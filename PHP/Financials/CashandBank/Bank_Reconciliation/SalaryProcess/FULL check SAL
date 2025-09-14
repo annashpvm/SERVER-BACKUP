@@ -1,0 +1,61 @@
+SELECT *
+FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019 and employee_roll_no like '4%'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019 and net_salary>15000
+and  employee_type='CONTRACT WORKER'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019 and net_salary_rounded<0
+and  employee_type='CONTRACT WORKER'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019 and vehicle_allowance>0
+and  employee_type='CONTRACT WORKER'
+
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019  and  
+basic_salary+incentive+allowance+conveyance+contract_wages+
+-- ot_wages+ot_incentive+
+vehicle_allowance-pf_amount-esi_amount-short_attendance_deduction<0
+
+select employee_roll_no,no_of_absent_days,short_attendance_deduction
+from emp_monthly_salary_header where no_of_absent_days>0
+and sal_month=2 and sal_year=2019 and employee_type='CONTRACT WORKER'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019  and  short_attendance_deduction<0
+
+select employee_roll_no,no_of_absent_days,short_attendance_deduction
+from emp_monthly_salary_header where no_of_absent_days>0
+and sal_month=2 and sal_year=2019 and short_attendance_deduction<0
+
+
+SELECT sum(other_deductions)  FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019  and employee_type='CONTRACT WORKER'
+
+
+SELECT sum(other_earnings)  FROM HrdProcess.emp_monthly_salary_header
+where sal_month=2 and sal_year=2019  and employee_type='CONTRACT WORKER'
+
+
+SELECT sum(net_salary_rounded) FROM HrdProcess.emp_monthly_salary_header es,
+hr_tbl_EmployeeMaster em
+where sal_month=2 and sal_year=2019
+and es.employee_roll_no=em.employee_roll_no
+and em.employee_type='CONTRACT WORKER' and es.bank_code not in (6)
+
+
+SELECT sum(deduction_amount) FROM HrdProcess.hr_tbl_deductionDetails dd,
+hr_tbl_EmployeeMaster em
+where 
+ deduction_month=1 and 
+deduction_year=2019 and deduction_code=1
+and em.employee_roll_no=dd.employee_roll_no
+and em.employee_type in ('CONTRACT WORKER')
+and em.active_status='Y'
+and created_by =2454
+--  and deduction_code=1 
+and employee_roll_no=24635

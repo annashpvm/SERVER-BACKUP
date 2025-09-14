@@ -1,0 +1,311 @@
+Ext.onReady(function(){
+   Ext.QuickTips.init();
+   
+    var BankDataStore = new Ext.data.Store({
+      id: 'BankDataStore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/SHVPM/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "BANK"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'ledcode', type: 'int',   mapping:'led_code'},
+        {name: 'ledname', type: 'string', mapping:'led_name'}
+      ])
+    });
+
+   
+  var cmbBank = new Ext.form.ComboBox({
+        fieldLabel      : 'Bank',
+        width           : 350,
+        displayField    : 'ledname',
+        valueField      : 'ledcode',
+        hiddenName      : 'ledname',
+        id              : 'cmbBank',
+        store           : BankDataStore,
+        typeAhead       : true,
+        mode            : 'local',
+        forceSelection  : true,
+        triggerAction   : 'all',
+        selectOnFocus   : false,
+        editable        : false,
+        allowblank      : false,
+        listeners       :{
+        select:function(){
+
+
+        }
+        }
+   });
+   
+    var MonthDataStore = new Ext.data.Store({
+      id: 'MonthDataStore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/SHVPM/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "cmbaccmonth"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'monthcode', type: 'int', mapping: 'month_code'},
+        {name: 'monthname', type: 'string', mapping: 'month_name'}
+      ])
+    });
+    
+
+   var cmbMonth = new Ext.form.ComboBox({
+        fieldLabel      : 'Month',
+        width           : 150,
+        displayField    : 'monthname',
+        valueField      : 'monthcode',
+        hiddenName      : 'monthname',
+        id              : 'cmbMonth',
+        store           : MonthDataStore,
+        typeAhead       : true,
+        mode            : 'remote',
+        forceSelection  : true,
+        triggerAction   : 'all',
+        selectOnFocus   : false,
+        editable        : false,
+        allowblank      : false,
+        listeners       :{
+        select:function(){
+
+
+        }
+        }
+   });   
+   var rptype="OP1";
+  
+   var optTypes = new Ext.form.FieldSet({
+        xtype   : 'fieldset',
+        title   : '',
+        layout  : 'hbox',
+        width   : 400,
+        x       : 5,
+        y       : 5,
+        border  : false,
+        items   : [
+            {xtype  : 'radiogroup',
+            columns : 3,
+            id      : 'optType',
+            items   : [
+                {boxLabel: 'CC', name: 'optTypes', id:'optCC', inputValue: 1, checked:true,
+                listeners:{
+                'check':function(rb,checked){
+                if(checked===true){
+                    rptype="OP1";
+                }
+                }
+                }
+                },
+                {boxLabel: 'PC', name: 'optTypes', id:'optPC', inputValue: 2,
+                 listeners:{
+                'check':function(rb,checked){
+                 if(checked===true){
+                    rptype="OP2";
+                 }
+                }
+                }
+                },
+               {boxLabel: 'Both', name: 'optTypes', id:'optBoth', inputValue: 3,
+                listeners:{
+                'check':function(rb,checked){
+                if(checked===true){
+                    rptype="OP3";
+                }
+                }
+                }}
+            ]
+        }
+        ]
+   }); 
+   
+   
+   
+   var BankCCPCinterestFormPanel = new Ext.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Bank CC / PC Interest Report',
+        header      : false,
+        width       : 827,        bodyStyle:{"background-color":"#3399CC"},
+        height      : 510,
+        x           : 0,
+        y           : 0,
+        frame       : false,
+        id          : 'BankCCPCinterestFormPanel',
+        method      : 'POST',
+        layout      : 'absolute',
+        reader: new Ext.data.JsonReader({
+                    root:'rows',
+                    totalProperty: 'results',
+                    id:'id'
+                    },[]),
+        tbar: { 
+            xtype: 'toolbar',bodyStyle: "background: #d7d5fa;",
+            height: 40,
+            style   :'background-color:#d7d5fa',
+            fontSize:18,
+            items: [
+		 {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/refresh.png',
+                    listeners:{
+                        click: function () {
+                            RefreshData();
+                        }
+                    }
+                },'-',
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',
+                    tooltip: 'View Details...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/view.png',
+                     //fp.getForm().reset();
+                    listeners:{
+                        click: function () {
+                            var form = BankCCPCinterestFormPanel.getForm();
+                            if (cmbMonth.getValue()==0) {
+                                Ext.MessageBox.alert("Alert","Select Month");
+                            }else if (cmbBank.getValue()==0) {
+                                Ext.MessageBox.alert("Alert","Select Bank");
+                            }
+                            else {
+                            if (form.isValid())  {
+                                var moncode=cmbMonth.getValue();
+                                var bankcode=cmbBank.getValue();
+                                
+                                var finid=22; 
+                                var compcode=1;
+                                
+                                if (rptype=="OP1") {
+                                    var opt="P";
+                                }
+                                else if (rptype=="OP2") {
+                                    var opt="C";
+                                }
+                                else if (rptype=="OP3") {
+                                    var opt="B";
+                                }
+                                
+                                var p1 = "&monthcode="+encodeURIComponent(moncode);
+                                var p2 = "&bankled_code="+encodeURIComponent(bankcode);
+                                var p3 = "&compcode="+encodeURIComponent(compcode);
+                                var p4 = "&finyear="+encodeURIComponent(finid);
+                                var p5 = "&ccpc_status="+encodeURIComponent(opt);
+                                
+                                var test = (p1+p2+p3+p4+p5);
+                                
+                                window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/acc_rep_monthlybankinterest.rptdesign' + test,  '_blank' );
+                                
+                            }
+                        }                           
+                        }
+                    }
+                },'-',
+               
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/exit.png',
+                    listeners:{
+                        click: function(){
+                            BankCCPCinterestWindow.hide();
+                        }
+                    }
+                }]
+        },
+        items: [
+            {   xtype       : 'fieldset',
+                title       : '',
+                layout      : 'hbox',
+                labelWidth  : 20,
+                height      : 200,
+                width       : 400,
+                x           : 10,
+                y           : 1,
+                border      : true,
+                layout      : 'absolute',
+                items: [optTypes,
+                    {
+                    xtype       : 'fieldset',
+                    title       : 'Month',
+                    layout      : 'hbox',
+                    labelWidth  : 20,
+                    height      : 200,
+                    width       : 200,
+                    x           : 10,
+                    y           : 60,
+                    border      : false,
+                    layout      : 'absolute',
+                    items: [cmbMonth]
+                    },
+                    {
+                    xtype       : 'fieldset',
+                    title       : 'Bank',
+                    layout      : 'hbox',
+                    labelWidth  : 20,
+                    height      : 200,
+                    width       : 400,
+                    x           : 10,
+                    y           : 120,
+                    border      : false,
+                    layout      : 'absolute',
+                    items: [cmbBank]
+                    }
+                    
+                    ]
+              } 
+                      
+
+        ]
+    });
+    
+    var BankCCPCinterestWindow = new Ext.Window({
+	height      : 325,
+        width       : 440,
+        y           : 120,
+        title       : 'Bank CC / PC Interest Report',
+        items       : BankCCPCinterestFormPanel,        bodyStyle:{"background-color":"#3399CC"},
+        layout      : 'fit',
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false,
+        listeners:
+            {
+                show:function(){
+                BankDataStore.load({
+                       url: '/SHVPM/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'BANK'
+                       }
+                });
+                 Ext.getCmp('cmbBank').bindStore(BankDataStore);    
+
+                MonthDataStore.load({
+                       url: '/SHVPM/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'cmbdepartment'
+                       }
+                });
+                 Ext.getCmp('cmbMonth').bindStore(MonthDataStore);                        
+                }
+            }
+    });
+    BankCCPCinterestWindow.show();  
+});

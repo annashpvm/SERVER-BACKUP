@@ -1,0 +1,192 @@
+/* global Ext */
+
+Ext.onReady(function(){
+    Ext.QuickTips.init();
+   /* var ginfinid =localStorage.getItem('accfinid');
+   var gstfinyear = localStorage.getItem('accfinyear');
+   var gstfinuser = localStorage.getItem('accuserid');
+   var compcode =localStorage.getItem('acccompcode');*/
+   
+   var GinCompcode = localStorage.getItem('gincompcode');
+   var GinFinid = localStorage.getItem('ginfinid');
+   var finstdate = localStorage.getItem('gfinstdate');   
+    
+   var GinUser = localStorage.getItem('gstuser');
+   var GinUserid = localStorage.getItem('ginuser');
+   var GinYear = localStorage.getItem('gstyear');
+   var fineddate = localStorage.getItem('gfineddate');
+          
+ var FDate = new Ext.form.DateField({
+        name: 'FDate',
+        id: 'FDate',
+//readOnly:true,
+        fieldLabel: 'From Date',
+        format     : 'Y-m-d',
+        value      : new Date()
+
+    });
+
+
+ var TDate = new Ext.form.DateField({
+        name: 'TDate',
+        id: 'TDate',
+//readOnly:true,
+        fieldLabel: 'To Date',
+        format     : 'Y-m-d',
+        value      : new Date()
+
+    });
+
+
+var RepWIPFormPanel = new Ext.form.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'WIP',
+        width       : 350,
+        height      : 200,
+     bodyStyle:{"background-color":"#3399CC"},
+        frame       : false,
+        id          : 'RepWIPFormPanel',
+        method      : 'post',
+        layout      : 'absolute',
+
+        tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',icon: '/Pictures/refresh.png',
+                    tooltip: 'Refresh Details...', height: 40,
+listeners: {
+                        click: function () {
+
+                            window.location.reload();
+                        }
+                    }
+                },'-',
+
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',icon: '/Pictures/view.png',
+                    tooltip: 'View Details...', height: 40,
+                     listeners:{
+                        click:
+                          function () {
+                    var fdate=Ext.getCmp('FDate').value;
+                    var d1 =  fdate;
+                     var tdate=Ext.getCmp('TDate').value;
+                    var d2 =  tdate;
+
+                    var p1 = "&fromdate="+encodeURIComponent(d1);
+                    var p2 = "&todate="+encodeURIComponent(d2);
+		    var test = (p1+p2);
+		        var rdchk=RepWIPFormPanel.getForm().getValues()['chkabs'];
+			if(rdchk=="1")
+window.open('http://192.168.11.14:8080/birt-viewer/frameset?__report=accounts/DenimWIPProcessRep.rptdesign'+test,  '_blank' );
+			else
+window.open('http://192.168.11.14:8080/birt-viewer/frameset?__report=accounts/DenimWIPRep.rptdesign'+test,  '_blank' );
+                    }
+                   
+                   }
+
+                 },'-',
+
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,icon: '/Pictures/exit.png',
+                    listeners:{
+                        click: function(){
+                            RepWipWindow.hide();
+                        }
+                    }
+                }
+                ]
+
+            },
+         items:[
+                {  xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                border:false,
+                height:85,
+                width:350,
+                layout      : 'absolute',
+                x: 10,
+                y: 0,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                width       : 250,
+                x           : 10,
+                y           : 0,
+                border      : false,
+                labelWidth  : 80,
+                items: [FDate]
+                },
+                 { xtype       : 'fieldset',
+                title       : '',
+                width       : 250,
+                x           : 10,
+                y           : 30,
+                border      : false,
+                labelWidth  : 80,
+                items: [TDate]
+                }
+                ]
+              },
+{
+                xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                height:40,
+                width:150,
+                x:60,
+                y:80,
+              items: [
+            {
+                xtype: 'checkboxgroup',
+		border  :  false,
+                x       : 0,
+                y       : 0,
+                columns :  1,
+                items: [
+                   {boxLabel: 'Production Details', name: 'chkabs', inputValue: 1 ,checked : false}
+			]
+	    }
+		     ]
+	    }
+]
+               });
+
+
+
+     var RepWipWindow = new Ext.Window({
+        height      : 250,
+        width       : 330,
+        items       : RepWIPFormPanel,
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false,
+        bodyStyle:{"background-color":"#3399CC"},
+		x: 450,
+       
+        y      : 100,
+listeners:{
+show:function(){
+
+}
+}
+
+
+    });
+       RepWipWindow.show();
+});    
+    
+

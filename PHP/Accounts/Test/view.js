@@ -1,0 +1,475 @@
+
+
+
+
+Ext.onReady(function() {
+    Ext.QuickTips.init();
+
+
+//Ext.ns('Ext.ux.grid');
+
+
+let script = document.createElement('script');
+script.src = '/ext-3.4.1/examples/ux/Groupsummary.js';
+document.head.appendChild(script);
+
+
+
+   var compcode = localStorage.getItem('gincompcode');
+   var finid    = localStorage.getItem('ginfinid');
+   var millname = localStorage.getItem('gstcompany');
+   var usertype = localStorage.getItem('ginuser');
+   var UserName = localStorage.getItem('ginusername');
+   var UserId   = localStorage.getItem('ginuserid');
+
+
+   var printtype = "PDF";
+
+   var Gincompcode = localStorage.getItem('gincompcode');
+   var GinFinid = localStorage.getItem('ginfinid');
+   var finstartdate = localStorage.getItem('gfinstdate');
+   var finenddate  = localStorage.getItem('gfineddate');
+
+   var yearfin  = localStorage.getItem('gstyear'); 
+
+   var yr  = localStorage.getItem('gstyear');
+
+   var yrfrom = yr.substr(0,4);  
+   var yrto  = yr.substr(5,4);  
+
+
+   var yearfinid=0;
+   var totdb,totcr;
+   var ledname="";
+   var ledgercode=0;
+   var ledgertype="";
+   var acctran_led_code;
+   var accrefvouno,clsbal; 
+   var b='';
+   var pvr_cramt,pvr_dbamt;
+   var monthcode;
+   var typevou;
+   var accref_vouno;
+   var accref_voudate;
+   var accref_payref_no;
+   var acctrail_inv_no;
+   var acctradbamt;
+   var acctrancramt;
+   var accref_vou_type;
+   var curbal_obcramt,curbal_obdbamt,monthtype;
+   var fvr_opbal,fst_dbcr, balmon;
+   var dgrecord = Ext.data.Record.create([]);
+   var dgrecord1 = Ext.data.Record.create([]);
+   var dgrecord2 = Ext.data.Record.create([]);
+   var flagtypenw;
+
+const formatter = new Intl.NumberFormat('en-IN', {
+//  style: 'currency',
+  currency: 'inr',
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+}); 
+
+
+
+
+var loadAdjustmentsDatastore = new Ext.data.GroupingStore({
+      id: 'loadAdjustmentsDatastore',
+//      autoLoad : true,
+      proxy: new Ext.data.HttpProxy({
+                url: 'ClsViewStatements.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task:"loadReceiptList"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+
+      {name:'heading',type:'string'},
+      {name:'accref_voudate',type:'date'},
+      {name:'acctran_cramt',type:'float'},
+      {name:'ref_invno',type:'string'},
+      {name:'ref_invdate',type:'string'},
+      {name:'ref_adjamount',type:'float'},  
+      {name:'ref_paymt_terms',type:'int'},
+      {name:'ref_adj_days',type:'int'},
+
+      ]
+      ),
+      sortInfo: {field: 'heading', direction: 'ASC'},
+            groupField: 'heading',
+});
+
+
+  function grid_tot(){
+        var dr = 0;
+        var cr = 0;
+        var Row1= flxBillDetails.getStore().getCount();
+
+        flxBillDetails.getSelectionModel().selectAll();
+        var sel=flxBillDetails.getSelectionModel().getSelections();
+        for(var i=0;i<Row1;i++)
+        {
+	      dr=Number(dr)+Number(sel[i].data.ref_adjamount);
+	      cr=cr+Number(sel[i].data.ref_adjamount);
+        }
+
+        var Dr2 = formatter.format(dr);
+        var Cr2 = formatter.format(cr);
+
+        txtTotalCollection.setRawValue(Dr2);
+        txtTotalAdjusted.setRawValue(Cr2);
+
+
+}
+
+
+
+   var txtTotalCollection = new Ext.form.NumberField({
+        fieldLabel  : 'Total Collection ',
+        id          : 'txtTotalCollection',
+        name        : 'txtTotalCollection',
+        width       :  140,
+	readOnly : true,
+        labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        tabindex : 2,
+        style : "font-size:14px;font-weight:bold",
+        decimalPrecision: 2,
+    });
+
+
+   var txtTotalAdjusted = new Ext.form.NumberField({
+        fieldLabel  : 'Total Adjusted',
+        id          : 'txtTotalAdjusted',
+        name        : 'txtTotalAdjusted',
+        width       :  140,
+	readOnly : true,
+        labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        tabindex : 2,
+        style : "font-size:14px;font-weight:bold",
+        decimalPrecision: 2,
+    });
+
+
+
+  // utilize custom extension for Group Summary
+//    var summary = new Ext.ux.grid.GroupSummary();
+
+    var summary = new Ext.ux.grid.GroupSummary();
+function ProcessData()
+{
+
+	loadAdjustmentsDatastore.removeAll();
+	loadAdjustmentsDatastore.load({
+	 url: 'ClsViewStatements.php',
+		params: {
+	    	task: 'loadReceiptList',
+		compcode:Gincompcode,
+		startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
+		enddate : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
+		},
+		scope:this,
+		callback:function()
+		{
+                      grid_tot();
+		}
+	 });     
+}
+
+
+
+
+    var monthstartdate = new Ext.form.DateField({
+	fieldLabel: 'From Date',
+        id: 'monthstartdate',
+	format: 'd-m-Y',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
+        value: new Date(),   
+       	enableKeyEvents: true,
+        listeners:{
+           blur:function(){
+              ProcessData();
+           },
+           keyup:function(){
+              ProcessData();
+            },
+           change:function(){
+              ProcessData();
+            },
+        }  
+    });
+    var monthenddate = new Ext.form.DateField({
+	fieldLabel: 'To Date',
+        id: 'monthenddate',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
+	format: 'd-m-Y',
+        value: new Date(),
+       	enableKeyEvents: true,
+        listeners:{
+           blur:function(){
+              ProcessData();
+           },
+           keyup:function(){
+              ProcessData();
+            },
+           change:function(){
+              ProcessData();
+            },
+        }     
+    });
+
+
+
+var btnPrint = new Ext.Button({
+
+	border: 1,
+	style: {
+	borderColor: 'blue',
+	borderStyle: 'solid',
+
+	},
+	text    : "Print",
+	width   : 80,
+	height  : 35,
+	x       : 700,
+	y       : 430,
+        icon    : 'BACK.JPG',   
+	listeners:{
+          click: function(){       
+                   var vouchertype  = 'BKR';
+                    var vou = "&voutype="+encodeURIComponent(vouchertype);
+                    var fd = "&fmdate="+encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));
+                    var td = "&tdate="+encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                    var comp = "&comp="+encodeURIComponent(Gincompcode);
+
+                    var param = (vou+fd+td+comp) ;
+ 	
+             
+                    if (printtype == "PDF") 
+                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Receipt_Payment.rptdesign&__format=pdf&'+param,  '_blank' );
+		    else if (printtype == "XLS") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Receipt_Payment.rptdesign&__format=XLS' + param, '_blank');
+                    else
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Receipt_Payment.rptdesign' + param, '_blank');	
+		}
+
+
+       	 }
+});
+
+
+var flxBillDetails = new Ext.grid.EditorGridPanel({
+    frame: false,
+    sm: new Ext.grid.RowSelectionModel(),
+    stripeRows : true,
+    scrollable: true,
+    scrollbar: true,
+    x:300,
+    y:10,
+    height: 450,
+    hidden:false,
+    width: 1000,
+    id: 'my-grid-font', 
+style: {
+            'font-size': '12px','font-weight':'bold'
+        },
+	columnLines: true,
+    columns:
+    [ 	 	
+
+//        {header: "Description " , dataIndex: 'grp_name',sortable:false,width:100,align:'left', menuDisabled: true,hidden :true},
+//        {header: "Description " , dataIndex: 'subgrp',sortable:false,width:100,align:'left', menuDisabled: true,hidden :true},
+//        {header: "led code " , dataIndex: 'acctran_led_code',sortable:false,width:100,align:'left', menuDisabled: /true,hidden :true},
+//        {header: "led type " , dataIndex: 'led_type',sortable:false,width:100,align:'left', menuDisabled: true,hidden :true},
+
+        {header: "Date / Voucher No " , dataIndex: 'heading',sortable:false,width:200,align:'left', menuDisabled: true,
+                summaryType: 'count',
+                summaryRenderer: function(v, params, data){
+                    return ((v === 0 || v > 1) ? '(' + v +' Ledger)' : '(1 Ledger)');
+                },
+        },
+        {header: "Bill Number " , dataIndex: 'ref_invno',sortable:false,width:100,align:'left', menuDisabled: true,hidden :false},
+        {header: "Bill Date " , dataIndex: 'ref_invdate',sortable:false,width:100,align:'center', menuDisabled: true,hidden :false},
+        {header: "Payment Terms" , dataIndex: 'ref_paymt_terms',sortable:false,width:100,align:'center', menuDisabled: true,hidden :false},
+
+
+        {header: "Adjusted" , dataIndex: 'ref_adjamount', sortable:true,width:100,align:'right',summaryType: 'sum',renderer: function (val, metaData, r){
+    if (val > 0) 
+    { 
+     return  parseFloat(val).toLocaleString('en-In', {
+         maximumFractionDigits: 2,
+         minimumFractionDigits: 2,
+//         style: 'currency',
+         currency: 'INR',
+         });
+      }
+   }},
+
+
+    ],
+     store: loadAdjustmentsDatastore,
+
+ 
+        view: new Ext.grid.GroupingView({
+            forceFit: false,
+            showGroupName: false,
+            enableNoGroups: false,
+            enableGroupingMenu: false,
+            hideGroupedColumn: true
+
+        }),
+
+        plugins:  [new Ext.ux.grid.GroupSummary()],
+/*
+        tbar : [{
+            text: 'Toggle',
+            tooltip: 'Toggle the visibility of summary row',
+            handler: function(){summary.toggleSummaries();}
+        }],
+*/
+
+ 
+        frame: true,
+
+        clicksToEdit: 1,
+        collapsible: true,
+        animCollapse: false,
+        trackMouseOver: false,
+        //enableColumnMove: false,
+        title: '',
+        iconCls: 'icon-grid',
+        renderTo: document.body,
+        listeners:{	
+
+	       'rowDblClick': function (flxBillDetails, rowIndex, cellIndex, e) {
+	
+                },
+                'render' : function(cmp) {
+                            cmp.getEl().on('keypress', function(e) {
+                                if (e.getKey() == e.ENTER) {
+
+                                }
+                             });
+                 },
+     
+
+        }, 
+
+
+});
+
+ 
+ var tabOverall = new Ext.TabPanel({
+    id          : 'tabOverall',
+    xtype       : 'tabpanel',
+     bodyStyle: {"background-color": "#0C5DA9"},
+        style: {
+            'color': 'white',
+            'style': 'Helvetica',
+            'font-size': '15px', 'font-weight': 'bold'
+        },
+    activeTab   : 0,
+    height      : 600,
+    width       : 1500,
+    items       : [
+    {
+        xtype: 'panel',
+        title: 'Receipt',
+        bodyStyle: {"background-color": "#ffe6f7"},
+        layout: 'absolute',
+        items: [
+
+			{ 
+                             xtype   : 'fieldset',
+                             title   : '',
+                             labelWidth  : 80,
+                             border  : false,
+		             x       : 10,
+			     y       : 10,
+                             items: [monthstartdate]
+                        },
+			{ 
+                             xtype   : 'fieldset',
+                             title   : '',
+                             labelWidth  : 70,
+                             border  : false,
+		             x       : 300,
+			     y       : 10,
+                             items: [monthenddate]
+                        },
+
+
+			{ 
+                             xtype   : 'fieldset',
+                             title   : '',
+                             labelWidth  : 70,
+                             border  : false,
+		             x       : 600,
+			     y       : 10,
+                             items: [btnPrint]
+                        },
+
+
+
+			{
+			    xtype       : 'fieldset',
+			    x           : 15,
+			    y           : 40,
+			    border      : false,
+			    width       :1000,
+			    items : [flxBillDetails]
+			},
+
+		{
+		    xtype       : 'fieldset',
+		    x           : 10,
+		    y           : 495,
+		    border      : false,
+		    width       : 500,
+                    labelWidth  : 120,
+		    items : [txtTotalCollection]
+		},
+
+		{
+		    xtype       : 'fieldset',
+		    x           : 300,
+		    y           : 495,
+		    border      : false,
+		    width       :500,
+                    labelWidth  : 120,
+		    items : [txtTotalAdjusted]
+		},
+        ]
+    }  
+    ]       
+});
+
+
+var myWin = new Ext.Window({
+    id     : 'myWin',
+    height : 620,
+    width  : 1340,
+    bodyStyle: {"background-color": "#ffffdb"},
+    x:10,
+    y:20,
+    maximized:false,
+    items  : [tabOverall],
+
+
+onEsc:function(){
+},
+    listeners:{
+      
+        show:function(){
+             
+            ProcessData();
+
+
+        }
+    }
+});
+myWin.show();
+    });

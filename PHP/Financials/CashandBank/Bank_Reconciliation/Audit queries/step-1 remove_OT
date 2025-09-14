@@ -1,0 +1,30 @@
+-- Remove OT details
+update confirm_attendance 
+set 
+session_two='A',ot='N',ot_hours='00:00:00'
+where month(attendance_date)=12 and year(attendance_date)=2018;
+
+update emp_monthly_salary_header 
+set total_ot_hours='00:00:00'
+where sal_month=12 and sal_year=2018;
+
+-- update Onduty as Present
+
+update confirm_attendance
+set session_one='P'
+where session_one='O'
+and month(attendance_date)=12 and year(attendance_date)=2018;
+
+
+update confirm_attendance
+set session_one='P'
+where session_one='C'
+and  month(attendance_date)=12 and year(attendance_date)=2018
+
+
+-- update National Holidays
+update  confirm_attendance
+set session_one='N'
+where attendance_date='2018-10-18'
+
+

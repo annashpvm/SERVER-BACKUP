@@ -1,0 +1,232 @@
+Ext.onReady(function() {
+Ext.QuickTips.init();
+    var ginfinid =localStorage.getItem('accfinid');
+   var gstfinyear = localStorage.getItem('accfinyear');
+   var gstfinuser = localStorage.getItem('accuserid');
+   var compcode =localStorage.getItem('acccompcode');
+
+var FDate = new Ext.form.DateField({
+        name: 'FDate',
+        id: 'FDate',
+        fieldLabel: 'From',
+        format     : 'Y-m-d',
+        value      : new Date()
+
+    });
+
+var TDate = new Ext.form.DateField({
+        name: 'TDate',
+        id: 'TDate',
+        fieldLabel: 'To',
+        format     : 'Y-m-d',
+        value      : new Date()
+
+    });
+
+    var gstStatus = "N";
+    var chkNew = new Ext.form.Checkbox({
+        id         : 'chkNew',
+        xtype      : 'checkbox',
+        fieldLabel : '',
+        boxLabel   : 'New Format',
+        inputValue : '',
+        listeners:{
+            'check': function(rb,checked){
+                if(checked === true){
+                    gstStatus = "Y";
+                } else {
+                    gstStatus = "N";
+                }
+            }
+        }
+    });
+var gstType="D";
+var CreditNoteRegisterFormPanel = new Ext.form.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Credit Note Register',
+        width       : 530,
+        height      : 320,
+     bodyStyle:{"background-color":"#3399CC"},
+        frame       : false,
+        id          : 'CreditNoteRegisterFormPanel',
+        method      : 'post',
+        layout      : 'absolute',
+
+        tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',icon: '/Pictures/refresh.png',
+                    tooltip: 'Refresh Details...', height: 40
+                },'-',
+
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',icon: '/Pictures/view.png',
+                    tooltip: 'View Details...', height: 40,
+                     listeners:{
+                        click:
+                          function () {
+                    var form = CreditNoteRegisterFormPanel.getForm();
+                    if (form.isValid()) {
+
+                    var fdate=Ext.getCmp('FDate').value;
+                    var tdate=Ext.getCmp('TDate').value;
+                    var d1 =  fdate + " 00:00:00.000";
+                    var d2 =  tdate + " 00:00:00.000";
+//                    var comcode=1;
+                    var voutype="CN";
+
+                    var vou = "&voutype="+encodeURIComponent(voutype);
+                    var fd = "&fmdate="+encodeURIComponent(d1);
+                    var td = "&tdate="+encodeURIComponent(d2);
+                    var comp = "&comp="+encodeURIComponent(compcode);
+
+                    var test = (vou+fd+td+comp) ;
+                    if(gstStatus=='Y')
+                    {
+                    
+                     window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccDebitNoteRegisterNewformat.rptdesign'+test,  '_blank' );
+                     
+                     }
+                    if(gstStatus=='N')
+                    {
+                     if (gstType=='D')
+                     {
+                     window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepDebitNoteRegister.rptdesign'+test,  '_blank' );
+                     }
+                     if(gstType=='A')
+                     {
+                      window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepDebitNoteRegisterAmountwise.rptdesign'+test,  '_blank' );
+                     }
+                     }
+                     
+
+                    }
+                    }
+                   
+                   }
+
+                 },'-',
+
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,icon: '/Pictures/exit.png',
+                    listeners:{
+                        click: function(){
+                            RepCreditNoteRegisterWindow.hide();
+                        }
+                    }
+                }
+                ]
+
+            },
+         items:[
+                {  xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                border:true,
+                height:75,
+                width:450,
+                layout      : 'absolute',
+                x: 30,
+                y: 10,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                width       : 250,
+                x           : 40,
+                y           : 0,
+                border      : false,
+                labelWidth  : 50,
+                items: [FDate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                width       : 250,
+                x           :230,
+                y           : 0,
+                border      : false,
+                labelWidth  : 50,
+                items: [TDate]
+                }
+                ]
+              },
+              {  xtype: 'fieldset',
+                title: '',
+                layout : 'vbox',
+                border:true,
+                height:80,
+                width:450,
+                layout      : 'absolute',
+                x: 30,
+                y: 95,
+             items:[
+                {
+                xtype   : 'radiogroup',
+                border  :  false,
+                x       : 20,
+                y       : 10,
+                columns :  2,
+                items: [
+                    {boxLabel: 'DateWise', name: 'OptType', id:'optDateWise',inputValue: 1, checked: true,
+                     listeners:{
+                        'check': function(rb,checked){
+                            if (checked===true){
+                               gstType = "D";
+                              }
+                             }
+                             }
+                    },
+                    {boxLabel: 'AmountWise', name: 'OptType',id:'optAmountWise', inputValue: 2,
+                    listeners:{
+                        'check': function(rb,checked){
+                            if (checked===true){
+                               gstType = "A";
+                              }
+                             }
+                             }
+                    }
+                    ]
+                }
+                   ]
+              },
+               { xtype       : 'fieldset',
+                title       : '',
+                width       : 250,
+                x           : 140,
+                y           : 180,
+                border      : false,
+                labelWidth  : 50,
+                items: [chkNew]
+                }
+]
+               });
+
+
+
+     var RepCreditNoteRegisterWindow = new Ext.Window({
+        height      : 320,
+        width       : 530,
+        items       : CreditNoteRegisterFormPanel,
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false,
+        bodyStyle:{"background-color":"#3399CC"},
+
+       
+        y      : 80
+
+
+    });
+       RepCreditNoteRegisterWindow.show();
+});

@@ -1,0 +1,150 @@
+
+Ext.onReady(function() {
+
+    var ginfinid = localStorage.getItem('accfinid');
+    var gstfinyear = localStorage.getItem('accfinyear');
+    var gstfinuser = localStorage.getItem('accuserid');
+    var gstfincompcode = localStorage.getItem('acccompcode');
+
+var txtfmdbno = new Ext.form.TextField({
+        fieldLabel  : 'Credit Note No1',
+        id          : 'txtfmdbno',
+        name        : 'txtfmdbno',
+        width       : 50
+    });
+
+var txttodbno = new Ext.form.TextField({
+        fieldLabel  : 'Credit Note No2',
+        id          : 'txttodbno',
+        name        : 'txttodbno',
+        width       : 50
+    });
+
+   var fp = new Ext.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Credit Note Print',bodyStyle:{"background-color":"#3399CC"},
+        width       : 390,
+        height      : 250,
+        x           : 25,
+        y           : 25,
+        frame       : false,
+        id          : 'fp',
+        method      : 'post',
+        layout      : 'absolute',
+	tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40,
+                    icon: '/Pictures/refresh.png'                                  
+                },'-',
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',
+                    tooltip: 'View Details...', height: 40,
+                    icon: '/Pictures/view.png',
+		    listeners:{
+                    click:function(){
+		var rd=fp.getForm().getValues()['flg'];
+  		var fn=Ext.getCmp('txtfmdbno').getRawValue();
+  		var tn=Ext.getCmp('txttodbno').getRawValue();
+		var comp=gstfincompcode;
+		var fin=ginfinid;
+		var type="CN";
+		var fd = "&frmdbno=" + encodeURIComponent(fn);
+		var td = "&todbno=" + encodeURIComponent(tn);
+		var c = "&comp=" + encodeURIComponent(comp);
+		var f = "&fin=" + encodeURIComponent(fin);
+		var g = "&flag=" + encodeURIComponent(type);
+		var param = (fd + td + c + f + g) ; 
+		     	if (rd=="1")
+		     	{    
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepDebitNotePrinting.rptdesign' + param,  '_blank' );   	
+		     	}
+			else
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepDebitNotePrintingAc.rptdesign' + param,  '_blank' );   
+			}
+ }}
+                 },'-',
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,
+                    icon: '/Pictures/exit.png',               
+                    listeners:{
+                        click: function(){
+                            frmwindow.hide();
+                        }
+                    }
+                }
+                ]
+            },
+        items: [
+	{
+                xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                height:40,
+                width:200,
+                x: 70,
+                y:90,
+              items: [
+            {
+                xtype: 'radiogroup',
+border  :  false,
+                x       : 100,
+                y       : 60,
+                columns :  2,
+                items: [
+                    {boxLabel: 'Stores', name: 'flg', inputValue: '1', checked: true},
+                    {boxLabel: 'Accounts', name: 'flg', inputValue: '2'}
+                ]
+            }
+        ]
+            },
+{ 
+		xtype       : 'fieldset',
+                title       : '',
+                width       :250,
+                border      : false,
+                labelWidth  : 80,
+		x:20,
+		y:20,
+                items: [txtfmdbno]
+           },
+{ 
+		xtype       : 'fieldset',
+                title       : '',
+                width       :250,
+                border      : false,
+                labelWidth  : 80,
+		x:200,
+		y:20,
+                items: [txttodbno]
+           }
+        ]
+    });
+
+var frmwindow = new Ext.Window({
+      height      : 300,
+      width       : 420,
+      bodyStyle   : 'padding: 10px',
+      layout      : 'form',
+      labelWidth  : 40,bodyStyle:{"background-color":"#3399CC"},
+      defaultType : 'field',
+	region: 'left',
+	closable : false,
+	draggable : false,
+	resizable:false,
+	title : 'Credit Note Print',
+	y:80,
+  items : [fp,]
+}).show();
+});
+

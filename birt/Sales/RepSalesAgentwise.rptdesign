@@ -1,0 +1,1051 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="9">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://192.168.11.15/dpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">TXlzcWwxMjM=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="SAL_Agentwise" id="5">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">cust_ref</property>
+                    <property name="alias">agent</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName" key="Agent">Agent</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">cust_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">agent</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">invh_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">invh_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">socno</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">agent</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">var_desc</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">var_size1</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">var_size2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">var_unit</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">invt_nos</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">invt_urate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">wt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">invh_netamt2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">invh_netamt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">invh_party_bank</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">cust_code</property>
+                    <property name="nativeName">cust_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">cust_ref</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">invh_no</property>
+                    <property name="nativeName">invh_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">invh_date</property>
+                    <property name="nativeName">invh_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">invh_our_ordno</property>
+                    <property name="nativeName">invh_our_ordno</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">cust_ref_7</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">var_desc</property>
+                    <property name="nativeName">var_desc</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">var_size1</property>
+                    <property name="nativeName">var_size1</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">var_size2</property>
+                    <property name="nativeName">var_size2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">var_unit</property>
+                    <property name="nativeName">var_unit</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">invt_nos</property>
+                    <property name="nativeName">invt_nos</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">invt_urate</property>
+                    <property name="nativeName">invt_urate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">wt</property>
+                    <property name="nativeName">wt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">invh_netamt2</property>
+                    <property name="nativeName">invh_netamt2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">invh_netamt</property>
+                    <property name="nativeName">invh_netamt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">invh_party_bank</property>
+                    <property name="nativeName">invh_party_bank</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spsal_rep_agentwise_sales(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fincode</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="10">
+            <property name="width">10.791666666666666in</property>
+            <property name="dataSet">SAL_Agentwise</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">invh_no</property>
+                    <text-property name="displayName">invh_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_no"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">invh_date</property>
+                    <text-property name="displayName">invh_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_date"]</expression>
+                    <property name="dataType">date</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">invh_our_ordno</property>
+                    <text-property name="displayName">invh_our_ordno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_our_ordno"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">var_desc</property>
+                    <text-property name="displayName">var_desc</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["var_desc"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">invt_nos</property>
+                    <text-property name="displayName">invt_nos</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_nos"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">invt_urate</property>
+                    <text-property name="displayName">invt_urate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_urate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">wt</property>
+                    <text-property name="displayName">wt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["wt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">invh_netamt</property>
+                    <text-property name="displayName">invh_netamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_netamt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_ref_7</property>
+                    <text-property name="displayName" key="party">party</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_ref_7"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_ref</property>
+                    <text-property name="displayName" key="Agent">Agent</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_ref"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">company_name</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["company_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">unit</property>
+                    <text-property name="displayName">unit</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["var_unit"] = 1)
+"REELS"
+else
+"BUNDLES"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">size</property>
+                    <text-property name="displayName">size</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["var_size1"] > 0)
+Formatter.format(dataSetRow["var_size1"],"#0.0") + " X " + Formatter.format(dataSetRow["var_size2"],"#0.0")
+else
+Formatter.format(dataSetRow["var_size2"],"#0.0")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">report heading</property>
+                    <text-property name="displayName">report heading</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("Agentwise Sales From ",Formatter.format(params["fromdate"].value,"dd/MM/yyyy")," To  ",Formatter.format(params["todate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Rundate</property>
+                    <text-property name="displayName">Rundate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(new Date(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">agentwt</property>
+                    <text-property name="displayName">agentwt</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>AgentGroup</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["wt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totwt</property>
+                    <text-property name="displayName">totwt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["wt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">agentamt</property>
+                    <text-property name="displayName">agentamt</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>AgentGroup</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["invh_netamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totamt</property>
+                    <text-property name="displayName">totamt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["invh_netamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="47">
+                <property name="width">0.7in</property>
+            </column>
+            <column id="48">
+                <property name="width">0.7in</property>
+            </column>
+            <column id="49">
+                <property name="width">0.7in</property>
+            </column>
+            <column id="50">
+                <property name="width">2.2in</property>
+            </column>
+            <column id="51">
+                <property name="width">1.8in</property>
+            </column>
+            <column id="52">
+                <property name="width">1in</property>
+            </column>
+            <column id="53">
+                <property name="width">0.8229166666666666in</property>
+            </column>
+            <column id="54">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="55">
+                <property name="width">0.7in</property>
+            </column>
+            <column id="56">
+                <property name="width">0.9in</property>
+            </column>
+            <column id="57">
+                <property name="width">1in</property>
+            </column>
+            <header>
+                <row id="129">
+                    <cell id="130">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="153">
+                            <property name="resultSetColumn">company_name</property>
+                        </data>
+                    </cell>
+                    <cell id="134"/>
+                    <cell id="135"/>
+                    <cell id="136"/>
+                    <cell id="137"/>
+                    <cell id="138"/>
+                    <cell id="139">
+                        <label id="128">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Page No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="140">
+                        <auto-text id="125">
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="141">
+                    <cell id="142">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="236">
+                            <property name="resultSetColumn">report heading</property>
+                        </data>
+                    </cell>
+                    <cell id="147"/>
+                    <cell id="148"/>
+                    <cell id="149"/>
+                    <cell id="150"/>
+                    <cell id="151">
+                        <label id="237">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="152">
+                        <data id="238">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">Rundate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="11">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <cell id="12">
+                        <label id="58">
+                            <text-property name="text">Inv. No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="13">
+                        <label id="60">
+                            <text-property name="text">Inv Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="14">
+                        <label id="62">
+                            <text-property name="text">Ord.No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="15">
+                        <label id="64">
+                            <text-property name="text">Customer</text-property>
+                        </label>
+                    </cell>
+                    <cell id="16">
+                        <label id="233">
+                            <property name="textAlign">left</property>
+                            <text-property name="text">        Product</text-property>
+                        </label>
+                    </cell>
+                    <cell id="17">
+                        <label id="232">
+                            <text-property name="text">Size</text-property>
+                        </label>
+                    </cell>
+                    <cell id="18">
+                        <label id="75">
+                            <text-property name="text" key="Agent">Unit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="19">
+                        <label id="66">
+                            <text-property name="text">Nos</text-property>
+                        </label>
+                    </cell>
+                    <cell id="20">
+                        <label id="68">
+                            <text-property name="text">Rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="21">
+                        <label id="70">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="22">
+                        <label id="72">
+                            <text-property name="text">         Value</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="154">
+                <property name="groupName">AgentGroup</property>
+                <expression name="keyExpr" type="javascript">row["cust_ref"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["cust_ref"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="155">
+                        <property name="height">0.2708333333333333in</property>
+                        <cell id="156">
+                            <property name="colSpan">4</property>
+                            <property name="rowSpan">1</property>
+                            <property name="fontWeight">bold</property>
+                            <data id="179">
+                                <property name="resultSetColumn">cust_ref</property>
+                            </data>
+                        </cell>
+                        <cell id="160"/>
+                        <cell id="161"/>
+                        <cell id="162"/>
+                        <cell id="163"/>
+                        <cell id="164"/>
+                        <cell id="165"/>
+                        <cell id="166"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="167">
+                        <property name="height">0.2708333333333333in</property>
+                        <cell id="168"/>
+                        <cell id="169"/>
+                        <cell id="170"/>
+                        <cell id="171"/>
+                        <cell id="172"/>
+                        <cell id="173">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">medium</property>
+                            <label id="244">
+                                <text-property name="text">AGENT TOTAL</text-property>
+                            </label>
+                        </cell>
+                        <cell id="175">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">medium</property>
+                        </cell>
+                        <cell id="176">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">medium</property>
+                        </cell>
+                        <cell id="177">
+                            <property name="fontSize">9pt</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">medium</property>
+                            <data id="239">
+                                <structure name="numberFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">#0.0000</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">agentwt</property>
+                            </data>
+                        </cell>
+                        <cell id="178">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">medium</property>
+                            <data id="241">
+                                <property name="fontSize">9pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">#0.00</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">agentamt</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="180">
+                <property name="groupName">PartyGroup</property>
+                <expression name="keyExpr" type="javascript">row["cust_ref_7"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["cust_ref_7"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="181">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="182">
+                            <data id="205">
+                                <property name="resultSetColumn">cust_ref_7</property>
+                            </data>
+                        </cell>
+                        <cell id="183"/>
+                        <cell id="184"/>
+                        <cell id="185"/>
+                        <cell id="186"/>
+                        <cell id="187"/>
+                        <cell id="188"/>
+                        <cell id="189"/>
+                        <cell id="190"/>
+                        <cell id="191"/>
+                        <cell id="192"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="193">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="194"/>
+                        <cell id="195"/>
+                        <cell id="196"/>
+                        <cell id="197"/>
+                        <cell id="198"/>
+                        <cell id="199"/>
+                        <cell id="200"/>
+                        <cell id="201"/>
+                        <cell id="202"/>
+                        <cell id="203"/>
+                        <cell id="204"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="206">
+                <property name="groupName">invno</property>
+                <expression name="keyExpr" type="javascript">row["invh_no"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["invh_no"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="207">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="208">
+                            <data id="231">
+                                <property name="resultSetColumn">invh_no</property>
+                            </data>
+                        </cell>
+                        <cell id="209"/>
+                        <cell id="210"/>
+                        <cell id="211"/>
+                        <cell id="212"/>
+                        <cell id="213"/>
+                        <cell id="214"/>
+                        <cell id="215"/>
+                        <cell id="216"/>
+                        <cell id="217"/>
+                        <cell id="218"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="219">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="220"/>
+                        <cell id="221"/>
+                        <cell id="222"/>
+                        <cell id="223"/>
+                        <cell id="224"/>
+                        <cell id="225"/>
+                        <cell id="226"/>
+                        <cell id="227"/>
+                        <cell id="228"/>
+                        <cell id="229"/>
+                        <cell id="230"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="23">
+                    <property name="fontSize">x-small</property>
+                    <cell id="24">
+                        <data id="59">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">invh_no</property>
+                        </data>
+                    </cell>
+                    <cell id="25">
+                        <data id="61">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">invh_date</property>
+                        </data>
+                    </cell>
+                    <cell id="26">
+                        <data id="63">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">invh_our_ordno</property>
+                        </data>
+                    </cell>
+                    <cell id="27">
+                        <data id="74">
+                            <property name="marginRight">2pt</property>
+                            <property name="whiteSpace">nowrap</property>
+                            <property name="resultSetColumn">cust_ref_7</property>
+                        </data>
+                    </cell>
+                    <cell id="28">
+                        <data id="65">
+                            <property name="marginLeft">5pt</property>
+                            <property name="whiteSpace">nowrap</property>
+                            <property name="resultSetColumn">var_desc</property>
+                        </data>
+                    </cell>
+                    <cell id="29">
+                        <data id="234">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">size</property>
+                        </data>
+                    </cell>
+                    <cell id="30">
+                        <data id="235">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">unit</property>
+                        </data>
+                    </cell>
+                    <cell id="31">
+                        <property name="textAlign">center</property>
+                        <data id="67">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">invt_nos</property>
+                        </data>
+                    </cell>
+                    <cell id="32">
+                        <data id="69">
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.00</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">invt_urate</property>
+                        </data>
+                    </cell>
+                    <cell id="33">
+                        <data id="71">
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.0000</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">wt</property>
+                        </data>
+                    </cell>
+                    <cell id="34">
+                        <data id="73">
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">invh_netamt</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="35">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <cell id="36"/>
+                    <cell id="37"/>
+                    <cell id="38"/>
+                    <cell id="39">
+                        <label id="245">
+                            <text-property name="text">GRAND TOTAL</text-property>
+                        </label>
+                    </cell>
+                    <cell id="40"/>
+                    <cell id="41"/>
+                    <cell id="42"/>
+                    <cell id="43"/>
+                    <cell id="44"/>
+                    <cell id="45">
+                        <data id="240">
+                            <property name="fontSize">9pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.0000</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">totwt</property>
+                        </data>
+                    </cell>
+                    <cell id="46">
+                        <data id="242">
+                            <property name="fontSize">9pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">totamt</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

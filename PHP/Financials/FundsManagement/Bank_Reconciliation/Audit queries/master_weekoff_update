@@ -1,0 +1,29 @@
+-- update  weekoff to master
+
+update hr_tbl_EmployeeMaster em,
+(select employee_roll_no from confirm_attendance where
+session_one='W' and attendance_date='2018-10-13')X
+set employee_weekly_off='SATURDAY'
+where 
+em.employee_roll_no = X.employee_roll_no
+
+-- UPDATE weekoff n shift_rotation table
+
+update hrm_shift_rotation  sr,
+hr_tbl_EmployeeMaster em
+set sr.weekly_off=em.employee_weekly_off
+where sr.employee_roll_no=em.employee_roll_no
+
+-- rotate shift
+select employee_roll_no,
+employee_name,
+employee_weekly_off,
+-- employee_current_shift,
+-- employee_shiftchange_day,
+unit_code,
+dept_code 
+from hr_tbl_EmployeeMaster
+where 
+employee_weekly_off='SUNDAY'
+ and employee_roll_no
+ in(select employee_roll_no from emp_monthly_salary_header where sal_year=2018 and sal_month=10)

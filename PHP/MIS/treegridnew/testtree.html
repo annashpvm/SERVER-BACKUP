@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test TreeGrid</title>
+    <link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/treegrid/treegrid.css" />
+
+    <script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base-debug.js"></script>
+    <script type="text/javascript" src="/ext-3.4.1/ext-all-debug.js"></script>
+
+    <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridSorter.js"></script>
+    <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridColumnResizer.js"></script>
+    <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridNodeUI.js"></script>
+    <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridColumns.js"></script>
+    <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGrid.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        Ext.onReady(function() {
+            Ext.QuickTips.init();
+
+            var tree = new Ext.ux.tree.TreeGrid({
+                title: 'Static Test TreeGrid',
+                width: 600,
+                height: 400,
+                renderTo: Ext.getBody(),
+                loader: null,
+                enableDD: false,
+                rootVisible: true,
+                columns: [
+                    { header: 'Code', dataIndex: 'main_grpcode', width: 100 },
+                    { header: 'Name', dataIndex: 'main_grpname', width: 200 }
+                ],
+                root: new Ext.tree.AsyncTreeNode({
+                    text: 'Root',
+                    id: 'root',
+                    expanded: true,
+                    children: [
+                        {
+                            id: '101',
+                            text: 'Node 101',
+                            main_grpcode: '101',
+                            main_grpname: 'Group 101',
+                            leaf: false  // ✅ critical for triggering expandnode
+                        }
+                    ]
+                }),
+                listeners: {
+                    expandnode: function(node) {
+                        console.log('✅ expandnode fired for:', node.id);
+                        if (!node.loaded) {
+                            node.appendChild({
+                                id: node.id + '_child',
+                                text: 'Child of ' + node.text,
+                                main_grpcode: node.id + '_child',
+                                main_grpname: 'SubGroup',
+                                leaf: true
+                            });
+                            node.loaded = true;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

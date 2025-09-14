@@ -1,0 +1,117 @@
+<!--
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+-->
+<html>
+<head>
+<title>GRID TEST Window</title>
+
+<link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css" />
+<script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/ext-all.js"></script>
+ <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/css/GroupSummary.css" />
+<script type="text/javascript" src="/ext-3.4.1/examples/ux/GroupSummary.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/src/widgets/tree/TreeNode.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/examples/ux/ColumnNodeUI.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/examples/tree/column-tree.js"></script>
+
+</head>
+
+<!-- Revised from demo code in ext3.0.0 -->
+<body>
+<script type="text/javascript">
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+Ext.onReady(function(){
+
+    Ext.QuickTips.init();
+
+Ext.define('App.view.BasicTreePanel', {
+extend: 'Ext.tree.Panel',
+xtype:'basictreepanel',
+title:'MVC pattern',
+root: {//define the data of our tree panel
+text:'Application', //the text the node is going to display
+expanded:true, //when the tree rendersthenode it will be expanded by default
+children:[ //the children of our Application node
+{
+text:'app',
+children:[ // each node can have their own children
+{
+text:'app.js',
+leaf:true //when we set leaf to true, our node will be last in the hierarchy and also its icon will change
+},{
+text:'controller'
+},{
+text:'model'
+},{
+text:'store'
+},{
+text:'view',
+children:[
+{
+text:'BasicTreePanel.js',
+leaf:true
+}
+]
+}
+]
+},{
+text:'data'
+},{
+text:'index.html',
+leaf:true
+},{
+text:'resources',
+children:[
+{
+text:'css'
+},{
+text:'resources'
+}
+]
+}
+]
+}
+});
+
+Ext.Loader.setConfig({
+enabled:true
+});
+Ext.application({
+name: 'App',
+requires:['App.view.BasicTreePanel'], // we need to require the BasicTreePanel class sou we can used later.
+
+launch: function() {
+Ext.create('Ext.Window',{
+width:630,
+height:318,
+title:'ExtTreePanel',
+autoScroll:true,
+frame:false,
+layout:'fit',
+items:[{
+xtype:'basictreepanel' // adding our tree panel definition toour window
+}]
+}).show();
+}
+});
+
+}); 
+
+// set up namespace for application
+
+
+</script>
+
+<div id="grid-example"></div>
+</body>
+</html>

@@ -1,0 +1,1496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="author">Annadurai V</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">5</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">5</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">5</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="7">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finstartdate" id="8">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="9">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="10">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="ledcode" id="11">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="lename" id="12">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="prtdsp" id="13">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="repcashbank" id="5">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">ledcode</property>
+                    <property name="paramName">ledcode</property>
+                    <property name="nativeName">ledcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-6</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">finid</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">finid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-6</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">finstartdate</property>
+                    <property name="paramName">finstartdate</property>
+                    <property name="nativeName">finstartdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">5</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">6</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">accref_seqno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">accref_vouno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">accref_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">accref_voudate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">accref_narration</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">acctran_led_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">acctran_dbamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">acctran_cramt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">accref_payref_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">accref_payref_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">ledcode2</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">yropdebit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">yropcredit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">trnobdebit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">trnobcreit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">cust_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">accref_seqno</property>
+                    <property name="nativeName">accref_seqno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">accref_vouno</property>
+                    <property name="nativeName">accref_vouno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">accref_comp_code</property>
+                    <property name="nativeName">accref_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">accref_voudate</property>
+                    <property name="nativeName">accref_voudate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">accref_narration</property>
+                    <property name="nativeName">accref_narration</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">acctran_led_code</property>
+                    <property name="nativeName">acctran_led_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">cr</property>
+                    <property name="nativeName">cr</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">dr</property>
+                    <property name="nativeName">dr</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">accref_payref_no</property>
+                    <property name="nativeName">accref_payref_no</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">accref_payref_date</property>
+                    <property name="nativeName">accref_payref_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">ledcode2</property>
+                    <property name="nativeName">ledcode2</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">yropdebit</property>
+                    <property name="nativeName">yropdebit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">yropcredit</property>
+                    <property name="nativeName">yropcredit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">trnobdebit</property>
+                    <property name="nativeName">trnobdebit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">trnobcreit</property>
+                    <property name="nativeName">trnobcreit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">cust_name</property>
+                    <property name="nativeName">cust_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call acc_sp_rep_cashbank_book(?,?,?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>ledcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-6</design:nativeDataTypeCode>
+          <design:precision>3</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>finid</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-6</design:nativeDataTypeCode>
+          <design:precision>3</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>finstartdate</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="headerHeight">0.2in</property>
+            <property name="footerHeight">0.2in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="102">
+            <property name="masterPage">Simple MasterPage</property>
+            <property name="pageBreakAfter">auto</property>
+            <property name="pageBreakBefore">auto</property>
+            <property name="pageBreakInside">auto</property>
+            <property name="dataSet">repcashbank</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">accref_vouno</property>
+                    <text-property name="displayName">accref_vouno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_vouno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_voudate</property>
+                    <text-property name="displayName">accref_voudate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_voudate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_payref_no</property>
+                    <text-property name="displayName">accref_payref_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_payref_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_payref_date</property>
+                    <text-property name="displayName">accref_payref_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_payref_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">led_name</property>
+                    <text-property name="displayName">led_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_name"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_narration</property>
+                    <text-property name="displayName">accref_narration</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_narration"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_dbamt</property>
+                    <text-property name="displayName">acctran_dbamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_dbamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_cramt</property>
+                    <text-property name="displayName">acctran_cramt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_cramt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">millname</property>
+                    <text-property name="displayName">millname</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["accref_comp_code"] == 1)&#13;
+"SRI HARI VENKATESHWARA PAPER MILLS (P) LTD"&#13;
+else if (dataSetRow["accref_comp_code"] == 90)&#13;
+"TRAIL ENTRY"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ReportHeading</property>
+                    <text-property name="displayName">ReportHeading</text-property>
+                    <expression name="expression" type="javascript">if (params["prtdsp"].value == 'C')&#13;
+"Cash Book from " + Formatter.format(params["fromdate"].value,"dd/MM/yyyy") + " to " + Formatter.format(params["todate"].value,"dd/MM/yyyy")&#13;
+else &#13;
+"Bank Book from " + Formatter.format(params["fromdate"].value,"dd/MM/yyyy") + " to " + Formatter.format(params["todate"].value,"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">openbal</property>
+                    <text-property name="displayName">openbal</text-property>
+                    <expression name="expression" type="javascript">vars["bopbal"] = dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"]&#13;
+vars["newclobal"] = dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">opbaldebit</property>
+                    <text-property name="displayName">opbaldebit</text-property>
+                    <expression name="expression" type="javascript">if ((dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"]) > 0)&#13;
+Math.abs(dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">opbalcredit</property>
+                    <text-property name="displayName">opbalcredit</text-property>
+                    <expression name="expression" type="javascript">if ((dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"]) &lt; 0)&#13;
+Math.abs(dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dopbal</property>
+                    <text-property name="displayName">dopbal</text-property>
+                    <expression name="expression" type="javascript">if (vars["bopbal"] &lt; 0)&#13;
+Math.abs(vars["bopbal"])&#13;
+else if (vars["bopbal"] == 0)&#13;
+row["opbaldebit"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">copbal</property>
+                    <text-property name="displayName">copbal</text-property>
+                    <expression name="expression" type="javascript">if (vars["bopbal"] > 0 )&#13;
+vars["bopbal"]&#13;
+else if (vars["bopbal"] ==0)&#13;
+row["opbalcredit"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_day_dbamt</property>
+                    <text-property name="displayName">sum_day_dbamt</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>voudate</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_dbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_day_cramt</property>
+                    <text-property name="displayName">sum_day_cramt</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>voudate</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_cramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ClBald</property>
+                    <text-property name="displayName">ClBald</text-property>
+                    <expression name="expression" type="javascript">//if (vars["chgopbal"] &lt; 0)&#13;
+//vars["chgopbal"]&#13;
+//row["t1"]&#13;
+if (row["closing"] > 0)&#13;
+row["closing"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ClBal</property>
+                    <text-property name="displayName">ClBal</text-property>
+                    <expression name="expression" type="javascript">//if (vars["chgopbal"] > 0)&#13;
+//vars["chgopbal"]//&#13;
+//row["t1"]&#13;
+if (row["closing"] &lt; 0)&#13;
+row["closing"] * -1</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_dbamt</property>
+                    <text-property name="displayName">sum_dbamt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_dbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cramt</property>
+                    <text-property name="displayName">sum_cramts</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_cramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totamtdr</property>
+                    <text-property name="displayName">totamtdr</text-property>
+                    <expression name="expression" type="javascript">row["opbaldebit"] + row["sum_dbamt"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totamtcr</property>
+                    <text-property name="displayName">totamtcr</text-property>
+                    <expression name="expression" type="javascript">row["opbalcredit"] + row["sum_cramt"];</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dayclosing</property>
+                    <text-property name="displayName">dayclosing</text-property>
+                    <expression name="expression" type="javascript">vars["bopbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sno</property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">RUNNINGCOUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">t1</property>
+                    <text-property name="displayName">t1</text-property>
+                    <expression name="expression" type="javascript">//if (vars["chgopbal"] > 0)&#13;
+//vars["chgopbal"] = vars["bopbal"] +row["sum_day_cramt"] - row["sum_day_dbamt"]&#13;
+//else&#13;
+//vars["chgopbal"] = vars["bopbal"] +row["sum_day_cramt"] - row["sum_day_dbamt"]&#13;
+row["closing"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">t2</property>
+                    <text-property name="displayName">t2</text-property>
+                    <expression name="expression" type="javascript">vars["chgopbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">test</property>
+                    <expression name="expression" type="javascript">vars["chgopbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dr_running</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">RUNNINGSUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_dbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cr_running</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">RUNNINGSUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_cramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">closing</property>
+                    <expression name="expression" type="javascript">row["firstopening"] +row["dr_running"]-row["cr_running"]&#13;
+//vars["bopbal"]-row["dr_running"]+row["cr_running"]&#13;
+//vars["chgopbal"]-row["dr_running"]+row["cr_running"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">firstopening</property>
+                    <text-property name="displayName">firstopening</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["yropdebit"] - dataSetRow["yropcredit"] + dataSetRow["trnobdebit"] - dataSetRow["trnobcreit"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">rundate</property>
+                    <text-property name="displayName">rundate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(BirtDateTime.now(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">test1</property>
+                    <text-property name="displayName">test1</text-property>
+                    <expression name="expression" type="javascript">vars["bopbal"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">testvar</property>
+                    <text-property name="displayName">testvar</text-property>
+                    <expression name="expression" type="javascript">vars["bopbal"];</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">remarks</property>
+                    <text-property name="displayName">remarks</text-property>
+                    <expression name="expression" type="javascript">function wraptext(textToWrap) {&#13;
+var wrappedText = '';&#13;
+while (textToWrap.length > 0) {&#13;
+wrappedText += textToWrap.substring(0,40) + '\n';&#13;
+textToWrap = textToWrap.substring(40);&#13;
+}&#13;
+return wrappedText;&#13;
+}&#13;
+&#13;
+var assetParam = '';&#13;
+assetParam = wraptext(row["accref_narration"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="repeatHeader">true</property>
+            <property name="pageBreakInterval">0</property>
+            <column id="127">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="128">
+                <property name="width">1.2in</property>
+            </column>
+            <column id="130">
+                <property name="width">1in</property>
+            </column>
+            <column id="182">
+                <property name="width">0.9in</property>
+            </column>
+            <column id="131">
+                <property name="whiteSpace">nowrap</property>
+                <property name="width">2.5in</property>
+            </column>
+            <column id="347">
+                <property name="overflow">scroll</property>
+                <property name="width">3in</property>
+            </column>
+            <column id="132">
+                <property name="width">1in</property>
+            </column>
+            <column id="133">
+                <property name="width">1in</property>
+            </column>
+            <header>
+                <row id="158">
+                    <cell id="159">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <data id="166">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">millname</property>
+                        </data>
+                    </cell>
+                    <cell id="332"/>
+                    <cell id="164">
+                        <label id="213">
+                            <property name="backgroundAttachment">scroll</property>
+                            <property name="backgroundPositionX">0%</property>
+                            <property name="backgroundPositionY">0%</property>
+                            <property name="backgroundRepeat">repeat</property>
+                            <property name="fontFamily">"FreeMono"</property>
+                            <property name="fontSize">9pt</property>
+                            <property name="fontWeight">normal</property>
+                            <property name="fontStyle">normal</property>
+                            <property name="fontVariant">normal</property>
+                            <property name="color">black</property>
+                            <property name="textLineThrough">none</property>
+                            <property name="textOverline">none</property>
+                            <property name="textUnderline">none</property>
+                            <property name="borderBottomColor">black</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderBottomWidth">medium</property>
+                            <property name="borderLeftColor">black</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderLeftWidth">medium</property>
+                            <property name="borderRightColor">black</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderRightWidth">medium</property>
+                            <property name="borderTopColor">black</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="borderTopWidth">medium</property>
+                            <property name="marginTop">0pt</property>
+                            <property name="marginLeft">0pt</property>
+                            <property name="marginBottom">0pt</property>
+                            <property name="marginRight">0pt</property>
+                            <property name="paddingTop">1pt</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingBottom">1pt</property>
+                            <property name="paddingRight">1pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="letterSpacing">normal</property>
+                            <property name="lineHeight">normal</property>
+                            <property name="orphans">2</property>
+                            <property name="textTransform">none</property>
+                            <property name="whiteSpace">normal</property>
+                            <property name="widows">2</property>
+                            <property name="wordSpacing">normal</property>
+                            <property name="display">block</property>
+                            <property name="pageBreakAfter">auto</property>
+                            <property name="pageBreakBefore">auto</property>
+                            <property name="pageBreakInside">auto</property>
+                            <property name="showIfBlank">false</property>
+                            <property name="canShrink">false</property>
+                            <property name="overflow">hidden</property>
+                            <text-property name="text">Page No :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="165">
+                        <auto-text id="214">
+                            <property name="fontFamily">"FreeMono"</property>
+                            <property name="fontSize">9pt</property>
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="167">
+                    <property name="masterPage">Simple MasterPage</property>
+                    <property name="pageBreakInside">auto</property>
+                    <cell id="168">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <data id="175">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">ReportHeading</property>
+                        </data>
+                    </cell>
+                    <cell id="333">
+                        <data id="149">
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">lename</property>
+                                    <expression name="expression" type="javascript">params["lename"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">lename</property>
+                        </data>
+                    </cell>
+                    <cell id="173">
+                        <label id="215">
+                            <property name="backgroundAttachment">scroll</property>
+                            <property name="backgroundPositionX">0%</property>
+                            <property name="backgroundPositionY">0%</property>
+                            <property name="backgroundRepeat">repeat</property>
+                            <property name="fontFamily">"FreeMono"</property>
+                            <property name="fontSize">9pt</property>
+                            <property name="fontWeight">normal</property>
+                            <property name="fontStyle">normal</property>
+                            <property name="fontVariant">normal</property>
+                            <property name="color">black</property>
+                            <property name="textLineThrough">none</property>
+                            <property name="textOverline">none</property>
+                            <property name="textUnderline">none</property>
+                            <property name="borderBottomColor">black</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderBottomWidth">medium</property>
+                            <property name="borderLeftColor">black</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderLeftWidth">medium</property>
+                            <property name="borderRightColor">black</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderRightWidth">medium</property>
+                            <property name="borderTopColor">black</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="borderTopWidth">medium</property>
+                            <property name="marginTop">0pt</property>
+                            <property name="marginLeft">0pt</property>
+                            <property name="marginBottom">0pt</property>
+                            <property name="marginRight">0pt</property>
+                            <property name="paddingTop">1pt</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingBottom">1pt</property>
+                            <property name="paddingRight">1pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="letterSpacing">normal</property>
+                            <property name="lineHeight">normal</property>
+                            <property name="orphans">2</property>
+                            <property name="textTransform">none</property>
+                            <property name="whiteSpace">normal</property>
+                            <property name="widows">2</property>
+                            <property name="wordSpacing">normal</property>
+                            <property name="display">block</property>
+                            <property name="pageBreakAfter">auto</property>
+                            <property name="pageBreakBefore">auto</property>
+                            <property name="pageBreakInside">auto</property>
+                            <property name="showIfBlank">false</property>
+                            <property name="canShrink">false</property>
+                            <property name="overflow">hidden</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="174">
+                        <data id="374">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">rundate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="103">
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="pageBreakInside">auto</property>
+                    <cell id="104">
+                        <label id="97">
+                            <text-property name="text">S.No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="105">
+                        <label id="61">
+                            <text-property name="text">Vou. No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="107">
+                        <label id="98">
+                            <text-property name="text">Ref No. &amp; Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="179">
+                        <label id="183">
+                            <text-property name="text">Ref. Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="108">
+                        <label id="141">
+                            <text-property name="text">Account Name </text-property>
+                        </label>
+                    </cell>
+                    <cell id="335">
+                        <label id="348">
+                            <property name="paddingLeft">30pt</property>
+                            <property name="paddingRight">1pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="109">
+                        <label id="144">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Debit(Recd )</text-property>
+                        </label>
+                    </cell>
+                    <cell id="110">
+                        <label id="146">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Credit(Paid )</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="222">
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.2604166666666667in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="223"/>
+                    <cell id="224"/>
+                    <cell id="226">
+                        <data id="231">
+                            <property name="resultSetColumn">openbal</property>
+                        </data>
+                    </cell>
+                    <cell id="227">
+                        <data id="373">
+                            <property name="resultSetColumn">firstopening</property>
+                        </data>
+                    </cell>
+                    <cell id="228"/>
+                    <cell id="336"/>
+                    <cell id="229">
+                        <data id="232">
+                            <property name="backgroundColor">aqua</property>
+                            <property name="paddingRight">5pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">opbaldebit</property>
+                        </data>
+                    </cell>
+                    <cell id="230">
+                        <data id="233">
+                            <property name="backgroundColor">aqua</property>
+                            <property name="paddingRight">5pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">opbalcredit</property>
+                        </data>
+                    </cell>
+                </row>
+            </header>
+            <group id="193">
+                <property name="groupName">voudate</property>
+                <expression name="keyExpr" type="javascript">row["accref_voudate"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["accref_voudate"]</expression>
+                </structure>
+                <property name="repeatHeader">false</property>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="194">
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.3229166666666667in</property>
+                        <cell id="195"/>
+                        <cell id="196"/>
+                        <cell id="198">
+                            <data id="212">
+                                <property name="fontWeight">bold</property>
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">dd/MM/yyyy</property>
+                                </structure>
+                                <property name="resultSetColumn">accref_voudate</property>
+                            </data>
+                        </cell>
+                        <cell id="199">
+                            <text-data id="360">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <expression name="valueExpr">var calclbal = 0;&#13;
+//calclbal = vars["chgopbal"] + row["sum_day_dbamt"] - row["sum_day_cramt"];&#13;
+calclbal = row["closing"];&#13;
+vars["chgopbal"] = calclbal;</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
+                        </cell>
+                        <cell id="200">
+                            <label id="234">
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text">OPENING BALANCE</text-property>
+                            </label>
+                        </cell>
+                        <cell id="337"/>
+                        <cell id="201">
+                            <data id="235">
+                                <property name="fontWeight">bold</property>
+                                <property name="paddingRight">5pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">dopbal</property>
+                            </data>
+                        </cell>
+                        <cell id="202">
+                            <data id="236">
+                                <property name="fontWeight">bold</property>
+                                <property name="paddingRight">5pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">copbal</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="203">
+                        <property name="verticalAlign">middle</property>
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.3854166666666667in</property>
+                        <cell id="204"/>
+                        <cell id="205"/>
+                        <cell id="207"/>
+                        <cell id="208">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="209">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <label id="177">
+                                <text-property name="text">DAY TOTAL</text-property>
+                            </label>
+                        </cell>
+                        <cell id="339">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="210">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="237">
+                                <property name="paddingRight">5pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_day_dbamt</property>
+                            </data>
+                        </cell>
+                        <cell id="211">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="238">
+                                <property name="paddingRight">5pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_day_cramt</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="239">
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.25in</property>
+                        <cell id="240"/>
+                        <cell id="241"/>
+                        <cell id="243">
+                            <text-data id="250">
+                                <property name="backgroundColor">yellow</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <expression name="valueExpr">var clbal = 0;&#13;
+//clbal = vars["bopbal"] + vars["chgopbal"];&#13;
+////vars["dyclbal"] = clbal;&#13;
+//vars["bopbal"] = clbal;&#13;
+vars["bopbal"] = row["closing"];</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
+                            <label id="385"/>
+                        </cell>
+                        <cell id="244"/>
+                        <cell id="245">
+                            <label id="93">
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text">CLOSING BALANCE</text-property>
+                            </label>
+                        </cell>
+                        <cell id="340">
+                            <grid id="361">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <column id="362"/>
+                                <column id="363"/>
+                                <column id="370"/>
+                                <row id="364">
+                                    <cell id="365">
+                                        <data id="367">
+                                            <property name="resultSetColumn">dr_running</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="366">
+                                        <data id="368">
+                                            <property name="resultSetColumn">cr_running</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="369">
+                                        <data id="371">
+                                            <property name="fontWeight">bold</property>
+                                            <property name="textAlign">right</property>
+                                            <property name="resultSetColumn">closing</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                        <cell id="246">
+                            <data id="248">
+                                <property name="fontWeight">bold</property>
+                                <property name="paddingRight">5pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">ClBald</property>
+                            </data>
+                        </cell>
+                        <cell id="247">
+                            <data id="249">
+                                <property name="fontWeight">bold</property>
+                                <property name="paddingRight">5pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">ClBal</property>
+                            </data>
+                            <data id="359">
+                                <property name="backgroundColor">lime</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">t1</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="111">
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.23958333333333334in</property>
+                    <cell id="112">
+                        <property name="textAlign">left</property>
+                        <data id="351">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">sno</property>
+                        </data>
+                    </cell>
+                    <cell id="113">
+                        <data id="135">
+                            <property name="resultSetColumn">accref_vouno</property>
+                        </data>
+                    </cell>
+                    <cell id="115">
+                        <data id="139">
+                            <property name="resultSetColumn">accref_payref_no</property>
+                        </data>
+                    </cell>
+                    <cell id="180">
+                        <data id="140">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">accref_payref_date</property>
+                        </data>
+                    </cell>
+                    <cell id="116">
+                        <data id="142">
+                            <property name="fontSize">9pt</property>
+                            <property name="resultSetColumn">led_name</property>
+                        </data>
+                    </cell>
+                    <cell id="338">
+                        <data id="391">
+                            <property name="fontSize">8pt</property>
+                            <property name="resultSetColumn">accref_narration</property>
+                        </data>
+                    </cell>
+                    <cell id="117">
+                        <data id="145">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["acctran_dbamt"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">acctran_dbamt</property>
+                        </data>
+                    </cell>
+                    <cell id="118">
+                        <data id="147">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["acctran_cramt"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">acctran_cramt</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="119">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.3958333333333333in</property>
+                    <cell id="120"/>
+                    <cell id="121">
+                        <data id="392"/>
+                    </cell>
+                    <cell id="123"/>
+                    <cell id="181"/>
+                    <cell id="124">
+                        <label id="301">
+                            <property name="fontSize">11pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="marginRight">15pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">TRANSACTION   SUMMARY</text-property>
+                        </label>
+                    </cell>
+                    <cell id="341"/>
+                    <cell id="125">
+                        <data id="260">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_dbamt</property>
+                        </data>
+                    </cell>
+                    <cell id="126">
+                        <data id="261">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_cramt</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <property name="pageVariables">
+        <variable-element name="bopbal">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="chgopbal">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="newclobal">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+    </property>
+</report>

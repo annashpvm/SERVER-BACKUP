@@ -1,0 +1,72 @@
+SELECT sum(esi_amount),count(*) FROM HrdProcess.emp_monthly_salary_header
+where sal_month=12 and sal_year=2018 
+-- and  employee_type='WORKER'
+and  ESI_AMOUNT>0
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019  
+and  employee_type='CONTRACT WORKER' and net_salary_rounded>15000 and pf_amount>0
+
+SELECT * FROM HrdProcess.confirm_attendance
+where month(attendance_date)=1   
+and  employee_type='CONTRACT WORKER' 
+and employee_roll_no=42356
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header es,
+hr_tbl_EmployeeMaster em
+where 
+em.employee_roll_no=es.employee_roll_no
+and sal_month=1 and sal_year=2019 
+and dept_code=44
+and  employee_roll_no=29465
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019 and net_salary_rounded>30000
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019 and employee_roll_no in (90185)
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019 and short_attendance_deduction<0
+
+select employee_roll_no,no_of_absent_days,short_attendance_deduction
+from emp_monthly_salary_header where no_of_absent_days>0
+and sal_month=1 and sal_year=2019 and employee_type='CONTRACT WORKER'
+
+
+select employee_roll_no,no_of_absent_days,short_attendance_deduction
+from emp_monthly_salary_header where no_of_absent_days>0
+and sal_month=12 and sal_year=2018 and short_attendance_deduction<0
+
+SELECT sum(net_salary_rounded) FROM HrdProcess.emp_monthly_salary_header
+where sal_month=12 and sal_year=2018 
+-- and net_salary_rounded>20000 
+and  employee_type='CONTRACT WORKER'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019 and net_salary<0
+and  employee_type='CONTRACT WORKER'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019 and net_salary_rounded<0
+and  employee_type='CONTRACT WORKER'
+
+SELECT * FROM HrdProcess.emp_monthly_salary_header
+where sal_month=1 and sal_year=2019  and  
+basic_salary+incentive+allowance+conveyance+contract_wages+
+-- ot_wages+ot_incentive+
+vehicle_allowance-pf_amount-esi_amount-short_attendance_deduction<0
+
+
+
+SELECT * FROM HrdProcess.hr_tbl_deductionDetails
+where 
+-- deduction_month=12 and 
+deduction_year=2019  and employee_roll_no=56381
+
+
+
+SELECT * FROM HrdProcess.hr_tbl_incentiveDetails
+where
+incentive_month=12 and 
+incentive_year=2018  and employee_roll_no=32217

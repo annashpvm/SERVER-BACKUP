@@ -1,0 +1,114 @@
+select  a.deda,employee_roll_no,other_earnings from 
+(select sum(incentive_amount) as deda ,id.employee_roll_no,other_earnings
+from hr_tbl_incentiveDetails id,
+emp_monthly_salary_header sh
+where incentive_month=2
+and incentive_year=2019
+and sal_month=2
+and sal_year=2019
+and id.employee_roll_no=sh.employee_roll_no
+group by id.employee_roll_no
+order by other_earnings) a
+where  cast(a.deda as decimal) <> cast(other_earnings as decimal)
+
+
+/*
+select sum(incentive_amount),id.employee_roll_no,other_earnings
+from hr_tbl_incentiveDetails id,
+emp_monthly_salary_header sh
+where incentive_month=1
+and incentive_year=2019
+and sal_month=1
+and sal_year=2019
+and id.employee_roll_no=sh.employee_roll_no
+and cast(incentive_amount as decimal)<>cast(other_earnings as decimal)
+group by id.employee_roll_no;
+*/
+select  a.deda,employee_roll_no,other_deductions from 
+(select sum(deduction_amount) as deda ,id.employee_roll_no,other_deductions
+from hr_tbl_deductionDetails id,
+emp_monthly_salary_header sh
+where deduction_month=2
+and sal_month=2
+and id.employee_roll_no=sh.employee_roll_no
+
+group by id.employee_roll_no
+order by other_deductions) a
+where cast(a.deda as decimal) <> cast(other_deductions as decimal)
+
+
+
+select sum(deduction_amount),id.employee_roll_no,other_deductions
+from hr_tbl_deductionDetails id,
+emp_monthly_salary_header sh
+where deduction_month=2
+and sal_month=2
+and sal_year=2019
+and id.employee_roll_no=sh.employee_roll_no
+and cast(deduction_amount as decimal) <> cast(other_deductions as decimal)
+group by id.employee_roll_no
+order by other_deductions
+
+
+
+select sum(incentive_amount)
+from hr_tbl_incentiveDetails id,
+hr_tbl_EmployeeMaster em
+where incentive_month=10 
+and em.employee_roll_no=id.employee_roll_no
+and em.employee_type in ('WORKER','TT')
+
+
+select sum(other_earnings)
+from emp_monthly_salary_header id,
+hr_tbl_EmployeeMaster em
+where sal_month=10
+and em.employee_roll_no=id.employee_roll_no
+and em.employee_type in ('WORKER','TT')
+
+
+select sum(other_deductions)
+from emp_monthly_salary_header id,
+hr_tbl_EmployeeMaster em
+where sal_month=10
+and em.employee_roll_no=id.employee_roll_no
+and em.employee_type in ('WORKER','TT')
+
+
+select sum(deduction_amount)
+from hr_tbl_deductionDetails id,
+hr_tbl_EmployeeMaster em
+where deduction_month=10
+and em.employee_roll_no=id.employee_roll_no
+and em.employee_type in ('WORKER','TT')
+
+
+select sum(deduction_amount),id.employee_roll_no
+from hr_tbl_deductionDetails id,
+hr_tbl_EmployeeMaster em
+where deduction_month=10
+and em.employee_roll_no=id.employee_roll_no
+and id.deduction_amount=540
+and em.employee_type in ('WORKER','TT')
+
+select * from emp_monthly_salary_header where employee_roll_no=27029
+
+select * from hr_tbl_EmployeeMaster where employee_roll_no=27029
+
+select sum(incentive_amount) as ii from hr_tbl_incentiveDetails
+where incentive_month=10  
+group by employee_roll_no
+order by ii
+
+select employee_roll_no ,count(*) from hr_tbl_incentiveDetails
+where incentive_month=10  and incentive_code=1
+group by 
+having count(*) >1
+
+
+select * from hr_tbl_incentiveDetails
+where incentive_month=10 
+and  employee_roll_no 
+not in (
+SELECT employee_roll_no FROM HrdProcess.emp_monthly_salary_header
+)

@@ -1,0 +1,234 @@
+Ext.onReady(function() {
+Ext.QuickTips.init();
+
+ 
+  var BankDataStore = new Ext.data.Store({
+      id: 'BankDataStore',
+      proxy: new Ext.data.HttpProxy({
+               url: '/Financials/clsRepFinancials.php',
+                method: 'POST'
+            }),
+            baseParams:{task: "BANK"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'led_code', type: 'int', mapping: 'led_code'},
+        {name: 'led_name', type: 'string', mapping: 'led_name'}
+      ]),
+      sortInfo:{field: 'led_code', direction: "DESC"}
+    });
+
+
+
+ var gstledcode;
+  var cmbBank = new Ext.form.ComboBox({
+        id         : 'cmbBank',
+        fieldLabel : 'Account Name',
+        width      : 320,
+        store      : BankDataStore,
+        displayField:'led_name',
+        valueField:'led_code',
+        hiddenName:'led_name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Account Name',
+        listeners:{
+            select :function(){
+            gstledcode=this.getValue();
+    }
+    }
+
+    });
+
+
+
+var Fdate = new Ext.form.DateField(
+    {
+        name: 'Fdate',
+        id: 'Fdate',
+        format     : 'Y-m-d',
+        value      : new Date(),
+        fieldLabel: 'From',
+        submitFormat: 'Y-m-d',
+        allowBlank: false
+    }
+);
+
+var Tdate = new Ext.form.DateField({
+        name: 'Tdate',
+        id: 'Tdate',
+        format     : 'Y-m-d',
+        value      : new Date(),
+        fieldLabel: 'To'
+
+    });
+
+
+var BankPaymentFormPanel = new Ext.form.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Bank Payment Abstract',
+        width       : 500,
+        height      : 300,
+                bodyStyle:{"background-color":"#3399CC"},
+        frame       : false,
+        id          : 'BankPaymentFormPanel',
+        method      : 'post',
+        layout      : 'absolute',
+       
+        tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+               
+                {
+                    text: 'Refresh',icon: '/Pictures/refresh.png',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40
+                },'-',
+
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',icon: '/Pictures/view.png',
+                    tooltip: 'View Details...', height: 40,
+                     listeners:{
+                        click:
+                          function () {
+                    var form = BankPaymentFormPanel.getForm();
+                    if (form.isValid()) {
+
+                    var fdate=Ext.getCmp('Fdate').value;
+                    var tdate=Ext.getCmp('Tdate').value;
+                    var d1 =  fdate + " 00:00:00.000";
+                    var d2 =  tdate + " 00:00:00.000";
+                    var comcode=1;
+                    var finid=20;
+
+
+                    var com="&compcode="+encodeURIComponent(comcode);
+                    var fin="&finid="+encodeURIComponent(finid);
+                    var fd = "&fromdate="+encodeURIComponent(d1);
+                    var td = "&todate="+encodeURIComponent(d2);
+
+
+                     var test = (com+fin+fd+td) ;
+                     if(gstledcode=='')
+                     {
+                     window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBankAbstractPayment.rptdesign'+test,  '_blank' );
+                     }
+                     if(gstledcode!='')
+                     {
+                      window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBankPaymentPartywise.rptdesign'+test,  '_blank' );
+                     }
+                    }
+                    }
+                    }
+
+
+
+                 },'-',
+
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',icon: '/Pictures/exit.png',
+                    tooltip: 'Close...', height: 40,
+                    listeners:{
+                        click: function(){
+                            BankPaymentWindow.hide();
+                        }
+                    }
+                }
+                ]
+
+            },
+         items:[
+                {xtype: 'fieldset',
+                title: '',
+                layout : 'vbox',
+                border:true,
+                height:80,
+                width:450,
+                layout      : 'absolute',
+                x: 10,
+                y: 10,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 0,
+                y           : 0,
+                border      : false,
+                labelWidth  : 85,
+                items: [cmbBank]
+                }
+                ]
+              },
+               {xtype: 'fieldset',
+                title: 'Period',
+                layout : 'hbox',
+                border:true,
+                height:80,
+                width:450,
+                layout      : 'absolute',
+                x: 10,
+                y: 90,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 0,
+                y           : 0,
+                border      : false,
+                labelWidth  : 70,
+                items: [Fdate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 220,
+                y           : 0,
+                border      : false,
+                labelWidth  : 70,
+                items: [Tdate]
+                }
+                ]
+              }
+              ]
+               });
+
+
+
+     var BankPaymentWindow = new Ext.Window({
+        height      : 300,
+        width       : 500,
+        items       : BankPaymentFormPanel,
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false,
+               bodyStyle:{"background-color":"#3399CC"},
+        y      : 120,
+	listeners:{
+        show:function(){
+        BankDataStore.load({
+                      url: '/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'BANK'
+                       }
+                    });
+	 
+ 	
+}}
+
+
+
+    });
+       BankPaymentWindow.show();
+});

@@ -1,0 +1,51 @@
+insert into staffHR.hr_tbl_EmployeeMaster
+SELECT * FROM HrdProcess.hr_tbl_EmployeeMaster_olddata where employee_roll_no in 
+
+
+(select * from sqlemployee_master where employee_active_status='Y' and employee_rollno not in 
+(SELECT employee_roll_no FROM staffHR.hr_tbl_EmployeeMaster))
+
+(SELECT * FROM staffHR.hr_tbl_EmployeeMaster where employee_roll_no=100)
+
+SELECT * FROM hr_tbl_EmployeeMaster where active_status='Y' and employee_roll_no not in 
+(select employee_roll_no from hr_tbl_employeeSalary)
+
+SELECT * from hr_tbl_employeeSalary where employee_roll_no
+not in (SELECT employee_roll_no FROM hr_tbl_EmployeeMaster)
+
+insert into
+hr_tbl_employeeSalary
+(employee_roll_no,
+basic,
+allowance,
+conveyance,
+incentive,
+contractwage,
+effect_date	,
+active_status,
+created_by,
+created_date,
+modified_by,
+modified_date,
+bonus_eligibility,
+bonus_payment_mode
+)
+select
+employee_rollno,employee_salary,employee_allowance,employee_conveyance,employee_incentive_amount,0,'2018-12-01','Y',7055,now(),7055,now(),'YES','PAY YEARLY'
+from sqlemployee_master where employee_rollno in (SELECT employee_roll_no FROM hr_tbl_EmployeeMaster where employee_roll_no not in 
+(select employee_roll_no from hr_tbl_employeeSalary))
+
+update hr_tbl_employeeSalary es,
+sqlemployee_master em
+set es.basic=em.employee_salary,
+es.allowance=em.employee_allowance
+where es.employee_roll_no=em.employee_rollno
+and es.active_status='Y'
+
+select es.*
+from  hr_tbl_employeeSalary es,
+sqlemployee_master em
+where es.employee_roll_no=em.employee_rollno
+and  es.basic = em.employee_salary
+and  es.allowance=em.employee_allowance
+and es.active_status='Y'

@@ -1,0 +1,278 @@
+Ext.onReady(function() {
+Ext.QuickTips.init();
+var gstoption="D";
+    var ginfinid =localStorage.getItem('ginfinid');
+   var gstfinyear = localStorage.getItem('gstyear');
+   var gstfinuser = localStorage.getItem('ginuser');
+   var compcode =localStorage.getItem('gincompcode');
+   var GinFinstdate = localStorage.getItem('gfinstdate');   
+ var BankDataStore = new Ext.data.Store({
+      id: 'BankDataStore',
+      proxy: new Ext.data.HttpProxy({
+               url: '/SHVPM/Financials/clsRepFinancials.php',
+                method: 'POST'
+            }),
+            baseParams:{task: "BANK"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'led_code', type: 'int', mapping: 'led_code'},
+        {name: 'led_name', type: 'string', mapping: 'led_name'}
+      ]),
+      sortInfo:{field: 'led_code', direction: "DESC"}
+    });
+
+ 
+
+ var gstledcode;
+ var gstaccname;
+  var cmbBank = new Ext.form.ComboBox({
+        id         : 'cmbBank',
+        fieldLabel : 'Account Name',
+        width      : 320,
+        store      : BankDataStore,
+        displayField:'led_name',
+        valueField:'led_code',
+        hiddenName:'led_name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Account Name',
+        listeners:{
+            select :function(){
+            gstledcode=this.getValue();
+            gstaccname=this.getRawValue();
+    }
+    }
+
+    });
+
+
+var Fdate = new Ext.form.DateField(
+    {
+        name: 'Fdate',
+        id: 'Fdate',
+        format     : 'Y-m-d',
+        value      : GinFinstdate,
+        fieldLabel: 'From',
+        submitFormat: 'Y-m-d',
+        allowBlank: false
+    }
+);
+
+var Tdate = new Ext.form.DateField({
+        name: 'Tdate',
+        id: 'Tdate',
+        format     : 'Y-m-d',
+        value      : new Date(),
+        fieldLabel: 'To'
+
+    });
+
+
+
+//var gstoption="D";
+//var gstaccname='%';
+
+var BankBookFormPanel = new Ext.form.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Bank Book',
+        width       : 500,
+        height      : 350,
+              bodyStyle:{"background-color":"#3399CC"},
+        frame       : false,
+        id          : 'BankBookFormPanel',
+        method      : 'post',
+        layout      : 'absolute',
+       
+        tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',icon: '/Pictures/refresh.png',
+                    tooltip: 'Refresh Details...', height: 40
+                },'-',
+
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',icon: '/Pictures/view.png',
+                    tooltip: 'View Details...', height: 40,
+                     listeners:{
+                        click:
+                          function () {
+                    var form = BankBookFormPanel.getForm();
+                    if (form.isValid()) {
+
+                    var fdate=Ext.getCmp('Fdate').value;
+                    var tdate=Ext.getCmp('Tdate').value;
+                    var d1 =  fdate + " 00:00:00.000";
+                    var d2 =  tdate + " 00:00:00.000";
+                    var comcode=compcode;
+                    var finid=ginfinid;
+
+                    var led="&ledcode="+encodeURIComponent(gstledcode);
+                    var com="&compcode="+encodeURIComponent(compcode);
+                    var fin="&finid="+encodeURIComponent(finid);
+                    var fd = "&fromdate="+encodeURIComponent(d1);
+                    var td = "&todate="+encodeURIComponent(d2);
+                    var lename="&lename="+encodeURIComponent(gstaccname);
+                    
+			
+			var cb = "B";
+			 var finstartdate = "&finstartdate="+encodeURIComponent(GinFinstdate);
+
+                    var prtdsp ="&prtdsp="+ encodeURIComponent(cb);                    
+
+                     var test = (led+com+fin+finstartdate+fd+td+lename + prtdsp) ;
+                     if (gstoption==='D')
+                     {
+                     //window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepBookPrintingDatewise.rptdesign'+test,  '_blank' );
+                     window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepCashBankBook.rptdesign' + test, '_blank');	
+                     }
+                     else
+                     {
+                      window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepBookPrintingAmountwise.rptdesign'+test,  '_blank' );
+                     }
+                    }
+                    }
+                    }
+
+
+                 },'-',
+
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,icon: '/Pictures/exit.png',
+                    listeners:{
+                        click: function(){
+                            BankBookWindow.hide();
+                        }
+                    }
+                }
+                ]
+
+            },
+         items:[
+                {xtype: 'fieldset',
+                title: '',
+                layout : 'vbox',
+                border:true,
+                height:120,
+                width:450,
+                layout      : 'absolute',
+                x: 10,
+                y: 10,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 0,
+                y           : 0,
+                border      : false,
+                labelWidth  : 85,
+                items: [cmbBank]
+                },
+                {
+                xtype   : 'radiogroup',
+                border  :  false,
+		layout : 'hbox',
+                x       : 30,
+                y       : 70,
+                columns : 2,
+                items: [
+                   {boxLabel: 'DateWise', name: 'OptType', id:'optDate',inputValue: 1,checked: true,
+                    listeners:{
+                    'check':function(rb,checked){
+                     if(checked==true){
+                         gstoption="D";
+                     }
+                     }
+                     }
+                    },
+                    {boxLabel: 'AmountWise', name: 'OptType',id:'optAmount', inputValue: 2,
+                    listeners:{
+                    'check':function(rb,checked){
+                     if(checked==true){
+                         gstoption="A";
+                     }
+                     }
+                     }
+                    }
+                   ]
+                }
+                ]
+              },
+               {xtype: 'fieldset',
+                title: 'Period',
+                layout : 'hbox',
+                border:true,
+                height:80,
+                width:450,
+                layout      : 'absolute',
+                x: 10,
+                y: 140,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 0,
+                y           : 0,
+                border      : false,
+                labelWidth  : 70,
+                items: [Fdate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 220,
+                y           : 0,
+                border      : false,
+                labelWidth  : 70,
+                items: [Tdate]
+                }
+                ]
+              }
+              
+              ]
+               });
+
+
+
+     var BankBookWindow = new Ext.Window({
+        height      : 350,
+        width       : 500,
+        items       : BankBookFormPanel,
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false,
+              bodyStyle:{"background-color":"#3399CC"},
+        y      : 120,
+	listeners:{
+        show:function(){
+        BankDataStore.load({
+                      url: '/SHVPM/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'BANK',
+			comp:compcode
+                       }
+                    });
+	 
+ 	
+}}
+
+
+    });
+       BankBookWindow.show();
+});

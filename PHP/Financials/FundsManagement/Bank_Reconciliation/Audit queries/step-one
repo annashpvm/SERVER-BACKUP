@@ -1,0 +1,38 @@
+-- Copy records from Actual Database 'HrdProcess'  to Audit Database 'audithr'
+
+-- step 1: Salary Records
+insert into audithr.emp_monthly_salary_header
+
+select sh.*,4,0 from HrdProcess.emp_monthly_salary_header sh,
+HrdProcess.hr_tbl_EmployeeMaster em
+where sal_year=2018 and sal_month=12 
+ -- and sh.pf_amount>0
+and em.employee_roll_no=sh.employee_roll_no
+and em.employee_pf='YES';
+
+-- step 2: Employee Details
+-- Check employee unavailable list
+select * from emp_monthly_salary_header 
+where sal_year=2018 and sal_month =12 and employee_roll_no not in 
+(select employee_roll_no from hr_tbl_EmployeeMaster )  order by employee_roll_no;
+
+-- Insert unavailable employees into audit database from HrdProcess database
+insert into hr_tbl_EmployeeMaster
+select * from HrdProcess.hr_tbl_EmployeeMaster em  where employee_roll_no=32786;
+
+
+-- step 3: Confirm Attendance
+ insert into confirm_attendance
+select ca.* from HrdProcess.confirm_attendance ca,
+hr_tbl_EmployeeMaster em
+where month(attendance_date)=12
+and year(attendance_date)=2018
+and ca.employee_roll_no=em.employee_roll_no
+
+
+
+
+
+
+
+

@@ -1,0 +1,264 @@
+<!--
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+-->
+<html>
+<head>
+<title>GRID TEST Window</title>
+
+<link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css" />
+<script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/ext-all.js"></script>
+    <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/css/GroupSummary.css" />
+    <script type="text/javascript" src="/ext-3.4.1/examples/ux/GroupSummary.js"></script>
+
+
+</head>
+
+<!-- Revised from demo code in ext3.0.0 -->
+<body>
+<script type="text/javascript">
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+Ext.onReady(function(){
+
+    Ext.QuickTips.init();
+
+//    var xg = Ext.grid;
+
+
+
+
+var GetModuleListDatastore = new Ext.data.GroupingStore({
+      id: 'GetModuleListDatastore',
+      autoLoad : true,
+      proxy: new Ext.data.HttpProxy({
+                url: 'Clsgridtest.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task:"loadDetails"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+     
+   {name:'cust_ref',type:'string'},
+      {name:'invh_no',type:'int'},
+      {name:'invh_date' },
+      {name:'invh_totwt',type:'float'},
+      {name:'invh_netamt',type:'float'}   
+
+
+      ]
+      
+      
+      ),
+      sortInfo: {field: 'cust_ref', direction: 'ASC'},
+            groupField: 'cust_ref'
+});
+
+
+    // define a custom summary function
+    Ext.ux.grid.GroupSummary.Calculations['totalCost'] = function(v, record, field){
+        return v + (record.data.invh_netamt );
+    };
+
+  // utilize custom extension for Group Summary
+    var summary = new Ext.ux.grid.GroupSummary();
+
+    var grid = new Ext.grid.EditorGridPanel({
+        store:GetModuleListDatastore,
+          
+        columns: [    
+            {header: "party"       , dataIndex: 'cust_ref', sortable:true,width:250,align:'left', menuDisabled: true},       
+            {header: "invoice no " ,  dataIndex: 'invh_no', sortable:true,width:40,align:'left', menuDisabled: true,
+                summaryType: 'count',
+                summaryRenderer: function(v, params, data){
+                    return ((v === 0 || v > 1) ? '(' + v +' Invoices)' : '(1 Invoice)');
+                },
+},
+            {header: "invoice date ",  dataIndex: 'invh_date', sortable:true,width:50,align:'left', menuDisabled: true},
+            {header: "wt " , dataIndex: 'invh_totwt', sortable:true,width:50,align:'right',summaryType: 'sum',renderer:function (value, record) {return Ext.util.Format.number(value, '0,000,0.000');}},
+            {header: "Amt " ,  dataIndex: 'invh_netamt',sortable:true,width:50,align:'right',renderer:function (value, record) {return Ext.util.Format.number(value, '0,0.00');            
+            },summaryType: 'sum',summaryRenderer:function (value, record){return Ext.util.Format.number(value, '00,00,000,0.00');
+            }}],
+            
+        view: new Ext.grid.GroupingView({
+            forceFit: true,
+            showGroupName: false,
+            enableNoGroups: false,
+      enableGroupingMenu: false,
+            hideGroupedColumn: true
+        }),
+
+        plugins: summary,
+
+        tbar : [{
+            text: 'Toggle',
+            tooltip: 'Toggle the visibility of summary row',
+            handler: function(){summary.toggleSummaries();}
+        }],
+
+        frame: true,
+        width: 600,
+        height: 600,
+        clicksToEdit: 1,
+        collapsible: true,
+        animCollapse: false,
+        trackMouseOver: false,
+        //enableColumnMove: false,
+        title: 'GRID Details',
+        iconCls: 'icon-grid',
+        renderTo: document.body
+    });
+
+
+
+   var UserMasPanel = new Ext.FormPanel({
+    renderTo    : Ext.getBody(),
+    xtype       : 'form',
+    header      : true,
+    width       : 280,
+    height      : 50 ,bodyStyle:{"background-color":"#f7f7d7"},
+    x           : 0,
+    y           : 0,
+    frame       : true,
+    id          : 'UserMasPanel',
+    method      : 'POST',
+    layout      : 'absolute',
+          tbar: { 
+            xtype: 'toolbar',bodyStyle: "background: #d7d5fa;",
+            height: 40,
+            style   :'background-color:#d7d5fa',
+            fontSize:50,
+            items: [
+        		
+        	 {
+                    text: 'Add',
+                    style  : 'text-align:center;',
+                    tooltip: 'Add Details...', height: 40, fontSize:70,width:70,
+                  
+                },'-',
+           	 {
+                    text: 'Edit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Edit Details...', height: 40, fontSize:70,width:70,
+
+                    listeners:{
+                        click: function () {
+                               edit_click();
+                        }
+                     }    
+
+                  
+                },'-',             
+                  {
+                    text: 'Save',
+                    style  : 'text-align:center;',
+                    tooltip: 'Save Details...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/save.png',
+
+                    listeners:{
+                        click: function () {
+
+                        }
+                    }
+                },'-',                
+        		
+        	 {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40, fontSize:70,width:70,
+                    listeners:{
+                        click: function () {
+                               RefreshData();
+                        }
+                    }       
+                },'-',
+                
+                 {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40, fontSize:70,width:70,
+                         handler: function(){	
+                            UsrMasWindow.hide();
+                        }              
+                }]
+        },
+                 items: [
+            { 
+            xtype   : 'fieldset',
+                title   : '',
+                layout  : 'hbox',
+                border  : true,
+                height  : 600,
+                width   : 850,
+  
+		style   : { border:'1px solid blue'},
+                         style      : "border-radius:15px;",     
+                layout  : 'absolute',
+                x       : 10,
+                y       : 10,	
+                items:[
+		    			{ 
+						xtype       : 'fieldset',
+						title       : '',
+						labelWidth  : 1,
+						width       : 800,
+						x           : 100,
+						y           : 0,
+					    	border      : false,
+						items: [grid]
+				          }, 
+
+       ]
+       
+       }
+       ]
+       
+ 
+});
+
+ var UsrMasWindow = new Ext.Window({
+	height      : 540,
+        width       : 900,
+        y           : 30,
+        title       :'GRID GROUP TESTING',
+        items       : 'UserMasPanel',
+        layout      : 'fit',
+        closable    : true,bodyStyle:{"background-color":"#E9EEDD"},
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+         border      : false,
+        draggable   : false,
+
+ 	listeners:{
+               show:function(){
+               RefreshData();
+
+             }
+             }
+            });
+             
+            UsrMasWindow.show();  
+        }); 
+
+// set up namespace for application
+
+
+</script>
+
+<div id="grid-example"></div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+update emp_monthly_salary_header sh,
+(
+select 
+employee_roll_no,
+count(session_one) as noa
+from confirm_attendance
+where
+session_one='A'
+and
+MONTH(attendance_date)=9
+and
+YEAR(attendance_date)=2018
+group by employee_roll_no
+)ca
+set
+sh.no_of_absent_days=ca.noa
+where
+sh.employee_roll_no=ca.employee_roll_no
+-- and sh.employee_type=emptype
+-- and sh.unit_code=unitcode 
+and sh.sal_month=9
+and sh.sal_year=2018;
+
+update emp_monthly_salary_header sh,
+(
+select 
+employee_roll_no,
+count(session_one) as noh
+from confirm_attendance
+where
+session_one='H'
+and
+MONTH(attendance_date)=11
+and
+YEAR(attendance_date)=2018
+group by employee_roll_no
+)ca2
+set
+sh.no_of_leave_days=(sh.no_of_leave_days+(0.5*ca2.noh))
+where
+sh.employee_roll_no=ca2.employee_roll_no
+-- and sh.employee_type=emptype
+-- and sh.unit_code=unitcode
+and sh.sal_month=11
+and sh.sal_year=2018;

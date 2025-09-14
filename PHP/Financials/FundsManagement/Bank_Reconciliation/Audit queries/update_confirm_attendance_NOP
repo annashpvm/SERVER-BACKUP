@@ -1,0 +1,54 @@
+-- compare salary NOP with confirm attendance session_one
+
+select
+ X.employee_roll_no,
+ sum(X.PDays+X.Hdays) as AttDays,
+ Y.SalDays
+from
+(select
+ employee_roll_no,
+ count(*) as PDays,
+ 0 as Hdays
+from
+   confirm_attendance
+where
+    session_one in ('P','O','N','C') and
+   dept_code <>44 AND
+   
+month(attendance_date)=10
+and year(attendance_date)=2018
+group by
+    employee_roll_no
+union
+select
+ employee_roll_no,
+ 0 as PDays,
+ COUNT(*) *0.5 as Hdays
+from
+   confirm_attendance
+where
+   session_one in ('H') and
+
+  dept_code <>44 AND
+month(attendance_date)=10
+and year(attendance_date)=2018
+group by
+    employee_roll_no
+   )X,
+(
+select
+employee_roll_no,
+no_of_present_days as SalDays
+from
+ emp_monthly_salary_header
+where
+  sal_year =2018 and
+  sal_month=10 AND
+  pf_amount >0
+)Y
+where
+X.employee_roll_no = Y.employee_roll_no
+group by
+X.employee_roll_no
+having cast(sum(X.PDays+X.Hdays) as decimal) <> cast(SalDays as decimal)
+

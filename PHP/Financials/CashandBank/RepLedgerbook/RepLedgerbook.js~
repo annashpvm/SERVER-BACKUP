@@ -1,0 +1,263 @@
+Ext.onReady(function() {
+   var GinCompcode = localStorage.getItem('acccompcode');
+   var GinFinid = localStorage.getItem('accfinid');
+
+var accnamedatastore = new Ext.data.Store({
+      id: 'accnamedatastore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "ledbook",gincompcode : GinCompcode}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'led_code', type: 'int', mapping: 'led_code'},
+        {name: 'led_name', type: 'string', mapping: 'led_name'}
+      ]),
+      sortInfo:{field: 'led_code', direction: "DESC"}
+    });
+
+
+var cmbaccname = new Ext.form.ComboBox({
+        id         : 'cmbaccname',
+        width      : 280,
+        store      : accnamedatastore,
+        displayField:'led_name',
+        valueField:'led_code',
+        hiddenName:'led_name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        fieldLabel  : 'Account Name',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Account Name',
+	allowBlank:false,
+        tabIndex:18,
+	hidden : false  
+    });
+
+var fmdate = new Ext.form.DateField({
+        name        : 'fmdate',
+        id          : 'fmdate',
+        fieldLabel  : 'From Date',
+        format      : 'Y-m-d',
+        value       : new Date()
+
+    });
+
+var todate = new Ext.form.DateField({
+        name        : 'todate',
+        id          : 'todate',
+        fieldLabel  : 'To Date',
+        format      : 'Y-m-d',
+        value       : new Date()
+
+    });
+   
+   var fp = new Ext.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'LEDGER BOOK',
+        width       : 420,
+        height      : 400,        bodyStyle:{"background-color":"#3399CC"},
+        x           : 25,
+        y           : 25,
+        frame       : false,
+        id          : 'fp',
+        method      : 'post',
+        layout      : 'absolute',
+	tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40,
+                    icon: '/Pictures/refresh.png'                                  
+                },'-',
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',
+                    tooltip: 'View Details...', height: 40,
+                    icon: '/Pictures/view.png',  
+		    listeners:{
+                    click:function(){
+			var fdate=Ext.getCmp('fmdate').value;
+			var tdate=Ext.getCmp('todate').value;
+//			var c="1";
+//			var f="22";
+			var l=Ext.getCmp('cmbaccname').getValue();
+			var lednm=Ext.getCmp('cmbaccname').getRawValue();
+			var rad=fp.getForm().getValues()['opt'];
+			var rdled=fp.getForm().getValues()['optled'];
+			var chkled=fp.getForm().getValues()['chkstores'];
+			var d1 =  fdate + " 00:00:00.000";
+			var d2 =  tdate + " 00:00:00.000";
+			var led="&ledcode="+encodeURIComponent(l);
+                    var com="&compcode="+encodeURIComponent(GinCompcode);
+                    var fin="&finid="+encodeURIComponent(GinFinid);
+                    var fd = "&fromdate="+encodeURIComponent(d1);
+                    var td = "&todate="+encodeURIComponent(d2);
+                    var lename="&ledname="+encodeURIComponent(lednm);
+			var param = (led + com + fin + fd + td + lename) ;
+			if (lednm=="")
+                          Ext.MessageBox.alert("Alert","Select the Ledger...");
+			else
+			{
+			if (rad=="2")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBookPrintingAmountwise.rptdesign' + param, '_blank');
+			} 
+			else if (rdled=="2")
+			{
+				if (chkled=="1")
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBookPrintingStoresLedger.rptdesign' + param, '_blank');	
+				else
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBookPrintingDatewise.rptdesign' + param, '_blank');
+			}
+			else
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBookPrintingrep1.rptdesign' + param, '_blank');	
+			}
+
+ }}
+                 },'-',
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,
+                    icon: '/Pictures/exit.png',  
+                    listeners:{
+                        click: function(){
+                            frmwindow.hide();
+                        }
+                    }
+                }
+                ]
+            },
+        items: [
+		{ xtype       : 'fieldset',
+                title       : '',
+                width       : 230,
+                x           : 10,
+                y           : 10,
+                border      : false,
+                labelWidth  : 65,
+                items: [fmdate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                width       : 300,
+                x           : 200,
+                y           : 10,
+                border      : false,
+                labelWidth  : 65,
+                items: [todate]
+                },
+{
+                xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                height:100,
+                width:380,
+                x: 10,
+                y:60,
+              items: [
+            {
+                xtype: 'radiogroup',
+border  :  false,
+                x       : 100,
+                y       : 60,
+                columns :  2,
+                items: [
+                    {boxLabel: 'Datewise', name: 'opt', inputValue: '1', checked: true},
+                    {boxLabel: 'Amountwise', name: 'opt', inputValue: '2'}
+                ]
+            }
+        ]
+            },
+{ 
+		xtype       : 'fieldset',
+                title       : '',
+                width       :380,
+                border      : false,
+                labelWidth  : 70,
+		x:10,
+		y:100,
+                items: [cmbaccname]
+           },
+{
+                xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                height:40,
+                width:350,
+                x: 30,
+                y:180,
+              items: [
+            {
+                xtype: 'radiogroup',
+border  :  false,
+                x       : 100,
+                y       : 60,
+                columns :  2,
+                items: [
+                    {boxLabel: 'Single Ledger', name: 'optled', inputValue: '1', checked: true},
+                    {boxLabel: 'All Ledgers', name: 'optled', inputValue: '2'}
+                ]
+            }
+        ]
+            },
+ 		{
+            	xtype: 'checkboxgroup',
+            	fieldLabel: '',
+                columns: 1,
+             	vertical: true,
+ 		x           : 30,
+                y           : 240,
+             	items: [
+             		 { 
+			    boxLabel: 'Stores Ledger', 
+			    name: 'chkstores', 
+			    inputValue: '1' 
+			 }
+           		]
+		}
+        ]
+    });
+
+var frmwindow = new Ext.Window({
+      height      : 400,
+      width       : 450,
+      bodyStyle   : 'padding: 10px',
+      layout      : 'form',
+      labelWidth  : 70,
+      defaultType : 'field',        bodyStyle:{"background-color":"#3399CC"},
+	region: 'left',
+	closable : false,
+	draggable : false,
+	resizable:false,
+	title : 'LEDGER BOOK',
+	y:120,
+  items : fp,
+        listeners:
+            {
+                show:function(){
+ accnamedatastore.load({
+                      url: '/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'ledbook',gincompcode : GinCompcode
+                       }
+                    });
+                }
+            }
+}).show();
+});
+

@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>TreeGrid Example</title>
+
+        <!-- ext css includes -->
+          <link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/treegrid/treegrid.css" rel="stylesheet" />
+        
+        <!-- ext javascript includes -->
+        <script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base-debug.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/ext-all-debug.js"></script>
+        
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridSorter.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridColumnResizer.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridNodeUI.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridLoader.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridColumns.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGrid.js"></script>
+       
+ 
+    </head>
+
+    <body style="padding: 50px;"></body>
+
+<body>
+<script type="text/javascript">
+
+Ext.onReady(function() {
+    Ext.QuickTips.init();
+
+
+
+    var treestore = Ext.create('Ext.data.TreeStore', {
+      id: 'GetModuleListDatastore',
+      autoLoad : true,
+      proxy: new Ext.data.HttpProxy({
+                url: 'Clsgridtest.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task:"loadDetails"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+     
+   {name:'cust_ref',type:'string'},
+      {name:'invh_no',type:'int'},
+      {name:'invh_date' },
+      {name:'invh_totwt',type:'float'},
+      {name:'invh_netamt',type:'float'}   
+
+
+      ]
+      
+      
+      ),
+      sortInfo: {field: 'cust_ref', direction: 'ASC'},
+            groupField: 'cust_ref'
+    });
+// get the tree
+    var tree = Ext.create('Ext.tree.Panel', {
+        store: treestore,
+        rootVisible: false,
+        title: 'Simple Tree',
+        renderTo: 'tree',
+        width: 200,
+        height: 250
+       });
+
+
+
+
+
+
+ //   tree.getRootNode().reload();
+
+});
+</script>
+
+<div id="grid-example"></div>
+</body
+</html>

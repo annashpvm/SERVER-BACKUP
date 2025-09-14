@@ -1,0 +1,54 @@
+-- Used to update short_attendance_deduction
+update emp_monthly_salary_header sh
+set
+sh.short_attendance_deduction=
+case 
+-- WHEN (sh.no_of_absent_days) >= 1 AND (sh.no_of_absent_days) <= 10 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount)>0 THEN (sh.no_of_absent_days)*100
+WHEN (sh.no_of_absent_days) >= 1 AND (sh.no_of_absent_days) <= 10 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)<1000 
+THEN (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)
+
+WHEN (sh.no_of_absent_days) >= 1 AND (sh.no_of_absent_days) <= 10 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)>=1000
+THEN (sh.no_of_absent_days)*100
+
+when (sh.no_of_absent_days) >= 11 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)>=1000
+then 1000
+
+when (sh.no_of_absent_days) >= 11 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)<1000 
+then (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)
+
+else
+0
+END
+where
+sh.sal_month=salmonth
+and
+sh.sal_year=salyear
+and
+sh.unit_code=unitcode
+and
+sh.employee_type=emptype;
+
+-- Short attendance deduction
+update emp_monthly_salary_header sh
+set
+sh.short_attendance_deduction=
+case 
+WHEN (sh.no_of_absent_days) >= 1 AND (sh.no_of_absent_days) <= 10 
+and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount)>0  and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)<sh.short_attendance_deduction 
+THEN sh.short_attendance_deduction - (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)
+-- THEN  (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)
+when (sh.no_of_absent_days) >= 11 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount)>0 and (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)<sh.short_attendance_deduction 
+
+then sh.short_attendance_deduction - (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)
+-- then (sh.basic_salary+sh.incentive+sh.allowance+sh.conveyance+sh.contract_wages+sh.ot_wages+sh.ot_incentive+sh.vehicle_allowance-sh.pf_amount-sh.esi_amount+sh.other_earnings-sh.other_deductions)
+else
+sh.short_attendance_deduction
+END
+where
+sh.sal_month=salmonth
+and
+sh.sal_year=salyear
+and
+sh.unit_code=unitcode
+and
+sh.employee_type=emptype;

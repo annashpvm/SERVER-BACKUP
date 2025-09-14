@@ -1,0 +1,72 @@
+select * from hr_tbl_deductionDetails order by employee_roll_no
+where employee_roll_no=2784
+
+select * from hr_tbl_incentiveDetails 
+where employee_roll_no=2784
+
+SELECT count(*),employee_roll_no
+FROM HrdProcess.hr_tbl_deductionDetails 
+where deduction_month=12 and deduction_code=1 group by employee_roll_no having count(*)>1
+
+select dd.employee_roll_no,deduction_amount,created_by
+from hr_tbl_deductionDetails dd,
+hr_tbl_EmployeeMaster em
+where deduction_month=12
+and deduction_year=2018
+and deduction_code=1 
+and em.employee_roll_no=dd.employee_roll_no 
+-- and dd.created_by=32421
+and
+dd.employee_roll_no in
+(SELECT employee_roll_no FROM  emp_monthly_salary_header
+ where no_of_present_days=0 and sal_month=11)
+/*
+update hr_tbl_deductionDetails
+set deduction_amount=0
+where
+deduction_month=11
+and deduction_year=2018
+and deduction_code=1 and  employee_roll_no in(
+2748,
+25738,
+28480,
+29776,
+30457,
+30615,
+31381,
+31581,
+31795,
+31847,
+31993,
+31997,
+32082,
+32177,
+32300,
+32302,
+32452,
+32485,
+32587,
+32598,
+32637,
+32657,
+32665,
+32678,
+32679,
+32681,
+32686,
+32757,
+32761,
+51321,
+51400,
+51505,
+51542,
+51551,
+51624,
+51753,
+54052,
+54353,
+54354,
+56381,
+56385
+
+)

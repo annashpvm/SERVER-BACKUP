@@ -1,0 +1,87 @@
+<!--
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+-->
+<html>
+<head>
+<title>GRID TEST Window</title>
+
+<link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css" />
+<script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/ext-all.js"></script>
+ <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/css/GroupSummary.css" />
+ <link rel="stylesheet" type="text/css" href="column-tree.css" />
+<script type="text/javascript" src="/ext-3.4.1/examples/ux/GroupSummary.js"></script>
+    <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/css/ColumnNodeUI.css" />
+<script type="text/javascript" src="/ext-3.4.1/src/widgets/tree/TreeNode.js"></script>
+<script type="text/javascript" src="/ext-3.4.1/examples/ux/ColumnNodeUI.js"></script>
+
+</head>
+
+<!-- Revised from demo code in ext3.0.0 -->
+<body>
+<script type="text/javascript">
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+Ext.onReady(function(){
+
+    Ext.QuickTips.init();
+
+    var tree = new Ext.ux.tree.ColumnTree({
+        width: 800,
+        height: 450,
+        rootVisible:false,
+        autoScroll:true,
+        title: 'Example Tasks',
+        renderTo: Ext.getBody(),
+
+        columns:[{
+            header:'Customer',
+            width:330,
+            dataIndex:'cust_ref'
+        },{
+            header:'Inv NO',
+            width:100,
+            dataIndex:'invh_no'
+        },{
+            header:'Inv. Date',
+            width:100,
+            dataIndex:'invh_date'
+        }],
+
+
+
+
+        loader: new Ext.tree.TreeLoader({
+//            dataUrl:'column-data.json',
+            dataUrl:'Clsgridtest.php',
+requestMethod:'GET',
+            uiProviders:{
+                'col': Ext.ux.tree.ColumnNodeUI
+            }
+        }),
+
+        root: new Ext.tree.AsyncTreeNode({
+            text:'Tasks'
+        })
+    });
+
+
+
+}); 
+
+
+
+</script>
+
+<div id="grid-example"></div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>TreeGrid Example</title>
+
+        <!-- ext css includes -->
+          <link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="/ext-3.4.1/examples/ux/treegrid/treegrid.css" rel="stylesheet" />
+        
+        <!-- ext javascript includes -->
+        <script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base-debug.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/ext-all-debug.js"></script>
+        
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridSorter.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridColumnResizer.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridNodeUI.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridLoader.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGridColumns.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/examples/ux/treegrid/TreeGrid.js"></script>
+        <script type="text/javascript" src="/ext-3.4.1/src/widgets/tree/AsyncTreeNode.js"></script>
+
+ 
+    </head>
+
+    <body style="padding: 50px;"></body>
+
+<body>
+<script type="text/javascript">
+
+Ext.onReady(function() {
+    Ext.QuickTips.init();
+
+
+
+var treeLoader = new Ext.tree.TreeLoader({
+dataUrl:'/SHVPM/MIS/treegrid/OLDClsgridtest.php'
+//dataUrl:'treegrid-data.json'
+
+});
+
+var rootNode = new Ext.tree.AsyncTreeNode({
+text: 'TB',
+    expand: true,
+                    id: "/"
+
+});
+
+var tree = new Ext.tree.TreePanel({
+//renderTo:'treecontainer',
+loader: treeLoader,
+root: rootNode
+});
+
+
+   var UserMasPanel = new Ext.FormPanel({
+    renderTo    : Ext.getBody(),
+    xtype       : 'form',
+    header      : true,
+    width       : 280,
+    height      : 50 ,bodyStyle:{"background-color":"#f7f7d7"},
+    x           : 0,
+    y           : 0,
+    frame       : true,
+    id          : 'UserMasPanel',
+    method      : 'POST',
+    layout      : 'absolute',
+          tbar: { 
+            xtype: 'toolbar',bodyStyle: "background: #d7d5fa;",
+            height: 40,
+            style   :'background-color:#d7d5fa',
+            fontSize:50,
+            items: [
+        		
+        	 {
+                    text: 'Add',
+                    style  : 'text-align:center;',
+                    tooltip: 'Add Details...', height: 40, fontSize:70,width:70,
+                  
+                },'-',
+           	 {
+                    text: 'Edit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Edit Details...', height: 40, fontSize:70,width:70,
+
+                    listeners:{
+                        click: function () {
+                               edit_click();
+                        }
+                     }    
+
+                  
+                },'-',             
+                  {
+                    text: 'Save',
+                    style  : 'text-align:center;',
+                    tooltip: 'Save Details...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/save.png',
+
+                    listeners:{
+                        click: function () {
+
+                        }
+                    }
+                },'-',                
+        		
+        	 {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40, fontSize:70,width:70,
+                    listeners:{
+                        click: function () {
+                               RefreshData();
+                        }
+                    }       
+                },'-',
+                
+                 {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40, fontSize:70,width:70,
+                         handler: function(){	
+                            UsrMasWindow.hide();
+                        }              
+                }]
+        },
+                 items: [
+            { 
+            xtype   : 'fieldset',
+                title   : '',
+                layout  : 'hbox',
+                border  : true,
+                height  : 600,
+                width   : 850,
+  
+		style   : { border:'1px solid blue'},
+                         style      : "border-radius:15px;",     
+                layout  : 'absolute',
+                x       : 10,
+                y       : 10,	
+                items:[
+		    			{ 
+						xtype       : 'fieldset',
+						title       : '',
+						labelWidth  : 1,
+						width       : 800,
+						x           : 100,
+						y           : 0,
+					    	border      : false,
+						items: [tree]
+				          }, 
+
+       ]
+       
+       }
+       ]
+       
+ 
+});
+function RefreshData()
+{
+
+
+}
+
+ var UsrMasWindow = new Ext.Window({
+	height      : 540,
+        width       : 900,
+        y           : 30,
+        title       :'GRID GROUP TESTING',
+        items       : 'UserMasPanel',
+        layout      : 'fit',
+        closable    : true,bodyStyle:{"background-color":"#E9EEDD"},
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+         border      : false,
+        draggable   : false,
+
+ 	listeners:{
+               show:function(){
+               RefreshData();
+
+             }
+             }
+            });
+             
+            UsrMasWindow.show();  
+});
+</script>
+
+
+</body
+
+</html>

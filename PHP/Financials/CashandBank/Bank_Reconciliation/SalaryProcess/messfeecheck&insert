@@ -1,0 +1,31 @@
+select employee_roll_no,count(*)
+from hr_tbl_deductionDetails 
+where deduction_month=1 and deduction_year=2019 and deduction_code=1
+group by employee_roll_no having count(*)>1
+
+select DATEDIFF('2019-01-31','2019-1-13')+1
+
+insert into hr_tbl_deductionDetails(
+employee_roll_no,
+deduction_code,
+deduction_amount,
+deduction_month,
+deduction_year,
+active_status,
+created_by,
+created_date)
+
+select employee_roll_no,1,
+round(if(employee_doj<'2019-02-1',1300,(1300/28)*(DATEDIFF('2019-02-28',employee_doj)+1)) ),2,2019,'Y',32421,now()
+from hr_tbl_EmployeeMaster em 
+where employee_type = 'WORKER' 
+and employee_stay_type='HOSTELER' 
+and active_status='Y' 
+and employee_doj<'2019-03-1'
+and employee_roll_no not in (select employee_roll_no
+from hr_tbl_deductionDetails 
+where deduction_month=2 and deduction_year=2019 and deduction_code=1 )
+
+select round(if(employee_doj<'2019-01-1',1300,(1300/31)*(DATEDIFF('2019-01-31',employee_doj)+1)) )
+from hr_tbl_EmployeeMaster
+where employee_roll_no=90187

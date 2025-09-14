@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fincode" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="9">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="gstr1_abs" id="5">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">fincode</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">grp</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">saltype</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">ledgername</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">goodsValue</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">freight</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">taxable</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">igst</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">cgst</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">sgst</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">tottaxamt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">nos</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">doclist</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">grp</property>
+                    <property name="nativeName">grp</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">saltype</property>
+                    <property name="nativeName">saltype</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">ledgername</property>
+                    <property name="nativeName">ledgername</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">qty</property>
+                    <property name="nativeName">qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">goodsValue</property>
+                    <property name="nativeName">goodsValue</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">freight</property>
+                    <property name="nativeName">freight</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">taxable</property>
+                    <property name="nativeName">taxable</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">igst</property>
+                    <property name="nativeName">igst</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">cgst</property>
+                    <property name="nativeName">cgst</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">sgst</property>
+                    <property name="nativeName">sgst</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">tottaxamt</property>
+                    <property name="nativeName">tottaxamt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">nos</property>
+                    <property name="nativeName">nos</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">doclist</property>
+                    <property name="nativeName">doclist</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spsal_rep_GSTR1_Ledgwise_Details(?,?,?,?)} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="85">
+            <property name="fontSize">8pt</property>
+            <property name="dataSet">gstr1_abs</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">rundate</property>
+                    <text-property name="displayName">rundate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(BirtDateTime.today(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <text-property name="displayName">heading</text-property>
+                    <expression name="expression" type="javascript">"GSTR-1 - Abstract For the Period " + BirtStr.concat("From  ",Formatter.format(params["fromdate"].value,"dd/MM/yyyy"),"  To ",Formatter.format(params["todate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ledgername</property>
+                    <text-property name="displayName">ledgername</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ledgername"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">qty</property>
+                    <text-property name="displayName">qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["qty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">goodsValue</property>
+                    <text-property name="displayName">goodsValue</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["goodsValue"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">freight</property>
+                    <text-property name="displayName">freight</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["freight"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">taxable</property>
+                    <text-property name="displayName">taxable</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["taxable"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">igst</property>
+                    <text-property name="displayName">igst</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["igst"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">cgst</property>
+                    <text-property name="displayName">cgst</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cgst"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">sgst</property>
+                    <text-property name="displayName">sgst</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sgst"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">tottaxamt</property>
+                    <text-property name="displayName">tottaxamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["tottaxamt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">nos</property>
+                    <text-property name="displayName">nos</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["nos"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">sno</property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">RUNNINGCOUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ledgername"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">doclist</property>
+                    <text-property name="displayName">doclist</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["doclist"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_qty</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["qty"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_goodsvalue</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["goodsValue"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_freight</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["freight"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_taxable</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["taxable"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_igst</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["igst"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cgst</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cgst"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_sgst</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sgst"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_tottaxamt</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["tottaxamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_nos</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["nos"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="119">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="120">
+                <property name="width">2in</property>
+            </column>
+            <column id="121">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="621"/>
+            <column id="122"/>
+            <column id="123"/>
+            <column id="124"/>
+            <column id="125"/>
+            <column id="126">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="127"/>
+            <column id="128"/>
+            <column id="639">
+                <property name="width">3in</property>
+            </column>
+            <header>
+                <row id="155">
+                    <cell id="156">
+                        <property name="colSpan">8</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">left</property>
+                        <label id="344">
+                            <text-property name="text">Sri Hari Venkateswara Paper Mills (P) Ltd.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="163">
+                        <property name="fontSize">8pt</property>
+                    </cell>
+                    <cell id="164">
+                        <property name="fontSize">8pt</property>
+                        <label id="534">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Page No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="165">
+                        <property name="fontSize">8pt</property>
+                        <auto-text id="536">
+                            <property name="fontWeight">normal</property>
+                            <property name="color">black</property>
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                    <cell id="634">
+                        <property name="fontSize">8pt</property>
+                    </cell>
+                </row>
+                <row id="144">
+                    <cell id="145">
+                        <property name="colSpan">8</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <data id="538">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="152">
+                        <property name="fontSize">8pt</property>
+                    </cell>
+                    <cell id="153">
+                        <property name="fontSize">8pt</property>
+                        <label id="535">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="154">
+                        <property name="fontSize">8pt</property>
+                        <data id="537">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">rundate</property>
+                        </data>
+                    </cell>
+                    <cell id="635">
+                        <property name="fontSize">8pt</property>
+                    </cell>
+                </row>
+                <row id="86">
+                    <cell id="87">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="142">
+                            <text-property name="text">SL. No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="88">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="542">
+                            <text-property name="text">Particulars</text-property>
+                        </label>
+                    </cell>
+                    <cell id="89">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="614">
+                            <text-property name="text">Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="618">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="623">
+                            <text-property name="text">Goods Value</text-property>
+                        </label>
+                    </cell>
+                    <cell id="90">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="624">
+                            <text-property name="text">Freight</text-property>
+                        </label>
+                    </cell>
+                    <cell id="91">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="140">
+                            <text-property name="text">Taxable Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="92">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="133">
+                            <text-property name="text">Integrated Tax Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="93">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="540">
+                            <text-property name="text">Central Tax Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="94">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="135">
+                            <text-property name="text">State Tax Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="95">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="539">
+                            <text-property name="text">Tax Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="96">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="541">
+                            <text-property name="text">Voucher Count</text-property>
+                        </label>
+                    </cell>
+                    <cell id="636">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="642">
+                            <text-property name="text">Documents List</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="97">
+                    <cell id="98">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="633">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">sno</property>
+                        </data>
+                    </cell>
+                    <cell id="99">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="613">
+                            <property name="resultSetColumn">ledgername</property>
+                        </data>
+                    </cell>
+                    <cell id="100">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="615">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">qty</property>
+                        </data>
+                    </cell>
+                    <cell id="619">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="622">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">goodsValue</property>
+                        </data>
+                    </cell>
+                    <cell id="101">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="625">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">freight</property>
+                        </data>
+                    </cell>
+                    <cell id="102">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="626">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">taxable</property>
+                        </data>
+                    </cell>
+                    <cell id="103">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="627">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">igst</property>
+                        </data>
+                    </cell>
+                    <cell id="104">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="628">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">cgst</property>
+                        </data>
+                    </cell>
+                    <cell id="105">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="630">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sgst</property>
+                        </data>
+                    </cell>
+                    <cell id="106">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="631">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">tottaxamt</property>
+                        </data>
+                    </cell>
+                    <cell id="107">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="632">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">nos</property>
+                        </data>
+                    </cell>
+                    <cell id="637">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="641">
+                            <property name="resultSetColumn">doclist</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="108">
+                    <property name="fontWeight">bold</property>
+                    <cell id="109">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="110">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="652">
+                            <text-property name="text">TOTAL</text-property>
+                        </label>
+                    </cell>
+                    <cell id="111">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="643">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="620">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="644">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_goodsvalue</property>
+                        </data>
+                    </cell>
+                    <cell id="112">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="645">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_freight</property>
+                        </data>
+                    </cell>
+                    <cell id="113">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="646">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_taxable</property>
+                        </data>
+                    </cell>
+                    <cell id="114">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="647">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_igst</property>
+                        </data>
+                    </cell>
+                    <cell id="115">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="648">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_cgst</property>
+                        </data>
+                    </cell>
+                    <cell id="116">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="649">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_sgst</property>
+                        </data>
+                    </cell>
+                    <cell id="117">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="650">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_tottaxamt</property>
+                        </data>
+                    </cell>
+                    <cell id="118">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                        <property name="textAlign">center</property>
+                        <data id="651">
+                            <property name="resultSetColumn">sum_nos</property>
+                        </data>
+                    </cell>
+                    <cell id="638">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dashed</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dashed</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dashed</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dashed</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <property name="pageVariables">
+        <variable-element name="serailno">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="reccount">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+    </property>
+</report>

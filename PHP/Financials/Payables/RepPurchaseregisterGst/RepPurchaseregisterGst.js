@@ -1,0 +1,388 @@
+Ext.onReady(function() {
+var GinCompcode = localStorage.getItem('acccompcode');
+
+var grpdatastore = new Ext.data.Store({
+      id: 'grpdatastore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/SHVPM/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "GROUP"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'grp_code', type: 'int', mapping: 'grp_code'},
+        {name: 'grp_name', type: 'string', mapping: 'grp_name'}
+      ]),
+      sortInfo:{field: 'grp_code', direction: "DESC"}
+    });
+
+
+var cmbgrp = new Ext.form.ComboBox({
+        id         : 'cmbgrp',
+        width      : 150,
+        store      : grpdatastore,
+        displayField:'grp_name',
+        valueField:'grp_code',
+        hiddenName:'grp_name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Group',
+	allowBlank:false,
+        tabIndex:18,
+	hidden : false  
+    });
+
+var fmdate = new Ext.form.DateField({
+        name        : 'fmdate',
+        id          : 'fmdate',
+        fieldLabel  : 'From Date',
+        format      : 'Y-m-d',
+        value       : new Date()
+
+    });
+
+var todate = new Ext.form.DateField({
+        name        : 'todate',
+        id          : 'todate',
+        fieldLabel  : 'To Date',
+        format      : 'Y-m-d',
+        value       : new Date()
+
+    });
+
+
+ var gst = "N";
+    var chkgst = new Ext.form.Checkbox({
+        id         : 'chkgst',
+        xtype      : 'checkbox',
+        fieldLabel : '',
+        boxLabel   : 'Without GST',
+        inputValue : 'NewFormat',
+        listeners:{
+            'check': function(rb,checked){
+                if(checked === true){
+                    gst = "Y";
+                } else {
+                    gst = "N";
+                }
+            }
+        }
+    });
+
+ var gstup = "N";
+    var chkgstupload = new Ext.form.Checkbox({
+        id         : 'chkgstupload',
+        xtype      : 'checkbox',
+        fieldLabel : '',
+        boxLabel   : 'GST Upload',
+        inputValue : 'NewFormat',
+        listeners:{
+            'check': function(rb,checked){
+                if(checked === true){
+                    gstup = "Y";
+                } else {
+                    gstup = "N";
+                }
+            }
+        }
+    });
+   
+ var gstmin = "N";
+    var chkgstmin = new Ext.form.Checkbox({
+        id         : 'chkgstmin',
+        xtype      : 'checkbox',
+        fieldLabel : '',
+        boxLabel   : 'Min Datewise',
+        inputValue : 'Min Datewise',
+        listeners:{
+            'check': function(rb,checked){
+                if(checked === true){
+                    gstmin = "Y";
+                } else {
+                    gstmin = "N";
+                }
+            }
+        }
+    });
+   var fp = new Ext.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Purchase Register',bodyStyle:{"background-color":"#3399CC"},
+        width       : 420,
+        height      : 500,
+        x           : 25,
+        y           : 25,
+        frame       : false,
+        id          : 'fp',
+        method      : 'post',
+        layout      : 'absolute',
+	tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40,
+                    icon: '/Pictures/refresh.png'                                 
+                },'-',
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',
+                    tooltip: 'View Details...', height: 40,
+                    icon: '/Pictures/view.png',   
+		    listeners:{
+                    click:function(){
+			var fdate=Ext.getCmp('fmdate').value;
+			var tdate=Ext.getCmp('todate').value;
+			var rad=fp.getForm().getValues()['options'];
+			if (rad=="1")
+			{
+			var v="DN";
+			}
+			else if (rad=="2")
+			{
+			var v="CN";
+			}
+			else if (rad=="3")
+			{
+			var v="S";
+			}
+			else if (rad=="4")
+			{
+			var v="ES";
+			}
+			else if (rad=="5")
+			{
+			var v="EX";
+			}
+			else if (rad=="6")
+			{
+			var v="Y";
+			}
+			else if (rad=="7")
+			{
+			var v="C";
+			}
+			else if (rad=="8")
+			{
+			var v="F";
+			}
+
+
+		     var d1 =  fdate + " 00:00:00.000";
+		     var d2 =  tdate + " 00:00:00.000";
+		     var fd = "&fmdate=" + encodeURIComponent(d1);
+		     var td = "&tdate=" + encodeURIComponent(d2);
+		     var cp = "&comp=" + encodeURIComponent(GinCompcode);
+		     var vu = "&flag=" + encodeURIComponent(v);
+		     var vt = "&voutype=" + encodeURIComponent(v);
+		     var param = (fd + td + cp + vu) ;
+if(gstup=="Y")
+{
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstDirect.rptdesign' + param, '_blank'); 
+}
+else if(rad=="1")
+{
+var param = (vt + fd + td + cp) ;
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepDebitnoteRegisterGst.rptdesign' + param, '_blank'); 
+}
+else if(rad=="2")
+{
+var param = (vt + fd + td + cp) ;
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepCreditnoteRegisterGst.rptdesign' + param, '_blank'); 
+}
+else if(rad=="3")
+{
+	if(gstmin=="Y")
+	{
+	window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstStoresMinDate.rptdesign' + param, '_blank'); 
+	}
+	else
+	{
+	window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstStores.rptdesign' + param, '_blank'); 
+	}
+}
+else if(rad=="4")
+{
+var param = (vt + fd + td + cp) ;
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepWoRegisterGst.rptdesign' + param, '_blank'); 
+}
+else if(rad=="5")
+{
+	if(gst=="N")
+	{
+	var param = (vt + fd + td + cp) ;
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPayablesRegisterGst.rptdesign' + param, '_blank'); 
+	}
+	else
+	{
+	var param = (fd + td + cp) ;
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepExpenseWihthoutgst.rptdesign' + param, '_blank'); 
+	}
+}
+else if(rad=="6")
+{
+	if(gstmin=="Y")
+	{
+	window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstYarnMinDate.rptdesign' + param, '_blank'); 
+	}
+	else
+	{
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstYarn.rptdesign' + param, '_blank'); 
+	}
+}
+else if(rad=="7")
+{
+	if(gstmin=="Y")
+	{
+	window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstCottonMinDate.rptdesign' + param, '_blank'); 
+	}
+	else
+	{
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstCotton.rptdesign' + param, '_blank'); 
+	}
+}
+else if(rad=="8")
+{
+	if(gstmin=="Y")
+	{
+	window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstFabricMinDate.rptdesign' + param, '_blank'); 
+	}
+	else
+	{
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepPurchaseRegisterGstFabric.rptdesign' + param, '_blank'); 
+	}
+}
+else if(rad=="9")
+{
+	var param = (fd + td + cp) ;
+window.open('http://192.168.11.14:8080/birt/frameset?__report=accounts/AccRepBankPaymentRegisterGst.rptdesign' + param, '_blank'); 
+}
+ }}
+                 },'-',
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,
+                    icon: '/Pictures/exit.png',   
+                    listeners:{
+                        click: function(){
+                            frmwindow.hide();
+                        }
+                    }
+                }
+                ]
+            },
+        items: [
+		{ xtype       : 'fieldset',
+                title       : '',
+                width       : 230,
+                x           : 10,
+                y           : 10,
+                border      : false,
+                labelWidth  : 65,
+                items: [fmdate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                width       : 300,
+                x           : 200,
+                y           : 10,
+                border      : false,
+                labelWidth  : 65,
+                items: [todate]
+                },
+{
+                xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                height:90,
+                width:380,
+                x: 20,
+                y:80,
+              items: [
+            {
+                xtype: 'radiogroup',
+		border  :  false,
+                x       : 100,
+                y       : 60,
+                columns :  3,
+                items: [
+                    {boxLabel: 'Debit Note', name: 'options', inputValue: '1', checked: true},
+                    {boxLabel: 'Credit Note', name: 'options', inputValue: '2'},
+                    {boxLabel: 'Stores', name: 'options', inputValue: '3'},
+                    {boxLabel: 'Workorder', name: 'options', inputValue: '4'},
+                    {boxLabel: 'Expense', name: 'options', inputValue: '5'},
+                    {boxLabel: 'Yarn', name: 'options', inputValue: '6'},
+                    {boxLabel: 'Cotton', name: 'options', inputValue: '7'},
+                    {boxLabel: 'Fabric', name: 'options', inputValue: '8'},
+                    {boxLabel: 'Bank Payment', name: 'options', inputValue: '9'}
+                ]
+            }
+        ]
+            },
+                { xtype     : 'fieldset',
+                title       : '',
+                x           : 20,
+                y           : 180,
+                border      : false,
+                labelWidth  : 70,
+                items: [chkgst]
+                },
+                { xtype     : 'fieldset',
+                title       : '',
+                x           : 200,
+                y           : 180,
+                border      : false,
+                labelWidth  : 70,
+                items: [chkgstupload]
+                },
+                { xtype     : 'fieldset',
+                title       : '',
+                x           : 200,
+                y           : 210,
+                border      : false,
+                labelWidth  : 70,
+                items: [chkgstmin]
+                }
+        ]
+    });
+
+var frmwindow = new Ext.Window({
+      height      : 350,
+      width       : 450,
+      bodyStyle   : 'padding: 10px',bodyStyle:{"background-color":"#3399CC"},
+      layout      : 'form',
+      labelWidth  : 70,
+      defaultType : 'field',
+	region: 'left',
+	closable : false,
+	draggable : false,
+	resizable:false,
+	title : 'GST Purchase Register',
+	y:70,
+  items : fp,
+        listeners:
+            {
+                show:function(){
+ grpdatastore.load({
+                      url: '/SHVPM/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'GROUP'
+                       }
+                    });
+                }
+            }
+}).show();
+});
+

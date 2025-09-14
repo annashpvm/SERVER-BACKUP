@@ -1,0 +1,54 @@
+-- Check shift rotation Missing employees. If any then manually create shift rotation details in 'hrm_shift_rotation'
+
+SELECT * FROM audithr.hrm_emp_shift;
+
+/*
+select * from hr_tbl_EmployeeMaster where active_status='Y' and employee_roll_no not in 
+(select employee_roll_no from hrm_shift_rotation)
+*/
+
+select employee_roll_no,multiple_shift_status,dept_code,shift_code ,employee_weekly_off
+from hr_tbl_EmployeeMaster where active_status='Y' and employee_roll_no  in 
+(select employee_roll_no from emp_monthly_salary_header where sal_month=12 and employee_roll_no not in 
+(select employee_roll_no from hrm_shift_rotation))
+
+-- Then update confirm_attendance shifts by using 'audit_empshiftupdation_catt' procedure
+
+call audit_empshiftupdation_catt('2018-12-01')
+call audit_empshiftupdation_catt('2018-12-02')
+call audit_empshiftupdation_catt('2018-12-29')
+call audit_empshiftupdation_catt('2018-12-30')
+call audit_empshiftupdation_catt('2018-12-31')
+-- like this, call this procedure upto month enddate
+
+
+-- Check reliever shift for session_one='P'(this process finds mismatch weekoffs)
+select * from confirm_attendance where shift_code=0 and 
+session_one in ('P','H') and month(attendance_date)=12
+group by employee_roll_no order by employee_roll_no
+
+
+-- Update employee intime and outtime
+
+call audit_updateshift_timings_dayshift('2018-12-01','2018-12-31',1);
+call audit_updateshift_timings_fullnightshift('2018-12-01','2018-12-31',3);
+call audit_updateshift_timings_generalshift('2018-12-01','2018-12-31',4);
+call audit_updateshift_timings_halfnightshift('2018-12-01','2018-12-31',2);
+
+-- update total hours
+
+select * from confirm_attendance where session_one='H' 
+and month(attendance_date)=12 and year(attendance_date)=2018
+
+
+update confirm_attendance set
+employee_out_time=DATE_SUB(employee_out_time, INTERVAL 4 HOUR)
+where session_one='H'
+and month(attendance_date)=12 and year(attendance_date)=2018
+
+
+update confirm_attendance 
+set total_hours = TIMEDIFF(employee_out_time, employee_in_time)
+WHERE month(attendance_date)=12 and year(attendance_date)=2018
+
+

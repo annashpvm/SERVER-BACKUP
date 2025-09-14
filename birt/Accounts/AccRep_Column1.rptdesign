@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="5">
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">cust_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">accref_vouno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">accref_voudate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">acctran_totamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">cust_name</property>
+                    <property name="nativeName">cust_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">accref_vouno</property>
+                    <property name="nativeName">accref_vouno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">accref_voudate</property>
+                    <property name="nativeName">accref_voudate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">acctran_totamt</property>
+                    <property name="nativeName">acctran_totamt</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spacc_rep_column_report()} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <cubes>
+        <tabular-cube name="Data Cube" id="107">
+            <property name="dimensions">
+                <tabular-dimension name="Group" id="108">
+                    <property name="defaultHierarchy">NewTabularHierarchy</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy" id="109">
+                            <property name="levels">
+                                <tabular-level name="cust_name" id="110">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">cust_name</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group1" id="111">
+                    <property name="isTimeType">false</property>
+                    <property name="defaultHierarchy">NewTabularHierarchy2</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy2" id="112">
+                            <property name="levels">
+                                <tabular-level name="accref_voudate" id="113">
+                                    <property name="dataType">date-time</property>
+                                    <property name="columnName">accref_voudate</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group3" id="114">
+                    <property name="defaultHierarchy">NewTabularHierarchy3</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy3" id="115">
+                            <property name="levels">
+                                <tabular-level name="accref_vouno" id="116">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">accref_vouno</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+            </property>
+            <property name="measureGroups">
+                <tabular-measure-group name="Summary Field" id="117">
+                    <property name="measures">
+                        <tabular-measure name="acctran_totamt" id="118">
+                            <expression name="measureExpression" type="javascript">dataSetRow["acctran_totamt"]</expression>
+                            <property name="dataType">float</property>
+                        </tabular-measure>
+                    </property>
+                </tabular-measure-group>
+            </property>
+            <property name="dataSet">Data Set</property>
+        </tabular-cube>
+    </cubes>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="rightMargin">0in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="185">
+            <property name="cube">Data Cube</property>
+            <property name="measures">
+                <extended-item extensionName="MeasureView" id="204">
+                    <property name="measure">acctran_totamt</property>
+                    <property name="detail">
+                        <extended-item extensionName="AggregationCell" id="205">
+                            <property name="aggregationOnRow">Group3/accref_vouno</property>
+                            <property name="aggregationOnColumn">Group/cust_name</property>
+                            <property name="width">5.239583333333333in</property>
+                            <property name="content">
+                                <data id="206">
+                                    <property name="resultSetColumn">acctran_totamt_Group3/accref_vouno_Group/cust_name</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="header">
+                        <extended-item extensionName="CrosstabCell" id="207">
+                            <property name="content">
+                                <label id="208">
+                                    <text-property name="text">acctran_totamt</text-property>
+                                </label>
+                            </property>
+                        </extended-item>
+                    </property>
+                </extended-item>
+            </property>
+            <property name="rows">
+                <extended-item extensionName="CrosstabView" id="193">
+                    <property name="views">
+                        <extended-item extensionName="DimensionView" id="198">
+                            <property name="dimension">Group1</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View2" id="199">
+                                    <property name="level">Group1/accref_voudate</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="200">
+                                            <property name="content">
+                                                <data name="accref_vouno" id="197">
+                                                    <property name="resultSetColumn">accref_vouno</property>
+                                                </data>
+                                            </property>
+                                            <property name="width">2.6666666666666665in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="194">
+                            <property name="dimension">Group3</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View1" id="195">
+                                    <property name="level">Group3/accref_vouno</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="196">
+                                            <property name="content">
+                                                <data name="accref_voudate" id="202">
+                                                    <structure name="dateTimeFormat">
+                                                        <property name="category">Custom</property>
+                                                        <property name="pattern">dd/MM/yyyy</property>
+                                                    </structure>
+                                                    <property name="resultSetColumn">accref_voudate</property>
+                                                </data>
+                                            </property>
+                                            <property name="width">2.0416666666666665in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                    </property>
+                </extended-item>
+            </property>
+            <property name="columns">
+                <extended-item extensionName="CrosstabView" id="187">
+                    <property name="views">
+                        <extended-item extensionName="DimensionView" id="188">
+                            <property name="dimension">Group</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View" id="189">
+                                    <property name="level">Group/cust_name</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="190">
+                                            <property name="content">
+                                                <data name="cust_name" id="191">
+                                                    <property name="resultSetColumn">cust_name</property>
+                                                </data>
+                                            </property>
+                                            <property name="width">9.09375in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                    </property>
+                </extended-item>
+            </property>
+            <property name="header">
+                <extended-item extensionName="CrosstabCell" id="209"/>
+                <extended-item extensionName="CrosstabCell" id="210">
+                    <property name="content">
+                        <label id="211">
+                            <text-property name="text">cust_name</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="201">
+                    <property name="content">
+                        <label id="203">
+                            <text-property name="text">accref_voudate</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="186">
+                    <property name="content">
+                        <label id="192">
+                            <text-property name="text">accref_vouno</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+            </property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">cust_name</property>
+                    <expression name="expression">dimension["Group"]["cust_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_vouno</property>
+                    <expression name="expression">dimension["Group3"]["accref_vouno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_voudate</property>
+                    <expression name="expression">dimension["Group1"]["accref_voudate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_totamt_Group3/accref_vouno_Group/cust_name</property>
+                    <expression name="expression">measure["acctran_totamt"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group3/accref_vouno</value>
+                        <value>Group/cust_name</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+            </list-property>
+        </extended-item>
+    </body>
+</report>

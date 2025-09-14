@@ -1,0 +1,354 @@
+var grpdatastore;
+var leddatastore;
+
+Ext.onReady(function() {
+var grpdatastore = new Ext.data.Store({
+      id: 'grpdatastore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "GRP"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'grp_code', type: 'int', mapping: 'grp_code'},
+        {name: 'grp_name', type: 'string', mapping: 'grp_name'}
+      ]),
+      sortInfo:{field: 'grp_code', direction: "DESC"}
+    });
+
+var leddatastore = new Ext.data.Store({
+      id: 'leddatastore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "LED"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'led_code', type: 'int', mapping: 'led_code'},
+        {name: 'led_name', type: 'string', mapping: 'led_name'}
+      ]),
+      sortInfo:{field: 'led_code', direction: "DESC"}
+    });
+
+var namestore = new Ext.data.SimpleStore({ fields : ['url'], data: [['Credit Balance'],['Debit Balance'],['All Balance']] }); 
+
+
+var cmbgrp = new Ext.form.ComboBox({
+        id         : 'cmbgrp',
+        width      : 150,
+        store      : grpdatastore,
+        displayField:'grp_name',
+        valueField:'grp_code',
+        hiddenName:'grp_name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Group',
+	allowBlank:false,
+        tabIndex:18,
+	hidden : true  
+    });
+
+var cmbled = new Ext.form.ComboBox({
+        id         : 'cmbled',
+        width      : 150,
+        store      : leddatastore,
+        displayField:'led_name',
+        valueField:'led_code',
+        hiddenName:'led_name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Ledger',
+	allowBlank:false,
+        tabIndex:18,
+	hidden : false  
+    });
+
+var cmbtypeofbal = new Ext.form.ComboBox({
+        id         : 'cmbtypeofbal',
+        width      : 200,
+        store      : namestore,
+        displayField:'url',
+//        valueField:'led_code',
+//        hiddenName:'led_name',
+	fieldLabel:'Type of Balance',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Type of Balance',
+	allowBlank:false,
+        tabIndex:18,
+	hidden : false  
+    });
+
+var fmdate = new Ext.form.DateField({
+        name        : 'fmdate',
+        id          : 'fmdate',
+        fieldLabel  : 'From Date',
+        format      : 'Y-m-d',
+        value       : new Date()
+
+    });
+
+var todate = new Ext.form.DateField({
+        name        : 'todate',
+        id          : 'todate',
+        fieldLabel  : 'To Date',
+        format      : 'Y-m-d',
+        value       : new Date()
+
+    });
+   
+   var fp = new Ext.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Type of Balance',
+        width       : 420,
+        height      : 300,        bodyStyle:{"background-color":"#3399CC"},
+        x           : 25,
+        y           : 25,
+        frame       : false,
+        id          : 'fp',
+        method      : 'post',
+        layout      : 'absolute',
+	tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                {
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40,
+                    icon: '/Pictures/refresh.png'                                 
+                },'-',
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',
+                    tooltip: 'View Details...', height: 40,
+                    icon: '/Pictures/view.png',              
+		    listeners:{
+                    click:function(){
+			var fdate=Ext.getCmp('fmdate').value;
+			var tdate=Ext.getCmp('todate').value;
+			var c="1";
+			var fin="22";
+			var rad=fp.getForm().getValues()['opt'];
+			var gp=Ext.getCmp('cmbgrp').getValue();
+			var ld=Ext.getCmp('cmbled').getValue();
+			var type=Ext.getCmp('cmbtypeofbal').getRawValue();
+			if (rad=="1")
+			{
+			if (ld=="")
+			{
+                          Ext.MessageBox.alert("Alert","Select the Ledger...");
+			}
+			else
+			{
+		     var d1 =  fdate + " 00:00:00.000";
+		     var d2 =  tdate + " 00:00:00.000";
+		     var fd = "&fmdate=" + encodeURIComponent(d1);
+		     var td = "&tdate=" + encodeURIComponent(d2);
+		     var cp = "&comp=" + encodeURIComponent(c);
+		     var fi = "&finid=" + encodeURIComponent(fin);
+		     var lc = "&ledcode=" + encodeURIComponent(ld);
+		     var param = (lc + cp + fi + fd + td );
+			if (type=="All Balance")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBalTypeAll.rptdesign' + param, '_blank'); 
+			}
+			else if (type=="Credit Balance")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBalTypeCramt.rptdesign' + param, '_blank'); 
+			}
+			else if (type=="Debit Balance")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepBalTypeDbamt.rptdesign' + param, '_blank'); 
+			}
+			else
+			{
+                          Ext.MessageBox.alert("Alert","Select the Type of Balance...");
+			}
+}
+			}
+			else if (rad=="2")
+			{
+			var d1 =  fdate + " 00:00:00.000";
+		     var d2 =  tdate + " 00:00:00.000";
+		     var fd = "&fmdate=" + encodeURIComponent(d1);
+		     var td = "&tdate=" + encodeURIComponent(d2);
+		     var cp = "&comp=" + encodeURIComponent(c);
+		     var fi = "&finid=" + encodeURIComponent(fin);
+		     var lc = "&ledcode=" + encodeURIComponent(gp);
+		     var param = (lc + cp + fi + fd + td );
+			if (type=="All Balance")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepAbstractLedger.rptdesign' + param, '_blank'); 
+			}
+			else if (type=="Credit Balance")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepAbstractLedgerCredit.rptdesign' + param, '_blank'); 
+			}
+			else if (type=="Debit Balance")
+			{
+window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepAbstractLedgerDebit.rptdesign' + param, '_blank'); 
+			}
+			else
+			{
+                          Ext.MessageBox.alert("Alert","Select the Type of Balance...");
+			}
+			}
+ }}
+                 },'-',
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40,
+                    icon: '/Pictures/exit.png',
+                    listeners:{
+                        click: function(){
+                            WTWindow.hide();
+                        }
+                    }
+                }
+                ]
+            },
+        items: [
+		{ xtype       : 'fieldset',
+                title       : '',
+                width       : 230,
+                x           : 10,
+                y           : 10,
+                border      : false,
+                labelWidth  : 65,
+                items: [fmdate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                width       : 300,
+                x           : 200,
+                y           : 10,
+                border      : false,
+                labelWidth  : 65,
+                items: [todate]
+                },
+{
+                xtype: 'fieldset',
+                title: '',
+                layout : 'hbox',
+                height:50,
+                width:380,
+                x: 20,
+                y:70,
+              items: [
+            {
+                xtype: 'radiogroup',
+border  :  false,
+                x       : 100,
+                y       : 60,
+                columns :  3,
+                items: [
+                    {boxLabel: 'Ledger', name: 'opt', inputValue: '1', checked: true,
+			listeners: {
+                change: function (cb, nv, ov) {
+                    if (nv) Ext.getCmp('cmbled').setVisible(true);
+                    Ext.getCmp('cmbgrp').setVisible(false);
+                }
+            }},
+                    {boxLabel: 'Group', name: 'opt', inputValue: '2',listeners: {
+                change: function (cb, nv, ov) {
+                    if (nv) Ext.getCmp('cmbgrp').setVisible(true);
+                    Ext.getCmp('cmbled').setVisible(false);
+                }
+            }}
+                ]
+            }
+        ]
+            },	
+{ 
+		xtype       : 'fieldset',
+                title       : '',
+                width       :250,
+                border      : false,
+                labelWidth  : 70,
+		x:160,
+		y:70,
+                items: [cmbgrp]
+           },
+{ 
+		xtype       : 'fieldset',
+                title       : '',
+                width       :250,
+                border      : false,
+                labelWidth  : 70,
+		x:160,
+		y:70,
+                items: [cmbled]
+           },
+{ 
+		xtype       : 'fieldset',
+                title       : '',
+                width       :300,
+                border      : false,
+                labelWidth  : 70,
+		x:30,
+		y:140,
+                items: [cmbtypeofbal]
+           }
+        ]
+    });
+
+new Ext.Window({
+      height      : 350,
+      width       : 450,
+      bodyStyle   : 'padding: 10px',
+      layout      : 'form',        bodyStyle:{"background-color":"#3399CC"},
+      labelWidth  : 70,
+      defaultType : 'field',
+	region: 'left',
+	closable : false,
+	draggable : false,
+	resizable:false,
+	title : 'Type Of Balance',
+	y:90,
+  items : fp,
+        listeners:
+            {
+                show:function(){
+ grpdatastore.load({
+                      url: '/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'GRP'
+                       }
+                    });
+ leddatastore.load({
+                      url: '/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'LED'
+                       }
+                    });
+                }
+            }
+}).show();
+});
+

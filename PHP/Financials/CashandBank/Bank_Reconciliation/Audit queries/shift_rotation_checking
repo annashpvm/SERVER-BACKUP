@@ -1,0 +1,86 @@
+SELECT count(*),sr.* FROM audithr.hrm_shift_rotation sr
+group by employee_roll_no having count(*)>1
+order by employee_roll_no;
+
+SELECT * FROM audithr.hrm_shift_rotation a 
+where shift_rotation_three=0 and no_of_shifts=1;
+
+select employee_roll_no from hr_tbl_EmployeeMaster em 
+where employee_roll_no  in (select employee_roll_no from hr_tbl_EmployeeMaster
+where multiple_shift_status='N' and shift_code  in (13,7)) order by employee_roll_no;
+
+
+delete from hrm_shift_rotation where no_of_shifts=1;
+
+select employee_roll_no,employee_weekly_off,shift_code,multiple_shift_status
+ from hr_tbl_EmployeeMaster where employee_roll_no not in 
+(select employee_roll_no from hrm_shift_rotation)
+
+select card_no,card_shift from hr_finger_print_details
+ where card_date='2018-08-99' and card_no in 
+(SELECT employee_roll_no FROM audithr.hrm_shift_rotation a 
+ where shift_rotation_one=99)
+
+
+update hrm_shift_rotation sr,
+hr_tbl_EmployeeMaster em
+set weekly_off=em.employee_weekly_off
+where sr.employee_roll_no=em.employee_roll_no
+and sr.no_of_shifts=1
+
+SELECT * FROM audithr.hrm_shift_rotation a 
+where shift_rotation_two=0 and no_of_shifts=3;
+
+update hrm_shift_rotation
+set shift_rotation_three=1
+where shift_rotation_two=3
+and no_of_shifts=3
+
+update hrm_shift_rotation
+set shift_rotation_three=0
+where shift_rotation_one=0
+and no_of_shifts=1
+
+update hrm_shift_rotation
+set shift_rotation_three=4
+where shift_rotation_three=0
+
+
+
+
+
+update hrm_shift_rotation  sr,
+(select card_no,card_shift from hr_finger_print_details
+ where card_date='2018-08-30' 
+and card_no in (SELECT employee_roll_no FROM audithr.hrm_shift_rotation a 
+ where shift_rotation_one=99)) fp
+set 
+sr.shift_starting_date='2018-08-30',
+shift_rotation_one=card_shift
+where 
+fp.card_no=sr.employee_roll_no
+
+
+update hrm_shift_rotation  sr,
+hr_finger_print_details fp
+set shift_rotation_one=card_shift
+where fp.card_date='2018-08-31'
+and fp.card_no=sr.employee_roll_no
+
+
+
+select employee_roll_no FROM audithr.hrm_shift_rotation
+where employee_roll_no not in 
+
+(select card_no from hr_finger_print_details where card_date='2018-09-1')
+
+select employee_roll_no FROM audithr.hrm_shift_rotation
+where employee_roll_no in 
+
+(select employee_roll_no from hr_tbl_EmployeeMaster where employee_weekly_off='FRIDAY')
+/*
+update hrm_shift_rotation sr,
+hr_tbl_EmployeeMaster em
+
+set weekly_off=employee_weekly_off
+where em.employee_roll_no=sr.employee_roll_no

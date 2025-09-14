@@ -1,0 +1,41 @@
+SELECT 
+sm.employee_roll_no,
+basic_salary,
+incentive,
+other_earnings,
+pf_amount,
+esi_amount ,
+(basic_salary+incentive+other_earnings)*1.75/100 as amt
+FROM HrdProcess.emp_monthly_salary_header sm,
+hr_tbl_EmployeeMaster em
+where 
+em.employee_roll_no=sm.employee_roll_no 
+   and dept_code=44
+and
+basic_salary + incentive + other_earnings  >= 21000
+and sal_month=1
+
+select *
+from hr_tbl_employeeSalary es,
+hr_tbl_EmployeeMaster em where 
+es.employee_roll_no=em.employee_roll_no
+and employee_pf='YES'
+and es.basic+es.contractwage<331
+
+and basic+incentive<=1200
+
+
+select employee_roll_no,no_of_absent_days,short_attendance_deduction,net_salary
+from emp_monthly_salary_header where employee_type='CONTRACT WORKER' 
+-- and no_of_absent_days>0 
+and sal_month=11
+
+select *
+from emp_monthly_salary_header where short_attendance_deduction<0 and sal_month=12
+
+select *
+from emp_monthly_salary_header where short_attendance_deduction>1000 and sal_month=12
+
+
+select *
+from hr_tbl_EmployeeMaster where EMPLOYEE_ROLL_NO=14753

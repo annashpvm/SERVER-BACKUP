@@ -1,0 +1,302 @@
+-- Select  audit database.
+Use audihr ;
+
+-- Copy records from Actual Database 'HrdProcess'  to Audit Database 'audithr'
+
+-- step 1: Salary Records
+insert into audithr.emp_monthly_salary_header
+
+select sh.*,4,2 from HrdProcess.emp_monthly_salary_header sh,
+HrdProcess.hr_tbl_EmployeeMaster em
+where sal_year=2019 and sal_month=1 
+ -- and sh.pf_amount>0
+and em.employee_roll_no=sh.employee_roll_no
+and em.employee_pf='YES';
+
+-- step 2: Employee Details
+-- Check employee unavailable list
+select * from emp_monthly_salary_header 
+where sal_year=2019 and sal_month =1 and employee_roll_no not in 
+(select employee_roll_no from hr_tbl_EmployeeMaster  where active_status='Y' ) 
+ order by employee_roll_no;
+
+select * from hr_tbl_EmployeeMaster em  where employee_roll_no=90118;
+-- Insert unavailable employees into audit database from HrdProcess database
+insert into hr_tbl_EmployeeMaster
+select * from HrdProcess.hr_tbl_EmployeeMaster em  where employee_roll_no=31087;
+
+
+-- step 3: Confirm Attendance
+ insert into confirm_attendance
+select ca.* from HrdProcess.confirm_attendance ca,
+hr_tbl_EmployeeMaster em
+where month(attendance_date)=1
+and year(attendance_date)=2019
+and ca.employee_roll_no=em.employee_roll_no
+
+
+-- Remove OT details
+update confirm_attendance 
+set 
+session_two='A',ot='N',ot_hours='00:00:00'
+where month(attendance_date)=1 and year(attendance_date)=2019;
+
+update emp_monthly_salary_header 
+set total_ot_hours='00:00:00'
+where sal_month=1 and sal_year=2019;
+
+-- update Onduty as Present
+
+update confirm_attendance
+set session_one='P'
+where session_one='O'
+and month(attendance_date)=1 and year(attendance_date)=2019;
+
+
+update confirm_attendance
+set session_one='P'
+where session_one='C'
+and  month(attendance_date)=1 and year(attendance_date)=2019
+
+-- Check national holiday from actual database
+
+select *  from HrdProcess.hr_tbl_HolidayMaster where holiday_year=2019
+
+
+-- update National Holidays
+update  confirm_attendance
+set session_one='N'
+where attendance_date='2019-1-26'
+
+
+
+-- compare salary NOP with confirm attendance session_one
+
+-- salary table nop and attendance table nop should be equal except drivers dept
+
+select
+ X.employee_roll_no,
+ sum(X.PDays+X.Hdays) as AttDays,
+ Y.SalDays
+from
+(select
+ employee_roll_no,
+ count(*) as PDays,
+ 0 as Hdays
+from
+   confirm_attendance
+where
+    session_one in ('P','O','N','C') and
+   --  confirm_attend_emp_type =1 and
+   --  confirm_attend_company_code in(1,2) and
+   -- confirm_attend_dept_code <>44 AND
+    -- attendance_date  between '2017-11-01' and '2017-11-30'
+month(attendance_date)=1 and year(attendance_date)=2019
+group by
+    employee_roll_no
+union
+select
+ employee_roll_no,
+ 0 as PDays,
+ COUNT(*) *0.5 as Hdays
+from
+   confirm_attendance
+where
+   session_one in ('H') and
+  --  confirm_attend_emp_type =1 and
+  -- confirm_attend_company_code in(1,2) and
+  -- confirm_attend_dept_code <>44 AND
+  --  confirm_attend_date  between '2017-11-01' and '2017-11-30'
+month(attendance_date)=1 and year(attendance_date)=2019
+group by
+    employee_roll_no
+   )X,
+(
+select
+employee_roll_no,
+no_of_present_days as SalDays
+from
+ emp_monthly_salary_header
+where
+  sal_year =2019 and
+  sal_month=1 AND
+  pf_amount >0
+)Y
+where
+X.employee_roll_no = Y.employee_roll_no
+group by
+X.employee_roll_no
+having cast(sum(X.PDays+X.Hdays) as decimal) < cast(SalDays as decimal)
+
+
+-- Adjust drivers weekoff
+update confirm_attendance
+set session_one='P'
+where 
+dept_code=44
+and session_one='W'
+and month(attendance_date)=1 and year(attendance_date)=2019
+
+
+update confirm_attendance ca,
+hr_tbl_EmployeeMaster em
+set ca.session_one='W'
+where 
+ca.dept_code=44
+and ca.employee_roll_no=em.employee_roll_no
+and cast(dayname(ca.attendance_date) as char)=cast(em.employee_weekly_off as char)
+and month(attendance_date)=1 and year(attendance_date)=2019
+
+-- -- update  weekoff to master
+
+update hr_tbl_EmployeeMaster em,
+(select employee_roll_no from confirm_attendance where
+session_one='W' and attendance_date='2019-1-12')X
+set employee_weekly_off='SATURDAY'
+where 
+em.employee_roll_no = X.employee_roll_no
+
+-- UPDATE weekoff in shift_rotation table
+
+update hrm_shift_rotation  sr,
+hr_tbl_EmployeeMaster em
+set sr.weekly_off=em.employee_weekly_off
+where sr.employee_roll_no=em.employee_roll_no
+
+
+-- update leave days to salary table
+
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*) as cnt from confirm_attendance
+where month(attendance_date)=1 and year(attendance_date)=2019 and session_one='L'
+group by employee_roll_no) ca
+
+set es.no_of_leave_days=ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=1 and sal_year=2019
+
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*) as cnt from confirm_attendance
+where month(attendance_date)=1 and year(attendance_date)=2019 and session_one='A'
+group by employee_roll_no) ca
+
+set es.no_of_absent_days=ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=1 and sal_year=2019
+
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*)/2 as cnt from confirm_attendance
+where month(attendance_date)=1 and year(attendance_date)=2019 and session_one='H'
+group by employee_roll_no) ca
+
+set es.no_of_leave_days=es.no_of_leave_days+ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=1 and sal_year=2019
+
+
+
+
+-- Check shift rotation Missing employees.
+--  If any then manually create shift rotation details in 'hrm_shift_rotation'
+SELECT * FROM audithr.hrm_shift_rotation;
+/*
+SELECT * FROM audithr.hrm_emp_shift;
+
+
+-- select * from hr_tbl_EmployeeMaster where active_status='Y' and employee_roll_no not in 
+select * from emp_monthly_salary_header where sal_year=2019 and sal_month =1 and employee_roll_no not in
+(select employee_roll_no from hrm_shift_rotation)
+*/
+
+select employee_roll_no,multiple_shift_status,dept_code,shift_code ,employee_weekly_off
+from hr_tbl_EmployeeMaster where active_status='Y' and employee_roll_no  in 
+(select employee_roll_no from emp_monthly_salary_header where sal_month=1 and sal_year=2019 and employee_roll_no not in 
+(select employee_roll_no from hrm_shift_rotation))
+
+-- Then update confirm_attendance shifts by using 'audit_empshiftupdation_catt' procedure
+
+call audit_empshiftupdation_catt('2019-1-01')
+call audit_empshiftupdation_catt('2019-1-02')
+call audit_empshiftupdation_catt('2019-1-29')
+call audit_empshiftupdation_catt('2019-1-30')
+call audit_empshiftupdation_catt('2019-1-31')
+-- like this, call this procedure upto month enddate
+
+
+-- Check reliever shift for session_one='P'(this process finds mismatch weekoffs)
+-- then manually correct weekoff(7 days once weekoff compulsory)
+select * from confirm_attendance where shift_code=0 and 
+session_one in ('P','H') and month(attendance_date)=1 and year(attendance_date)=2019
+group by employee_roll_no order by employee_roll_no
+
+-- If there leave or weekoff changes, then update no. of weekoffdays,national holidays, leave days and absent days
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*) as cnt from confirm_attendance
+where month(attendance_date)=1 and year(attendance_date)=2019 and session_one='W'
+group by employee_roll_no) ca
+
+set es.no_of_weekoff_days=ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=1 and sal_year=2019
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*) as cnt from confirm_attendance
+where month(attendance_date)=1 and year(attendance_date)=2019 and session_one='N'
+group by employee_roll_no) ca
+
+set es.no_of_nationalholidays=ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=1 and sal_year=2019
+
+
+
+-- Update employee intime and outtime
+
+call audit_updateshift_timings_dayshift('2019-1-01','2019-1-31',1);
+call audit_updateshift_timings_fullnightshift('2019-1-01','2019-1-31',3);
+call audit_updateshift_timings_generalshift('2019-1-01','2019-1-31',4);
+call audit_updateshift_timings_halfnightshift('2019-1-01','2019-1-31',2);
+
+-- update total hours
+
+select * from confirm_attendance where session_one='H' 
+and month(attendance_date)=1 and year(attendance_date)=2019
+
+
+update confirm_attendance set
+employee_out_time=DATE_SUB(employee_out_time, INTERVAL 4 HOUR)
+where session_one='H'
+and month(attendance_date)=1 and year(attendance_date)=2019
+
+
+update confirm_attendance 
+set total_hours = TIMEDIFF(employee_out_time, employee_in_time)
+WHERE month(attendance_date)=1 and year(attendance_date)=2019
+
+
+-- Update hindi workers salary
+update emp_monthly_salary_header es
+set
+contract_wages=no_of_present_days*365,
+incentive=no_of_present_days*140
+
+where sal_month=1 and sal_year=2019
+and employee_roll_no like '4%'
+
+
+update emp_monthly_salary_header es
+set
+pf_amount=round((contract_wages*12)/100,0),
+esi_amount=ceil((contract_wages*1.75)/100)
+
+where sal_month=1 and sal_year=2019
+and employee_roll_no like '4%'

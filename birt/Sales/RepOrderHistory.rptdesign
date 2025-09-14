@@ -1,0 +1,1774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="46">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fincode" id="47">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="48">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="49">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ds_order_rep" id="60">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">fincode</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ordh_sono</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ordh_sodate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">cust_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">var_desc</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">shade_shortname</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">ordt_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">ordt_fin_wt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">pckt_sono</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">pckt_sodate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">pack_variety</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">pack_shade</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">pckh_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">pckh_invno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">invwt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">with1day</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">with1_4days</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">with5_7days</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">with8_10days</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">above10days</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ordh_sono</property>
+                    <property name="nativeName">ordh_sono</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">ordh_sodate</property>
+                    <property name="nativeName">ordh_sodate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">cust_name</property>
+                    <property name="nativeName">cust_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">var_desc</property>
+                    <property name="nativeName">var_desc</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">shade_shortname</property>
+                    <property name="nativeName">shade_shortname</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">ordt_qty</property>
+                    <property name="nativeName">ordt_qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">ordt_fin_wt</property>
+                    <property name="nativeName">ordt_fin_wt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">pckt_sono</property>
+                    <property name="nativeName">pckt_sono</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">pckt_sodate</property>
+                    <property name="nativeName">pckt_sodate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">pack_variety</property>
+                    <property name="nativeName">pack_variety</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">pack_shade</property>
+                    <property name="nativeName">pack_shade</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">pckh_date</property>
+                    <property name="nativeName">pckh_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">pckh_invno</property>
+                    <property name="nativeName">pckh_invno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">invwt</property>
+                    <property name="nativeName">invwt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">with1day</property>
+                    <property name="nativeName">with1day</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">with1_4days</property>
+                    <property name="nativeName">with1_4days</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">with5_7days</property>
+                    <property name="nativeName">with5_7days</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">with8_10days</property>
+                    <property name="nativeName">with8_10days</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">above10days</property>
+                    <property name="nativeName">above10days</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spsal_rep_Order_History(?,?,?,?)} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="headerHeight">0.1in</property>
+            <property name="footerHeight">0.2in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="302">
+            <property name="dataSet">ds_order_rep</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">cust_name</property>
+                    <text-property name="displayName">cust_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ordh_sono</property>
+                    <text-property name="displayName">ordh_sono</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ordh_sono"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">var_desc</property>
+                    <text-property name="displayName">var_desc</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["var_desc"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">shade_shortname</property>
+                    <text-property name="displayName">shade_shortname</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["shade_shortname"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ordt_qty</property>
+                    <text-property name="displayName">ordt_qty</text-property>
+                    <expression name="expression" type="javascript">//dataSetRow["ordt_qty"]&#13;
+if (row["invwt"] > dataSetRow["ordt_qty"])&#13;
+   row["invwt"]&#13;
+else   &#13;
+   dataSetRow["ordt_qty"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ordt_fin_wt</property>
+                    <text-property name="displayName">ordt_fin_wt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ordt_fin_wt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">pckh_invno</property>
+                    <text-property name="displayName">pckh_invno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["pckh_invno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">invwt</property>
+                    <text-property name="displayName">invwt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invwt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">with1day</property>
+                    <text-property name="displayName">with1day</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["with1day"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">with1_4days</property>
+                    <text-property name="displayName">with1_4days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["with1_4days"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">with5_7days</property>
+                    <text-property name="displayName">with5_7days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["with5_7days"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">with8_10days</property>
+                    <text-property name="displayName">with8_10days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["with8_10days"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">above10days</property>
+                    <text-property name="displayName">above10days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["above10days"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">ordh_sodate</property>
+                    <text-property name="displayName">ordh_sodate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ordh_sodate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">deliveryrate</property>
+                    <expression name="expression" type="javascript">((row["with1day"]+((0.75*row["with1_4days"])+ (0.5*row["with5_7days"]) + (0.25*row["with8_10days"]))) / row["ordt_qty"] ) * 100</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <expression name="expression" type="javascript">BirtStr.concat("Sales Order Details from  " , Formatter.format( params["fromdate"].value,"dd/MM/yyyy") , ' to ' , Formatter.format( params["fromdate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="445">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="345">
+                <property name="width">2in</property>
+            </column>
+            <column id="346"/>
+            <column id="347">
+                <property name="width">1in</property>
+            </column>
+            <column id="348"/>
+            <column id="349"/>
+            <column id="350"/>
+            <column id="351">
+                <property name="width">1.5in</property>
+            </column>
+            <column id="352"/>
+            <column id="353"/>
+            <column id="354"/>
+            <column id="355"/>
+            <column id="356"/>
+            <column id="357"/>
+            <column id="436"/>
+            <header>
+                <row id="496">
+                    <property name="textAlign">left</property>
+                    <cell id="497">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">3</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <property name="textAlign">left</property>
+                        <image id="512">
+                            <property name="height">0.5833333333333334in</property>
+                            <property name="width">0.59375in</property>
+                            <property name="source">embed</property>
+                            <property name="imageName">logo.jpg</property>
+                        </image>
+                    </cell>
+                    <cell id="498">
+                        <property name="colSpan">9</property>
+                        <property name="rowSpan">2</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <property name="textAlign">center</property>
+                        <property name="verticalAlign">middle</property>
+                        <label id="219">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD</text-property>
+                        </label>
+                    </cell>
+                    <cell id="507">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="513">
+                            <text-property name="text">Ref. No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="509">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="516">
+                            <text-property name="text">SHVPM/MKT/F04</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="480">
+                    <property name="textAlign">left</property>
+                    <cell id="491">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="514">
+                            <text-property name="text">Rev. No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="493">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="517">
+                            <text-property name="text">002</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="464">
+                    <property name="textAlign">left</property>
+                    <property name="height">0.25in</property>
+                    <cell id="466">
+                        <property name="colSpan">9</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">12pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <property name="textAlign">center</property>
+                        <data id="463">
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="475">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="515">
+                            <text-property name="text">Rev. Dated</text-property>
+                        </label>
+                    </cell>
+                    <cell id="477">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="518">
+                            <text-property name="text">01-04-2025</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="303">
+                    <property name="verticalAlign">middle</property>
+                    <cell id="440">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="446">
+                            <text-property name="text">SO Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="304">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="358">
+                            <text-property name="text">Customer Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="305">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="360">
+                            <text-property name="text">SO NO</text-property>
+                        </label>
+                    </cell>
+                    <cell id="306">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="362">
+                            <text-property name="text">Quality</text-property>
+                        </label>
+                    </cell>
+                    <cell id="307">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="364">
+                            <text-property name="text">Shade</text-property>
+                        </label>
+                    </cell>
+                    <cell id="308">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="366">
+                            <text-property name="text">Order Qty(t)</text-property>
+                        </label>
+                    </cell>
+                    <cell id="309">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="368">
+                            <text-property name="text">Finished</text-property>
+                        </label>
+                    </cell>
+                    <cell id="310">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="370">
+                            <text-property name="text">Invoice Nos</text-property>
+                        </label>
+                    </cell>
+                    <cell id="311">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="372">
+                            <text-property name="text">Despatched</text-property>
+                        </label>
+                    </cell>
+                    <cell id="312">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="374">
+                            <text-property name="text">With in a day</text-property>
+                        </label>
+                    </cell>
+                    <cell id="313">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="376">
+                            <text-property name="text">1 - 4 Days Delay</text-property>
+                        </label>
+                    </cell>
+                    <cell id="314">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="379">
+                            <text-property name="text">5 - 6 Days Delay</text-property>
+                        </label>
+                    </cell>
+                    <cell id="315">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="381">
+                            <text-property name="text">8 - 10 Days Delay</text-property>
+                        </label>
+                    </cell>
+                    <cell id="316">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="383">
+                            <text-property name="text">Above 10 Days Delay</text-property>
+                        </label>
+                    </cell>
+                    <cell id="431">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="437">
+                            <text-property name="text">Delivery Rating</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="400">
+                <property name="groupName">SODATEGRP</property>
+                <expression name="keyExpr" type="javascript">row["ordh_sodate"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["ordh_sodate"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="401">
+                        <property name="verticalAlign">middle</property>
+                        <property name="height">0.3645833333333333in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="441">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="402">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="403">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="404">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="405">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="406">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="407">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="408">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="409">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="410">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="411">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="412">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="413">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="414">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="432">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="415">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="443">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="416">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="417">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="418">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="419">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="420">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="421">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="422">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="423">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="424">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="425">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="426">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="427">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="428">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="434">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="317">
+                    <cell id="442">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="429">
+                            <property name="fontWeight">normal</property>
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">ordh_sodate</property>
+                        </data>
+                    </cell>
+                    <cell id="318">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="359">
+                            <property name="resultSetColumn">cust_name</property>
+                        </data>
+                    </cell>
+                    <cell id="319">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="361">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">ordh_sono</property>
+                        </data>
+                    </cell>
+                    <cell id="320">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="363">
+                            <property name="resultSetColumn">var_desc</property>
+                        </data>
+                    </cell>
+                    <cell id="321">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="365">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">shade_shortname</property>
+                        </data>
+                    </cell>
+                    <cell id="322">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="367">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ordt_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="323">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="369">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ordt_fin_wt</property>
+                        </data>
+                    </cell>
+                    <cell id="324">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="371">
+                            <property name="resultSetColumn">pckh_invno</property>
+                        </data>
+                    </cell>
+                    <cell id="325">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="373">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">invwt</property>
+                        </data>
+                    </cell>
+                    <cell id="326">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="375">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["with1day"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">with1day</property>
+                        </data>
+                    </cell>
+                    <cell id="327">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="377">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if ( row["with1_4days"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">with1_4days</property>
+                        </data>
+                    </cell>
+                    <cell id="328">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="380">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if ( row["with5_7days"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">with5_7days</property>
+                        </data>
+                    </cell>
+                    <cell id="329">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="382">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if ( row["with8_10days"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">with8_10days</property>
+                        </data>
+                    </cell>
+                    <cell id="330">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="384">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if ( row["above10days"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">above10days</property>
+                        </data>
+                    </cell>
+                    <cell id="433">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="438">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">deliveryrate</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="331">
+                    <cell id="444">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="332">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="333">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="334">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="335">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="336">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="337">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="338">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="339">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="340">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="341">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="342">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="343">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="344">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="435">
+                        <property name="fontSize">8pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">logo.jpg</property>
+            <property name="data">
+                /9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAgGBhIQEBMTExEQFRIVGBsYGBAQGCAVFRgbJSAlJSUgJSUg
+                JCMwICo1KiYcKDQpNSQxQD8/JjA5PSwmSCM/KCYBCQkJDQwNGA4OGCYdHR0mJiYmJiYmJiYmJiYmJiYm
+                JiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJv/AABEIALAAlAMBEQACEQEDEQH/xAAbAAAB
+                BQEBAAAAAAAAAAAAAAAFAAIDBAYBB//EADoQAAIBAgUCBQIEBAUEAwAAAAECEQADBAUSITFBUQYTImFx
+                MoFCkaHRI1JiwRQVseHwM1OS8RYkNP/EABkBAAIDAQAAAAAAAAAAAAAAAAAEAQIDBf/EACURAAIDAAIC
+                AgMAAwEAAAAAAAABAgMREiEEMRMiFDJBUWFxQv/aAAwDAQACEQMRAD8A9+qAO0AKgBUAKgDkUAcigBRU
+                kgvNMXDKgJk7kjoBVdLRRUyfGk371okmIcTvsf8Aesov7F5x6D8VsjIVAHYoIO0AKgBUAKgDhoAis4dU
+                1FVA1HU0bSYAn9BVtIwmqpIqAFQByaNA5NBOCoIAuLzO4uINqEC6AwYyWJmCI9tqo2/4aRXQy7n4tsBc
+                HPDDisnc4+y0a+QJbG+ZjHIMoba6Tx13qkbYyZpwyIspGnH3XZoU2gN9gINQpxjMtOP0NA+eWRw8nsom
+                tlahf42SLm9ssqloZ/pDbEn2qVYiHBoIA1oUO1ICoAVACoAVACoAVACoAaxqGwMPmfjMee9lJC25DMOW
+                YdAelJ3W/wAQ3XVq1jMPnFwFG8yNYJCHfcciD096q5yS0v8AGmjX5djhethxtPI7Gm4WckKTg4shzbAG
+                6oKkC4u6k8e4Psal/wCiYvAB56uDbuABvxW26H2/esJSUupG0d/hRwuIDXGVWRmsnTqbaQfw0lnGXQzx
+                TXZzAsmIJJZTpYyv9Q2/IVNaTl2FnUfqEHxduyIHP8q7kmmnNR6Qu032y/lWXM7reurBWdCHlZ6/NaVx
+                ftmdkl6RohTBgI0AcoJO0EHaAFQAqkBVAHDQA1qiS0lHjGCsGzevBlZzrfZQCdUnmuVJ/c6aX1LIAayJ
+                nzCTLMZ57HpRKxuJHHGbPwEjLYdWbVDnc8waZ8R7EX8pZI02JvrbVnYwqiST2pvcQqjMXMBcxsXGTy1P
+                0hx647nsfak50ub1DMLFAx2NyFMNfcPqbUQ4ImD7wKTsUovodrmpItZNlGpmZf4f9PXf296iumU+ybLY
+                xDmUKuFufxlB1na7yFPYnpTFNbg+xa2XNfU2ymukszoRZ2p3+sj/AEjMZ34iKaghA0xv3Mx+lJW3NvIj
+                VdWLWUredXbTEu6kEArOxI+DVZWSjjLqpSRrMBjFvW1deD+ntTkZckmKzi4vC0KuUO0AKpAVQBw0ANNH
+                tEnlWa4kf5heVQ0BwS4kKDAkGOTPT3rlXPJM6dUdgiHE3yqXgFAFwj1N6Sh9hG/51irOmacPsbnwfYK2
+                WJ/EfngRT/hrI6JeW/uXM+xi2lV3DG2reoKNXwSOomt5zUfZjCO9FPMvERCfwkJY8G76FHzStvkqK+pt
+                X4737GfwmMCgtdZWvNuxXf7Csa7l7ZvKr+RLT4xZ124LGAQCBI/2q78iK7RVVyzGSvmVpwVfYHYrc2rS
+                N8ZLDNVSTC3hrG6kZJLC2YVu69B9uK3qnpjbHGF8Xd023bspP5CtJ9JlI+zzvDYu1ctjzDOpQZIJgxwd
+                tvbvNc6OP2PYwbfdHthQX886h6gZI7iekVNjXHS0V9jceBrDJg1DEk6m57TTXjvYinkfuaWmUzAdQQKp
+                A4KgDpoAYah+gXs8kxuICYq+HBMXXgAEsZ6jp2rmWfs9OrWtiiuuMUg22D+YSNIIJU99/wB6xSXHS2S0
+                9BweapYwlsncxAUdTTldyjATsrcrAFjc6e8wUEAkjc7bT0FL2WOx4b11qPZnGulbzLc1/UdDDYH79d+9
+                UyPo15aWsPItshiSZ1k0alHpEZjO3LmwXTvwWESRVeSzGgWtjxf3KKdW0kXDK1PFN/UHqX2NLlXiDy4t
+                3FA9h/zema7OHTF7Kd7RqLoFy2QDIZSJHYinX3HoUXUjzK3bZJAdRvpLH6ttoA61y1JrTp9CRvVbUsCw
+                OlSRuBwAfeq8pSxEZms9OwlgIiqOAIrrVxyKRzZvW2T1okVHUECqQG1BJRxeJcMFQAkCTPbsKo2SkTYb
+                FC4NuRsR1BqIyBrDzvxCot4y7NvV5gWIMRI3P6Vz/Ik1I6VDTgBr98KhO8g8nqe1KyaawajH+k1p7mlQ
+                TqZRwTxvPFaVrrWY2JJ9BJbZvsPQBtvHRiZJ/wBq0adjxGWqK7LlvKRJMalSPT32q8aOMtZX5dXRfSwn
+                QCPbim1GL/gvKckxl7AI+2gSeo5FZWVxzpEwm1LQPdytgutTMzIHIFK/E0uSG/li+mRW3Tdmmf5jzPSK
+                mPa79hJP+BbJc98mUuSFaSsjcH9jV43OC+xlOnfQJw170sGWdjEbCTuJPeqRerkXaekWDcsRP1AiBtx8
+                jnerOSaSQPo9Us/SJ7V0YfqjnS9kkVcqdoAVSA2oJKGk/wCIOwgoN+sg8VRolATF4sYbGgljpuKSR9+a
+                UnLhLRiMeccG3it+55xQALtbY8n3q6Sn9mCk4LDJZm6G80CYaSBx2rm2Ri5nRhJ/GSDDTdCqzbruxg7H
+                oSK0Ue1FGO4tZo7FoIoUdP1NdGuCghKcnJncFe9dxfcGPaKld9Ey6XRSW8bd24hkr9ax79PzrB2fHLGa
+                cOa0JgmzbLvzGpgOntWyeLWZcdeFbCfQp7id+d96tHGuyJ/7B2a4Mj1ptvJAG3zSl9XB8kM1WasBTWGv
+                W9nt6RMAEysHp9/esZLnHTVPi8Y7AXXu2wF7EMo5EGD+tZ/LLOKNJRXsM+HsvFy4nMW+TwD7fnW/jyc/
+                aF73iN9NdNejn+yBMchfQD6v0qOZOFmrEHRUkFLF5natRruKpPAJ3P2rOU0iyi2Bcyz62CrKZdWgKdtQ
+                PIrCfkJG0aWwT4rxSXvL8sjXH19QD0mlfJnGWYMURcNbJr7+XbVBuwAVQO8Vu5KNeIqls9Zj3Rxc/CRq
+                OvbYnvtxSEc5djzf16CeRWXaW2WCZVd9uIE1rTXstQvbPiuw+MKx9SXCw7NE/nTri/4KqUX2yjcu+XeV
+                zIJGll4270t8koz7N3CMo9Hc1TVetMGI6GNwRPBotalJE1pqGE2a44f9KCS+xI3ir23cUomddestYfUw
+                Ho0iOG5rark0UnFJkOY3GQBQuovsAvT3qt7eYi1UUnrM9hcOFZh9DCSxPzE9ppKrW2mNTazSz4TdVvuC
+                vqaTr4kD/wBT96tQl8mMrfJ/H0arCYy3h7oQgKLp2Ycau1OJKpiT2ZZxGY+YxVCNA+phvv2rTnyKcXEW
+                BtarwboinYd2j9q0ikE30G6tpmOFSQYfFZd/hmZnGvUSfPYajueCekVlJI3h2RX8VZ0ljo2445pW3h/T
+                aCm/RmMux+K8pkuWrRB1Fbkwd+NqVslH+DSjJdMOeHBqtK7GbkkEzP5UxS01pjammC9hcfUJJBUCYMzz
+                Sy/Z6jf/AMoMZBAt7dIpnxMemHk/zS9cXy5YGByVPH2NMyfFi6Sl0Vb+Z23TUyuQBqBA3pWycJI3hBrp
+                AzKcSly35jXChJby1J2gdKUS/pu208ZJkWcqw1FSzE/UF4reN0d2RSdTXoJrnBd9FtOOrbRW0fJ5Poxd
+                KS0t27W8sZY9enwKZUd7MW89ADN7hW+BvobSHI3gHv7Vz5xy3sbjL6kmBsHzdSMSqSRPUdh3qYxXPUTO
+                TcMCuaDzbJAIDAgieRW9uSiY1LGQ4bFJh7CgsC2+w5JqsLoxjhaVblI02ShRbB1KWbdiD+n2puqakhWx
+                Y8CgNapGQ8VJBG6Tzv8ANQ1pKeGU8Q5Kl+5bsLbC6vU95BuoHT5NL2URkb12yj2CfEeRWsOqBGfgypMz
+                FJeRVGDwbotlN6POE02w9rYgTpHDe1a8OMOSKOezxga1i5ctoBBJ9PbaloWbqw3nHMYTyXEAa1OxkQO9
+                beLLHhnfHewpbwYLFrh1z+E/SPgU7xT7YqpNehmPxFsIyhVLERpHNK3OETWtT9syduyLYCm13gEUk90d
+                4qXYVyFxacrcTTPU/T8VpQlF5Ipb2ugzdwKk67cK3ccH5ptVJ9xFObXTH4e+TIYQ45HP3FMKXXZm4reg
+                PjXXzmLHYQJ6CB19qQm+U9YzFNRLGWXVLsQCq7hZ5IHX79KmucVIiafHAdisW64pypSNIADbie+1Z3zX
+                LDauC44ixkllL1695rKSd1UbAew70VKEnjK3cox6NLZwyrsqx8bEV04QSXQhKWsv5fiWD+Wx1GJnkj2J
+                q0W0ysl0FhWpmcqAKt6+lsM7EAdSfas5tLsuk30efZziRi7usGEGyhutcfyJ85HTprcEPyfMAoCXCBuQ
+                CT17VtRbq4spbDXqBl22RdIV4BJEHjfil02rOjbNj2WLeGNp0Z9zuTHzE1rxanrM91YjQjDqR1399q6M
+                ca6EvsmUWwQbEIAoCIpLe5PArCVPKZvGz6EGcv8AxV2MJuY+36Vjc8n0Xq3gS+IsCXtB15QgkfzL1FaW
+                16kylUsljLuHw4UDy2KgxtyK2rhkejKyTchuNtkjUbkFeoEfaq2w+vReEuwHZdYZ2tlmYEbfST9+lJ1v
+                inyGHr6RdyZWdipiBHmRxPIUVFFfOWkWy4x7HeJLSny1kAz8GK18lRWIPGbxskvZVbTRc0+lSNajqvf7
+                VdUxxSRSVzacTb2bC6RpmI236V0IZnQg2S27CrsAB8VK9kN6TVJA2hkgbPtFu1cukAsFgatxPTal73kD
+                WnuR5rawi+UZLG6GLCJnvFc2PFrTpzctSFld5yiXCgYDbYbiOtRSlrIsWJGqyvJLWIwrso9ZJ9cyZHSm
+                oVJx0Vna1LAAzGRbd7i6JIJO89j96XeP2MLAplmOB9O8jlexram3i8ZlZD/ARF9VJ33MQOZppTTfRg4s
+                bbwohtW5fnr9qr8W6yfkcehnmEWyh5CmD3Heol1DGTFd6SYRv4SH+kVNc1GPZEoNsH5heN0hFI239Ww+
+                9LTs5yxGsIcER4Kzduv5YI2aB3EdZ7VTOT4F5NRXIuYa55AdIJfWdRHHt+la1L49RlP7tNgoXfOuOHVt
+                UAg8AClbJOUuxmKUV0HsNiFuWiOwII94p+qcXDBWyDUtNLkzzYtn+kU1V6FbP2L9XKHakBtQyQF4vE4V
+                h7j/AFpXyv0N/H/YwCXdFu8NOr0adY5HvXPrkuB0Ja5I7lOtNOnTOnluhjpU+Ot0rc+0jZeBLcYTfnWx
+                Pfmuj4+OOCXkP7HfEGQF5uWwNfJWOaxuoW8kWptzpmceXKwSjDknkmf0pfFLr0MpjBiG8wOwMAFdaDYm
+                etVyUHyQSafovjPLfXUBzJHStvyZL+GX4/8Akr4zNrVy2RDnUYBUSZ/1FVnc7OsNIwUX2RYfUFVUgADg
+                k6u/FYxrmWskk+hmGtG4U0o+sz9/cfvQk5evYSeLs3OT5SLCyfrbk/2roVVcVr9iNs+T6MrjrzNi7wQq
+                GDhfXvsF5il2/uxiK+iBlvCsMQzFlGxUwdo9qWSTnjYw5ZAI5PhTdvXFDkenZtjJ/vW9Va5dMxtlkdN3
+                gsN5dtUBnSAJroxWIQk9ZZq5UVSA2oJA/ia3qwz+0H9aV8lfQ2o/Y85LsquASynaI2+K5cJvjh03+yH2
+                7Y07sVOjgfVttHY/nV6F0VtXaw2Pgi7Np16gzB25HanfFf8AEJeSu0zVRTjX+RXQRmWQWrxJiGP4h1+R
+                1rKylSNq7nHoxWYYe7YuG2WI2P0iQy/FcyyyVf1Y9WlZ2UDcdhB0gCTLSSf2FUXkJ+y6gTG++9wBVJAG
+                mJEDrO01efkJeiFToWyXJXvrqDFV41nYnvAHT5NbUxlZ2YWz+N4a/LspSyNhLdWPNO10xh2KWWOT7L9a
+                tPDM82xgU4q4uorLkkjYnpzXM9zenQX6IqONLbnYEgkGB+8UrGKdptLVX0aHw2n/ANpoggJsR9qdqz5M
+                iL3t/H2bUV0UIHakBVIHKj+gV8bh/Mtuv8wIqlkeSLwlkjyUWXFxrYYg7yhgCQe9cfi02jrRaeMs4MWy
+                Br6j7c9aihJS7K277RofBl/+K44DCQJng0z4rjzaQv5K+qZt66YixVD67I/h514uzHVfKqCdCwSO9cfz
+                XykdTxY8YgBMSzbEhQPxE7UmojXHSD/MoEkEjf7jvUKD0s+j03whf14S2Yjnb712/ESUMOP5P7aw9TX/
+                AEwGu0AntVZvESvZ5a7qWdn3JM21EkzO9cmOa2zp50kSYW7puA6QR1XnbvNZeOvu2Xt/XEaLw2VbE3WQ
+                HTAiac8fHZore3wxmvFdIRO0aAqkBVADTQAEzjw1axB1H03B+NeaXnSpejau5oxOb5M2HOliIJkEbSOo
+                rmTrdUzo12xmixkeI0YlGC6VYgBPtFa1vjPUUtjscNzm+aLhrRuNJAgADkk10bLOC058Icnhj8Z4tvXN
+                ltkAjpzvXOt8tser8ZL2D7CNcLPJUxA1KTA/vSnJvsYeRWIr3sqQtOoAzuQDuPio7LRkx2EycDYOpE8M
+                Dx2FC0HYFstvnCAATpA4Enfr9q3qvcDCdcZmnyvxFavAbw3Y10a/KjL2IzocfRZzfE+XYuN7ED5NWvnk
+                StUdlh526GASrQBC9pneuc1kNH4r7EmFVghuKwImT27f8FTVFwWk2Nbhr/CWBZLbO4hnMx7dKd8aP9FP
+                JnrxGipsVO0AKpAVQAqAGkUf8DSjmmVpiE0v9iORWdlUZey9c3BgnA+E1tOrG4zBDIBA5rONKRrK9tEP
+                jz/86zxrEjmay839C/ifsYXAAqW0NOtCgXoOvXqK46kdSSQUwty+gj2ADMpiAKtGWFHFD0x14ekspP8A
+                NpPFS7GRwOvmGIACqfVI9ZWduvtUOxkcENxKXysBn+oENEEb8fFV5tsOio1q7KA3G2YmQApnnirQk+RM
+                0sNf4tukYe3zpJEn7bV0vJcnBCPj5zZnQztFgTvEA7H5+1KycnkRnMTkbLKvDlqwsCW4+rcT8V06qVGP
+                Zz7LXJhpRW6WGLY6pAVACqQFUAKgBUAcoAaahkr2ZDx9cAsoCOWiegMc0h5knnQ34q2RjRcUKukKSFVW
+                PABn6h1mK5WnS4hZ8eFASHK6vq1EQP3qOaK8WIY22WO97SOoPX3qU0DjIkfMEUj1XY6sWjftU8kRwkxP
+                mmqV0vG29xtiD8VVzQKAKxLfxB6AArbODJII4qYSWl3Do9PTDrdsqrgEFRIPxXciozhjONJuMtKuXeGr
+                Nhy6KdR6kzUw8aMeyZXSksDAFMGI6gBUAKgBVICqAFQAqAI7rhQSeBvUMlI89xXiG9iSTbLKk7AbEjvX
+                Ns8h7h0K6UvYKutcMlgzD+omsJWt+zaMFHtFM21/7R+ASCaybibJsZeVmUhQyz152rNxiWTO4a9dW3AS
+                WHfgjvWeEsbiLd5gBHzIipSRKHDDYggSQFHTr96s0s9EN9llMK07qTB77fNFeb6KWPoJWr920QyMw7kn
+                b4p2NuCsq9RtfDuc/wCKtaohlJVl966NE+cdEbYcWGK2MjtACoAVACqQFUAKgBUAQ4lJRh3BFVs9Ew9n
+                jdzDRq0XGUkhYnZQDP6xXCnJxfZ2YR1E+Hxl4K0uDMkfBPFVlasL/GWzmNwx/wBMNPXcSBAPxVfkRHBn
+                P8ycRATZCIP60fIg4M7bzN53CfgiO1RzQcGPXM3kbJMtv70c0W4DbeZXAJOjhfy/erKaIdbZYtY641yF
+                CSWO2/Mf6VEe2VccArW7jFg90kEFTp2Ahpn+1Xcv4iePenoHga0Bh2IndzuetdXxE1E5nkvZGppsWFQA
+                qAFQAqkBVACoAVAHIo9gB8Z4Zw90lmtgMeWX0msJ+PGfs2hdKJRPgfD9Dc/8qxfhwZqvLmMPga10d/jY
+                1T8GJb82QweBLX/cf9KPwIk/myHDwLan633+KPwIkfmyHDwPZ/mufmKPwIkfmSHf/CbHe59jU/hRTD8y
+                Zay/wvZssWUuSRHqP61rDxIxZnPyZyGW/B2GBJKs09GMiheJBPQ/IngbsWFRQqgBRwBsKZUVFdGDbb1k
+                tSQKgBUAKgBVIH//2Q==
+</property>
+        </structure>
+    </list-property>
+</report>

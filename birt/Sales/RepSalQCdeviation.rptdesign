@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="9">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="DPMPHP" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://192.168.11.15/dpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">TXlzcWwxMjM=</encrypted-property>
+            <property name="OdaConnProfileName">DPMPHP</property>
+            <property name="OdaConnProfileStorePath">DPMPHP</property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ds_sal_qcdeviation" id="5">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-6</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">finid</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">finid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-6</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">invh_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">invh_fincode</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">invh_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">invh_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">invh_type</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">invh_netamt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">invh_totwt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">invt_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">invt_wt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">invt_urate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">invt_loss_pmt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">cust_ref</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">var_size1</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">var_size2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">var_gsm</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">vartyp_shrtname</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">DPMPHP</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">invh_comp_code</property>
+                    <property name="nativeName">invh_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">invh_fincode</property>
+                    <property name="nativeName">invh_fincode</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">invh_no</property>
+                    <property name="nativeName">invh_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">invh_date</property>
+                    <property name="nativeName">invh_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">invh_type</property>
+                    <property name="nativeName">invh_type</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">invh_netamt</property>
+                    <property name="nativeName">invh_netamt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">invh_totwt</property>
+                    <property name="nativeName">invh_totwt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">invt_no</property>
+                    <property name="nativeName">invt_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">invt_wt</property>
+                    <property name="nativeName">invt_wt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">invt_urate</property>
+                    <property name="nativeName">invt_urate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">invt_loss_pmt</property>
+                    <property name="nativeName">invt_loss_pmt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">cust_ref</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">var_size1</property>
+                    <property name="nativeName">var_size1</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">var_size2</property>
+                    <property name="nativeName">var_size2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">var_gsm</property>
+                    <property name="nativeName">var_gsm</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">vartyp_shrtname</property>
+                    <property name="nativeName">vartyp_shrtname</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spsal_rep_qcdeviation(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-6</design:nativeDataTypeCode>
+          <design:precision>3</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>finid</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-6</design:nativeDataTypeCode>
+          <design:precision>3</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="rightMargin">0.5104166666666666in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="43">
+            <property name="dataSet">ds_sal_qcdeviation</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">invh_no</property>
+                    <text-property name="displayName">invh_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_no"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">invh_date</property>
+                    <text-property name="displayName">invh_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_ref</property>
+                    <text-property name="displayName">cust_ref</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_ref"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">vartyp_shrtname</property>
+                    <text-property name="displayName">vartyp_shrtname</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["vartyp_shrtname"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">var_gsm</property>
+                    <text-property name="displayName">var_gsm</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["var_gsm"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">size</property>
+                    <text-property name="displayName">size</text-property>
+                    <expression name="expression" type="javascript">if(dataSetRow["var_size1"]>0)
+BirtStr.concat(dataSetRow["var_size1"],"X",dataSetRow["var_size2"])
+else
+Formatter.format(dataSetRow["var_size2"],"0.0")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">wt</property>
+                    <text-property name="displayName">wt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_wt"]/1000</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">invt_urate</property>
+                    <text-property name="displayName">invt_urate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_urate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">invt_loss_pmt</property>
+                    <text-property name="displayName">invt_loss_pmt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_loss_pmt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">lossamount</property>
+                    <text-property name="displayName">lossamount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_loss_pmt"] * row["wt"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">company_name</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["company_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <text-property name="displayName">heading</text-property>
+                    <expression name="expression" type="javascript">"Sale of Quality Deviation from " + Formatter.format(params["fromdate"].value,"dd/MM/yyyy") + "  to   "  + Formatter.format(params["todate"].value,"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">rundate</property>
+                    <text-property name="displayName">rundate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(BirtDateTime.today(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">grandwt</property>
+                    <text-property name="displayName">grandwt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["wt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">grandlossamt</property>
+                    <text-property name="displayName">grandlossamt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["lossamount"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">daywt</property>
+                    <text-property name="displayName">daywt</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpindate</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["wt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dayloss</property>
+                    <text-property name="displayName">dayloss</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpindate</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["lossamount"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="77">
+                <property name="width">2cm</property>
+            </column>
+            <column id="78">
+                <property name="width">2.5cm</property>
+            </column>
+            <column id="79">
+                <property name="width">8.5cm</property>
+            </column>
+            <column id="80">
+                <property name="width">2cm</property>
+            </column>
+            <column id="81">
+                <property name="width">2cm</property>
+            </column>
+            <column id="82">
+                <property name="width">2.5cm</property>
+            </column>
+            <column id="83">
+                <property name="width">2cm</property>
+            </column>
+            <column id="84">
+                <property name="width">2cm</property>
+            </column>
+            <column id="85">
+                <property name="width">2cm</property>
+            </column>
+            <column id="86">
+                <property name="width">2cm</property>
+            </column>
+            <header>
+                <row id="115">
+                    <property name="height">0.5833333333333334in</property>
+                    <cell id="116">
+                        <property name="colSpan">10</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="126">
+                            <property name="height">0.5in</property>
+                            <column id="127"/>
+                            <column id="128">
+                                <property name="width">1.2in</property>
+                            </column>
+                            <column id="129">
+                                <property name="width">1.2in</property>
+                            </column>
+                            <row id="130">
+                                <property name="height">0.2604166666666667in</property>
+                                <cell id="131">
+                                    <data id="138">
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">company_name</property>
+                                    </data>
+                                </cell>
+                                <cell id="132">
+                                    <label id="140">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Page No.</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="133">
+                                    <auto-text id="142">
+                                        <property name="textAlign">left</property>
+                                        <property name="type">page-number</property>
+                                    </auto-text>
+                                </cell>
+                            </row>
+                            <row id="134">
+                                <property name="height">0.23958333333333334in</property>
+                                <cell id="135">
+                                    <data id="139">
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">heading</property>
+                                    </data>
+                                </cell>
+                                <cell id="136">
+                                    <label id="141">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Run Date</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="137">
+                                    <data id="143">
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">rundate</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="87">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="88">
+                        <label id="98">
+                            <text-property name="text">Inv. No.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="89">
+                        <label id="100">
+                            <text-property name="text">Inv.Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="90">
+                        <label id="102">
+                            <property name="paddingLeft">30pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Customer</text-property>
+                        </label>
+                    </cell>
+                    <cell id="91">
+                        <label id="104">
+                            <text-property name="text">Qly</text-property>
+                        </label>
+                    </cell>
+                    <cell id="92">
+                        <label id="106">
+                            <text-property name="text">GSM</text-property>
+                        </label>
+                    </cell>
+                    <cell id="93">
+                        <label id="144">
+                            <text-property name="text">SIZE</text-property>
+                        </label>
+                    </cell>
+                    <cell id="94">
+                        <label id="145">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Weight</text-property>
+                        </label>
+                    </cell>
+                    <cell id="95">
+                        <label id="110">
+                            <property name="paddingRight">10pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="96">
+                        <label id="112">
+                            <text-property name="text">Loss PMT</text-property>
+                        </label>
+                    </cell>
+                    <cell id="97">
+                        <label id="146">
+                            <text-property name="text">Loss Amount</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="147">
+                <property name="groupName">grpindate</property>
+                <expression name="keyExpr" type="javascript">row["invh_date"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["invh_date"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="148">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="149">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
+                        </cell>
+                        <cell id="152"/>
+                        <cell id="153"/>
+                        <cell id="154"/>
+                        <cell id="155"/>
+                        <cell id="156"/>
+                        <cell id="157"/>
+                        <cell id="158"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="159">
+                        <cell id="160"/>
+                        <cell id="161"/>
+                        <cell id="162"/>
+                        <cell id="163">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="165">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="166">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="202">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.0000{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">daywt</property>
+                            </data>
+                        </cell>
+                        <cell id="167">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="168">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="169">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="203">
+                                <property name="paddingRight">10pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">0</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">dayloss</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="171">
+                <property name="groupName">grpinvno</property>
+                <expression name="keyExpr" type="javascript">row["invh_no"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["invh_no"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="172">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="173">
+                            <data id="194">
+                                <property name="resultSetColumn">invh_date</property>
+                            </data>
+                        </cell>
+                        <cell id="174"/>
+                        <cell id="175"/>
+                        <cell id="176"/>
+                        <cell id="177"/>
+                        <cell id="178"/>
+                        <cell id="179"/>
+                        <cell id="180"/>
+                        <cell id="181"/>
+                        <cell id="182"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="183">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="184"/>
+                        <cell id="185"/>
+                        <cell id="186"/>
+                        <cell id="187"/>
+                        <cell id="188"/>
+                        <cell id="189"/>
+                        <cell id="190"/>
+                        <cell id="191"/>
+                        <cell id="192"/>
+                        <cell id="193"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="55">
+                    <cell id="56">
+                        <data id="99">
+                            <property name="paddingLeft">3pt</property>
+                            <property name="resultSetColumn">invh_no</property>
+                        </data>
+                    </cell>
+                    <cell id="57">
+                        <data id="101">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">invh_date</property>
+                        </data>
+                    </cell>
+                    <cell id="58">
+                        <data id="103">
+                            <property name="resultSetColumn">cust_ref</property>
+                        </data>
+                    </cell>
+                    <cell id="59">
+                        <data id="105">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">vartyp_shrtname</property>
+                        </data>
+                    </cell>
+                    <cell id="60">
+                        <property name="textAlign">center</property>
+                        <data id="107">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">var_gsm</property>
+                        </data>
+                    </cell>
+                    <cell id="61">
+                        <property name="textAlign">center</property>
+                        <data id="108">
+                            <property name="resultSetColumn">size</property>
+                        </data>
+                    </cell>
+                    <cell id="62">
+                        <data id="109">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.0000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">wt</property>
+                        </data>
+                    </cell>
+                    <cell id="63">
+                        <data id="111">
+                            <property name="paddingRight">10pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">invt_urate</property>
+                        </data>
+                    </cell>
+                    <cell id="64">
+                        <data id="113">
+                            <property name="paddingRight">10pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">invt_loss_pmt</property>
+                        </data>
+                    </cell>
+                    <cell id="65">
+                        <data id="114">
+                            <property name="paddingRight">10pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">lossamount</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="66">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="67"/>
+                    <cell id="68"/>
+                    <cell id="69">
+                        <label id="201">
+                            <text-property name="text">GRAND TOTAL</text-property>
+                        </label>
+                    </cell>
+                    <cell id="70"/>
+                    <cell id="71"/>
+                    <cell id="72"/>
+                    <cell id="73">
+                        <data id="198">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.0000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">grandwt</property>
+                        </data>
+                    </cell>
+                    <cell id="74"/>
+                    <cell id="75"/>
+                    <cell id="76">
+                        <data id="199">
+                            <property name="paddingRight">10pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">grandlossamt</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

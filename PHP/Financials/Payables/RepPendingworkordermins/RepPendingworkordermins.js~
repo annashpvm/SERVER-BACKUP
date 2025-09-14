@@ -1,0 +1,232 @@
+Ext.onReady(function(){
+   Ext.QuickTips.init();
+    var ginfinid = localStorage.getItem('accfinid');
+    var gstfinyear = localStorage.getItem('accfinyear');
+    var gstfinuser = localStorage.getItem('accuserid');
+    var gstfincompcode = localStorage.getItem('acccompcode');
+
+   var dtpFromdate = new Ext.form.DateField({
+        fieldLabel : '',
+        id         : 'dtpFromdate',
+        name       : 'pack_date',
+        format     : 'Y-m-d',
+        value      : new Date()
+   });
+
+   var dtpTodate = new Ext.form.DateField({
+        fieldLabel : '',
+        id         : 'dtpTodate',
+        name       : 'bl_date',
+        format     : 'Y-m-d',
+        value      : new Date()
+   });   
+   
+   var rptype="OP1";
+  
+   var optTypes = new Ext.form.FieldSet({
+        xtype   : 'fieldset',
+        title   : '',
+        layout  : 'hbox',
+        width   : 400,
+        x       : 5,
+        y       : 5,
+        border  : false,
+        items   : [
+            {xtype  : 'radiogroup',
+            columns : 2,
+            id      : 'optType',
+            items   : [
+                {boxLabel: 'Details', name: 'optTypes', id:'optDetails', inputValue: 1, checked:true,
+                listeners:{
+                'check':function(rb,checked){
+                if(checked===true){
+                    rptype="OP1";
+                }
+                }
+                }
+                },
+                {boxLabel: 'Consolidated', name: 'optTypes', id:'optCons', inputValue: 2,
+                 listeners:{
+                'check':function(rb,checked){
+                 if(checked===true){
+                    rptype="OP2";
+                 }
+                }
+                }
+                },
+                {boxLabel: 'Madeups', name: 'optTypes', id:'optMadeups', inputValue: 3,
+                 listeners:{
+                'check':function(rb,checked){
+                 if(checked===true){
+                    rptype="OP3";
+                 }
+                }
+                }
+                }/*,
+                {boxLabel: 'Process Defect Supervisor wise', name: 'optTypes', id:'optSuperwise', inputValue: 4,
+                 listeners:{
+                'check':function(rb,checked){
+                 if(checked===true){
+                    rptype="OP4";
+                 }
+                }
+                }
+                }*/
+            ]
+        }
+        ]
+   });     
+   
+
+   var ProcessWastageFormPanel = new Ext.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : 'Pending WO MIN Report',
+        width       : 787,
+        height      : 510,
+        x           : 0,bodyStyle:{"background-color":"#3399CC"},
+        y           : 0,
+        frame       : false,
+        id          : 'ProcessWastageFormPanel',
+        method      : 'POST',
+        layout      : 'absolute',
+        reader: new Ext.data.JsonReader({
+                    root:'rows',
+                    totalProperty: 'results',
+                    id:'id'
+                    },[]),
+        tbar: {
+            xtype: 'toolbar',bodyStyle: "background: #d7d5fa;",
+            height: 40,
+            style   :'background-color:#d7d5fa',
+            fontSize:18,
+            items: [
+		{
+                    text: 'Refresh',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40,
+                    icon: '/Pictures/refresh.png'                                  
+                },'-',
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',icon: '/Pictures/view.png' ,
+                    tooltip: 'View Details...', height: 40, fontSize:30,width:70,
+                  //  icon: '/Pictures/view.png',
+                     //fp.getForm().reset();
+                    listeners:{
+                        click: function () {
+                            var form = ProcessWastageFormPanel.getForm();
+                            if (form.isValid())  {
+//                                var finid=22; 
+//                                var compcode=1;
+
+                                var fdate=Ext.getCmp('dtpFromdate').value;
+                                var tdate=Ext.getCmp('dtpTodate').value;
+                                var d1 =  fdate + " 00:00:00.000";
+                                var d2 =  tdate + " 23:59:59.000";
+                                var d3 = '%';
+
+                                var p1 = "&compcode="+encodeURIComponent(gstfincompcode);
+                                var p2 = "&minfinid="+encodeURIComponent(ginfinid);
+                                var p3 = "&fromdate="+encodeURIComponent(d1);
+                                var p4 = "&todate="+encodeURIComponent(d2);
+                                var p5 = "&vencode="+encodeURIComponent(d3);
+                                
+                                var test = (p1+p2+p3+p4+p5);
+                                
+                                if (rptype=="OP1") {
+                                    if(gstfincompcode==1){
+                                        window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/acc_pending_womin_details.rptdesign' + test,  '_blank' );    
+                                    }else{
+                                        window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/acc_pending_womin_details_new.rptdesign' + test,  '_blank' );
+                                    }
+                                }
+                                else if (rptype=="OP2") {
+                                    if(gstfincompcode==1){
+                                        window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/acc_consolidatepending_womin_details.rptdesign' + test,  '_blank' );    
+                                    }else{
+                                        window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/acc_consolidatepending_womin_details_new.rptdesign' + test,  '_blank' );
+                                    }
+                                }                                
+                                else if (rptype=="OP3") {
+                                    window.open('http://kgsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/acc_madeups_pending_womin_details.rptdesign' + test,  '_blank' );
+                                }                                
+                            }
+                         }
+                    }
+                },'-',
+               
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',
+                    tooltip: 'Close...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/exit.png',
+                    listeners:{
+                        click: function(){
+                            ProcessWastageWindow.hide();
+                        }
+                    }
+                }]
+        },
+        items: [
+              { xtype   : 'fieldset',
+                title   : 'Date',
+                layout  : 'hbox',
+                border  : true,
+                height  : 80,
+                width   : 420,
+                layout  : 'absolute',
+                x       : 10,
+                y       : 10,
+
+                items:[
+                { xtype     : 'fieldset',
+                  title     : 'From',
+                  x         : 0,
+                  y         : 0,
+                  border    : false,
+                  labelWidth: 30,
+                  items     : [dtpFromdate]
+                },
+                { xtype     : 'fieldset',
+                  title     : 'To',
+                  x         : 200,
+                  y         : 0,
+                  border    : false,
+                  labelWidth: 30,
+                  items     : [dtpTodate]
+                }
+                ]
+              },
+                      
+            {   xtype       : 'fieldset',
+                title       : 'Options',
+                layout      : 'hbox',
+                labelWidth  : 20,
+                height      : 100,
+                width       : 420,
+                x           : 10,
+                y           : 90,
+                border      : true,
+                layout      : 'absolute',
+                items: [optTypes]
+              }             
+        ]
+    });
+    
+    
+    var ProcessWastageWindow = new Ext.Window({
+	height      : 300,
+        width       : 450,
+        y           : 120,bodyStyle:{"background-color":"#3399CC"},
+        items       : ProcessWastageFormPanel,
+        layout      : 'fit',
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false
+    });
+    ProcessWastageWindow.show();  
+});

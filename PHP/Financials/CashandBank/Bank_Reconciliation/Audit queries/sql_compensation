@@ -1,0 +1,17 @@
+-- Update hindi workers salary
+update emp_monthly_salary_header es
+set
+contract_wages=no_of_present_days*365,
+incentive=no_of_present_days*140
+
+where sal_month=9 and sal_year=2018
+and employee_roll_no like '4%'
+
+
+update emp_monthly_salary_header es
+set
+pf_amount=round((contract_wages*12)/100,0),
+esi_amount=ceil((contract_wages*1.75)/100)
+
+where sal_month=9 and sal_year=2018
+and employee_roll_no like '4%'

@@ -1,0 +1,57 @@
+-- compare salary NOP with confirm attendance session_one
+
+-- salary table nop and attendance table nip should be equal other than drivers dept
+
+select
+ X.employee_roll_no,
+ sum(X.PDays+X.Hdays) as AttDays,
+ Y.SalDays
+from
+(select
+ employee_roll_no,
+ count(*) as PDays,
+ 0 as Hdays
+from
+   confirm_attendance
+where
+    session_one in ('P','O','N','C') and
+   --  confirm_attend_emp_type =1 and
+   --  confirm_attend_company_code in(1,2) and
+   -- confirm_attend_dept_code <>44 AND
+    -- attendance_date  between '2017-11-01' and '2017-11-30'
+month(attendance_date)=12
+group by
+    employee_roll_no
+union
+select
+ employee_roll_no,
+ 0 as PDays,
+ COUNT(*) *0.5 as Hdays
+from
+   confirm_attendance
+where
+   session_one in ('H') and
+  --  confirm_attend_emp_type =1 and
+  -- confirm_attend_company_code in(1,2) and
+  -- confirm_attend_dept_code <>44 AND
+  --  confirm_attend_date  between '2017-11-01' and '2017-11-30'
+month(attendance_date)=12
+group by
+    employee_roll_no
+   )X,
+(
+select
+employee_roll_no,
+no_of_present_days as SalDays
+from
+ emp_monthly_salary_header
+where
+  sal_year =2018 and
+  sal_month=12 AND
+  pf_amount >0
+)Y
+where
+X.employee_roll_no = Y.employee_roll_no
+group by
+X.employee_roll_no
+having cast(sum(X.PDays+X.Hdays) as decimal) = cast(SalDays as decimal)

@@ -1,0 +1,1510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="author">a</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <text-property name="title">Purchase PO</text-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="pono" id="14">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="15">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="compcode" id="16">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="SRIHARI" id="12">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="DSPurPurchaseOrder" id="13">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">phdpono</property>
+                    <property name="paramName">pono</property>
+                    <property name="nativeName">phdpono</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">phdfincode</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">phdfincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">phdcompcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">phdcompcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">phd_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">phd_pono</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">phd_podate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">phd_fin_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">phd_credit_days</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">phd_dely_point</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">phd_dely_sch</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">phd_spl_instruction</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">phd_prepared_by</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">phd_roundoff</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">phd_total</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">phd_amnd_status</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">phd_bank</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">phd_party_refno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">phd_party_refdate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">ptr_slno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">ptr_unit_rate</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">ptr_ord_qty</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">ptr_discount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">ptr_pf_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">ptr_freight_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">ptr_oth_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">ptr_ind_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">ptr_disval</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">ptr_pfval</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">ptr_cgst_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">ptr_cgst_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">ptr_sgst_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">ptr_sgst_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">ptr_igst_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">ptr_igst_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">ptr_frt2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">33</property>
+                        <property name="name">sup_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">34</property>
+                        <property name="name">sup_addr1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
+                        <property name="name">sup_addr2</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">sup_addr3</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">sup_city</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">sup_zip</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
+                        <property name="name">sup_panno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">sup_gstin</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">41</property>
+                        <property name="name">carr_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">42</property>
+                        <property name="name">company_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">43</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">44</property>
+                        <property name="name">company_gst</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">45</property>
+                        <property name="name">term_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">46</property>
+                        <property name="name">item_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">47</property>
+                        <property name="name">ind_remarks</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">48</property>
+                        <property name="name">state_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">49</property>
+                        <property name="name">state_codeno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
+                        <property name="name">dept_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">51</property>
+                        <property name="name">uom_short_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">52</property>
+                        <property name="name">item_hsncode</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">53</property>
+                        <property name="name">ptr_remarks</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">54</property>
+                        <property name="name">phd_duedate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">SRIHARI</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">phd_comp_code</property>
+                    <property name="nativeName">phd_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">phd_pono</property>
+                    <property name="nativeName">phd_pono</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">phd_podate</property>
+                    <property name="nativeName">phd_podate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">phd_fin_code</property>
+                    <property name="nativeName">phd_fin_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">phd_credit_days</property>
+                    <property name="nativeName">phd_credit_days</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">phd_dely_point</property>
+                    <property name="nativeName">phd_dely_point</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">phd_dely_sch</property>
+                    <property name="nativeName">phd_dely_sch</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">phd_spl_instruction</property>
+                    <property name="nativeName">phd_spl_instruction</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">phd_prepared_by</property>
+                    <property name="nativeName">phd_prepared_by</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">phd_roundoff</property>
+                    <property name="nativeName">phd_roundoff</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">phd_total</property>
+                    <property name="nativeName">phd_total</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">phd_amnd_status</property>
+                    <property name="nativeName">phd_amnd_status</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">phd_bank</property>
+                    <property name="nativeName">phd_bank</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">phd_party_refno</property>
+                    <property name="nativeName">phd_party_refno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">phd_party_refdate</property>
+                    <property name="nativeName">phd_party_refdate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">ptr_slno</property>
+                    <property name="nativeName">ptr_slno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">ptr_unit_rate</property>
+                    <property name="nativeName">ptr_unit_rate</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">ptr_ord_qty</property>
+                    <property name="nativeName">ptr_ord_qty</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">ptr_discount</property>
+                    <property name="nativeName">ptr_discount</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">ptr_pf_per</property>
+                    <property name="nativeName">ptr_pf_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">ptr_freight_amt</property>
+                    <property name="nativeName">ptr_freight_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">ptr_oth_amt</property>
+                    <property name="nativeName">ptr_oth_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">ptr_ind_no</property>
+                    <property name="nativeName">ptr_ind_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">ptr_disval</property>
+                    <property name="nativeName">ptr_disval</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">ptr_pfval</property>
+                    <property name="nativeName">ptr_pfval</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">ptr_cgst_per</property>
+                    <property name="nativeName">ptr_cgst_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">ptr_cgst_amt</property>
+                    <property name="nativeName">ptr_cgst_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">ptr_sgst_per</property>
+                    <property name="nativeName">ptr_sgst_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">ptr_sgst_amt</property>
+                    <property name="nativeName">ptr_sgst_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">ptr_igst_per</property>
+                    <property name="nativeName">ptr_igst_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">ptr_igst_amt</property>
+                    <property name="nativeName">ptr_igst_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">ptr_frt2</property>
+                    <property name="nativeName">ptr_frt2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">33</property>
+                    <property name="name">sup_name</property>
+                    <property name="nativeName">sup_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">34</property>
+                    <property name="name">sup_addr1</property>
+                    <property name="nativeName">sup_addr1</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
+                    <property name="name">sup_addr2</property>
+                    <property name="nativeName">sup_addr2</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
+                    <property name="name">sup_addr3</property>
+                    <property name="nativeName">sup_addr3</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">sup_city</property>
+                    <property name="nativeName">sup_city</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">38</property>
+                    <property name="name">sup_zip</property>
+                    <property name="nativeName">sup_zip</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">39</property>
+                    <property name="name">sup_panno</property>
+                    <property name="nativeName">sup_panno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">40</property>
+                    <property name="name">sup_gstin</property>
+                    <property name="nativeName">sup_gstin</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">41</property>
+                    <property name="name">carr_name</property>
+                    <property name="nativeName">carr_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">42</property>
+                    <property name="name">company_code</property>
+                    <property name="nativeName">company_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">43</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">44</property>
+                    <property name="name">company_gst</property>
+                    <property name="nativeName">company_gst</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">45</property>
+                    <property name="name">term_name</property>
+                    <property name="nativeName">term_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">46</property>
+                    <property name="name">item_name</property>
+                    <property name="nativeName">item_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">47</property>
+                    <property name="name">ind_remarks</property>
+                    <property name="nativeName">ind_remarks</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">48</property>
+                    <property name="name">state_name</property>
+                    <property name="nativeName">state_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">49</property>
+                    <property name="name">state_codeno</property>
+                    <property name="nativeName">state_codeno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">50</property>
+                    <property name="name">dept_name</property>
+                    <property name="nativeName">dept_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">51</property>
+                    <property name="name">uom_short_name</property>
+                    <property name="nativeName">uom_short_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">52</property>
+                    <property name="name">item_hsncode</property>
+                    <property name="nativeName">item_hsncode</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">53</property>
+                    <property name="name">ptr_remarks</property>
+                    <property name="nativeName">ptr_remarks</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">54</property>
+                    <property name="name">phd_duedate</property>
+                    <property name="nativeName">phd_duedate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[call sppur_rep_purchaseorder(?,?,?) ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="TOC-level-0" id="1615">
+            <property name="textLineThrough">none</property>
+            <property name="textOverline">none</property>
+            <property name="textUnderline">none</property>
+        </style>
+        <style name="remk" id="1616">
+            <property name="canShrink">true</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1px</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1px</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1px</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1px</property>
+            <property name="headerHeight">0.2in</property>
+            <property name="footerHeight">1in</property>
+            <page-footer>
+                <grid id="1915">
+                    <property name="height">0.5416666666666666in</property>
+                    <column id="1916">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1917">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1918">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1928">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1919"/>
+                    <row id="1940">
+                        <property name="verticalAlign">top</property>
+                        <property name="height">0.5416666666666666in</property>
+                        <cell id="1941"/>
+                        <cell id="1942"/>
+                        <cell id="1943"/>
+                        <cell id="1944"/>
+                        <cell id="1945">
+                            <label id="1946">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">for Sri Hari Venkateswara Paper Mills (P) Ltd.,</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="1947">
+                        <property name="verticalAlign">top</property>
+                        <property name="height">0.2604166666666667in</property>
+                        <cell id="1948">
+                            <data id="2344">
+                                <property name="paddingLeft">10pt</property>
+                                <property name="textAlign">left</property>
+                                <property name="dataSet">DSPurPurchaseOrder</property>
+                                <list-property name="boundDataColumns">
+                                    <structure>
+                                        <property name="name">phd_prepared_by</property>
+                                        <text-property name="displayName">phd_prepared_by</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["phd_prepared_by"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">phd_prepared_by</property>
+                            </data>
+                        </cell>
+                        <cell id="1949"/>
+                        <cell id="1950"/>
+                        <cell id="1951"/>
+                        <cell id="1952">
+                            <label id="1953"/>
+                        </cell>
+                    </row>
+                    <row id="1920">
+                        <property name="verticalAlign">top</property>
+                        <property name="height">0.5416666666666666in</property>
+                        <cell id="1921">
+                            <label id="1925">
+                                <text-property name="text">(PREPARED BY)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1922">
+                            <label id="1926">
+                                <text-property name="text">(CHECKED BY)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1923">
+                            <label id="1929">
+                                <text-property name="text">(DEPARTMENT HEAD)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1927">
+                            <label id="1930">
+                                <text-property name="text">(PURCHASE HEAD)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1924">
+                            <label id="1931">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">(Authorized Signatory)</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="2400">
+            <property name="dataSet">DSPurPurchaseOrder</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">item_name</property>
+                    <text-property name="displayName">item_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["item_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_remarks</property>
+                    <text-property name="displayName">ptr_remarks</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_remarks"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">uom_short_name</property>
+                    <text-property name="displayName">uom_short_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["uom_short_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_ord_qty</property>
+                    <text-property name="displayName">ptr_ord_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_ord_qty"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_slno</property>
+                    <text-property name="displayName">ptr_slno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_slno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_unit_rate</property>
+                    <text-property name="displayName">ptr_unit_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_unit_rate"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_discount</property>
+                    <text-property name="displayName">ptr_discount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_discount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_disval</property>
+                    <text-property name="displayName">ptr_disval</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_disval"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">gstper</property>
+                    <text-property name="displayName">gstper</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_cgst_per"]+dataSetRow["ptr_sgst_per"]+dataSetRow["ptr_igst_per"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">gstaamt</property>
+                    <text-property name="displayName">gstamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_cgst_amt"]+dataSetRow["ptr_sgst_amt"]+dataSetRow["ptr_igst_amt"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">item_value</property>
+                    <text-property name="displayName">item_value</text-property>
+                    <expression name="expression" type="javascript">(dataSetRow["ptr_ord_qty"]*dataSetRow["ptr_unit_rate"])-dataSetRow["ptr_disval"]+dataSetRow["ptr_pfval"]+dataSetRow["ptr_sgst_amt"]+dataSetRow["ptr_cgst_amt"]+dataSetRow["ptr_igst_amt"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_pfval</property>
+                    <text-property name="displayName">ptr_pfval</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_pfval"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">gst</property>
+                    <expression name="expression" type="javascript">"GSTIN/UIN : " + dataSetRow["company_gst"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cin</property>
+                    <text-property name="displayName">cin</text-property>
+                    <expression name="expression" type="javascript">"CIN : U21012TN2006PTC060296"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">state_name</property>
+                    <text-property name="displayName">state_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["state_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_name</property>
+                    <text-property name="displayName">sup_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">supgstin</property>
+                    <text-property name="displayName">supgstin</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("GSTIN/UNI : ", dataSetRow["sup_gstin"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">supstate</property>
+                    <text-property name="displayName">supstate</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("State Name :" , dataSetRow["state_name"] , ' Code : ' , dataSetRow["state_codeno"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="2433">
+                <property name="width">0.3in</property>
+            </column>
+            <column id="2434">
+                <property name="width">2.5in</property>
+            </column>
+            <column id="2435">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="2436">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="2437">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="2475">
+                <property name="width">0.7in</property>
+            </column>
+            <column id="2438">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="2444">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="2439">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="2466">
+                <property name="width">1in</property>
+            </column>
+            <header>
+                <row id="2556">
+                    <cell id="2557">
+                        <property name="colSpan">10</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1255">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">PURCHASE ORDER</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="2545">
+                    <cell id="2546"/>
+                    <cell id="2547"/>
+                    <cell id="2548"/>
+                    <cell id="2549"/>
+                    <cell id="2550"/>
+                    <cell id="2551"/>
+                    <cell id="2552"/>
+                    <cell id="2553"/>
+                    <cell id="2554"/>
+                    <cell id="2555"/>
+                </row>
+                <row id="2534">
+                    <property name="height">4.447916666666667in</property>
+                    <cell id="2535">
+                        <property name="colSpan">10</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="2613">
+                            <property name="height">1.3125in</property>
+                            <column id="2614">
+                                <property name="width">1in</property>
+                            </column>
+                            <column id="2615"/>
+                            <column id="2622"/>
+                            <column id="2616"/>
+                            <row id="2617">
+                                <property name="height">1.3125in</property>
+                                <cell id="2618">
+                                    <image id="2612">
+                                        <property name="height">81px</property>
+                                        <property name="width">80px</property>
+                                        <property name="source">embed</property>
+                                        <property name="imageName">logo.jpg</property>
+                                    </image>
+                                </cell>
+                                <cell id="2619">
+                                    <grid id="2623">
+                                        <column id="2624">
+                                            <property name="width">4in</property>
+                                        </column>
+                                        <row id="2625">
+                                            <cell id="2626">
+                                                <label id="1744">
+                                                    <property name="fontSize">10pt</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">INVOICE TO</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="2627">
+                                            <cell id="2628">
+                                                <label id="1763">
+                                                    <property name="fontSize">10pt</property>
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD.,</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="2629">
+                                            <cell id="2630">
+                                                <property name="textAlign">left</property>
+                                                <label id="2641">
+                                                    <text-property name="text">2/151 , KEELANMARAI NADU VILLAGE</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="2631">
+                                            <cell id="2632">
+                                                <label id="2642">
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">A.LAKSHMIAPURAM POST, SIVAKASI - 626127</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="2633">
+                                            <cell id="2634">
+                                                <data id="2643">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">gst</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="2635">
+                                            <cell id="2636">
+                                                <label id="2644">
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">State Name : Tamil Nadu                     State Code : 33</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="2637">
+                                            <cell id="2638">
+                                                <data id="2645">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">cin</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="2639">
+                                            <cell id="2640">
+                                                <label id="2646">
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">E-Mail : purchase@sriharipapers.com</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                    </grid>
+                                </cell>
+                                <cell id="2621"/>
+                                <cell id="2620"/>
+                            </row>
+                        </grid>
+                        <grid id="2647">
+                            <column id="2648"/>
+                            <column id="2649"/>
+                            <column id="2650"/>
+                            <row id="2651">
+                                <cell id="2652">
+                                    <label id="2671">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Supplier (Bill From)</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2653"/>
+                                <cell id="2654"/>
+                            </row>
+                            <row id="2655">
+                                <cell id="2656">
+                                    <data id="2677">
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">sup_name</property>
+                                    </data>
+                                </cell>
+                                <cell id="2657"/>
+                                <cell id="2658"/>
+                            </row>
+                            <row id="2659">
+                                <cell id="2660">
+                                    <data id="2342">
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">sup_addr1</property>
+                                    </data>
+                                </cell>
+                                <cell id="2661"/>
+                                <cell id="2662"/>
+                            </row>
+                            <row id="2663">
+                                <cell id="2664">
+                                    <data id="1204">
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">sup_addr2</property>
+                                    </data>
+                                </cell>
+                                <cell id="2665"/>
+                                <cell id="2666"/>
+                            </row>
+                            <row id="2667">
+                                <cell id="2668">
+                                    <data id="1205">
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">sup_addr3</property>
+                                    </data>
+                                </cell>
+                                <cell id="2669"/>
+                                <cell id="2670"/>
+                            </row>
+                            <row id="2673">
+                                <cell id="2674">
+                                    <data id="1209">
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">City</property>
+                                    </data>
+                                </cell>
+                                <cell id="2675"/>
+                                <cell id="2676"/>
+                            </row>
+                            <row id="2678">
+                                <cell id="2679">
+                                    <data id="2686">
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">supgstin</property>
+                                    </data>
+                                </cell>
+                                <cell id="2680"/>
+                                <cell id="2681"/>
+                            </row>
+                            <row id="2682">
+                                <cell id="2683">
+                                    <data id="2687">
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">supstate</property>
+                                    </data>
+                                </cell>
+                                <cell id="2684"/>
+                                <cell id="2685"/>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="2523">
+                    <property name="height">1.1666666666666667in</property>
+                    <cell id="2524">
+                        <property name="colSpan">10</property>
+                        <property name="rowSpan">1</property>
+                    </cell>
+                </row>
+                <row id="2512">
+                    <cell id="2513"/>
+                    <cell id="2514"/>
+                    <cell id="2515"/>
+                    <cell id="2516"/>
+                    <cell id="2517"/>
+                    <cell id="2518"/>
+                    <cell id="2519"/>
+                    <cell id="2520"/>
+                    <cell id="2521"/>
+                    <cell id="2522"/>
+                </row>
+                <row id="2501">
+                    <cell id="2502"/>
+                    <cell id="2503"/>
+                    <cell id="2504"/>
+                    <cell id="2505"/>
+                    <cell id="2506"/>
+                    <cell id="2507"/>
+                    <cell id="2508"/>
+                    <cell id="2509"/>
+                    <cell id="2510"/>
+                    <cell id="2511"/>
+                </row>
+                <row id="2490">
+                    <cell id="2491"/>
+                    <cell id="2492"/>
+                    <cell id="2493"/>
+                    <cell id="2494"/>
+                    <cell id="2495"/>
+                    <cell id="2496"/>
+                    <cell id="2497"/>
+                    <cell id="2498"/>
+                    <cell id="2499"/>
+                    <cell id="2500"/>
+                </row>
+                <row id="2479">
+                    <cell id="2480"/>
+                    <cell id="2481"/>
+                    <cell id="2482"/>
+                    <cell id="2483"/>
+                    <cell id="2484"/>
+                    <cell id="2485"/>
+                    <cell id="2486"/>
+                    <cell id="2487"/>
+                    <cell id="2488"/>
+                    <cell id="2489"/>
+                </row>
+                <row id="2401">
+                    <cell id="2402">
+                        <label id="2445">
+                            <text-property name="text">S.No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2403">
+                        <label id="2446">
+                            <text-property name="text">item_name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2404">
+                        <label id="2449">
+                            <text-property name="text">UOM</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2405">
+                        <label id="2451">
+                            <text-property name="text">ptr_ord_qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2406">
+                        <label id="2455">
+                            <text-property name="text">ptr_unit_rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2471">
+                        <label id="2476">
+                            <text-property name="text">ptr_pfval</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2407">
+                        <label id="2457">
+                            <text-property name="text">ptr_discount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2440">
+                        <label id="2468">
+                            <text-property name="text">GST</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2408">
+                        <label id="2469">
+                            <text-property name="text">GST</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2462">
+                        <label id="2470">
+                            <text-property name="text">Value</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="2409">
+                    <cell id="2410">
+                        <data id="2454">
+                            <property name="resultSetColumn">ptr_slno</property>
+                        </data>
+                    </cell>
+                    <cell id="2411">
+                        <data id="2447">
+                            <property name="resultSetColumn">item_name</property>
+                        </data>
+                    </cell>
+                    <cell id="2412">
+                        <data id="2450">
+                            <property name="resultSetColumn">uom_short_name</property>
+                        </data>
+                    </cell>
+                    <cell id="2413">
+                        <data id="2452">
+                            <property name="resultSetColumn">ptr_ord_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="2414">
+                        <data id="2456">
+                            <property name="resultSetColumn">ptr_unit_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="2472">
+                        <data id="2477">
+                            <property name="resultSetColumn">ptr_pfval</property>
+                        </data>
+                    </cell>
+                    <cell id="2415">
+                        <data id="2459">
+                            <property name="resultSetColumn">ptr_disval</property>
+                        </data>
+                    </cell>
+                    <cell id="2441">
+                        <data id="2460">
+                            <property name="resultSetColumn">gstper</property>
+                        </data>
+                    </cell>
+                    <cell id="2416">
+                        <data id="2461">
+                            <property name="resultSetColumn">gstaamt</property>
+                        </data>
+                    </cell>
+                    <cell id="2463">
+                        <data id="2467">
+                            <property name="resultSetColumn">item_value</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2417">
+                    <cell id="2418"/>
+                    <cell id="2419">
+                        <data id="2478">
+                            <property name="paddingLeft">3pt</property>
+                            <property name="resultSetColumn">ptr_remarks</property>
+                        </data>
+                    </cell>
+                    <cell id="2420"/>
+                    <cell id="2421"/>
+                    <cell id="2422"/>
+                    <cell id="2473"/>
+                    <cell id="2423"/>
+                    <cell id="2442"/>
+                    <cell id="2424"/>
+                    <cell id="2464"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="2425">
+                    <cell id="2426"/>
+                    <cell id="2427"/>
+                    <cell id="2428"/>
+                    <cell id="2429"/>
+                    <cell id="2430"/>
+                    <cell id="2474"/>
+                    <cell id="2431"/>
+                    <cell id="2443"/>
+                    <cell id="2432"/>
+                    <cell id="2465"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">logo.jpg</property>
+            <property name="data">
+                /9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAgGBhIQEBMTExEQFRIVGBsYGBAQGCAVFRgbJSAlJSUgJSUg
+                JCMwICo1KiYcKDQpNSQxQD8/JjA5PSwmSCM/KCYBCQkJDQwNGA4OGCYdHR0mJiYmJiYmJiYmJiYmJiYm
+                JiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJv/AABEIALAAlAMBEQACEQEDEQH/xAAbAAAB
+                BQEBAAAAAAAAAAAAAAAFAAIDBAYBB//EADoQAAIBAgUCBQIEBAUEAwAAAAECEQADBAUSITFBUQYTImFx
+                MoFCkaHRI1JiwRQVseHwM1OS8RYkNP/EABkBAAIDAQAAAAAAAAAAAAAAAAAEAQIDBf/EACURAAIDAAIC
+                AgMAAwEAAAAAAAABAgMREiEEMRMiFDJBUWFxQv/aAAwDAQACEQMRAD8A9+qAO0AKgBUAKgDkUAcigBRU
+                kgvNMXDKgJk7kjoBVdLRRUyfGk371okmIcTvsf8Aesov7F5x6D8VsjIVAHYoIO0AKgBUAKgDhoAis4dU
+                1FVA1HU0bSYAn9BVtIwmqpIqAFQByaNA5NBOCoIAuLzO4uINqEC6AwYyWJmCI9tqo2/4aRXQy7n4tsBc
+                HPDDisnc4+y0a+QJbG+ZjHIMoba6Tx13qkbYyZpwyIspGnH3XZoU2gN9gINQpxjMtOP0NA+eWRw8nsom
+                tlahf42SLm9ssqloZ/pDbEn2qVYiHBoIA1oUO1ICoAVACoAVACoAVACoAaxqGwMPmfjMee9lJC25DMOW
+                YdAelJ3W/wAQ3XVq1jMPnFwFG8yNYJCHfcciD096q5yS0v8AGmjX5djhethxtPI7Gm4WckKTg4shzbAG
+                6oKkC4u6k8e4Psal/wCiYvAB56uDbuABvxW26H2/esJSUupG0d/hRwuIDXGVWRmsnTqbaQfw0lnGXQzx
+                TXZzAsmIJJZTpYyv9Q2/IVNaTl2FnUfqEHxduyIHP8q7kmmnNR6Qu032y/lWXM7reurBWdCHlZ6/NaVx
+                ftmdkl6RohTBgI0AcoJO0EHaAFQAqkBVAHDQA1qiS0lHjGCsGzevBlZzrfZQCdUnmuVJ/c6aX1LIAayJ
+                nzCTLMZ57HpRKxuJHHGbPwEjLYdWbVDnc8waZ8R7EX8pZI02JvrbVnYwqiST2pvcQqjMXMBcxsXGTy1P
+                0hx647nsfak50ub1DMLFAx2NyFMNfcPqbUQ4ImD7wKTsUovodrmpItZNlGpmZf4f9PXf296iumU+ybLY
+                xDmUKuFufxlB1na7yFPYnpTFNbg+xa2XNfU2ymukszoRZ2p3+sj/AEjMZ34iKaghA0xv3Mx+lJW3NvIj
+                VdWLWUredXbTEu6kEArOxI+DVZWSjjLqpSRrMBjFvW1deD+ntTkZckmKzi4vC0KuUO0AKpAVQBw0ANNH
+                tEnlWa4kf5heVQ0BwS4kKDAkGOTPT3rlXPJM6dUdgiHE3yqXgFAFwj1N6Sh9hG/51irOmacPsbnwfYK2
+                WJ/EfngRT/hrI6JeW/uXM+xi2lV3DG2reoKNXwSOomt5zUfZjCO9FPMvERCfwkJY8G76FHzStvkqK+pt
+                X4737GfwmMCgtdZWvNuxXf7Csa7l7ZvKr+RLT4xZ124LGAQCBI/2q78iK7RVVyzGSvmVpwVfYHYrc2rS
+                N8ZLDNVSTC3hrG6kZJLC2YVu69B9uK3qnpjbHGF8Xd023bspP5CtJ9JlI+zzvDYu1ctjzDOpQZIJgxwd
+                tvbvNc6OP2PYwbfdHthQX886h6gZI7iekVNjXHS0V9jceBrDJg1DEk6m57TTXjvYinkfuaWmUzAdQQKp
+                A4KgDpoAYah+gXs8kxuICYq+HBMXXgAEsZ6jp2rmWfs9OrWtiiuuMUg22D+YSNIIJU99/wB6xSXHS2S0
+                9BweapYwlsncxAUdTTldyjATsrcrAFjc6e8wUEAkjc7bT0FL2WOx4b11qPZnGulbzLc1/UdDDYH79d+9
+                UyPo15aWsPItshiSZ1k0alHpEZjO3LmwXTvwWESRVeSzGgWtjxf3KKdW0kXDK1PFN/UHqX2NLlXiDy4t
+                3FA9h/zema7OHTF7Kd7RqLoFy2QDIZSJHYinX3HoUXUjzK3bZJAdRvpLH6ttoA61y1JrTp9CRvVbUsCw
+                OlSRuBwAfeq8pSxEZms9OwlgIiqOAIrrVxyKRzZvW2T1okVHUECqQG1BJRxeJcMFQAkCTPbsKo2SkTYb
+                FC4NuRsR1BqIyBrDzvxCot4y7NvV5gWIMRI3P6Vz/Ik1I6VDTgBr98KhO8g8nqe1KyaawajH+k1p7mlQ
+                TqZRwTxvPFaVrrWY2JJ9BJbZvsPQBtvHRiZJ/wBq0adjxGWqK7LlvKRJMalSPT32q8aOMtZX5dXRfSwn
+                QCPbim1GL/gvKckxl7AI+2gSeo5FZWVxzpEwm1LQPdytgutTMzIHIFK/E0uSG/li+mRW3Tdmmf5jzPSK
+                mPa79hJP+BbJc98mUuSFaSsjcH9jV43OC+xlOnfQJw170sGWdjEbCTuJPeqRerkXaekWDcsRP1AiBtx8
+                jnerOSaSQPo9Us/SJ7V0YfqjnS9kkVcqdoAVSA2oJKGk/wCIOwgoN+sg8VRolATF4sYbGgljpuKSR9+a
+                UnLhLRiMeccG3it+55xQALtbY8n3q6Sn9mCk4LDJZm6G80CYaSBx2rm2Ri5nRhJ/GSDDTdCqzbruxg7H
+                oSK0Ue1FGO4tZo7FoIoUdP1NdGuCghKcnJncFe9dxfcGPaKld9Ey6XRSW8bd24hkr9ax79PzrB2fHLGa
+                cOa0JgmzbLvzGpgOntWyeLWZcdeFbCfQp7id+d96tHGuyJ/7B2a4Mj1ptvJAG3zSl9XB8kM1WasBTWGv
+                W9nt6RMAEysHp9/esZLnHTVPi8Y7AXXu2wF7EMo5EGD+tZ/LLOKNJRXsM+HsvFy4nMW+TwD7fnW/jyc/
+                aF73iN9NdNejn+yBMchfQD6v0qOZOFmrEHRUkFLF5natRruKpPAJ3P2rOU0iyi2Bcyz62CrKZdWgKdtQ
+                PIrCfkJG0aWwT4rxSXvL8sjXH19QD0mlfJnGWYMURcNbJr7+XbVBuwAVQO8Vu5KNeIqls9Zj3Rxc/CRq
+                OvbYnvtxSEc5djzf16CeRWXaW2WCZVd9uIE1rTXstQvbPiuw+MKx9SXCw7NE/nTri/4KqUX2yjcu+XeV
+                zIJGll4270t8koz7N3CMo9Hc1TVetMGI6GNwRPBotalJE1pqGE2a44f9KCS+xI3ir23cUomddestYfUw
+                Ho0iOG5rark0UnFJkOY3GQBQuovsAvT3qt7eYi1UUnrM9hcOFZh9DCSxPzE9ppKrW2mNTazSz4TdVvuC
+                vqaTr4kD/wBT96tQl8mMrfJ/H0arCYy3h7oQgKLp2Ycau1OJKpiT2ZZxGY+YxVCNA+phvv2rTnyKcXEW
+                BtarwboinYd2j9q0ikE30G6tpmOFSQYfFZd/hmZnGvUSfPYajueCekVlJI3h2RX8VZ0ljo2445pW3h/T
+                aCm/RmMux+K8pkuWrRB1Fbkwd+NqVslH+DSjJdMOeHBqtK7GbkkEzP5UxS01pjammC9hcfUJJBUCYMzz
+                Sy/Z6jf/AMoMZBAt7dIpnxMemHk/zS9cXy5YGByVPH2NMyfFi6Sl0Vb+Z23TUyuQBqBA3pWycJI3hBrp
+                AzKcSly35jXChJby1J2gdKUS/pu208ZJkWcqw1FSzE/UF4reN0d2RSdTXoJrnBd9FtOOrbRW0fJ5Poxd
+                KS0t27W8sZY9enwKZUd7MW89ADN7hW+BvobSHI3gHv7Vz5xy3sbjL6kmBsHzdSMSqSRPUdh3qYxXPUTO
+                TcMCuaDzbJAIDAgieRW9uSiY1LGQ4bFJh7CgsC2+w5JqsLoxjhaVblI02ShRbB1KWbdiD+n2puqakhWx
+                Y8CgNapGQ8VJBG6Tzv8ANQ1pKeGU8Q5Kl+5bsLbC6vU95BuoHT5NL2URkb12yj2CfEeRWsOqBGfgypMz
+                FJeRVGDwbotlN6POE02w9rYgTpHDe1a8OMOSKOezxga1i5ctoBBJ9PbaloWbqw3nHMYTyXEAa1OxkQO9
+                beLLHhnfHewpbwYLFrh1z+E/SPgU7xT7YqpNehmPxFsIyhVLERpHNK3OETWtT9syduyLYCm13gEUk90d
+                4qXYVyFxacrcTTPU/T8VpQlF5Ipb2ugzdwKk67cK3ccH5ptVJ9xFObXTH4e+TIYQ45HP3FMKXXZm4reg
+                PjXXzmLHYQJ6CB19qQm+U9YzFNRLGWXVLsQCq7hZ5IHX79KmucVIiafHAdisW64pypSNIADbie+1Z3zX
+                LDauC44ixkllL1695rKSd1UbAew70VKEnjK3cox6NLZwyrsqx8bEV04QSXQhKWsv5fiWD+Wx1GJnkj2J
+                q0W0ysl0FhWpmcqAKt6+lsM7EAdSfas5tLsuk30efZziRi7usGEGyhutcfyJ85HTprcEPyfMAoCXCBuQ
+                CT17VtRbq4spbDXqBl22RdIV4BJEHjfil02rOjbNj2WLeGNp0Z9zuTHzE1rxanrM91YjQjDqR1399q6M
+                ca6EvsmUWwQbEIAoCIpLe5PArCVPKZvGz6EGcv8AxV2MJuY+36Vjc8n0Xq3gS+IsCXtB15QgkfzL1FaW
+                16kylUsljLuHw4UDy2KgxtyK2rhkejKyTchuNtkjUbkFeoEfaq2w+vReEuwHZdYZ2tlmYEbfST9+lJ1v
+                inyGHr6RdyZWdipiBHmRxPIUVFFfOWkWy4x7HeJLSny1kAz8GK18lRWIPGbxskvZVbTRc0+lSNajqvf7
+                VdUxxSRSVzacTb2bC6RpmI236V0IZnQg2S27CrsAB8VK9kN6TVJA2hkgbPtFu1cukAsFgatxPTal73kD
+                WnuR5rawi+UZLG6GLCJnvFc2PFrTpzctSFld5yiXCgYDbYbiOtRSlrIsWJGqyvJLWIwrso9ZJ9cyZHSm
+                oVJx0Vna1LAAzGRbd7i6JIJO89j96XeP2MLAplmOB9O8jlexram3i8ZlZD/ARF9VJ33MQOZppTTfRg4s
+                bbwohtW5fnr9qr8W6yfkcehnmEWyh5CmD3Heol1DGTFd6SYRv4SH+kVNc1GPZEoNsH5heN0hFI239Ww+
+                9LTs5yxGsIcER4Kzduv5YI2aB3EdZ7VTOT4F5NRXIuYa55AdIJfWdRHHt+la1L49RlP7tNgoXfOuOHVt
+                UAg8AClbJOUuxmKUV0HsNiFuWiOwII94p+qcXDBWyDUtNLkzzYtn+kU1V6FbP2L9XKHakBtQyQF4vE4V
+                h7j/AFpXyv0N/H/YwCXdFu8NOr0adY5HvXPrkuB0Ja5I7lOtNOnTOnluhjpU+Ot0rc+0jZeBLcYTfnWx
+                Pfmuj4+OOCXkP7HfEGQF5uWwNfJWOaxuoW8kWptzpmceXKwSjDknkmf0pfFLr0MpjBiG8wOwMAFdaDYm
+                etVyUHyQSafovjPLfXUBzJHStvyZL+GX4/8Akr4zNrVy2RDnUYBUSZ/1FVnc7OsNIwUX2RYfUFVUgADg
+                k6u/FYxrmWskk+hmGtG4U0o+sz9/cfvQk5evYSeLs3OT5SLCyfrbk/2roVVcVr9iNs+T6MrjrzNi7wQq
+                GDhfXvsF5il2/uxiK+iBlvCsMQzFlGxUwdo9qWSTnjYw5ZAI5PhTdvXFDkenZtjJ/vW9Va5dMxtlkdN3
+                gsN5dtUBnSAJroxWIQk9ZZq5UVSA2oJA/ia3qwz+0H9aV8lfQ2o/Y85LsquASynaI2+K5cJvjh03+yH2
+                7Y07sVOjgfVttHY/nV6F0VtXaw2Pgi7Np16gzB25HanfFf8AEJeSu0zVRTjX+RXQRmWQWrxJiGP4h1+R
+                1rKylSNq7nHoxWYYe7YuG2WI2P0iQy/FcyyyVf1Y9WlZ2UDcdhB0gCTLSSf2FUXkJ+y6gTG++9wBVJAG
+                mJEDrO01efkJeiFToWyXJXvrqDFV41nYnvAHT5NbUxlZ2YWz+N4a/LspSyNhLdWPNO10xh2KWWOT7L9a
+                tPDM82xgU4q4uorLkkjYnpzXM9zenQX6IqONLbnYEgkGB+8UrGKdptLVX0aHw2n/ANpoggJsR9qdqz5M
+                iL3t/H2bUV0UIHakBVIHKj+gV8bh/Mtuv8wIqlkeSLwlkjyUWXFxrYYg7yhgCQe9cfi02jrRaeMs4MWy
+                Br6j7c9aihJS7K277RofBl/+K44DCQJng0z4rjzaQv5K+qZt66YixVD67I/h514uzHVfKqCdCwSO9cfz
+                XykdTxY8YgBMSzbEhQPxE7UmojXHSD/MoEkEjf7jvUKD0s+j03whf14S2Yjnb712/ESUMOP5P7aw9TX/
+                AEwGu0AntVZvESvZ5a7qWdn3JM21EkzO9cmOa2zp50kSYW7puA6QR1XnbvNZeOvu2Xt/XEaLw2VbE3WQ
+                HTAiac8fHZore3wxmvFdIRO0aAqkBVADTQAEzjw1axB1H03B+NeaXnSpejau5oxOb5M2HOliIJkEbSOo
+                rmTrdUzo12xmixkeI0YlGC6VYgBPtFa1vjPUUtjscNzm+aLhrRuNJAgADkk10bLOC058Icnhj8Z4tvXN
+                ltkAjpzvXOt8tser8ZL2D7CNcLPJUxA1KTA/vSnJvsYeRWIr3sqQtOoAzuQDuPio7LRkx2EycDYOpE8M
+                Dx2FC0HYFstvnCAATpA4Enfr9q3qvcDCdcZmnyvxFavAbw3Y10a/KjL2IzocfRZzfE+XYuN7ED5NWvnk
+                StUdlh526GASrQBC9pneuc1kNH4r7EmFVghuKwImT27f8FTVFwWk2Nbhr/CWBZLbO4hnMx7dKd8aP9FP
+                JnrxGipsVO0AKpAVQAqAGkUf8DSjmmVpiE0v9iORWdlUZey9c3BgnA+E1tOrG4zBDIBA5rONKRrK9tEP
+                jz/86zxrEjmay839C/ifsYXAAqW0NOtCgXoOvXqK46kdSSQUwty+gj2ADMpiAKtGWFHFD0x14ekspP8A
+                NpPFS7GRwOvmGIACqfVI9ZWduvtUOxkcENxKXysBn+oENEEb8fFV5tsOio1q7KA3G2YmQApnnirQk+RM
+                0sNf4tukYe3zpJEn7bV0vJcnBCPj5zZnQztFgTvEA7H5+1KycnkRnMTkbLKvDlqwsCW4+rcT8V06qVGP
+                Zz7LXJhpRW6WGLY6pAVACqQFUAKgBUAcoAaahkr2ZDx9cAsoCOWiegMc0h5knnQ34q2RjRcUKukKSFVW
+                PABn6h1mK5WnS4hZ8eFASHK6vq1EQP3qOaK8WIY22WO97SOoPX3qU0DjIkfMEUj1XY6sWjftU8kRwkxP
+                mmqV0vG29xtiD8VVzQKAKxLfxB6AArbODJII4qYSWl3Do9PTDrdsqrgEFRIPxXciozhjONJuMtKuXeGr
+                Nhy6KdR6kzUw8aMeyZXSksDAFMGI6gBUAKgBVICqAFQAqAI7rhQSeBvUMlI89xXiG9iSTbLKk7AbEjvX
+                Ns8h7h0K6UvYKutcMlgzD+omsJWt+zaMFHtFM21/7R+ASCaybibJsZeVmUhQyz152rNxiWTO4a9dW3AS
+                WHfgjvWeEsbiLd5gBHzIipSRKHDDYggSQFHTr96s0s9EN9llMK07qTB77fNFeb6KWPoJWr920QyMw7kn
+                b4p2NuCsq9RtfDuc/wCKtaohlJVl966NE+cdEbYcWGK2MjtACoAVACqQFUAKgBUAQ4lJRh3BFVs9Ew9n
+                jdzDRq0XGUkhYnZQDP6xXCnJxfZ2YR1E+Hxl4K0uDMkfBPFVlasL/GWzmNwx/wBMNPXcSBAPxVfkRHBn
+                P8ycRATZCIP60fIg4M7bzN53CfgiO1RzQcGPXM3kbJMtv70c0W4DbeZXAJOjhfy/erKaIdbZYtY641yF
+                CSWO2/Mf6VEe2VccArW7jFg90kEFTp2Ahpn+1Xcv4iePenoHga0Bh2IndzuetdXxE1E5nkvZGppsWFQA
+                qAFQAqkBVACoAVAHIo9gB8Z4Zw90lmtgMeWX0msJ+PGfs2hdKJRPgfD9Dc/8qxfhwZqvLmMPga10d/jY
+                1T8GJb82QweBLX/cf9KPwIk/myHDwLan633+KPwIkfmyHDwPZ/mufmKPwIkfmSHf/CbHe59jU/hRTD8y
+                Zay/wvZssWUuSRHqP61rDxIxZnPyZyGW/B2GBJKs09GMiheJBPQ/IngbsWFRQqgBRwBsKZUVFdGDbb1k
+                tSQKgBUAKgBVIH//2Q==
+</property>
+        </structure>
+    </list-property>
+</report>

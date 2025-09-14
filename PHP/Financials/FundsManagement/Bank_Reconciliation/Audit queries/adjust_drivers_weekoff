@@ -1,0 +1,70 @@
+-- Adjust drivers weekoff
+update confirm_attendance
+set session_one='P'
+where 
+dept_code=44
+and session_one='W'
+and month(attendance_date)=12 and year(attendance_date)=2018
+
+
+update confirm_attendance ca,
+hr_tbl_EmployeeMaster em
+set ca.session_one='W'
+where 
+ca.dept_code=44
+and ca.employee_roll_no=em.employee_roll_no
+and cast(dayname(ca.attendance_date) as char)=cast(em.employee_weekly_off as char)
+and month(attendance_date)=12 and year(attendance_date)=2018
+
+-- -- update  weekoff to master
+
+update hr_tbl_EmployeeMaster em,
+(select employee_roll_no from confirm_attendance where
+session_one='W' and attendance_date='2018-12-8')X
+set employee_weekly_off='SATURDAY'
+where 
+em.employee_roll_no = X.employee_roll_no
+
+-- UPDATE weekoff n shift_rotation table
+
+update hrm_shift_rotation  sr,
+hr_tbl_EmployeeMaster em
+set sr.weekly_off=em.employee_weekly_off
+where sr.employee_roll_no=em.employee_roll_no
+
+
+-- update leave days to salary
+
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*) as cnt from confirm_attendance
+where month(attendance_date)=12 and year(attendance_date)=2018 and session_one='L'
+group by employee_roll_no) ca
+
+set es.no_of_leave_days=ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=12 and sal_year=2018
+
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*) as cnt from confirm_attendance
+where month(attendance_date)=12 and year(attendance_date)=2018 and session_one='A'
+group by employee_roll_no) ca
+
+set es.no_of_absent_days=ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=12 and sal_year=2018
+
+
+update emp_monthly_salary_header es,
+(select employee_roll_no,count(*)/2 as cnt from confirm_attendance
+where month(attendance_date)=12 and year(attendance_date)=2018 and session_one='H'
+group by employee_roll_no) ca
+
+set es.no_of_leave_days=es.no_of_leave_days+ca.cnt
+where  
+ca.employee_roll_no=es.employee_roll_no
+and sal_month=12 and sal_year=2018
+

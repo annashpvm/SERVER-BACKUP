@@ -1,0 +1,31 @@
+-- update total hours
+update confirm_attendance 
+set total_hours = TIMEDIFF(employee_out_time, employee_in_time);
+
+select * from confirm_attendance where session_one='H'
+
+update confirm_attendance set
+employee_out_time=DATE_SUB(employee_out_time, INTERVAL 4 HOUR)
+where session_one='H'
+
+
+-- Adjust drivers salary table nop details
+update emp_monthly_salary_header es,
+hr_tbl_EmployeeMaster em ,
+(select employee_roll_no,count(*) as cnt from confirm_attendance 
+where month(attendance_date)=9 and dept_code=44 and 
+session_one='P' group by employee_roll_no) a
+set no_of_present_days=no_of_present_days+1
+where 
+es.employee_roll_no=em.employee_roll_no
+and es.employee_roll_no=a.employee_roll_no
+and em.dept_code=44
+
+/*
+-- backup usage
+update emp_monthly_salary_header es,
+empmonthlysalary em
+set es.no_of_present_days=em.no_of_present_days
+where es.employee_roll_no=em.employee_roll_no
+
+*/

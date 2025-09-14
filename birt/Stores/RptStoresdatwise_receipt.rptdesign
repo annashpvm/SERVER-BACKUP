@@ -1,0 +1,1193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="9">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ST_datewisereceipt" id="5">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">2</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">3</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">mint_minno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">mint_mindate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">mint_pono</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">mint_inv_qty</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">mint_rcvd_qty</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">mint_accept_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">mint_unit_rate</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">mint_value</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">mint_ind_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">mint_cr_status</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">item_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">minh_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">minh_mindate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">minh_bill_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">minh_bill_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">cust_ref</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">cust_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">uom_short_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">led_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">minh_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">minhDate</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">BillDate</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">mint_minno</property>
+                    <property name="nativeName">mint_minno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">mint_mindate</property>
+                    <property name="nativeName">mint_mindate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">mint_pono</property>
+                    <property name="nativeName">mint_pono</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">mint_inv_qty</property>
+                    <property name="nativeName">mint_inv_qty</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">mint_rcvd_qty</property>
+                    <property name="nativeName">mint_rcvd_qty</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">mint_accept_qty</property>
+                    <property name="nativeName">mint_accept_qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">mint_unit_rate</property>
+                    <property name="nativeName">mint_unit_rate</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">mint_value</property>
+                    <property name="nativeName">mint_value</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">mint_ind_no</property>
+                    <property name="nativeName">mint_ind_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">mint_cr_status</property>
+                    <property name="nativeName">mint_cr_status</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">item_name</property>
+                    <property name="nativeName">item_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">minh_comp_code</property>
+                    <property name="nativeName">minh_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">minh_mindate</property>
+                    <property name="nativeName">minh_mindate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">minh_bill_no</property>
+                    <property name="nativeName">minh_bill_no</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">minh_bill_date</property>
+                    <property name="nativeName">minh_bill_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">cust_ref</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">cust_type</property>
+                    <property name="nativeName">cust_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">uom_short_name</property>
+                    <property name="nativeName">uom_short_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">led_name</property>
+                    <property name="nativeName">led_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">minh_type</property>
+                    <property name="nativeName">minh_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">minhDate</property>
+                    <property name="nativeName">minhDate</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">BillDate</property>
+                    <property name="nativeName">BillDate</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[call spst_rep_datewisereceipt (?,?,?);]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>19</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>19</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1px</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1px</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1px</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1px</property>
+            <property name="showFooterOnLast">true</property>
+            <property name="headerHeight">0.1in</property>
+            <property name="footerHeight">0.1in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="185">
+            <property name="fontSize">8.5pt</property>
+            <property name="dataSet">ST_datewisereceipt</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">mint_minno</property>
+                    <text-property name="displayName">mint_minno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_minno"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_mindate</property>
+                    <text-property name="displayName">mint_mindate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_mindate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">minh_bill_no</property>
+                    <text-property name="displayName">minh_bill_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["minh_bill_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">minh_bill_date</property>
+                    <text-property name="displayName">minh_bill_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["minh_bill_date"]</expression>
+                    <property name="dataType">date</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_cr_status</property>
+                    <text-property name="displayName">mint_cr_status</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_cr_status"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_ind_no</property>
+                    <text-property name="displayName">mint_ind_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_ind_no"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_pono</property>
+                    <text-property name="displayName">mint_pono</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_pono"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">item_name</property>
+                    <text-property name="displayName">item_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["item_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">uom_short_name</property>
+                    <text-property name="displayName">uom_short_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["uom_short_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_rcvd_qty</property>
+                    <text-property name="displayName">mint_rcvd_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_rcvd_qty"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_value</property>
+                    <text-property name="displayName">mint_value</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_value"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">led_name</property>
+                    <text-property name="displayName">led_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["led_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">daytotval</property>
+                    <text-property name="displayName">daytotval</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>GrnDate</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["mint_value"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totval</property>
+                    <text-property name="displayName">totval</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["mint_value"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">company_name</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["company_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Title</property>
+                    <text-property name="displayName">Title</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("Datewise Receipt Register From: ",Formatter.format(params["fromdate"].value,"dd/MM/yyyy")," To: ",Formatter.format(params["todate"].value,"dd/MM/yyyy")," ")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">RunDate</property>
+                    <text-property name="displayName">RunDate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(new Date(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_refname</property>
+                    <text-property name="displayName">sup_refname</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_ref"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_mintotal</property>
+                    <text-property name="displayName">sum_mintotal</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grngrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["mint_value"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">count</property>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grngrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">COUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["item_name"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_inv_qty</property>
+                    <text-property name="displayName">mint_inv_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_inv_qty"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">mint_accept_qty</property>
+                    <text-property name="displayName">mint_accept_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["mint_accept_qty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <column id="225">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">0.1in</property>
+            </column>
+            <column id="518">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">0.5in</property>
+            </column>
+            <column id="226">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">1.8in</property>
+            </column>
+            <column id="227">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">0.8in</property>
+            </column>
+            <column id="228">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">0.6in</property>
+            </column>
+            <column id="229">
+                <property name="suppressDuplicates">true</property>
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
+                <property name="width">0.4in</property>
+            </column>
+            <column id="230">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">0.4in</property>
+            </column>
+            <column id="231">
+                <property name="suppressDuplicates">true</property>
+                <property name="width">0.4in</property>
+            </column>
+            <column id="232">
+                <property name="width">2.1in</property>
+            </column>
+            <column id="233">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="529">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="234">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="539">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="235">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="236">
+                <property name="suppressDuplicates">true</property>
+            </column>
+            <header>
+                <row id="268">
+                    <cell id="269">
+                        <property name="colSpan">9</property>
+                        <property name="rowSpan">1</property>
+                        <data id="316">
+                            <property name="fontSize">medium</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="color">#880B08</property>
+                            <property name="textAlign">justify</property>
+                            <property name="resultSetColumn">company_name</property>
+                        </data>
+                    </cell>
+                    <cell id="277"/>
+                    <cell id="520"/>
+                    <cell id="278"/>
+                    <cell id="530"/>
+                    <cell id="279">
+                        <label id="318">
+                            <property name="fontSize">x-small</property>
+                            <property name="textAlign">left</property>
+                            <structure name="toc"/>
+                            <text-property name="text">Page No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="280">
+                        <auto-text id="448">
+                            <property name="fontSize">x-small</property>
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="303">
+                    <cell id="304">
+                        <property name="colSpan">9</property>
+                        <property name="rowSpan">1</property>
+                        <data id="317">
+                            <property name="fontSize">medium</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="color">#880B08</property>
+                            <property name="textAlign">justify</property>
+                            <property name="resultSetColumn">Title</property>
+                        </data>
+                    </cell>
+                    <cell id="312"/>
+                    <cell id="521"/>
+                    <cell id="313"/>
+                    <cell id="531"/>
+                    <cell id="314">
+                        <label id="319">
+                            <property name="fontSize">x-small</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Run date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="315">
+                        <data id="465">
+                            <property name="fontSize">x-small</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">RunDate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="186">
+                    <property name="backgroundColor">#D9F0F4</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">2px</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">2px</property>
+                    <cell id="187"/>
+                    <cell id="511">
+                        <label id="62">
+                            <text-property name="text">GRN No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="188">
+                        <label id="64">
+                            <text-property name="text">Supplier Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="189">
+                        <label id="66">
+                            <text-property name="text">Bill No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="190">
+                        <label id="68">
+                            <text-property name="text">Bill Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="191">
+                        <label id="70">
+                            <text-property name="text">Cat</text-property>
+                        </label>
+                    </cell>
+                    <cell id="192">
+                        <label id="467">
+                            <text-property name="text">Ind. No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="193">
+                        <label id="72">
+                            <text-property name="text">PO No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="194">
+                        <label id="74">
+                            <text-property name="text">Item Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="195">
+                        <label id="76">
+                            <text-property name="text">UOM</text-property>
+                        </label>
+                    </cell>
+                    <cell id="522">
+                        <label id="540">
+                            <text-property name="text">Inv . Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="196">
+                        <label id="78">
+                            <text-property name="text">Recd Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="532">
+                        <label id="542">
+                            <text-property name="text">Accepted Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="197">
+                        <label id="80">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Landing Cost</text-property>
+                        </label>
+                    </cell>
+                    <cell id="198">
+                        <label id="84">
+                            <text-property name="text">led_name</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="240">
+                <property name="groupName">GrnDate</property>
+                <expression name="keyExpr" type="javascript">row["mint_mindate"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["mint_mindate"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="241">
+                        <property name="fontSize">x-small</property>
+                        <cell id="242">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
+                            <data id="267">
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">dd/MM/yyyy</property>
+                                </structure>
+                                <property name="textAlign">left</property>
+                                <property name="resultSetColumn">mint_mindate</property>
+                            </data>
+                        </cell>
+                        <cell id="244"/>
+                        <cell id="245"/>
+                        <cell id="246"/>
+                        <cell id="247"/>
+                        <cell id="248"/>
+                        <cell id="249"/>
+                        <cell id="250"/>
+                        <cell id="523"/>
+                        <cell id="251"/>
+                        <cell id="533"/>
+                        <cell id="252"/>
+                        <cell id="253"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="254">
+                        <property name="fontSize">small</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">2px</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">2px</property>
+                        <cell id="255"/>
+                        <cell id="516"/>
+                        <cell id="256">
+                            <data id="519"/>
+                        </cell>
+                        <cell id="257"/>
+                        <cell id="258"/>
+                        <cell id="259"/>
+                        <cell id="260"/>
+                        <cell id="261"/>
+                        <cell id="262">
+                            <property name="fontWeight">bold</property>
+                            <label id="181">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Day Total</text-property>
+                            </label>
+                        </cell>
+                        <cell id="263"/>
+                        <cell id="527"/>
+                        <cell id="264"/>
+                        <cell id="537"/>
+                        <cell id="265">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <data id="301">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">daytotval</property>
+                            </data>
+                        </cell>
+                        <cell id="266"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="468">
+                <property name="groupName">grngrp</property>
+                <expression name="keyExpr" type="javascript">row["mint_minno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["mint_minno"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="469">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="470">
+                            <data id="495">
+                                <property name="resultSetColumn">mint_minno</property>
+                            </data>
+                        </cell>
+                        <cell id="513"/>
+                        <cell id="471"/>
+                        <cell id="472"/>
+                        <cell id="473"/>
+                        <cell id="474"/>
+                        <cell id="475"/>
+                        <cell id="476"/>
+                        <cell id="477"/>
+                        <cell id="478"/>
+                        <cell id="524"/>
+                        <cell id="479"/>
+                        <cell id="534"/>
+                        <cell id="480"/>
+                        <cell id="481"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="482">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">if (row["count"] == 1)&#13;
+   true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="483"/>
+                        <cell id="515"/>
+                        <cell id="484">
+                            <data id="498">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">count</property>
+                            </data>
+                        </cell>
+                        <cell id="485"/>
+                        <cell id="486"/>
+                        <cell id="487"/>
+                        <cell id="488"/>
+                        <cell id="489"/>
+                        <cell id="490">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <label id="497">
+                                <text-property name="text">GRN TOTAL</text-property>
+                            </label>
+                        </cell>
+                        <cell id="491">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="526">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="492">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="536">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="493">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="496">
+                                <property name="fontSize">x-small</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_mintotal</property>
+                            </data>
+                        </cell>
+                        <cell id="494"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="199">
+                    <property name="fontSize">x-small</property>
+                    <cell id="200"/>
+                    <cell id="514">
+                        <data id="238">
+                            <property name="fontSize">xx-small</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">mint_minno</property>
+                        </data>
+                    </cell>
+                    <cell id="201">
+                        <data id="466">
+                            <property name="fontSize">xx-small</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">sup_refname</property>
+                        </data>
+                    </cell>
+                    <cell id="202">
+                        <data id="282">
+                            <property name="fontSize">xx-small</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">minh_bill_no</property>
+                        </data>
+                    </cell>
+                    <cell id="203">
+                        <data id="284">
+                            <property name="fontSize">xx-small</property>
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">minh_bill_date</property>
+                        </data>
+                    </cell>
+                    <cell id="204">
+                        <data id="286">
+                            <property name="fontSize">xx-small</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">mint_cr_status</property>
+                        </data>
+                    </cell>
+                    <cell id="205">
+                        <data id="288">
+                            <property name="fontSize">xx-small</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">mint_ind_no</property>
+                        </data>
+                    </cell>
+                    <cell id="206">
+                        <data id="290">
+                            <property name="fontSize">xx-small</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">mint_pono</property>
+                        </data>
+                    </cell>
+                    <cell id="207">
+                        <data id="292">
+                            <property name="fontSize">xx-small</property>
+                            <property name="resultSetColumn">item_name</property>
+                        </data>
+                    </cell>
+                    <cell id="208">
+                        <data id="294">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">uom_short_name</property>
+                        </data>
+                    </cell>
+                    <cell id="525">
+                        <data id="541">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">mint_inv_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="209">
+                        <data id="296">
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.000</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">mint_rcvd_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="535">
+                        <data id="543">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">mint_accept_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="210">
+                        <data id="298">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">mint_value</property>
+                        </data>
+                    </cell>
+                    <cell id="211">
+                        <data id="300">
+                            <property name="fontSize">xx-small</property>
+                            <property name="marginLeft">3pt</property>
+                            <property name="marginRight">1pt</property>
+                            <property name="paddingLeft">2pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <property name="resultSetColumn">led_name</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="212">
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">2px</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">2px</property>
+                    <cell id="213"/>
+                    <cell id="517"/>
+                    <cell id="214"/>
+                    <cell id="215"/>
+                    <cell id="216"/>
+                    <cell id="217"/>
+                    <cell id="218"/>
+                    <cell id="219"/>
+                    <cell id="220">
+                        <property name="fontWeight">bold</property>
+                        <label id="182">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Grand Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="221"/>
+                    <cell id="528"/>
+                    <cell id="222"/>
+                    <cell id="538"/>
+                    <cell id="223">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <data id="302">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">totval</property>
+                        </data>
+                    </cell>
+                    <cell id="224"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

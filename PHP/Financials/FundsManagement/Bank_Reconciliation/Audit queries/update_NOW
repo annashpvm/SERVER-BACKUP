@@ -1,0 +1,30 @@
+update emp_monthly_salary_header sh,
+(
+select 
+employee_roll_no,
+count(session_one) as now
+from confirm_attendance
+where
+session_one='W'
+and
+MONTH(attendance_date)=11
+and
+YEAR(attendance_date)=2018
+group by employee_roll_no
+)ca
+set
+sh.no_of_weekoff_days=ca.now
+where
+sh.employee_roll_no=ca.employee_roll_no
+-- and sh.employee_type=emptype
+-- and sh.unit_code=unitcode 
+and sh.sal_month=11
+and sh.sal_year=2018;
+
+
+
+
+update emp_monthly_salary_header
+set 
+no_of_leave_days=0,
+no_of_absent_days=0

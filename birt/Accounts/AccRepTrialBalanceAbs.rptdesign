@@ -1,0 +1,2455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="fmdate" id="70">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">dateTime</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="tdate" id="71">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">dateTime</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="comp" id="72">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="434">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="7">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="8">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">finid</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">finid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">comp</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fmdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">3</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">tdate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">4</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">acctran_led_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">led_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">curbal_obdbamt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">curbal_obcramt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">debit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">credit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">closing</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">grp</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">grp0</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">grp1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">grp2</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">grp3</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">grp4</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">acctran_led_code</property>
+                    <property name="nativeName">acctran_led_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">led_name</property>
+                    <property name="nativeName">led_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">curbal_obdbamt</property>
+                    <property name="nativeName">curbal_obdbamt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">curbal_obcramt</property>
+                    <property name="nativeName">curbal_obcramt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">debit</property>
+                    <property name="nativeName">debit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">credit</property>
+                    <property name="nativeName">credit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">closing</property>
+                    <property name="nativeName">closing</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">grp</property>
+                    <property name="nativeName">grp</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">grp0</property>
+                    <property name="nativeName">grp0</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">grp1</property>
+                    <property name="nativeName">grp1</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">grp2</property>
+                    <property name="nativeName">grp2</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">grp3</property>
+                    <property name="nativeName">grp3</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">grp4</property>
+                    <property name="nativeName">grp4</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call accspreptrialbalance(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>finid</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>19</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>19</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">custom</property>
+            <property name="topMargin">0.125in</property>
+            <property name="leftMargin">0.0625in</property>
+            <property name="bottomMargin">0.75in</property>
+            <property name="rightMargin">0in</property>
+            <property name="height">11in</property>
+            <property name="width">14in</property>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of></value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="188">
+            <property name="width">13.864583333333334in</property>
+            <property name="dataSet">Data Set</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">led_name</property>
+                    <text-property name="displayName">led_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["led_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">curbal_obdbamt</property>
+                    <text-property name="displayName">curbal_obdbamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["curbal_obdbamt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">curbal_obcramt</property>
+                    <text-property name="displayName">curbal_obcramt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["curbal_obcramt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">debit</property>
+                    <text-property name="displayName">debit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["debit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">credit</property>
+                    <text-property name="displayName">credit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["credit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">closing</property>
+                    <text-property name="displayName">closing</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["closing"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">cr</property>
+                    <text-property name="displayName">cr</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["closing"]&lt;0)
+Math.abs(dataSetRow["closing"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dr</property>
+                    <text-property name="displayName">dr</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["closing"]>0)
+dataSetRow["closing"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totdr</property>
+                    <text-property name="displayName">totdr</text-property>
+                    <property name="dataType">decimal</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totcr</property>
+                    <text-property name="displayName">totcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">tcr</property>
+                    <text-property name="displayName">tcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">tdr</property>
+                    <text-property name="displayName">tdr</text-property>
+                    <property name="dataType">decimal</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">tobcr</property>
+                    <text-property name="displayName">tobcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obcramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">tobdb</property>
+                    <text-property name="displayName">tobdb</text-property>
+                    <property name="dataType">decimal</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obdbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">grp0</property>
+                    <text-property name="displayName">grp0</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp0"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">grp4</property>
+                    <text-property name="displayName">grp4</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp4"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">g4obdb</property>
+                    <text-property name="displayName">g4obdb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp4</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obdbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4obcr</property>
+                    <text-property name="displayName">g4obcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp4</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obcramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4deb</property>
+                    <text-property name="displayName">g4deb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp4</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4crd</property>
+                    <text-property name="displayName">g4crd</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp4</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4dr</property>
+                    <text-property name="displayName">g4dr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp4</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4cr</property>
+                    <text-property name="displayName">g4cr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp4</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0obdb</property>
+                    <text-property name="displayName">g0obdb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp0</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obdbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0obcr</property>
+                    <text-property name="displayName">g0obcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp0</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obcramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0deb</property>
+                    <text-property name="displayName">g0deb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp0</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0crd</property>
+                    <text-property name="displayName">g0crd</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp0</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0dr</property>
+                    <text-property name="displayName">g0dr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp0</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0cr</property>
+                    <text-property name="displayName">g0cr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grp0</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">grp1</property>
+                    <text-property name="displayName">grp1</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp1"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">grp2</property>
+                    <text-property name="displayName">grp2</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp2"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">grp3</property>
+                    <text-property name="displayName">grp3</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp3"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">company</property>
+                    <text-property name="displayName">company</text-property>
+                    <expression name="expression" type="javascript">if (params["comp"].value=="1")
+"SRINIVASA GARMENT PRIVATE LIMITED"
+else if (params["comp"].value=="2")
+"TRIGGER MARKETING LIMITED"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">grp</property>
+                    <text-property name="displayName">grp</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">g1obdb</property>
+                    <text-property name="displayName">g1obdb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpgp1</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obdbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1obcr</property>
+                    <text-property name="displayName">g1obcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpgp1</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obcramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1deb</property>
+                    <text-property name="displayName">g1deb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpgp1</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1crd</property>
+                    <text-property name="displayName">g1crd</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpgp1</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1dr</property>
+                    <text-property name="displayName">g1dr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpgp1</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1cr</property>
+                    <text-property name="displayName">g1cr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpgp1</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2cr</property>
+                    <text-property name="displayName">g2cr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp2</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2dr</property>
+                    <text-property name="displayName">g2dr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp2</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2crd</property>
+                    <text-property name="displayName">g2crd</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp2</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2deb</property>
+                    <text-property name="displayName">g2deb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp2</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2obcr</property>
+                    <text-property name="displayName">g2obcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp2</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obcramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2obdb</property>
+                    <text-property name="displayName">g2obdb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp2</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obdbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3obdb</property>
+                    <text-property name="displayName">g3obdb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp3</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obdbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3obcr</property>
+                    <text-property name="displayName">g3obcr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp3</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["curbal_obcramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3deb</property>
+                    <text-property name="displayName">g3deb</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp3</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3crd</property>
+                    <text-property name="displayName">g3crd</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp3</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3dr</property>
+                    <text-property name="displayName">g3dr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp3</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3cr</property>
+                    <text-property name="displayName">g3cr</text-property>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Grpgp3</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0obbal</property>
+                    <text-property name="displayName">g0obbal</text-property>
+                    <expression name="expression" type="javascript">row["g0obdb"]-row["g0obcr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">gobaldeb</property>
+                    <text-property name="displayName">g0baldeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g0obbal"]>0)
+row["g0obbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0balcrd</property>
+                    <text-property name="displayName">g0balcrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g0obbal"]&lt;0)
+Math.abs(row["g0obbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1obbal</property>
+                    <text-property name="displayName">g1obbal</text-property>
+                    <expression name="expression" type="javascript">row["g1obdb"]-row["g1obcr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1baldeb</property>
+                    <text-property name="displayName">g1baldeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g1obbal"]>0)
+row["g1obbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1balcrd</property>
+                    <text-property name="displayName">g1balcrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g1obbal"]&lt;0)
+Math.abs(row["g1obbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2obbal</property>
+                    <text-property name="displayName">g2obbal</text-property>
+                    <expression name="expression" type="javascript">row["g2obdb"]-row["g2obcr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2baldeb</property>
+                    <text-property name="displayName">g2baldeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g2obbal"]>0)
+row["g2obbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2balcrd</property>
+                    <text-property name="displayName">g2balcrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g2obbal"]&lt;0)
+Math.abs(row["g2obbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3obbal</property>
+                    <text-property name="displayName">g3obbal</text-property>
+                    <expression name="expression" type="javascript">row["g3obdb"]-row["g3obcr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3baldeb</property>
+                    <text-property name="displayName">g3baldeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g3obbal"]>0)
+row["g3obbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3balcrd</property>
+                    <text-property name="displayName">g3balcrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g3obbal"]&lt;0)
+Math.abs(row["g3obbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4obbal</property>
+                    <text-property name="displayName">g4obbal</text-property>
+                    <expression name="expression" type="javascript">row["g4obdb"]-row["g4obcr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4obdeb</property>
+                    <text-property name="displayName">g4obdeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g4obbal"]>0)
+row["g4obbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4obcrd</property>
+                    <text-property name="displayName">g4obcrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g4obbal"]&lt;0)
+Math.abs(row["g4obbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">goclsbal</property>
+                    <text-property name="displayName">goclsbal</text-property>
+                    <expression name="expression" type="javascript">row["g0dr"]-row["g0cr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0clsdeb</property>
+                    <text-property name="displayName">g0clsdeb</text-property>
+                    <expression name="expression" type="javascript">if (row["goclsbal"]>0)
+row["goclsbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g0clscrd</property>
+                    <text-property name="displayName">g0clscrd</text-property>
+                    <expression name="expression" type="javascript">if (row["goclsbal"]&lt;0)
+Math.abs(row["goclsbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1clsbal</property>
+                    <text-property name="displayName">g1clsbal</text-property>
+                    <expression name="expression" type="javascript">row["g1dr"]-row["g1cr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1clsdeb</property>
+                    <text-property name="displayName">g1clsdeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g1clsbal"]>0)
+row["g1clsbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g1clscrd</property>
+                    <text-property name="displayName">g1clscrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g1clsbal"]&lt;0)
+Math.abs(row["g1clsbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2clsbal</property>
+                    <text-property name="displayName">g2clsbal</text-property>
+                    <expression name="expression" type="javascript">row["g2dr"]-row["g2cr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2clsdeb</property>
+                    <text-property name="displayName">g2clsdeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g2clsbal"]>0)
+row["g2clsbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g2clscrd</property>
+                    <text-property name="displayName">g2clscrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g2clsbal"]&lt;0)
+Math.abs(row["g2clsbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3clsbal</property>
+                    <text-property name="displayName">g3clsbal</text-property>
+                    <expression name="expression" type="javascript">row["g3dr"]-row["g3cr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3clsdeb</property>
+                    <text-property name="displayName">g3clsdeb</text-property>
+                    <expression name="expression" type="javascript">if (row["g3clsbal"]>0)
+row["g3clsbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g3clscrd</property>
+                    <text-property name="displayName">g3clscrd</text-property>
+                    <expression name="expression" type="javascript">if (row["g3clsbal"]&lt;0)
+Math.abs(row["g3clsbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4bldeb</property>
+                    <text-property name="displayName">g4</text-property>
+                    <expression name="expression" type="javascript">if (row["g4clsbal"]>0)
+row["g4clsbal"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4</property>
+                    <text-property name="displayName">g4</text-property>
+                    <expression name="expression" type="javascript">if (row["g4clsbal"]&lt;0)
+Math.abs(row["g4clsbal"])</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">g4clsbal</property>
+                    <text-property name="displayName">g4clsbal</text-property>
+                    <expression name="expression" type="javascript">row["g4dr"]-row["g4cr"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="pageBreakInterval">0</property>
+            <column id="282">
+                <property name="width">0.9895833333333334in</property>
+            </column>
+            <column id="298">
+                <property name="width">0.9895833333333334in</property>
+            </column>
+            <column id="290">
+                <property name="width">0.9895833333333334in</property>
+            </column>
+            <column id="304">
+                <property name="width">0.9895833333333334in</property>
+            </column>
+            <column id="247">
+                <property name="width">1.09375in</property>
+            </column>
+            <column id="535">
+                <property name="width">0.25in</property>
+            </column>
+            <column id="253">
+                <property name="width">1.3125in</property>
+            </column>
+            <column id="551">
+                <property name="width">0.3333333333333333in</property>
+            </column>
+            <column id="222">
+                <property name="width">1.28125in</property>
+            </column>
+            <column id="583">
+                <property name="width">0.25in</property>
+            </column>
+            <column id="227">
+                <property name="width">1.3645833333333333in</property>
+            </column>
+            <column id="599">
+                <property name="width">0.3125in</property>
+            </column>
+            <column id="202">
+                <property name="width">1.4583333333333333in</property>
+            </column>
+            <column id="615">
+                <property name="width">0.34375in</property>
+            </column>
+            <column id="203">
+                <property name="width">1.1041666666666667in</property>
+            </column>
+            <header>
+                <row id="704">
+                    <property name="fontWeight">bold</property>
+                    <cell id="705">
+                        <property name="colSpan">15</property>
+                        <property name="rowSpan">1</property>
+                    </cell>
+                </row>
+                <row id="211">
+                    <property name="fontWeight">bold</property>
+                    <cell id="277">
+                        <property name="colSpan">15</property>
+                        <property name="rowSpan">1</property>
+                        <label id="215">
+                            <text-property name="text">TRIAL BALANCE</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="619">
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="height">0.2604166666666667in</property>
+                    <cell id="620">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="641">
+                            <property name="resultSetColumn">company</property>
+                        </data>
+                    </cell>
+                    <cell id="624">
+                        <label id="638">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">From Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="625">
+                        <label id="637">
+                            <text-property name="text">:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="626">
+                        <data id="635">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">left</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">fmdate</property>
+                                    <expression name="expression" type="javascript">params["fmdate"]</expression>
+                                    <property name="dataType">date-time</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">fmdate</property>
+                        </data>
+                    </cell>
+                    <cell id="627"/>
+                    <cell id="628">
+                        <label id="639">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">To Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="629">
+                        <label id="640">
+                            <text-property name="text">:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="630">
+                        <data id="636">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">left</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">tdate</property>
+                                    <expression name="expression" type="javascript">params["tdate"]</expression>
+                                    <property name="dataType">date-time</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">tdate</property>
+                        </data>
+                    </cell>
+                    <cell id="631"/>
+                    <cell id="632"/>
+                    <cell id="633"/>
+                    <cell id="634"/>
+                </row>
+                <row id="234">
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <cell id="278"/>
+                    <cell id="294"/>
+                    <cell id="286"/>
+                    <cell id="300"/>
+                    <cell id="243">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <label id="254">
+                            <text-property name="text">YEAR OPENING</text-property>
+                        </label>
+                    </cell>
+                    <cell id="537"/>
+                    <cell id="236">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <label id="240">
+                            <text-property name="text">TRANSACTIONS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="585"/>
+                    <cell id="238">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <label id="241">
+                            <text-property name="text">CLOSING</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="189">
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <cell id="279">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <label id="283">
+                            <text-property name="text">Group</text-property>
+                        </label>
+                    </cell>
+                    <cell id="287">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <label id="204">
+                            <text-property name="text">Account Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="244">
+                        <label id="255">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Debit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="522"/>
+                    <cell id="250">
+                        <label id="256">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Credit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="538"/>
+                    <cell id="219">
+                        <label id="258">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Debit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="570"/>
+                    <cell id="224">
+                        <label id="257">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Credit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="586"/>
+                    <cell id="191">
+                        <label id="206">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Debit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="602"/>
+                    <cell id="192">
+                        <label id="208">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Credit</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="305">
+                <property name="groupName">Grp0</property>
+                <expression name="keyExpr" type="javascript">row["grp"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="306">
+                        <property name="height">0.28125in</property>
+                        <cell id="307">
+                            <property name="colSpan">4</property>
+                            <property name="rowSpan">1</property>
+                            <data id="334">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">purple</property>
+                                <property name="resultSetColumn">grp0</property>
+                            </data>
+                        </cell>
+                        <cell id="314">
+                            <property name="textAlign">right</property>
+                            <data id="674">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">purple</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">gobaldeb</property>
+                            </data>
+                        </cell>
+                        <cell id="523"/>
+                        <cell id="315">
+                            <data id="675">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">purple</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g0balcrd</property>
+                            </data>
+                        </cell>
+                        <cell id="539"/>
+                        <cell id="316">
+                            <data id="373">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">purple</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g0deb</property>
+                            </data>
+                        </cell>
+                        <cell id="571"/>
+                        <cell id="317">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">purple</property>
+                            <property name="textAlign">right</property>
+                            <data id="374">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g0crd</property>
+                            </data>
+                        </cell>
+                        <cell id="587"/>
+                        <cell id="318">
+                            <data id="690">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">purple</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g0clsdeb</property>
+                            </data>
+                        </cell>
+                        <cell id="603"/>
+                        <cell id="319">
+                            <data id="691">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">purple</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g0clscrd</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="320">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="321"/>
+                        <cell id="322"/>
+                        <cell id="323"/>
+                        <cell id="324"/>
+                        <cell id="328">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="533">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="329">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="549">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="330">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="581">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="331">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="597">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="332">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="613">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="333"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="406">
+                <property name="groupName">grpgp1</property>
+                <expression name="keyExpr" type="javascript">row["grp1"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp1"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="407">
+                        <property name="height">0.2708333333333333in</property>
+                        <cell id="408">
+                            <property name="colSpan">4</property>
+                            <property name="rowSpan">1</property>
+                            <data id="433">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">blue</property>
+                                <property name="marginLeft">30pt</property>
+                                <property name="resultSetColumn">grp1</property>
+                            </data>
+                        </cell>
+                        <cell id="414">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">blue</property>
+                            <property name="textAlign">right</property>
+                            <data id="677">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g1baldeb</property>
+                            </data>
+                        </cell>
+                        <cell id="524"/>
+                        <cell id="415">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">blue</property>
+                            <property name="textAlign">right</property>
+                            <data id="679">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g1balcrd</property>
+                            </data>
+                        </cell>
+                        <cell id="540"/>
+                        <cell id="416">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">blue</property>
+                            <property name="textAlign">right</property>
+                            <data id="657">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g1deb</property>
+                            </data>
+                        </cell>
+                        <cell id="572"/>
+                        <cell id="417">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">blue</property>
+                            <property name="textAlign">right</property>
+                            <data id="658">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g1crd</property>
+                            </data>
+                        </cell>
+                        <cell id="588"/>
+                        <cell id="418">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">blue</property>
+                            <property name="textAlign">right</property>
+                            <data id="693">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g1clsdeb</property>
+                            </data>
+                        </cell>
+                        <cell id="604"/>
+                        <cell id="419">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">blue</property>
+                            <property name="textAlign">right</property>
+                            <data id="695">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g1clscrd</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="420">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="421"/>
+                        <cell id="422"/>
+                        <cell id="423"/>
+                        <cell id="424"/>
+                        <cell id="427"/>
+                        <cell id="532"/>
+                        <cell id="428"/>
+                        <cell id="548"/>
+                        <cell id="429"/>
+                        <cell id="580"/>
+                        <cell id="430"/>
+                        <cell id="596"/>
+                        <cell id="431"/>
+                        <cell id="612"/>
+                        <cell id="432"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="463">
+                <property name="groupName">Grpgp2</property>
+                <expression name="keyExpr" type="javascript">row["grp2"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp2"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="464">
+                        <property name="height">0.28125in</property>
+                        <cell id="465">
+                            <property name="colSpan">4</property>
+                            <property name="rowSpan">1</property>
+                            <data id="490">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">maroon</property>
+                                <property name="marginLeft">40pt</property>
+                                <property name="resultSetColumn">grp2</property>
+                            </data>
+                        </cell>
+                        <cell id="471">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">maroon</property>
+                            <property name="textAlign">right</property>
+                            <data id="681">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g2baldeb</property>
+                            </data>
+                        </cell>
+                        <cell id="525"/>
+                        <cell id="472">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">maroon</property>
+                            <property name="textAlign">right</property>
+                            <data id="682">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g2balcrd</property>
+                            </data>
+                        </cell>
+                        <cell id="541"/>
+                        <cell id="473">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">maroon</property>
+                            <property name="textAlign">right</property>
+                            <data id="664">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g2deb</property>
+                            </data>
+                        </cell>
+                        <cell id="573"/>
+                        <cell id="474">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">maroon</property>
+                            <property name="textAlign">right</property>
+                            <data id="663">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g2crd</property>
+                            </data>
+                        </cell>
+                        <cell id="589"/>
+                        <cell id="475">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">maroon</property>
+                            <property name="textAlign">right</property>
+                            <data id="697">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g2clsdeb</property>
+                            </data>
+                        </cell>
+                        <cell id="605"/>
+                        <cell id="476">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">maroon</property>
+                            <property name="textAlign">right</property>
+                            <data id="698">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g2clscrd</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="477">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="478"/>
+                        <cell id="479"/>
+                        <cell id="480"/>
+                        <cell id="481"/>
+                        <cell id="484"/>
+                        <cell id="531"/>
+                        <cell id="485"/>
+                        <cell id="547"/>
+                        <cell id="486"/>
+                        <cell id="579"/>
+                        <cell id="487"/>
+                        <cell id="595"/>
+                        <cell id="488"/>
+                        <cell id="611"/>
+                        <cell id="489"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="492">
+                <property name="groupName">Grpgp3</property>
+                <expression name="keyExpr" type="javascript">row["grp3"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp3"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="493">
+                        <property name="height">0.28125in</property>
+                        <cell id="494">
+                            <property name="colSpan">4</property>
+                            <property name="rowSpan">1</property>
+                            <data id="519">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">green</property>
+                                <property name="marginLeft">50pt</property>
+                                <property name="resultSetColumn">grp3</property>
+                            </data>
+                        </cell>
+                        <cell id="500">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">green</property>
+                            <property name="textAlign">right</property>
+                            <data id="684">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g3baldeb</property>
+                            </data>
+                        </cell>
+                        <cell id="526"/>
+                        <cell id="501">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">green</property>
+                            <property name="textAlign">right</property>
+                            <data id="685">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g3balcrd</property>
+                            </data>
+                        </cell>
+                        <cell id="542"/>
+                        <cell id="502">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">green</property>
+                            <property name="textAlign">right</property>
+                            <data id="669">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g3deb</property>
+                            </data>
+                        </cell>
+                        <cell id="574"/>
+                        <cell id="503">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">green</property>
+                            <property name="textAlign">right</property>
+                            <data id="670">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g3crd</property>
+                            </data>
+                        </cell>
+                        <cell id="590"/>
+                        <cell id="504">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">green</property>
+                            <property name="textAlign">right</property>
+                            <data id="700">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g3clsdeb</property>
+                            </data>
+                        </cell>
+                        <cell id="606"/>
+                        <cell id="505">
+                            <property name="fontWeight">bold</property>
+                            <property name="color">green</property>
+                            <property name="textAlign">right</property>
+                            <data id="701">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">g3clscrd</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="506">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="507"/>
+                        <cell id="508"/>
+                        <cell id="509"/>
+                        <cell id="510"/>
+                        <cell id="513"/>
+                        <cell id="530"/>
+                        <cell id="514"/>
+                        <cell id="546"/>
+                        <cell id="515"/>
+                        <cell id="578"/>
+                        <cell id="516"/>
+                        <cell id="594"/>
+                        <cell id="517"/>
+                        <cell id="610"/>
+                        <cell id="518"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="335">
+                <property name="groupName">Grp4</property>
+                <expression name="keyExpr" type="javascript">row["grp4"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp4"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="336">
+                        <property name="height">0.2708333333333333in</property>
+                        <cell id="337">
+                            <property name="colSpan">4</property>
+                            <property name="rowSpan">1</property>
+                            <data id="364">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <property name="marginLeft">60pt</property>
+                                <property name="resultSetColumn">grp4</property>
+                            </data>
+                        </cell>
+                        <cell id="648">
+                            <data id="687">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g4obdeb</property>
+                            </data>
+                        </cell>
+                        <cell id="649"/>
+                        <cell id="647">
+                            <property name="colSpan">1</property>
+                            <property name="rowSpan">1</property>
+                            <data id="688">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g4obcrd</property>
+                            </data>
+                        </cell>
+                        <cell id="650"/>
+                        <cell id="651">
+                            <data id="367">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g4deb</property>
+                            </data>
+                        </cell>
+                        <cell id="575">
+                            <property name="colSpan">1</property>
+                            <property name="rowSpan">1</property>
+                        </cell>
+                        <cell id="652">
+                            <data id="368">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g4crd</property>
+                            </data>
+                        </cell>
+                        <cell id="653"/>
+                        <cell id="654">
+                            <data id="702">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g4bldeb</property>
+                            </data>
+                        </cell>
+                        <cell id="607">
+                            <data id="721"/>
+                        </cell>
+                        <cell id="349">
+                            <data id="703">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">fuchsia</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">g4</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="350">
+                        <property name="height">0.23958333333333334in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="351"/>
+                        <cell id="352"/>
+                        <cell id="353"/>
+                        <cell id="354"/>
+                        <cell id="358">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="529">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="359">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="545">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="360">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="577">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="361">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="593">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="362">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="609">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="363">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="193">
+                    <property name="height">0.20833333333333334in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="280">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <data id="205">
+                            <property name="color">blue</property>
+                            <property name="marginLeft">40pt</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">led_name</property>
+                        </data>
+                    </cell>
+                    <cell id="245">
+                        <data id="259">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">curbal_obdbamt</property>
+                        </data>
+                    </cell>
+                    <cell id="528"/>
+                    <cell id="251">
+                        <data id="260">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">curbal_obcramt</property>
+                        </data>
+                    </cell>
+                    <cell id="544"/>
+                    <cell id="220">
+                        <data id="275">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">debit</property>
+                        </data>
+                    </cell>
+                    <cell id="576"/>
+                    <cell id="225">
+                        <data id="276">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">credit</property>
+                        </data>
+                    </cell>
+                    <cell id="592"/>
+                    <cell id="195">
+                        <data id="210">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">dr</property>
+                        </data>
+                    </cell>
+                    <cell id="608"/>
+                    <cell id="196">
+                        <data id="209">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">cr</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="197">
+                    <cell id="281"/>
+                    <cell id="297"/>
+                    <cell id="289"/>
+                    <cell id="303"/>
+                    <cell id="246">
+                        <property name="textAlign">right</property>
+                        <data id="262">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">tobdb</property>
+                        </data>
+                    </cell>
+                    <cell id="534">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="252">
+                        <property name="textAlign">right</property>
+                        <data id="261">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">tobcr</property>
+                        </data>
+                    </cell>
+                    <cell id="550">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="221">
+                        <property name="textAlign">right</property>
+                        <data id="233">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">tdr</property>
+                        </data>
+                    </cell>
+                    <cell id="582">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="226">
+                        <property name="textAlign">right</property>
+                        <data id="232">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">tcr</property>
+                        </data>
+                    </cell>
+                    <cell id="598">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="199">
+                        <data id="216">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">totdr</property>
+                        </data>
+                    </cell>
+                    <cell id="614"/>
+                    <cell id="200">
+                        <data id="217">
+                            <property name="fontWeight">bold</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">totcr</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

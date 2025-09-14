@@ -1,0 +1,1050 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="4">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="5">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="voucher_type" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="voucher_name" id="10">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="11">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="12">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">startdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">startdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">enddate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">enddate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">voutype</property>
+                    <property name="paramName">voucher_type</property>
+                    <property name="nativeName">voutype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">5</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">accref_seqno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">accref_vouno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">accref_voudate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">ledtype</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">accrefno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">cust_ref</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">cust_gstin</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">invamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">vou_refno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">billdate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">accref_narration</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">slno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">ledger_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">ledger_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">accref_seqno</property>
+                    <property name="nativeName">accref_seqno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">accref_vouno</property>
+                    <property name="nativeName">accref_vouno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">accref_voudate</property>
+                    <property name="nativeName">accref_voudate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">ledtype</property>
+                    <property name="nativeName">ledtype</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">accrefno</property>
+                    <property name="nativeName">accrefno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">cust_ref</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">cust_gstin</property>
+                    <property name="nativeName">cust_gstin</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">invamt</property>
+                    <property name="nativeName">invamt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">vou_refno</property>
+                    <property name="nativeName">vou_refno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">billdate</property>
+                    <property name="nativeName">billdate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">accref_narration</property>
+                    <property name="nativeName">accref_narration</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">slno</property>
+                    <property name="nativeName">slno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">ledger_name</property>
+                    <property name="nativeName">ledger_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">ledger_amt</property>
+                    <property name="nativeName">ledger_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spacc_rep_column_report_VouType_JV(?,?,?,?,?)} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <cubes>
+        <tabular-cube name="Data Cube" id="432">
+            <property name="dimensions">
+                <tabular-dimension name="Group" id="433">
+                    <property name="defaultHierarchy">NewTabularHierarchy</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy" id="434">
+                            <property name="levels">
+                                <tabular-level name="ledger_name" id="435">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">ledger_name</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group1" id="436">
+                    <property name="isTimeType">false</property>
+                    <property name="defaultHierarchy">NewTabularHierarchy2</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy2" id="437">
+                            <property name="levels">
+                                <tabular-level name="accref_voudate" id="438">
+                                    <property name="dataType">date-time</property>
+                                    <property name="columnName">accref_voudate</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group3" id="439">
+                    <property name="defaultHierarchy">NewTabularHierarchy3</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy3" id="440">
+                            <property name="levels">
+                                <tabular-level name="accref_vouno" id="441">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">accref_vouno</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group4" id="442">
+                    <property name="defaultHierarchy">NewTabularHierarchy4</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy4" id="443">
+                            <property name="levels">
+                                <tabular-level name="cust_ref" id="444">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">cust_ref</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group5" id="448">
+                    <property name="defaultHierarchy">NewTabularHierarchy5</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy5" id="449">
+                            <property name="levels">
+                                <tabular-level name="cust_gstin" id="450">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">cust_gstin</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group6" id="451">
+                    <property name="defaultHierarchy">NewTabularHierarchy6</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy6" id="452">
+                            <property name="levels">
+                                <tabular-level name="vou_refno" id="453">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">vou_refno</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group7" id="454">
+                    <property name="isTimeType">false</property>
+                    <property name="defaultHierarchy">NewTabularHierarchy8</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy8" id="455">
+                            <property name="levels">
+                                <tabular-level name="billdate" id="456">
+                                    <property name="dataType">date-time</property>
+                                    <property name="columnName">billdate</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group9" id="457">
+                    <property name="defaultHierarchy">NewTabularHierarchy9</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy9" id="458">
+                            <property name="levels">
+                                <tabular-level name="invamt" id="459">
+                                    <property name="dataType">float</property>
+                                    <property name="columnName">invamt</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+            </property>
+            <property name="measureGroups">
+                <tabular-measure-group name="Summary Field" id="460">
+                    <property name="measures">
+                        <tabular-measure name="ledger_amt" id="461">
+                            <expression name="measureExpression" type="javascript">dataSetRow["ledger_amt"]</expression>
+                            <property name="dataType">float</property>
+                        </tabular-measure>
+                    </property>
+                </tabular-measure-group>
+            </property>
+            <property name="dataSet">Data Set</property>
+        </tabular-cube>
+    </cubes>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">custom</property>
+            <property name="orientation">landscape</property>
+            <property name="height">297mm</property>
+            <property name="width">1000mm</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="530">
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">heading</property>
+                    <expression name="expression" type="javascript">BirtStr.concat( params["voucher_name"].value , " - Details From ",Formatter.format(params["fromdate"].value,"dd/MM/yyyy")," To  ",Formatter.format(params["todate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="531"/>
+            <row id="532">
+                <cell id="533">
+                    <label id="1534">
+                        <property name="fontWeight">bold</property>
+                        <text-property name="text">Sri Hari Venkateswara Paper Mills (P) Ltd.</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="534">
+                <cell id="535"/>
+            </row>
+            <row id="536">
+                <cell id="537">
+                    <data id="1537">
+                        <property name="resultSetColumn">heading</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1535">
+                <cell id="1536"/>
+            </row>
+        </grid>
+        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="462">
+            <property name="cube">Data Cube</property>
+            <property name="measures">
+                <extended-item extensionName="MeasureView" id="504">
+                    <property name="measure">ledger_amt</property>
+                    <property name="detail">
+                        <extended-item extensionName="AggregationCell" id="505">
+                            <property name="aggregationOnRow">Group9/invamt</property>
+                            <property name="aggregationOnColumn">Group/ledger_name</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="content">
+                                <data id="506">
+                                    <structure name="numberFormat">
+                                        <property name="category">Fixed</property>
+                                        <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">ledger_amt_Group9/invamt_Group/ledger_name</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="aggregations">
+                        <extended-item extensionName="AggregationCell" id="1545">
+                            <property name="aggregationOnColumn">Group/ledger_name</property>
+                            <property name="content">
+                                <data id="1546">
+                                    <property name="fontWeight">bold</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Fixed</property>
+                                        <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                    </structure>
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">ledger_amt_Group/ledger_name</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="header">
+                        <extended-item extensionName="CrosstabCell" id="507">
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="height">0in</property>
+                        </extended-item>
+                    </property>
+                </extended-item>
+            </property>
+            <property name="rows">
+                <extended-item extensionName="CrosstabView" id="464">
+                    <property name="grandTotal">
+                        <extended-item extensionName="CrosstabCell" id="1544">
+                            <property name="content">
+                                <label id="1547">
+                                    <property name="fontWeight">bold</property>
+                                    <text-property name="text">Grand Total</text-property>
+                                </label>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="views">
+                        <extended-item extensionName="DimensionView" id="469">
+                            <property name="dimension">Group1</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View1" id="470">
+                                    <property name="level">Group1/accref_voudate</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="471">
+                                            <property name="content">
+                                                <data name="accref_voudate" id="473">
+                                                    <structure name="dateTimeFormat">
+                                                        <property name="category">Custom</property>
+                                                        <property name="pattern">dd/MM/yyyy</property>
+                                                    </structure>
+                                                    <property name="textAlign">center</property>
+                                                    <property name="resultSetColumn">accref_voudate</property>
+                                                </data>
+                                            </property>
+                                            <property name="verticalAlign">middle</property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">0.9in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="474">
+                            <property name="dimension">Group3</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View2" id="475">
+                                    <property name="level">Group3/accref_vouno</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="476">
+                                            <property name="content">
+                                                <data name="accref_vouno" id="478">
+                                                    <property name="textAlign">center</property>
+                                                    <property name="resultSetColumn">accref_vouno</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">0.7in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="479">
+                            <property name="dimension">Group4</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View3" id="480">
+                                    <property name="level">Group4/cust_ref</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="481">
+                                            <property name="content">
+                                                <data name="cust_ref" id="483">
+                                                    <property name="resultSetColumn">cust_ref</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">2.5in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="484">
+                            <property name="dimension">Group5</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View4" id="485">
+                                    <property name="level">Group5/cust_gstin</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="486">
+                                            <property name="content">
+                                                <data name="cust_gstin" id="488">
+                                                    <property name="resultSetColumn">cust_gstin</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">1in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="489">
+                            <property name="dimension">Group6</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View5" id="490">
+                                    <property name="level">Group6/vou_refno</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="491">
+                                            <property name="content">
+                                                <data name="vou_refno" id="493">
+                                                    <property name="resultSetColumn">vou_refno</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">1in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="494">
+                            <property name="dimension">Group7</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View6" id="495">
+                                    <property name="level">Group7/billdate</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="496">
+                                            <property name="content">
+                                                <data name="billdate" id="498">
+                                                    <structure name="dateTimeFormat">
+                                                        <property name="category">Custom</property>
+                                                        <property name="pattern">dd/MM/yyyy</property>
+                                                    </structure>
+                                                    <property name="textAlign">center</property>
+                                                    <property name="resultSetColumn">billdate</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">0.8in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="DimensionView" id="499">
+                            <property name="dimension">Group9</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View7" id="500">
+                                    <property name="level">Group9/invamt</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="501">
+                                            <property name="content">
+                                                <data name="invamt" id="503">
+                                                    <structure name="numberFormat">
+                                                        <property name="category">Fixed</property>
+                                                        <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                                    </structure>
+                                                    <property name="textAlign">right</property>
+                                                    <property name="resultSetColumn">invamt</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <property name="width">0.9in</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="grandTotalLocation">after</property>
+                </extended-item>
+            </property>
+            <property name="columns">
+                <extended-item extensionName="CrosstabView" id="517">
+                    <property name="views">
+                        <extended-item extensionName="DimensionView" id="518">
+                            <property name="dimension">Group</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View" id="519">
+                                    <property name="level">Group/ledger_name</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="520">
+                                            <property name="content">
+                                                <data name="ledger_name" id="528">
+                                                    <property name="resultSetColumn">ledger_name</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">dotted</property>
+                                            <property name="borderTopWidth">1px</property>
+                                            <property name="borderLeftStyle">dotted</property>
+                                            <property name="borderLeftWidth">1px</property>
+                                            <property name="borderBottomStyle">dotted</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightStyle">dotted</property>
+                                            <property name="borderRightWidth">1px</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="grandTotalLocation">after</property>
+                </extended-item>
+            </property>
+            <property name="header">
+                <extended-item extensionName="CrosstabCell" id="521">
+                    <property name="content">
+                        <label id="510">
+                            <text-property name="text">Vou. Date</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="522">
+                    <property name="content">
+                        <label id="511">
+                            <text-property name="text">Vou. No</text-property>
+                        </label>
+                    </property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="523">
+                    <property name="content">
+                        <label id="512">
+                            <text-property name="text">Ledger Name</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="524">
+                    <property name="content">
+                        <label id="513">
+                            <text-property name="text">GST IN</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="525">
+                    <property name="content">
+                        <label id="514">
+                            <text-property name="text">Ref NO.</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="526">
+                    <property name="content">
+                        <label id="515">
+                            <text-property name="text">Ref. Date</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="527">
+                    <property name="content">
+                        <label id="516">
+                            <text-property name="text">JV Amount</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="472">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="477">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="482">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="487">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="492">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="497">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="502">
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="borderLeftStyle">dotted</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">dotted</property>
+                    <property name="borderRightWidth">1px</property>
+                </extended-item>
+            </property>
+            <property name="fontSize">8pt</property>
+            <property name="borderTopStyle">dotted</property>
+            <property name="borderTopWidth">1px</property>
+            <property name="borderLeftStyle">dotted</property>
+            <property name="borderLeftWidth">1px</property>
+            <property name="borderBottomStyle">dotted</property>
+            <property name="borderBottomWidth">1px</property>
+            <property name="borderRightStyle">dotted</property>
+            <property name="borderRightWidth">1px</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">accref_voudate</property>
+                    <expression name="expression">dimension["Group1"]["accref_voudate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_vouno</property>
+                    <expression name="expression">dimension["Group3"]["accref_vouno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_ref</property>
+                    <expression name="expression">dimension["Group4"]["cust_ref"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_gstin</property>
+                    <expression name="expression">dimension["Group5"]["cust_gstin"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">vou_refno</property>
+                    <expression name="expression">dimension["Group6"]["vou_refno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">billdate</property>
+                    <expression name="expression">dimension["Group7"]["billdate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">invamt</property>
+                    <expression name="expression">dimension["Group9"]["invamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ledger_amt_Group9/invamt</property>
+                    <expression name="expression">measure["ledger_amt"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group9/invamt</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">ledger_name</property>
+                    <expression name="expression">dimension["Group"]["ledger_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ledger_amt_Group9/invamt_Group/ledger_name</property>
+                    <expression name="expression">measure["ledger_amt"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group9/invamt</value>
+                        <value>Group/ledger_name</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">ledger_amt_Group/ledger_name</property>
+                    <expression name="expression">measure["ledger_amt"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group/ledger_name</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+            </list-property>
+        </extended-item>
+    </body>
+</report>

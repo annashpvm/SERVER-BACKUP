@@ -1,0 +1,260 @@
+Ext.onReady(function() {
+Ext.QuickTips.init();
+
+ 
+ var GroupDataStore = new Ext.data.Store({
+      id: 'ParentGroupDataStore',
+      proxy: new Ext.data.HttpProxy({
+                url: '/SHVPM/Financials/clsRepFinancials.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task: "GROUP"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+        {name: 'grpcode', type: 'int', mapping: 'grp_code'},
+        {name: 'grpname', type: 'string', mapping: 'grp_name'}
+      ]),
+      sortInfo:{field: 'grpcode', direction: "ASC"}
+    });
+
+ 
+
+
+var cmbGroup = new Ext.form.ComboBox({
+        id         : 'cmbGroup',
+        fieldLabel : 'Group Name',
+        width      : 300,
+        store      : GroupDataStore,
+        displayField:'grpname',
+        valueField:'grpcode',
+        hiddenName:'grpname',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        selectOnFocus:true,
+        editable: true,
+        emptyText:'Select Group Name',
+        listeners:{
+            select :function(){
+          
+    }
+    }
+
+    });
+
+
+var Fdate = new Ext.form.DateField(
+    {
+        name: 'Fdate',
+        id: 'Fdate',
+        format     : 'Y-m-d',
+        value      : new Date(),
+        fieldLabel: 'From',
+        submitFormat: 'Y-m-d',
+        allowBlank: false
+    }
+);
+
+var Tdate = new Ext.form.DateField({
+        name: 'Tdate',
+        id: 'Tdate',
+        format     : 'Y-m-d',
+        value      : new Date(),
+        fieldLabel: 'To'
+
+    });
+
+ var gstabs = "N";
+    var chkAbs = new Ext.form.Checkbox({
+        id         : 'chkAbs',
+        xtype      : 'checkbox',
+        fieldLabel : '',
+        boxLabel   : 'Abstract',
+        inputValue : 'Abstract',
+        listeners:{
+            'check': function(rb,checked){
+                if(checked === true){
+                    gstabs = "Y";
+                } else {
+                    gstabs = "N";
+                }
+            }
+        }
+    });
+
+ var gstaddress = "N";
+    var chkAddress = new Ext.form.Checkbox({
+        id         : 'chkAddress',
+        xtype      : 'checkbox',
+        fieldLabel : '',
+        boxLabel   : 'Address',
+        inputValue : 'Address',
+        listeners:{
+            'check': function(rb,checked){
+                if(checked === true){
+                    gstaddress = "Y";
+                } else {
+                    gstaddress = "N";
+                }
+            }
+        }
+    });
+
+var GroupAbsFormPanel = new Ext.form.FormPanel({
+        renderTo    : Ext.getBody(),
+        xtype       : 'form',
+        title       : '',
+        width       : 500,
+        height      : 400,
+                   bodyStyle:{"background-color":"#3399CC"},
+        frame       : false,
+        id          : 'GroupAbsFormPanel',
+        method      : 'post',
+        layout      : 'absolute',
+       
+        tbar: {
+            xtype: 'toolbar',
+            height: 40,
+            fontSize:25,
+            items: [
+                
+                {
+                    text: 'Refresh',icon: '/Pictures/refresh.png',
+                    style  : 'text-align:center;',
+                    tooltip: 'Refresh Details...', height: 40
+                },'-',
+
+                {
+                    text: 'View',
+                    style  : 'text-align:center;',icon: '/Pictures/view.png',
+                    tooltip: 'View Details...', height: 40,
+                     listeners:{
+                        click:
+                          function () {
+                    var form = GroupAbsFormPanel.getForm();
+                    if (form.isValid()) {
+			window.open('http://denimsoft.kgdenim.com:8080/birt-viewer/frameset?__report=accounts/AccRepGroupAbstract.rptdesign',  '_blank')
+		}
+                    }
+                    }
+
+
+
+                 },'-',
+
+                {
+                    text: 'Exit',
+                    style  : 'text-align:center;',icon: '/Pictures/exit.png',
+                    tooltip: 'Close...', height: 40,
+                    listeners:{
+                        click: function(){
+                            GroupAbsWindow.hide();
+                        }
+                    }
+                }
+                ]
+
+            },
+         items:[
+                {xtype: 'fieldset',
+                title: '',
+                layout : 'vbox',
+                border:true,
+                height:60,
+                width:450,
+                layout      : 'absolute',
+                x: 10,
+                y: 10,
+             items:[
+               { xtype       : 'fieldset',
+                title       : '',
+                x           : 0,
+                y           : 0,
+                border      : false,
+                labelWidth  : 85,
+                items: [cmbGroup]
+                }
+                ]
+              },
+               {xtype: 'fieldset',
+                title: 'Date',
+                layout : 'hbox',
+                border:true,
+                height:80,
+                width:450,
+                layout      : 'absolute',
+                x: 10,
+                y: 70,
+             items:[
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 0,
+                y           : 0,
+                border      : false,
+                labelWidth  : 70,
+                items: [Fdate]
+                },
+                { xtype       : 'fieldset',
+                title       : '',
+                x           : 220,
+                y           : 0,
+                border      : false,
+                labelWidth  : 70,
+                items: [Tdate]
+                }
+                ]
+              },
+              { xtype       : 'fieldset',
+                title       : '',
+                x           : 150,
+                y           : 160,
+                border      : false,
+                labelWidth  : 70,
+                items: [chkAbs]
+               },
+              { xtype       : 'fieldset',
+                title       : '',
+                x           : 150,
+                y           : 190,
+                border      : false,
+                labelWidth  : 70,
+                items: [chkAddress]
+               }
+              ]
+               });
+
+
+
+     var GroupAbsWindow = new Ext.Window({
+        height      : 400,
+        width       : 500,
+	title:'Group Abstract',
+        items       : GroupAbsFormPanel,          bodyStyle:{"background-color":"#3399CC"},
+        closable    : true,
+        minimizable : true,
+        maximizable : true,
+        resizable   : false,
+        border      : false,
+        draggable   : false,
+        y      : 120,
+	listeners:{
+        show:function(){
+        GroupDataStore.load({
+                      url: '/SHVPM/Financials/clsRepFinancials.php',
+                       params: {
+                           task: 'GROUP'
+                       }
+                    });
+	 
+ 	
+}}
+
+
+    });
+       GroupAbsWindow.show();
+});

@@ -1,0 +1,22 @@
+update emp_monthly_salary_header sh,
+(
+select 
+employee_roll_no,
+count(session_one) as nol
+from confirm_attendance
+where
+session_one='L'
+and
+MONTH(attendance_date)=9
+and
+YEAR(attendance_date)=2018
+group by employee_roll_no
+)ca3
+set
+sh.no_of_leave_days=ca3.nol
+where
+sh.employee_roll_no=ca3.employee_roll_no
+-- and sh.employee_type=emptype
+-- and sh.unit_code=unitcode
+and sh.sal_month=9
+and sh.sal_year=2018;

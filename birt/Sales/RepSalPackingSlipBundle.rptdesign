@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="invoicefrom" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="invoiceto" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="DPMPHP" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://192.168.11.15/dpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">TXlzcWwxMjM=</encrypted-property>
+            <property name="OdaConnProfileName">DPMPHP</property>
+            <property name="OdaConnProfileStorePath">DPMPHP</property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="rptsalpackslipbundel" id="5">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">invoicefrom</property>
+                    <property name="paramName">invoicefrom</property>
+                    <property name="nativeName">invoicefrom</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">invoiceto</property>
+                    <property name="paramName">invoiceto</property>
+                    <property name="nativeName">invoiceto</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">invno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">unittype</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">startno</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">endno</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">weight</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">invh_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">invh_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">var_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">var_size1</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">var_size2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">var_reams</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">var_sheets</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">var_desc</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">var_gsm</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">DPMPHP</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">invno</property>
+                    <property name="nativeName">invno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">unittype</property>
+                    <property name="nativeName">unittype</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">startno</property>
+                    <property name="nativeName">startno</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">endno</property>
+                    <property name="nativeName">endno</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">weight</property>
+                    <property name="nativeName">weight</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">invh_no</property>
+                    <property name="nativeName">invh_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">invh_date</property>
+                    <property name="nativeName">invh_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">var_code</property>
+                    <property name="nativeName">var_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">var_size1</property>
+                    <property name="nativeName">var_size1</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">var_size2</property>
+                    <property name="nativeName">var_size2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">var_reams</property>
+                    <property name="nativeName">var_reams</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">var_sheets</property>
+                    <property name="nativeName">var_sheets</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">var_desc</property>
+                    <property name="nativeName">var_desc</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">var_gsm</property>
+                    <property name="nativeName">var_gsm</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spsal_rep_packslip_bundle(?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>invoicefrom</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>invoiceto</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="leftMargin">0.4583333333333333in</property>
+            <property name="rightMargin">0.6875in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="8">
+            <property name="dataSet">rptsalpackslipbundel</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">startno</property>
+                    <text-property name="displayName">startno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["startno"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">endno</property>
+                    <text-property name="displayName">endno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["endno"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">weight</property>
+                    <text-property name="displayName">weight</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["weight"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">company_name</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["company_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <text-property name="displayName">heading</text-property>
+                    <expression name="expression" type="javascript">"Annexure List for the Invoice No. " + dataSetRow["invh_no"] + " Dated " + Formatter.format(dataSetRow["invh_date"],"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sno</property>
+                    <text-property name="displayName">sno</text-property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">RUNNINGCOUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["startno"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">invno</property>
+                    <text-property name="displayName">invno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">var_code</property>
+                    <text-property name="displayName">var_code</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["var_code"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Product</property>
+                    <text-property name="displayName">Product</text-property>
+                    <expression name="expression" type="javascript">"PRODUCT : " + dataSetRow["var_desc"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">product</property>
+                    <text-property name="displayName">product</text-property>
+                    <expression name="expression" type="javascript">"PRODUCT : " + dataSetRow["var_desc"] + " GSM   : " + dataSetRow["var_gsm"] + "      SIZE  :   " + BirtStr.concat(dataSetRow["var_size1"],"X",dataSetRow["var_size2"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">nos</property>
+                    <text-property name="displayName">nos</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["endno"]-dataSetRow["startno"]+1</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sizetotal</property>
+                    <text-property name="displayName">sizetotal</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpsize</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["weight"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">invtotal</property>
+                    <text-property name="displayName">invtotal</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>grpinvno</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["weight"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">reamwt</property>
+                    <text-property name="displayName">reamwt</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(dataSetRow["var_size1"] * dataSetRow["var_size2"] *dataSetRow["var_gsm"] *dataSetRow["var_sheets"] /10000000,"00.0")</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">bundlewt</property>
+                    <text-property name="displayName">bundlewt</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(row["reamwt"] * dataSetRow["var_reams"],"00.0")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="33">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="34">
+                <property name="width">1.5in</property>
+            </column>
+            <column id="35">
+                <property name="width">1.5in</property>
+            </column>
+            <column id="36">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="37">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="38">
+                <property name="width">0.8in</property>
+            </column>
+            <column id="39">
+                <property name="width">1in</property>
+            </column>
+            <header>
+                <row id="62">
+                    <cell id="63">
+                        <property name="colSpan">7</property>
+                        <property name="rowSpan">1</property>
+                        <data id="70">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">company_name</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="46">
+                    <cell id="47">
+                        <property name="paddingBottom">3pt</property>
+                        <label id="71"/>
+                    </cell>
+                    <cell id="48"/>
+                    <cell id="49"/>
+                    <cell id="50"/>
+                    <cell id="51"/>
+                    <cell id="52"/>
+                    <cell id="53"/>
+                </row>
+                <row id="9">
+                    <cell id="10">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="72">
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="15"/>
+                    <cell id="16"/>
+                </row>
+                <row id="78">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="79">
+                        <data id="104">
+                            <property name="resultSetColumn">invno</property>
+                        </data>
+                    </cell>
+                    <cell id="80">
+                        <data id="105">
+                            <property name="resultSetColumn">var_code</property>
+                        </data>
+                    </cell>
+                    <cell id="81"/>
+                    <cell id="82"/>
+                    <cell id="83"/>
+                    <cell id="84"/>
+                    <cell id="85"/>
+                </row>
+                <row id="54">
+                    <cell id="55"/>
+                    <cell id="56"/>
+                    <cell id="57"/>
+                    <cell id="58"/>
+                    <cell id="59"/>
+                    <cell id="60"/>
+                    <cell id="61"/>
+                </row>
+            </header>
+            <group id="124">
+                <property name="groupName">grpinvno</property>
+                <expression name="keyExpr" type="javascript">row["invno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["invno"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="125">
+                        <property name="height">0.2604166666666667in</property>
+                        <cell id="126">
+                            <label id="212"/>
+                        </cell>
+                        <cell id="127"/>
+                        <cell id="128"/>
+                        <cell id="129"/>
+                        <cell id="130"/>
+                        <cell id="131"/>
+                        <cell id="132"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="203">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <cell id="204">
+                            <label id="211">
+                                <property name="paddingBottom">2pt</property>
+                            </label>
+                        </cell>
+                        <cell id="205"/>
+                        <cell id="206"/>
+                        <cell id="207"/>
+                        <cell id="208"/>
+                        <cell id="209"/>
+                        <cell id="210">
+                            <property name="fontFamily">"Abyssinica SIL"</property>
+                        </cell>
+                    </row>
+                    <row id="133">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <cell id="134"/>
+                        <cell id="135">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <label id="200">
+                                <text-property name="text">INVOICE TOTAL WEIGHT</text-property>
+                            </label>
+                        </cell>
+                        <cell id="137"/>
+                        <cell id="138"/>
+                        <cell id="139"/>
+                        <cell id="140">
+                            <property name="fontFamily">"Abyssinica SIL"</property>
+                            <data id="198">
+                                <property name="fontFamily">serif</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">invtotal</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="106">
+                <property name="groupName">grpsize</property>
+                <expression name="keyExpr" type="javascript">row["var_code"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["var_code"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="107">
+                        <property name="height">0.78125in</property>
+                        <cell id="108">
+                            <property name="colSpan">7</property>
+                            <property name="rowSpan">1</property>
+                            <grid id="170">
+                                <column id="171">
+                                    <property name="width">0.6in</property>
+                                </column>
+                                <column id="172">
+                                    <property name="width">1.5in</property>
+                                </column>
+                                <column id="173">
+                                    <property name="width">1.5in</property>
+                                </column>
+                                <column id="174">
+                                    <property name="width">0.8in</property>
+                                </column>
+                                <column id="175">
+                                    <property name="width">0.8in</property>
+                                </column>
+                                <column id="176">
+                                    <property name="width">0.8in</property>
+                                </column>
+                                <column id="177"/>
+                                <row id="178">
+                                    <cell id="179">
+                                        <property name="colSpan">6</property>
+                                        <property name="rowSpan">1</property>
+                                        <data id="195">
+                                            <property name="resultSetColumn">product</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="185"/>
+                                </row>
+                                <row id="186">
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">1px</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">1px</property>
+                                    <cell id="187">
+                                        <label id="73">
+                                            <property name="textAlign">center</property>
+                                            <text-property name="text">S.No</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="188">
+                                        <label id="40">
+                                            <text-property name="text">Start Number</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="189">
+                                        <label id="42">
+                                            <text-property name="text">End number</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="190">
+                                        <label id="74">
+                                            <text-property name="text">No. of Bundles</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="191">
+                                        <label id="75">
+                                            <property name="textAlign">center</property>
+                                            <text-property name="text">Ream Weight</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="192">
+                                        <label id="76">
+                                            <property name="textAlign">center</property>
+                                            <text-property name="text">Bundle Weight</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="193">
+                                        <label id="44">
+                                            <property name="textAlign">right</property>
+                                            <text-property name="text">WEIGHT</text-property>
+                                        </label>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="115">
+                        <cell id="116"/>
+                        <cell id="117"/>
+                        <cell id="118"/>
+                        <cell id="119"/>
+                        <cell id="120">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <label id="199">
+                                <text-property name="text">SIZE TOTAL</text-property>
+                            </label>
+                        </cell>
+                        <cell id="122">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="197">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sizetotal</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="17">
+                    <cell id="18">
+                        <data id="77">
+                            <property name="resultSetColumn">sno</property>
+                        </data>
+                    </cell>
+                    <cell id="19">
+                        <data id="41">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">startno</property>
+                        </data>
+                    </cell>
+                    <cell id="20">
+                        <data id="43">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">endno</property>
+                        </data>
+                    </cell>
+                    <cell id="21">
+                        <data id="196">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">nos</property>
+                        </data>
+                    </cell>
+                    <cell id="22">
+                        <data id="201">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">reamwt</property>
+                        </data>
+                    </cell>
+                    <cell id="23">
+                        <data id="202">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">bundlewt</property>
+                        </data>
+                    </cell>
+                    <cell id="24">
+                        <data id="45">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">weight</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="25">
+                    <cell id="26"/>
+                    <cell id="27"/>
+                    <cell id="28"/>
+                    <cell id="29"/>
+                    <cell id="30"/>
+                    <cell id="31"/>
+                    <cell id="32"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="repphp" id="100">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="dsinv" id="101">
+            <list-property name="columnHints"/>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData"/>
+            <property name="dataSource">repphp</property>
+            <list-property name="resultSet"/>
+            <xml-property name="queryText"><![CDATA[{call spsal_invoice(?)} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2"/>
+    </page-setup>
+    <body>
+        <table id="102">
+            <property name="dataSet">dsinv</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">cust_add1</property>
+                    <text-property name="displayName">cust_add1</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_add1"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_city</property>
+                    <text-property name="displayName">cust_city</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_city"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">invt_urate</property>
+                    <text-property name="displayName">invt_urate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_urate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">invt_nos</property>
+                    <text-property name="displayName">invt_nos</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invt_nos"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <column id="136"/>
+            <column id="137"/>
+            <column id="138"/>
+            <column id="139"/>
+            <column id="140"/>
+            <column id="141"/>
+            <column id="142"/>
+            <column id="143"/>
+            <column id="144"/>
+            <column id="145"/>
+            <header>
+                <row id="103">
+                    <cell id="104"/>
+                    <cell id="105">
+                        <label id="146">
+                            <text-property name="text">cust_add1</text-property>
+                        </label>
+                    </cell>
+                    <cell id="106">
+                        <label id="148">
+                            <text-property name="text">cust_city</text-property>
+                        </label>
+                    </cell>
+                    <cell id="107"/>
+                    <cell id="108">
+                        <label id="150">
+                            <text-property name="text">invt_urate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="109">
+                        <label id="152">
+                            <text-property name="text">invt_nos</text-property>
+                        </label>
+                    </cell>
+                    <cell id="110"/>
+                    <cell id="111"/>
+                    <cell id="112"/>
+                    <cell id="113"/>
+                </row>
+            </header>
+            <detail>
+                <row id="114">
+                    <cell id="115"/>
+                    <cell id="116">
+                        <data id="147">
+                            <property name="resultSetColumn">cust_add1</property>
+                        </data>
+                    </cell>
+                    <cell id="117">
+                        <data id="149">
+                            <property name="resultSetColumn">cust_city</property>
+                        </data>
+                    </cell>
+                    <cell id="118"/>
+                    <cell id="119">
+                        <data id="151">
+                            <property name="resultSetColumn">invt_urate</property>
+                        </data>
+                    </cell>
+                    <cell id="120">
+                        <data id="153">
+                            <property name="resultSetColumn">invt_nos</property>
+                        </data>
+                    </cell>
+                    <cell id="121"/>
+                    <cell id="122"/>
+                    <cell id="123"/>
+                    <cell id="124"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="125">
+                    <cell id="126"/>
+                    <cell id="127"/>
+                    <cell id="128"/>
+                    <cell id="129"/>
+                    <cell id="130"/>
+                    <cell id="131"/>
+                    <cell id="132"/>
+                    <cell id="133"/>
+                    <cell id="134"/>
+                    <cell id="135"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>
