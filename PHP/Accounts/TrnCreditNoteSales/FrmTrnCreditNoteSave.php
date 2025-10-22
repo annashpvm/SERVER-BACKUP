@@ -315,7 +315,7 @@ $querya7 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$invno','$invdate','$t
 		$adjdays=$recdatenew['daysin'];
 
 
-		$querya10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq', '$vouno', '$voudate', '$invseqno','$invvouno','$invno', '$invdate','$CreditValue ',$adjdays,'CN',curdate(),$payterms,$partyledcode,'$voutype' );";
+		$querya10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq', '$vouno', '$voudate', '$invseqno','$invvouno','$invno', '$invdate','$CreditValue ',$adjdays,'CN',curdate(),$payterms,$partyledcode,'$voutype' , '$invdate');";
 
 		$resulta10 = mysql_query($querya10);
 

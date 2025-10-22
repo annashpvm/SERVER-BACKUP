@@ -31,7 +31,7 @@ var ledgercode = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-          'cust_code', 'cust_name','cust_type'
+          'cust_code', 'cust_ref','cust_type'
       ]),
     });
 
@@ -118,7 +118,8 @@ function InsertUnAdjustedBillDetail(){
                             voutype: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vou_type'),
                             Year:gstfin,
                             accrefseqno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_seqno'),
-                            accrefvouno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vouno')
+                            accrefvouno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vouno'),
+                            accrefvoudate: UnAdjustedBillDetaildatastore.getAt(i).get('accref_voudate')
                         })
                     );
                 }
@@ -139,7 +140,7 @@ function CalcSum(){
                 }
             }
         }
-        txtTotadjamt.setValue(ginadjtotal);
+        txtTotadjamt.setValue(Ext.util.Format.number(ginadjtotal,"0.00"));
     }
 
 function UpdateReceiptBillsAdjusted(){
@@ -219,9 +220,9 @@ function UpdateReceiptBillsAdjusted(){
           id: 'id'
         },[
           {name: 'vou_seqno', type: 'int', mapping: 'acctrail_accref_seqno'},
-          {name: 'vou_no', type: 'string', mapping: 'acctrail_inv_no'}
+          {name: 'vou_no', type: 'string', mapping: 'accref_vouno'}
         ]),
-        sortInfo:{field: 'vou_seqno', direction: "DESC"}
+        sortInfo:{field: 'vou_seqno', direction: "ASC"}
     });
     
     var VoucherNoDetaildatastore = new Ext.data.Store({
@@ -251,7 +252,7 @@ function UpdateReceiptBillsAdjusted(){
           root: 'results',
           totalProperty: 'total',
           id: 'id'
-        },['accref_seqno','accref_voudate','accref_narration','acctrail_inv_value','acctrail_adj_value'])
+        },['accref_seqno','accref_voudate','accref_narration','acctrail_inv_value','acctrail_adj_value','acctrail_inv_no'])
     });
     
     var AdjustedBillDetaildatastore = new Ext.data.Store({
@@ -283,7 +284,7 @@ function UpdateReceiptBillsAdjusted(){
           totalProperty: 'total',
           id: 'id'
         },['acctrail_inv_no','acctrail_inv_date','dbcr_invvalue','acctrail_inv_value','accref_finid',
-            'acctrail_adj_value','accref_vou_type','accref_seqno','accref_vouno','acctrail_crdays' ])
+            'acctrail_adj_value','accref_vou_type','accref_seqno','accref_vouno','acctrail_crdays','accref_voudate' ])
     });
 /*    
     var cmbPartyname = new Ext.form.ComboBox({
@@ -341,6 +342,33 @@ function LedgerSearch()
 }
 
 
+function LoadData()
+{
+
+    flxDetail.getStore().removeAll();
+    flxAdjdocDetail.getStore().removeAll(); 
+    txtAmount.setValue('');
+    cmbVouno.setValue('');
+    txtNarration.setValue('');
+    Voucherdatastore.removeAll();
+    Voucherdatastore.load({
+        url: '/SHVPM/Accounts/clsAccounts.php',
+        params:
+        {
+            task:"cmbadjvoucher",
+            partyname:ledgercode,
+            finid:ginfinid,
+            compcode:gstfincompcode,
+            voutype:gsttype
+        },
+        callback: function () {                    
+            cmbVouno.focus();
+        }  
+    });
+   InsertUnAdjustedBillDetail();
+
+}
+
 function grid_chk_flxLedger()
 {
 	var sm = flxLedger.getSelectionModel();
@@ -352,33 +380,13 @@ function grid_chk_flxLedger()
             ledgercode = selrow.get('cust_code');
             ledtype    = selrow.get('cust_type');
             partycode  = selrow.get('cust_code');
-	    txtAccountName.setValue(selrow.get('cust_name'));
+	    txtAccountName.setValue(selrow.get('cust_ref'));
 	    flxLedger.hide();  
 
+        LoadData()
 
 
-                flxDetail.getStore().removeAll();
-                flxAdjdocDetail.getStore().removeAll();
 
-		txtAmount.setValue('');
-                cmbVouno.setValue('');
-		txtNarration.setValue('');
-                Voucherdatastore.removeAll();
-                Voucherdatastore.load({
-                    url: '/SHVPM/Accounts/clsAccounts.php',
-                    params:
-                    {
-                        task:"cmbadjvoucher",
-                        partyname:ledgercode,
-                        finid:ginfinid,
-                        compcode:gstfincompcode,
-                        voutype:gsttype
-                    },
-                    callback: function () {                    
-                        cmbVouno.focus();
-                    }  
-                });
-               InsertUnAdjustedBillDetail();
 	}
 }
 
@@ -399,7 +407,7 @@ function grid_chk_flxLedger()
         columns: [   
 //            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
 		{header: "Led Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
-		{header: "", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
+		{header: "", dataIndex: 'cust_ref',sortable:true,width:330,align:'left'},
 		{header: "", dataIndex: 'cust_type',sortable:true,width:50,align:'left'},
 
 
@@ -503,6 +511,8 @@ var txtAccountName = new Ext.form.TextField({
                        dtpVoudate.setValue(VoucherDetaildatastore.getAt(0).get('accref_voudate'));
                         var inval=Number(VoucherDetaildatastore.getAt(0).get('acctrail_inv_value'));
                         var adjval=Number(VoucherDetaildatastore.getAt(0).get('acctrail_adj_value'));
+
+                        txtRefNo.setRawValue(VoucherDetaildatastore.getAt(0).get('acctrail_inv_no'));
                         if(inval==adjval){
                             txtAmount.setValue(Number(inval));
                         }else{
@@ -597,6 +607,15 @@ var txtAccountName = new Ext.form.TextField({
         }
     });
     
+
+    var txtRefNo = new Ext.form.TextField({
+        fieldLabel  : 'Ref.NO',
+        id          : 'txtRefNo',
+        width       : 110,
+        name        : 'txtRefNo',
+        readOnly    : true
+    });
+
     var txtAmount = new Ext.form.TextField({
         fieldLabel  : 'Amount',
         id          : 'txtAmount',
@@ -611,9 +630,10 @@ var txtAccountName = new Ext.form.TextField({
         rows: 1,
         id: 'optType',
         layout : 'hbox',
+        border : true,  
         width:175,
-        x:100,
-        y:5,
+        x:700,
+        y:50,
         defaults: {xtype: "radio",name: "OptPayType"},
         items: [
             {boxLabel: 'Receipt', id:'optReceipt', inputValue: 2,checked:true,
@@ -621,7 +641,7 @@ var txtAccountName = new Ext.form.TextField({
                     'check': function(rb,checked){
                         if (checked===true){
                             gsttype = "R";
-                            RefreshData();
+                            LoadData();
                         }
                     }
                 }
@@ -632,7 +652,7 @@ var txtAccountName = new Ext.form.TextField({
                     'check': function(rb,checked){
                         if (checked===true){
                             gsttype = "P";
-                            RefreshData();
+                            LoadData();
                         }
                     }
                 }
@@ -668,12 +688,13 @@ var txtAccountName = new Ext.form.TextField({
         autoShow: true,
         stripeRows : true,
         scrollable: true,
-        height: 130,
-        width: 850,
+        height: 210,
+        width: 1000,
         x: 5,
         y: 5,
         columns: [         
             {header: "Vouno", dataIndex: 'accrefvouno',sortable:true,width:110,align:'left'},
+            {header: "VouDate", dataIndex: 'accrefvoudate',sortable:true,width:110,align:'left'},
             {header: "Inv No", dataIndex: 'invno',sortable:true,width:110,align:'left'},
             {header: "Date", dataIndex: 'invdate',sortable:true,width:90,align:'left'},
             {header: "P.Terms", dataIndex: 'payterms', sortable: true, width: 80, align: 'center'},
@@ -757,8 +778,8 @@ var txtAccountName = new Ext.form.TextField({
     var txtNarration = new Ext.form.TextArea({
         fieldLabel  : 'Narration',
         id          : 'txtNarration',
-        width       : 500,
-        height      : 55,
+        width       : 800,
+        height      : 50,
         name        : 'narration',
         style :{textTransform:"uppercase"}
     });
@@ -892,9 +913,10 @@ else
                                                 compcode:gstfincompcode,
                                                 accrefseq:cmbVouno.getValue(),
                                                 accvoudate:dtpVoudate.getValue(),
-						narration:txtNarration.getRawValue(),
+						                        narration:txtNarration.getRawValue(),
                                                 ledcode : ledgercode,
                                                 vouno:cmbVouno.getRawValue(),
+                                                Invno:txtRefNo.getRawValue(),
                                                 totadjamt:Number(txtTotadjamt.getValue()),
                                                 flagtype:gstFlag,
                                                 adjtype :  gsttype,
@@ -985,7 +1007,7 @@ getAdjustmentDetails();
             {   xtype       : 'fieldset',
                 title       : '',
                 width       : 1170,
-                height      : 480,
+                height      : 500,
                 x           : 2,
                 y           : 2,
                 border      : true,
@@ -1012,17 +1034,20 @@ getAdjustmentDetails();
                         border      : false,
                         items: [cmbVouno]
                     },
+
                     { 
                         xtype       : 'fieldset',
                         title       : '',
-                        labelWidth  : 78,
+                        labelWidth  : 50,
                         width       : 210,
                         x           : 270,
                         y           : 100,
                         defaultType : 'textfield',
                         border      : false,
-                        items: [txtAmount]
+                        items: [txtRefNo]
                     },
+
+
                     {
                         xtype       : 'fieldset',
                         title       : '',
@@ -1033,15 +1058,28 @@ getAdjustmentDetails();
                         border      : false,
                         items : [dtpVoudate]
                     },
+                    
+                    { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 78,
+                        width       : 220,
+                        x           :700,
+                        y           : 100,
+                        defaultType : 'textfield',
+                        border      : false,
+                        items: [txtAmount]
+                    },
+
 
                     optType, // flxDetail,
                     { 
                         xtype       : 'fieldset',
                         title       : '',
                         labelWidth  : 120,
-                        width       : 700,
+                        width       : 1100,
                         x           : 0,
-                        y           : 170,
+                        y           : 160,
                         defaultType : 'textfield',
                         border      : false,
                         items: [txtNarration]
@@ -1050,10 +1088,10 @@ getAdjustmentDetails();
             },
             {   xtype       : 'fieldset',
                 title       : '',
-                width       : 900,
-                height      : 170,
+                width       : 1050,
+                height      : 265,
                 x           : 2,
-                y           : 250,
+                y           : 230,
                 border      : true,
                 layout      : 'absolute',
                 style       : 'padding:0px',
@@ -1063,8 +1101,8 @@ getAdjustmentDetails();
                         title       : '',
                         labelWidth  : 38,
                         width       : 350,
-                        x           : 500,
-                        y           : 130,
+                        x           : 540,
+                        y           : 220,
                         defaultType : 'textfield',
                         border      : false,
                         items: [txtTotadjamt]
@@ -1117,6 +1155,8 @@ onEsc:function(){
             {
                 show:function(){
                     gstFlag="Add";
+
+
               //      gsttype='P';
 			if(gstfinyear.substring(5,9)==='2018'){
 			  dtpVoudate.setRawValue('31-'+'03-'+gstfinyear.substring(5,9));

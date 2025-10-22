@@ -3748,6 +3748,7 @@ onEsc:function(){
 
         dtpDate.focus();
 
+        alert("test");
       if (gstfincompcode == 90)
            Ext.getCmp('EInv').setVisible(false);
               Ext.getCmp('txtPass').hide();

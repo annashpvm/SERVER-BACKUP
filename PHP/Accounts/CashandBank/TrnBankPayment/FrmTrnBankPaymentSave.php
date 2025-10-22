@@ -242,7 +242,13 @@
             $dbcramt    = $gridadjdet[$i]['InvAmt'];
             $ovoutype   = $gridadjdet[$i]['Type'];
             $adjvouno   = $gridadjdet[$i]['Vocno'];
-           
+            $adjvoudate = $gridadjdet[$i]['VocDate'];            
+       
+//echo "Vouc date  : ";            
+ //echo $adjvoudate;
+//echo "<br>";
+
+
             if($adjamt>0 && $paytype=="BB"){
 
        $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
@@ -258,9 +264,11 @@
 	$adjdays=$recdatenew['daysin'];
 
 
-$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$oaccrefseq','$adjvouno','$oaccvouno','$oaccvoudt','$adjamt',$adjdays,'BP',curdate(),$payterms,$ledcode,'BKP' );";
+$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$oaccrefseq','$adjvouno','$oaccvouno','$oaccvoudt','$adjamt',$adjdays,'BP',curdate(),$payterms,$ledcode,'BKP' ,'$adjvoudate' );";
 
 $result10 = mysql_query($query10);
+//echo $query10;
+//echo "<br>";
 
 //                $ledseqno = $griddet[0]['ledseq'];
 

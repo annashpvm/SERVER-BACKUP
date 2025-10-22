@@ -476,6 +476,29 @@ var btnTEST = new Ext.Button({
         click: function(){       
 
 
+
+    
+            var dt_invoice = dtDocDate.getValue();
+
+            var fyStart, fyEnd;
+        
+            if (dt_invoice.getMonth() >= 3) {
+                // April or later in the year
+                fyStartYear = dt_invoice.getFullYear();
+                fyEndYear = dt_invoice.getFullYear() + 1;
+            } else {
+                // Jan, Feb, Mar
+                fyStartYear = dt_invoice.getFullYear() - 1;
+                fyEndYear = dt_invoice.getFullYear();
+            }
+
+            var startCode = ("0" + (fyStartYear % 100)).slice(-2);
+            var endCode = ("0" + (fyEndYear % 100)).slice(-2);
+        
+           alert(startCode + endCode);
+        
+            /*
+
                             Ext.Ajax.request({
                             url: 'TEST.php',
                             params :
@@ -488,7 +511,8 @@ var btnTEST = new Ext.Button({
                               {
 
                                 }
-                           });     
+                           });   
+                           */  
          
        }
 

@@ -164,6 +164,8 @@
             $totamt = $griddet[$i]['totamt'];
             $ledtype = $griddet[$i]['ledtype'];
             $description = strtoupper($griddet[$i]['narration']);
+            $ledrefno = $griddet[$i]['refno'];
+            $ledrefdate = $griddet[$i]['refdate'];
 
             if ($dbamt>0)
             {
@@ -181,17 +183,17 @@
 
 
 
-    if ($refno == '')
+    if ($ledrefno == '')
     { 
-         $newvouno   = substr(trim($vouno),0,29);
+         $newvouno   = strtoupper(substr(trim($vouno),0,29));
 //         $newvouno = $vouno;
          $newvouDT = $voudate;
     }       
     else
     { 
   //       $newvouno = $refno;
-         $newvouno   = substr(trim($refno),0,29);
-         $newvouDT = $refdate;
+         $newvouno   = strtoupper(substr(trim($ledrefno),0,29));
+         $newvouDT = $ledrefdate;
     }    
 
 
@@ -202,7 +204,7 @@
 
                }
 //echo  $querya3;
-
+//echo "<br>";
             #Insert AccTran
 
 
@@ -329,6 +331,7 @@
         for($i=0;$i<$adjcnt;$i++){
 
 	    $adjvouno    = $adjgriddet[$i]['accrefvouno'];
+            $adjvoudate  = $adjgriddet[$i]['accrefvoudate'];
 	    $invno       = $adjgriddet[$i]['invno'];
 	    $invdate     = $adjgriddet[$i]['invdate'];
 	    $adjamt      = (float)$adjgriddet[$i]['adjamt'];
@@ -356,7 +359,7 @@
 	    $recdatenew = mysql_fetch_array($resultdate);
 	    $adjdays=$recdatenew['daysin'];
 
-	    $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'GJV',curdate(),$payterms,'$ledgercode','$voutype' );";
+	    $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'GJV',curdate(),$payterms,'$ledgercode','$voutype' ,'$adjvoudate' );";
 
 
 

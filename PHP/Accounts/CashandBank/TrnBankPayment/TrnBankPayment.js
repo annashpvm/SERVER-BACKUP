@@ -325,7 +325,7 @@ function edit_click()
           totalProperty: 'total',
           id: 'id'
         },['ref_slno', 'ref_docseqno', 'ref_docno', 'ref_docdate', 'ref_adjseqno', 'ref_adjvouno', 'ref_invno', 'ref_invdate', 'ref_adjamount', 'ref_paymt_terms', 'ref_adj_days', 'ref_adj_by', 'ref_adjusted_on',
-'acctrail_accref_seqno' , 'acctrail_inv_value',  'acctrail_led_code','acctrail_crdays','ref_adjvoutype',
+'acctrail_accref_seqno' , 'acctrail_inv_value',  'acctrail_led_code','acctrail_crdays','ref_adjvoutype','ref_adjvoudate',
 'acctrail_crdays','invh_crd_days','acctrail_adj_value','accref_vou_type','cust_ref' ])
     });
 
@@ -1057,6 +1057,7 @@ flxAdjdocDetail.getStore().removeAll();
                                     acctrailinvno = PaymentBilldetailsDataStore.getAt(i).get('accref_vouno');
                                     acctrail_inv_date = PaymentBilldetailsDataStore.getAt(i).get('accref_voudate');
                                 }
+                                ref_voudate = PaymentBilldetailsDataStore.getAt(i).get('accref_voudate');
                                 acctrail_inv_value = PaymentBilldetailsDataStore.getAt(i).get('acctrail_inv_value');
                                 dbcrvalue = PaymentBilldetailsDataStore.getAt(i).get('dbcr_invvalue');
                                 if (dbcrvalue > 0) {
@@ -1108,8 +1109,8 @@ flxAdjdocDetail.getStore().removeAll();
                                             Adjusted: '',
                                             Type: accref_vou_type,
                                             Billseqno: accref_seqno,
-                                            Vocno: accrefvouno
-
+                                            Vocno: accrefvouno,
+                                            VocDate: ref_voudate,
 
 
                                         })
@@ -1161,7 +1162,8 @@ flxAdjdocDetail.getStore().removeAll();
                                         Adjusted: '',
                                         Type: accref_vou_type,
                                         Billseqno: accref_seqno,
-                                        Vocno: accrefvouno
+                                        Vocno: accrefvouno,
+                                        VocDate: ref_voudate,
                                     })
                                     );
                         }
@@ -1309,6 +1311,7 @@ var flxAdjdocDetail = new Ext.grid.EditorGridPanel({
         { header: "Led Name", dataIndex: 'ledname', hidden: true },
         { header: "Ledcode", dataIndex: 'ledcode', hidden: true },
         { header: "VOU No", dataIndex: 'Vocno', width: 80 },
+        { header: "VOU Date", dataIndex: 'VocDate', width: 80 },
         { header: "Inv.No", dataIndex: 'InvNo', width: 100 },
         { header: "Date", dataIndex: 'InvDate', width: 85 },
         { header: "Inv.Amount", dataIndex: 'InvAmt', width: 100, align: 'right' },
@@ -2624,6 +2627,7 @@ function grid_move() {
                     ledcode: Number(recData.ledcode),
                     ledname: recData.ledname,
                     Vocno: recData.Vocno,
+                    VocDate: recData.VocDate,
                     InvNo: recData.InvNo,
                     InvDate: recData.InvDate,
                     InvAmt: Number(recData.InvAmt),
@@ -2655,6 +2659,7 @@ function grid_move() {
             {header: "Led Name", dataIndex: 'ledname', sortable: true, width: 230, align: 'left'},
             {header: "Ledcode", dataIndex: 'ledcode', sortable: true, width:50, align: 'left', hidden: true},
             {header: "VOU No", dataIndex: 'Vocno', sortable: true, width: 100, align: 'left', hidden: true},
+            {header: "VOU Date", dataIndex: 'VocDate', sortable: true, width: 100, align: 'left', hidden: true},
             {header: "Inv.No", dataIndex: 'InvNo', sortable: true, width: 100, align: 'left'},
             {header: "Date", dataIndex: 'InvDate', sortable: true, width: 10, align: 'left', hidden: true},
             {header: "Inv.Amount", dataIndex: 'InvAmt', sortable: true, width: 50, align: 'left', hidden: true},
@@ -2853,7 +2858,9 @@ function getAdjustmentDetails2()
 	        ledgercode =  LoadAdjustmentDetailsdatastore.getAt(aj).get('acctrail_led_code');
 	        ledgername =  LoadAdjustmentDetailsdatastore.getAt(aj).get('cust_ref');
 
+            accrefvoudate = LoadAdjustmentDetailsdatastore.getAt(aj).get('ref_adjvoudate');
 
+     
                 pendamt = Number(invamt)  -Number(invadj) + Number(adjusted);
                 rowadjusted = 0;  
                 rowpending= 0;  
@@ -2895,7 +2902,7 @@ function getAdjustmentDetails2()
 	                            balamt    :  0,
 	                            Billseqno : accrefseqno,
                                     Type      : adjvoutype,
-
+                                    VocDate : accrefvoudate,
 	                        })
 	                        );
                                 CalcSum();

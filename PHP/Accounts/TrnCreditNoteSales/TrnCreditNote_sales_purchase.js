@@ -901,7 +901,8 @@ function load_data()
 
                       var cdvalue = Number(loadAdjustmentsPendingsDatastore.getAt(j).get('invqty')) * 500;    
                       cdvalue     = parseFloat(cdvalue.toFixed(2));   
-                      var cdcgst  = Number(cdvalue) * 0.06;  
+                      var cdcgst  = Number(cdvalue) * 0.09;  
+                      
                       cdcgst      = Math.round(cdcgst * 100) / 100;
                       cdcgst      = parseFloat(cdcgst.toFixed(2));   
                       var cdsgst  = parseFloat(cdcgst.toFixed(2));   
@@ -1709,6 +1710,17 @@ listeners: {
             alert ("Adjusted Amount is greater than Pending Amount for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
             allok = 1;
             } 
+            if (Number(sel[i].data.cdamt1) > Number(sel[i].data.pendingamt) ) 
+                {
+                alert ("CASH DISCOUNT Amount is greater than Pending Amount for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
+                allok = 1;
+                } 
+                if (Number(sel[i].data.balamt)  < 0  ) 
+                    {
+                    alert ("Error in BALANCE Amount  for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
+                    allok = 1;
+                    } 
+
         }
 
 
@@ -2082,7 +2094,7 @@ listeners: {
     }
     
     var BillAdjustmentEntryWindow = new Ext.Window({
-	height      : 600,
+    	height      : 600,
         width       : 1350,
         y           : 35,
         title       : 'Sales Vs Purchase Credit Note',

@@ -2696,7 +2696,7 @@ var txtItemSpec = new Ext.form.TextArea({
     name        : 'itemremark',
      height      : 110,  
      style      :{textTransform:"uppercase"},
-     autoCreate  : {tag:'input',type:'text',size:20,autocomplete:'off',maxlength:498},  
+    // autoCreate  : {tag:'input',type:'text',size:20,autocomplete:'off',maxlength:498},  
         listeners:{
  
 specialkey:function(f,e){

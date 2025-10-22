@@ -32,13 +32,6 @@ var fin = localStorage.getItem('ginfinid');
                     }
                 },
 
-    		{
-                    text: '<b>EXCHANGE RATE MASTER -2 </b>',
-                    group: 'theme',
-                    handler: function(){
-                        window.location.href=('http://10.0.0.251/SHVPM/ImportOld/MasExchangeRate/FrmMasExRate.php');
-                    }
-                },
 		
             ]
         }

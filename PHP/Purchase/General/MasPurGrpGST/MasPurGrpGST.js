@@ -372,8 +372,8 @@ function grid_chk_flxGST()
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'cust_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 
@@ -391,8 +391,8 @@ function grid_chk_flxGST()
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'cust_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 
@@ -410,8 +410,8 @@ function grid_chk_flxGST()
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'cust_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 
@@ -560,8 +560,8 @@ var cmbState = new Ext.form.ComboBox({
 var cmbcgstledger = new Ext.form.ComboBox({
         fieldLabel      : 'CGST Ledger',
         width           : 350,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+        displayField    : 'cust_name', 
+        valueField      : 'cust_code',
         hiddenName      : '',
         id              : 'cmbcgstledger',
         typeAhead       : true,
@@ -584,8 +584,8 @@ var cmbcgstledger = new Ext.form.ComboBox({
 var cmbsgstledger = new Ext.form.ComboBox({
         fieldLabel      : 'SGST Ledger',
         width           : 350,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+        displayField    : 'cust_name', 
+        valueField      : 'cust_code',
         hiddenName      : '',
         id              : 'cmbsgstledger',
         typeAhead       : true,
@@ -609,8 +609,8 @@ var cmbsgstledger = new Ext.form.ComboBox({
 var cmbigstledger = new Ext.form.ComboBox({
         fieldLabel      : 'IGST Ledger',
         width           : 350,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+        displayField    : 'cust_name', 
+        valueField      : 'cust_code',
         hiddenName      : '',
         id              : 'cmbigstledger',
         typeAhead       : true,
@@ -827,8 +827,8 @@ var cmbigstledger = new Ext.form.ComboBox({
 		                            	url: 'FrmMasPurGrpGSTSave.php',
 		                                params:
 						{
-                                                        saveflag        : SaveFlag,
-                                                        taxledcode      : taxledcode,
+                            saveflag        : SaveFlag,
+                            taxledcode      : ledgercode,
 							taxname         : ledname, 
 							taxsgst_ledger  : cmbsgstledger.getRawValue(), 
 							taxcgst_ledger  : cmbcgstledger.getRawValue(), 

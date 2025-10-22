@@ -1091,7 +1091,7 @@ function add_btn_click()
                 if (txtAccountName.getValue()==0||txtAccountName.getRawValue()=="" || ledgercode == 0 ){
                     gstInsert = "false";
                     Ext.MessageBox.alert("Journal","Select Ledger");
-                }else if (cmbType.getRawValue()== 'Db'){
+                }else if (cmbType.getRawValue()== 'Dr'){
                     if (txtDebit.getRawValue()==""){
                         gstInsert = "false";
                         Ext.MessageBox.alert("Journal","Enter Debit Amount");
@@ -1144,23 +1144,18 @@ function add_btn_click()
 			sel[idx].set('ledtype' , ledtype);
             sel[idx].set('narration' , txtNarration.getRawValue().toUpperCase());
 			sel[idx].set('refno'   , txtLedgerRefno.getRawValue());
-	 		sel[idx].set('refdate' , Ext.util.Format.date(dtpLedgerRefdate.getValue(),"Y-m-d"));
+	 		sel[idx].set('refdate' , Ext.util.Format.date(dtpLedgerRefdate.getValue(),"m-d-Y"));
             txtNarration.setValue('');
-
-            txtRefno.setRawValue(txtLedgerRefno.getRawValue());
-            dtpRefdate.setValue(dtpLedgerRefdate.getValue());
-
-
 			flxDetail.getSelectionModel().clearSelections();
 
 
-            if (Number(txtDebit.getValue())  > 0)
-            {
+                    if (Number(txtDebit.getValue())  > 0)
+                    {
 			flxCreditAdjustments.getSelectionModel().selectAll();
 			var selrows = flxCreditAdjustments.getSelectionModel().getCount();
 			var sel = flxCreditAdjustments.getSelectionModel().getSelections();
-            for (var i = 0; i < selrows; i++) {
-                seqno = Number(sel[i].data.accrefseqno);
+                      	for (var i = 0; i < selrows; i++) {
+                            seqno = Number(sel[i].data.accrefseqno);
         
 			    var sm = flxAdjustments.getSelectionModel();
 			    var selrow = sm.getSelected();
@@ -1277,8 +1272,8 @@ function add_btn_click()
                 if  (cnt ==0){
                     var totamt;
 
-//                    alert(Ext.util.Format.date(dtpLedgerRefdate.getValue(),"d-m-Y"));
-//                    alert(Ext.util.Format.date(dtpLedgerRefdate.getValue(),"m-d-Y"));
+                    alert(Ext.util.Format.date(dtpLedgerRefdate.getValue(),"d-m-Y"));
+                    alert(Ext.util.Format.date(dtpLedgerRefdate.getValue(),"m-d-Y"));
 
                     totamt= Number(txtDebit.getRawValue())+ Number(txtCredit.getRawValue())
                     flxDetail.getStore().insert(
@@ -1293,12 +1288,9 @@ function add_btn_click()
                             ledtype : ledtype,
                             narration : txtNarration.getRawValue().toUpperCase(),
                             refno     : txtLedgerRefno.getRawValue().toUpperCase(),
-                            refdate   : Ext.util.Format.date(dtpLedgerRefdate.getValue(),"Y-m-d"),
+                            refdate   : Ext.util.Format.date(dtpLedgerRefdate.getValue(),"m-d-Y"),
                         })
                     );
-
-                    txtRefno.setRawValue(txtLedgerRefno.getRawValue());
-                    dtpRefdate.setValue(dtpLedgerRefdate.getValue());
 
                     if (Number(txtDebit.getValue())  > 0)
                     {
@@ -1375,8 +1367,6 @@ function add_btn_click()
              
                     txtNarration.setValue('');
                     txtAccountName.focus();
-                    txtRefno.setRawValue(txtLedgerRefno.getRawValue());
-                    dtpRefdate.setValue(dtpLedgerRefdate.getValue());
 		            txtAccountName.setRawValue('');
                     txtLedgerRefno.setRawValue('');
                     CalcTotalDebitCredit();
@@ -1497,7 +1487,7 @@ function add_btn_click()
         },['accref_seqno', 'accref_vouno', 'accref_voudate', 'accref_vou_type', 'accref_bank_name', 'accref_paymode', 'accref_payref_no',
 'accref_payref_date', 'accref_narration', 'accref_chq_status', 'accref_reverse_status', 'acctran_accref_seqno', 
 'acctran_serialno', 'acctran_led_code', 'acctran_dbamt', 'acctran_cramt', 'acctran_totamt', 'acctran_paytype',
-'cust_name', 'led_addr1', 'led_addr2','cust_type', 'led_custcode' ,'acctran_narration' ,'acctrail_inv_no','acctrail_inv_date'  ])
+'cust_name', 'led_addr1', 'led_addr2','cust_type', 'led_custcode' ,'acctran_narration' ])
     });
 
 
@@ -1571,7 +1561,7 @@ function add_btn_click()
                                           ledgercount += 1;
                                       if (LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt') > 0)           
                                       { 
-                                         drcr = 'Db';
+                                         drcr = 'Dr';
                                          txtAmountCr.setValue(LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'));	
                                       }  
                                       else
@@ -1590,8 +1580,6 @@ function add_btn_click()
                                              ledseq  : LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'), 
                                              ledtype : LoadVouNoDetailsdatastore.getAt(j).get('cust_type'),
                                              narration : LoadVouNoDetailsdatastore.getAt(j).get('acctran_narration'),
-                                             refno : LoadVouNoDetailsdatastore.getAt(j).get('acctrail_inv_no'),
-                                             refdate : LoadVouNoDetailsdatastore.getAt(j).get('acctrail_inv_date'),
 
 	                                  })
                                       );
@@ -1618,7 +1606,7 @@ function add_btn_click()
 
                                       if (LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt') > 0)
                                       { 
-                                         drcr = 'Db';
+                                         drcr = 'Dr';
                                          dbcr = "P";
 
 
@@ -1697,7 +1685,6 @@ function add_btn_click()
             Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
     }
     dtpRefdate.setRawValue(dtpVouDate.getRawValue());
-    dtpLedgerRefdate.setRawValue(dtpVouDate.getRawValue());
 
  }
 
@@ -1985,7 +1972,7 @@ flxDebitAdjustments.getEl().dom.style.opacity = 1; // optional visual cue
         selectOnFocus   : false,
         editable        : true,
         allowblank      : false,
-        store           : [['1','Db'],['2','Cr']],
+        store           : [['1','Dr'],['2','Cr']],
         listeners: {
           specialkey:function(f,e){
              if (e.getKey() == e.ENTER)
@@ -2524,15 +2511,11 @@ function edit_click()
 
 }
     var btnSubmit = new Ext.Button({
-        border: 1,
-        style: {
-            borderColor: 'blue',
-            borderStyle: 'solid',
-        },
+        style   : 'text-align:center;',
         text    : "Submit",
         width   : 60,
-        x       : 780,
-        y       : 86,
+        x       : 750,
+        y       : 60,
         listeners: {
             click: function(){
                   add_btn_click(); 
@@ -2591,8 +2574,8 @@ function edit_click()
             {header: "totamt", dataIndex: 'totamt',sortable:true,width:80,align:'left',hidden:true},
             {header: "ledtype", dataIndex: 'ledtype',sortable:true,width:60,align:'left',hidden:true},
             {header: "Narration", dataIndex: 'narration', sortable: true, width: 300, align: 'left', hidden: false},
-            {header: "Ref No.", dataIndex: 'refno', sortable: true, width: 100, align: 'left', hidden: false},     
-            {header: "Ref Date", dataIndex: 'refdate', sortable: true, width: 100, align: 'left', hidden: false},
+            {header: "Ref No.", dataIndex: 'refno', sortable: true, width: 60, align: 'left', hidden: false},     
+            {header: "Ref Date", dataIndex: 'refdate', sortable: true, width: 60, align: 'left', hidden: false},
         ],
         store:[],
 
@@ -2619,7 +2602,7 @@ function edit_click()
                     cmbType.setRawValue(selrow.get('type'));
                     txtNarration.setValue(selrow.get('narration'));
                     txtLedgerRefno.setRawValue(selrow.get('refno'));
-                    dtpLedgerRefdate.setValue(Ext.util.Format.date(selrow.get('refdate'),"Y-m-d"));
+                    dtpLedgerRefdate.setValue(Ext.util.Format.date(selrow.get('refno'),"m-d-Y"));
                     
                     
 
@@ -2633,7 +2616,7 @@ function edit_click()
                     }
    
                     flxDetail.getSelectionModel().clearSelections();
-                    if (selrow.get('type') == 'Db')
+                    if (selrow.get('type') == 'Dr')
                     {
                         txtDebit.enable();
                         txtCredit.disable();
@@ -3464,7 +3447,7 @@ function edit_click()
 
                     Ext.getCmp('editchk').hide();
   //                  cmbType.setValue(1);
-   //                 cmbType.setRawValue('Db');
+   //                 cmbType.setRawValue('Dr');
   		    flxLedger.hide(); 
   		    cmbAdjType.hide(); 
 
@@ -3475,7 +3458,7 @@ function edit_click()
         txtCredit.setValue("");
  
         cmbType.setValue(1);
-        cmbType.setRawValue('Db');
+        cmbType.setRawValue('Dr');
  flxLedger.hide();
         txtAccountName.setValue("");
         acseqno = 0;   

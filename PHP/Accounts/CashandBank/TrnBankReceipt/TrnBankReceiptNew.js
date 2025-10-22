@@ -64,6 +64,51 @@ Ext.onReady(function () {
     var ratediffmt = 0;
     var totinvwt = 0;
 
+
+    function check_password()
+    {
+       if (txtPassword.getRawValue() == "admin@123")
+       {
+         Ext.getCmp('saveOld').setDisabled(false);
+         
+       }
+       else
+       {
+         Ext.getCmp('saveOld').setDisabled(true);
+       }    
+  
+    }   
+      
+     var txtPassword = new Ext.form.TextField({
+      fieldLabel  : 'Password',
+      id          : 'txtPassword',
+      name        : 'txtPassword',
+      inputType   : 'password',
+      fieldStyle  : 'text-transform:uppercase',
+      width       :  100,
+  //	readOnly    : true,
+      labelStyle  : "font-size:12px;font-weight:bold;",
+      style       :"border-radius: 5px;",
+   enableKeyEvents: true,
+      listeners   :{
+  
+        change: function (obj, newValue) {
+      //    console.log(newValue);
+  //            obj.setRawValue(newValue.toUpperCase());
+          check_password();
+        },
+  
+  
+         blur:function(){
+            check_password();
+         },
+         keyup:function(){
+            check_password();
+         },
+      }
+  
+  });
+
     var lblAcctname = new Ext.form.Label({
         fieldLabel  : 'Account Name',
         id          : 'lblAcctname',
@@ -575,7 +620,7 @@ new Ext.KeyMap( Ext.getBody(), [{
 
 
 
-function RecordSave()
+function RecordSave2()
 {
 
                         Ext.getCmp('save').setDisabled(true);  
@@ -599,8 +644,134 @@ function RecordSave()
 		            CreditNoteupdData.push(record.data);
 		        });
 
+
+
 		        Ext.Ajax.request({
 		            url: 'FrmTrnBankReceiptSave.php',
+		            params: {
+		                griddet: Ext.util.JSON.encode(accupdData),
+		                gridadjdet: Ext.util.JSON.encode(accadjupdData),
+		                gridcreditnote: Ext.util.JSON.encode(CreditNoteupdData),
+
+		                cnt: accData.length,
+		                adjcnt: accadjData.length,
+                	    creditnotecnt: CreditNoteData.length,
+
+                         finsuffix :invfin,
+		                finid: GinFinid,
+		                finyear: gstfinyear,
+		                compcode: GinCompcode,
+		                accrefseq: seqno,
+		                vouno: txtVouNo.getRawValue(),
+		                voudate: Ext.util.Format.date(dtpVouDate.getValue(), "Y-m-d"),
+		                bankname: txtBankName.getRawValue(),
+		                refno: txtRefNo.getRawValue(),
+		                refdate: Ext.util.Format.date(dtpRefDate.getValue(), "Y-m-d"),
+		                narration: txtNarration.getRawValue(),
+		                paytype: gstPaytype,
+		                paymode: cmbPaymode.getRawValue(),
+		                payno: txtNo.getRawValue(),
+		                paydate: Ext.util.Format.date(dtpDate.getValue(), "Y-m-d"),
+		                headacct: cmbHeadAccount.getValue(),
+		                rcptamt  : Number(txtTotCredit.getRawValue()) , //- Number(txtTotDebit.getRawValue()),
+		                totadjamt: Number(txtTotNetAmt.getRawValue()),
+                                usercode : GinUserid, 
+                                reason   : txtReason.getRawValue(),
+		                flagtype: gstFlag,
+
+                                usercode : GinUserid,
+                                qty      : txtQty.getRawValue(),
+
+
+                                generateCN : 'YES',
+		                CNRemarks: txtCNRemarks.getRawValue(),  
+                                cgstledcode : cgstledcode,
+                                sgstledcode : sgstledcode,
+                                igstledcode : igstledcode,
+
+                                salledcode  : salledcode,
+
+                                ledgercode  : ledgercode,
+                                partycode   : partycode,
+                                CreditValue : txtTotCDAmt.getValue(),
+                                roff        : rounding, 
+                                itemname    : quality,
+
+                                crnoteseqno : crnoteseqno,
+                                cnvouno     : txtCNNo.getValue(),  
+                                billnolist  : billnolist,  
+
+		              },
+		            callback: function (options, success, response)
+		            {
+		                var obj = Ext.decode(response.responseText);
+		                if (obj['success'] === "true") {
+
+
+                                    BankReceiptEntryFormPanel.remove(flxAccounts, false);
+                                    tabAccounts.setActiveTab(0);
+				    flxAccounts.getStore().removeAll();
+                                    flxAccounts.store.clearData();
+				    flxDetail.getStore().removeAll();
+				    flxAccounts.getStore().removeAll();
+				    RefreshData();
+				    Ext.getCmp('txtAccountName').focus(false, 200);
+
+
+			Ext.MessageBox.show({
+			    title: "",
+			    msg: "Bank Receipt Entry Saved -" + obj['vouno'],
+			    icon: Ext.MessageBox.WARNING,
+			    buttons: Ext.MessageBox.OK,
+			    fn: function(buttonId) {
+				if (buttonId === "ok") {
+                                    BankReceiptEntryFormPanel.remove(flxAccounts, false);
+                                    tabAccounts.setActiveTab(0);
+				    flxAccounts.getStore().removeAll();
+                                    flxAccounts.store.clearData();
+				    flxDetail.getStore().removeAll();
+				    flxAccounts.getStore().removeAll();
+				    RefreshData();
+				    Ext.getCmp('txtAccountName').focus(false, 200);
+				}
+			    }
+			});
+
+		               }
+		                 else {
+                               	Ext.MessageBox.alert("Bank Receipt Not Saved! Pls Check!- " + obj['vouno']);  
+		                }
+		            }
+		        });//msg2
+}
+
+
+function RecordSave()
+{
+
+               // Ext.getCmp('saveNew').setDisabled(true);  
+
+		        var accData = flxDetail.getStore().getRange();
+		        var accupdData = new Array();
+		        Ext.each(accData, function (record) {
+		            accupdData.push(record.data);
+		        });
+
+		        var accadjData = flxAdjustDetails.getStore().getRange();
+		        var accadjupdData = new Array();
+		        Ext.each(accadjData, function (record) {
+		            accadjupdData.push(record.data);
+		        });
+
+
+		        var CreditNoteData = flxAccounts.getStore().getRange();
+		        var CreditNoteupdData = new Array();
+		        Ext.each(CreditNoteData, function (record) {
+		            CreditNoteupdData.push(record.data);
+		        });
+
+		        Ext.Ajax.request({
+		            url: 'FrmTrnBankReceiptSaveNew.php',
 		            params: {
 		                griddet: Ext.util.JSON.encode(accupdData),
 		                gridadjdet: Ext.util.JSON.encode(accadjupdData),
@@ -697,6 +868,143 @@ function RecordSave()
 		            }
 		        });//msg2
 }
+function save2_click() 
+{
+
+
+        var saverecord = 'Y';
+
+	Caladj();
+
+
+    var accadjData = flxAdjustDetails.getStore().getRange();
+    var accadjupdData = new Array();
+    Ext.each(accadjData, function (record) {
+        accadjupdData.push(record.data);
+    });
+
+
+    if (accadjData.length == 0)
+        gstPaytype = "AD";
+    else
+        gstPaytype = "BB";
+
+
+	var rcnt = flxDetail.getStore().getCount();
+	fromdate = "04/01/" + gstfinyear.substring(0, 4);
+	todate = "03/31/" + gstfinyear.substring(5, 9);
+        if (gstFlag == "Edit" && (txtReason.getRawValue() == ''  || txtReason.getRawValue().length <5  )  )
+        {
+            Ext.MessageBox.alert("Alert", "Reason for Edit is mandatory. Provide Reason..");
+		Ext.Msg.prompt('Reason for Modification', '', function(btn, text){
+		    if (btn == 'ok'){
+			txtReason.setRawValue(text)
+                        save2_click();
+		    }
+		});
+
+        }
+	else if (Ext.util.Format.date(dtpVouDate.getValue(), "Y-m-d") < Ext.util.Format.date(fromdate, "Y-m-d")) {
+	    Ext.MessageBox.alert("Alert", "Voucher Date not in current finyear");
+	}
+        else if (rcnt == 0) {
+            Ext.MessageBox.alert("Alert", "Check Receipt Amount and Press Enter Key in the Receipt Amount");
+        } 
+        else if (Ext.util.Format.date(dtpVouDate.getValue(), "Y-m-d") > Ext.util.Format.date(todate, "Y-m-d")) {
+	    Ext.MessageBox.alert("Alert", "Voucher Date not in current finyear");
+	} else if (rcnt <= 0) {
+	    Ext.MessageBox.alert("Receipt", "Transactions Details Not Available ..");
+	} else if (cmbHeadAccount.getValue() == 0) {
+	    Ext.MessageBox.alert("Receipt", "Select the Head of Account");
+	} else if (cmbHeadAccount.getRawValue() == '') {
+	    Ext.MessageBox.alert("Receipt", "Select the Head of Account");
+	} else if (txtTotNetAmt.getRawValue() <= 0 && gstPaytype == "BB") {
+	    Ext.MessageBox.alert("Receipt", "You have selected Bill to Bill mode & no bills are adjusted" + totadjamtvalue);
+	} else if (txtTotNetAmt.getRawValue() > 0 && gstPaytype == "AD") {
+	    Ext.MessageBox.alert("Receipt", "You have to select Bill to Bill mode in order to adjust bills");
+	} else if (Number(txtTotNetAmt.getRawValue()) > Number(txtTotCredit.getRawValue()) ) {
+	    Ext.MessageBox.alert("Receipt", "Adjusted Amout is heigh then received amount");
+	} 
+        else if( Number(txtTotCDAmt.getValue()) > 0 && Number(txtDebitTotal.getValue())!=Number(txtCreditTotal.getValue())){
+     Ext.MessageBox.alert("Receipt","In Credit Note,  Debit and Credit Totals are not Equal. click CREDIT NOTE tab and continue");
+
+
+/*
+            var diff = 0;
+            diff =  Number(txtDebitTotal.getValue())-Number(txtDebitTotal.geValue()); 
+            var sel1 = flxAccounts.getSelectionModel().getSelections();           		
+            sel1[1].set('debit',sel1[1].get('debit')-diff);
+alert(diff);
+*/
+
+        }
+
+        else if( Number(txtTotCDAmt.getValue()) > 0 && (Number(txtDebitTotal.getValue()) == 0 || Number(txtCreditTotal.getValue())== 0 ) ){
+            Ext.MessageBox.alert("Receipt","Credit Note Debit and Credit Total are not Equal. click CREDIT NOTE tab and continue")
+        }
+        else if( Number(txtTotNetAmt.getValue()) >  Number(txtRecAmt.getValue())  ){
+            Ext.MessageBox.alert("Receipt","Adjustment amount is heigher than receipt amount. Can't save the record")
+        }
+
+        else if( Number(txttotCDValue.getValue()) > 0 && txtCNRemarks.getRawValue() == "" ){
+            Ext.MessageBox.alert("Receipt","Credit Note Remark is Empty. Can't save the record")
+        }
+
+
+        else {
+	    Caladj();
+	    Ext.Msg.show({
+		title: 'Receipt Voucher',
+		icon: Ext.Msg.QUESTION,
+		buttons: Ext.MessageBox.YESNO,
+		msg: 'Are You Sure to Add This Record?',
+		fn: function (btn) {
+		    if (btn == 'yes') {
+
+                    if (Number(txtTotCDAmt.getValue()) > 0)
+                    { 
+
+                          saverecord = 'N';
+                        Ext.Msg.show({
+                            title: 'Confirmation Again',
+                            icon: Ext.Msg.QUESTION,
+                            buttons: Ext.MessageBox.YESNO,
+                            msg: 'This Receipt having CREDIT NOTE . Kindly CONFIRM AGAIN to SAVE the Record..',
+                            fn: function(btn)
+                            {
+                                if (btn === 'yes')
+                                {   
+                                   saverecord = 'Y';
+                                   RecordSave2();
+                                }   
+                                else
+                                   saverecord = 'N';
+
+
+
+                            }
+                        });
+                     }
+                     else
+                     {
+                          saverecord = 'Y';
+                     }  
+
+                  
+                     if (saverecord == 'Y' )
+                     {
+                        RecordSave2();
+
+
+                    } // save record
+		    }
+		}
+  
+	    });//msg1
+	}
+
+}
+
 
 function save_click() 
 {
@@ -705,6 +1013,22 @@ function save_click()
         var saverecord = 'Y';
 
 	Caladj();
+
+
+    var accadjData = flxAdjustDetails.getStore().getRange();
+    var accadjupdData = new Array();
+    Ext.each(accadjData, function (record) {
+        accadjupdData.push(record.data);
+    });
+
+
+    if (accadjData.length == 0)
+        gstPaytype = "AD";
+    else
+        gstPaytype = "BB";
+
+
+        
 	var rcnt = flxDetail.getStore().getCount();
 	fromdate = "04/01/" + gstfinyear.substring(0, 4);
 	todate = "03/31/" + gstfinyear.substring(5, 9);
@@ -819,7 +1143,6 @@ alert(diff);
 	}
 
 }
-
 
 function edit_click() 
 {
@@ -2962,6 +3285,7 @@ var txtAccountName = new Ext.form.TextField({
         }
        }  
     });
+    
 
     var btnClearAdj = new Ext.Button({
         style: 'text-align:center;',
@@ -3480,6 +3804,7 @@ var flxCD = new Ext.grid.EditorGridPanel({
 function loadCDDetails() {
 
         ClearAdjusted();
+        var cdincluding = 0; 
         var cashdisc_value  = 0;
         var cashdisc_cgst_amt = 0;
         var cashdisc_sgst_amt = 0;
@@ -3503,6 +3828,11 @@ function loadCDDetails() {
     for (var i = 0; i < rcnt; i++) {
         var rec = store.getAt(i);
 
+        cdincluding =  0;
+        if ( Number(rec.get('cgstper')) + Number(rec.get('sgstper')) + Number(rec.get('igstper')) > 0)
+             cdincluding =  (100 + Number(rec.get('cgstper')) + Number(rec.get('sgstper')) + Number(rec.get('igstper')))/100;
+       
+        
         if (gstPaytype == "BB" && rec.get('invdate')) {
             var invDate = rec.get('invdate');
             dtpInvDate.setValue(Ext.util.Format.date(invDate, "Y-m-d"));
@@ -3540,7 +3870,9 @@ function loadCDDetails() {
                        {
                           cashdisc_value = Math.round(rec.get('invwt')*rec.get('PMT30dayscdamt') * 100) / 100;
                           cashdisc_value = cashdisc_value.toFixed(0);
-                         cashdisc_value = (cashdisc_value)/1.12;
+
+                          if (cdincluding > 0)                          
+                             cashdisc_value = (cashdisc_value)/cdincluding;
                        }
                        cdpermt = rec.get('PMT30dayscdamt');
                     }
@@ -3558,7 +3890,8 @@ function loadCDDetails() {
                        {
                          cashdisc_value = Math.round(rec.get('invwt')*rec.get('PMT45dayscdamt1') * 100) / 100;
                          cashdisc_value = cashdisc_value.toFixed(0);
-                         cashdisc_value = (cashdisc_value)/1.12;
+                         if (cdincluding > 0)                          
+                            cashdisc_value = (cashdisc_value)/cdincluding;
                        }
                        cdpermt = rec.get('PMT45dayscdamt1');
                     }
@@ -3572,7 +3905,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT45dayscdamt2'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
                           cdpermt = rec.get('PMT45dayscdamt2');
@@ -3594,7 +3928,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT60dayscdamt1'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
                           cdpermt = rec.get('PMT60dayscdamt1');
@@ -3609,7 +3944,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT60dayscdamt2'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
                           cdpermt = rec.get('PMT60dayscdamt2');
@@ -3625,7 +3961,8 @@ function loadCDDetails() {
                               cashdisc_value = Math.round(rec.get('invwt')*rec.get('PMT60dayscdamt3') * 100) / 100;
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT60dayscdamt3'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
          
@@ -3649,7 +3986,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt1'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
 
@@ -3665,7 +4003,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt2'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
                           cdpermt = rec.get('PMT90dayscdamt2');
@@ -3680,7 +4019,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt3'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
          
@@ -3697,7 +4037,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt4'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
          
@@ -3715,7 +4056,8 @@ function loadCDDetails() {
                           {
                               cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt5'))+Number(rec.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-                              cashdisc_value = (cashdisc_value)/1.12;
+                              if (cdincluding > 0)                          
+                                cashdisc_value = (cashdisc_value)/cdincluding;
 
                           }
          
@@ -5659,7 +6001,7 @@ var tabAccounts = new Ext.TabPanel({
                         y: 10,
                         border: false,
                         items: [txtReceiptAmt]
-                    }, btnAdd, 
+                    }, // btnAdd, 
                     {
                         xtype: 'fieldset',
                         title: '',
@@ -5759,6 +6101,7 @@ var tabAccounts = new Ext.TabPanel({
                         labelWidth: 1,
                         x: 840,
                         y: 70,
+                        width : 100,
                         border: false,
                         items: [btnConfirm]
                     },
@@ -6254,7 +6597,56 @@ var tabAccounts = new Ext.TabPanel({
                             BankReceiptEntryWindow.hide();
                         }
                     }
-                }]
+                }, '-',
+
+                {
+                    text: '',
+                    style: 'text-align:center;',
+                    tooltip: 'Close...',
+                    height: 40,
+                    fontSize: 30,
+                    width: 70,
+                    icon: '/Pictures/exit.png',
+                    listeners: {
+                        click: function () {
+                     
+                        }
+                    }
+                },  '-',
+
+
+                {
+                    text: '',
+                    style: 'text-align:center;',
+                    tooltip: 'Close...',
+                    height: 40,
+                    fontSize: 30,
+                    width: 70,
+                    icon: '/Pictures/exit.png',
+                    listeners: {
+                        click: function () {
+                     
+                        }
+                    }
+                }  ,'-',
+                {
+                    text: 'SAVE-OLD',
+                    id : 'saveOld',
+                    style: 'text-align:center;',
+                    tooltip: 'Save...',
+                    height: 40,
+                    fontSize: 30,
+                    width: 70,
+                    icon: '/Pictures/exit.png',
+                    listeners: {
+                        click: function () {
+                            save2_click();
+                        }
+                    }
+                }
+
+
+            ]
         },
         items: [
             {
@@ -6340,6 +6732,7 @@ var tabAccounts = new Ext.TabPanel({
                                 border: false,
                                 items: [cmbHeadAccount]
                             },
+                            
                             {
                                 xtype: 'fieldset',
                                 title: '',
@@ -6347,7 +6740,7 @@ var tabAccounts = new Ext.TabPanel({
                                 height: 43,
                                 x:  640,
                                 y: 0,
-                                border: true,
+                                border: false,
                                 style: 'padding:0px',
                                 layout: 'absolute',
                                 items: [optPayType]
@@ -6367,7 +6760,18 @@ var tabAccounts = new Ext.TabPanel({
                             },
 
 */
-		{
+
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                labelWidth: 70,
+                                width: 300,
+                                x: 900,
+                                y: 0,
+                                border: false,
+                                items: [txtPassword]
+                            },
+	                    	{
                                 xtype: 'fieldset',
                                 title: '',
                                 labelWidth: 70,
@@ -6613,8 +7017,11 @@ var tabAccounts = new Ext.TabPanel({
 },
         listeners: {
             show: function () {
+   
 
-//Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');
+                Ext.getCmp('optPayType').hide(true);
+                 Ext.getCmp('saveOld').setDisabled(true);
+                //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');
                   dtpVouDate.setRawValue(new Date().format('d-m-Y'));
                   dtpRefDate.setRawValue(new Date().format('d-m-Y'));
                   RefreshData();

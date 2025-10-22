@@ -17,6 +17,62 @@ var UserName = localStorage.getItem('ginusername');
 
 var printtype = "PDF";
 
+
+
+var optprinttype = new Ext.form.FieldSet({
+    xtype: 'fieldset',
+    title: '',
+    fieldLabel: '',
+    layout : 'hbox',
+    border: false,
+    items: [
+    {
+        xtype: 'radiogroup',
+        columns: 3,
+        rows : 1,
+        id: 'optprinttype',
+        items: [
+		{boxLabel: 'PDF', name: 'optprinttype', id:'prtPDF', inputValue: 1,checked:true,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+					    printtype="PDF";
+
+					}
+				}
+			}
+		},
+             {boxLabel: 'Excel', name: 'optprinttype', id:'optExcel', inputValue: 2,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+						printtype="XLS";
+
+
+					}
+				}
+			}
+		},
+		{boxLabel: 'Others', name: 'optprinttype', id:'optOTH', inputValue: 2,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+						printtype="OTHERS";
+
+
+					}
+				}
+			}
+		},
+            
+        ],
+    }
+
+
+
+    ]
+});
+
 var ledgercode = 0;
 var ledtype    = '';
 var partycode  = 0;
@@ -1057,7 +1113,7 @@ listeners: {
                      labelWidth  : 80,
                      border  : false,
                      width   : 220,
-	             x       : 550,
+	             x       : 450,
 		     y       : 10,
                      items: [monthstartdate]
                 },
@@ -1067,7 +1123,7 @@ listeners: {
                      labelWidth  : 70,
                      border  : false,
                      width   : 220,
-	             x       : 750,
+	             x       : 650,
 		     y       : 10,
                      items: [monthenddate]
                 },
@@ -1078,7 +1134,7 @@ listeners: {
                      labelWidth  : 70,
                      border  : false,
                      width   : 220,
-	             x       : 1000,
+	             x       : 850,
 		     y       : 10,
                      items: [btnCDPrint]
                 },
@@ -1089,13 +1145,24 @@ listeners: {
                      labelWidth  : 70,
                      border  : false,
                      width   : 220,
-	             x       : 1100,
+	             x       : 950,
 		     y       : 10,
                      items: [btnCD_Datawise]
                 },
 
 
-
+                { 
+                    xtype   : 'fieldset',
+                    title   : '',
+                    layout  : 'hbox',
+                    border  : false,
+                    height  : 60,
+                    width   : 250,
+                    layout  : 'absolute',
+                    x       : 1100,
+                    y       : 10,
+                    items:[optprinttype],
+                },
 
 
 

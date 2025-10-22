@@ -64,51 +64,6 @@ Ext.onReady(function () {
     var ratediffmt = 0;
     var totinvwt = 0;
 
-
-    
-  function check_password()
-  {
-     if (txtPassword.getRawValue() == "admin@123")
-     {
-       Ext.getCmp('save').setDisabled(false);
-     }
-     else
-     {
-       Ext.getCmp('save').setDisabled(true);
-     }    
-
-  }   
-    
-   var txtPassword = new Ext.form.TextField({
-    fieldLabel  : 'Password',
-    id          : 'txtPassword',
-    name        : 'txtPassword',
-    inputType   : 'password',
-    fieldStyle  : 'text-transform:uppercase',
-    width       :  100,
-//	readOnly    : true,
-    labelStyle  : "font-size:12px;font-weight:bold;",
-    style       :"border-radius: 5px;",
- enableKeyEvents: true,
-    listeners   :{
-
-      change: function (obj, newValue) {
-    //    console.log(newValue);
-//            obj.setRawValue(newValue.toUpperCase());
-        check_password();
-      },
-
-
-       blur:function(){
-          check_password();
-       },
-       keyup:function(){
-          check_password();
-       },
-    }
-
-});
-
     var lblAcctname = new Ext.form.Label({
         fieldLabel  : 'Account Name',
         id          : 'lblAcctname',
@@ -280,6 +235,9 @@ function getCNRemarks()
            Remarks = "BEING THE AMOUNT CREDITED TO YOUR ACCOUNT TOWARDS CASH DISCOUNT Rs." + cdpermt + "/MT AGAINST INV. NO(s) ";
 */
 
+
+
+
         flxAdjustDetails.getSelectionModel().selectAll();
         var selrows = flxAdjustDetails.getSelectionModel().getCount();
         var sel = flxAdjustDetails.getSelectionModel().getSelections();
@@ -291,7 +249,10 @@ function getCNRemarks()
        billnolist = '';
 
         for (var i = 0; i < selrows; i++) {
+
             if (Number(sel[i].data.cdamount) > 0 && Number(sel[i].data.adjamt) > 0 ) {
+
+
                 gstbillnos = gstbillnos + sel[i].data.invno + ",";
                 totinvwt = Number(totinvwt)+ Number(sel[i].data.invwt);
                 if (sel[i].data.invno.substring(0,3)  == "TN/" || sel[i].data.invno.substring(0,3)  == "OS/")
@@ -400,7 +361,28 @@ txtCNRemarks.setRawValue("BEING THE AMOUNT CREDITED TO YOUR ACCOUNT TOWARDS " + 
 
 }
 
+var btnConfirm	 = new Ext.Button({
+    style   : 'text-align:center;',
+    text    : "Confirm",
+    id      : 'btnConfirm',
+    width   : 60,
+    height  : 30,
+          border: 1,
+          style: {
+              borderColor: 'blue',
+              borderStyle: 'solid',
+              fontSize  : '14px',
 
+          },
+    bodyStyle:{"background-color":"#ebebdf"},
+    listeners:{
+        click: function(){     
+
+               loadCDDetails();
+
+        }
+    }
+}); 
 
 
 var btnRemarks	 = new Ext.Button({
@@ -1419,6 +1401,7 @@ alert("1");
         if (flxDetail.getStore().getCount() == 1 && gstPaytype === "BB") {
             var ginledcode = flxDetail.getStore().getAt(0).get('ledseq');
 
+            var dt_coll = dtpRefDate.getValue();
 
             ReceiptAdjBillDetdatastore.removeAll();
             ReceiptAdjBillDetdatastore.load({
@@ -1442,6 +1425,8 @@ alert("1");
                         var tax = ReceiptAdjBillDetdatastore.getAt(i).get('invh_taxableamt')-ReceiptAdjBillDetdatastore.getAt(i).get('invh_frt_amt');
 //alert(tax);
 //alert(ReceiptAdjBillDetdatastore.getAt(i).get('acctrail_inv_no'));
+
+//alert(ReceiptAdjBillDetdatastore.getAt(i).get('ordh_payterm_90days_7days_receipt'));
 
 
                         flxAdjustDetails.getStore().insert(
@@ -1500,10 +1485,12 @@ alert("1");
                                     igstper  : ReceiptAdjBillDetdatastore.getAt(i).get('invh_igst_per'),
                                     igstamount: 0,
                                     cdamount: 0,
+                                    adjdays : 0,
 
                                 })
                                 );
                     }
+//loadCDDetails();
  getAdjustmentDetails2();
 
        LoadInvoiceCashDiscountDetailsdatastore.removeAll();
@@ -1672,6 +1659,9 @@ alert("1");
                  }    
 
                  editfind = 0;
+                 if (gstFlag == "Add")
+                 loadCDDetails();
+
 
               }   
  
@@ -1689,7 +1679,7 @@ alert("1");
         } else if (flxDetail.getStore().getCount() > 1) {
             if (Number(txtTotNetAmt.getRawValue()) > Number(txtRecAmt.getRawValue())) {
                 var sm = flxAdjustDetails.getSelectionModel();
-                var selrow = sm.getSelected();
+                var selrow2 = sm.getSelected();
                 var rcnt = flxAdjustDetails.getStore().getCount();
                 for (var i = 0; i < rcnt; i++) {
                     var rec = flxAdjustDetails.getStore().getAt(i);
@@ -1744,17 +1734,6 @@ alert("1");
                        }
 
             }
-                   if (rec.get('adjamt') == 0 )
-                   {
-
-			  rec.set('cdvalue', 0);
-			  rec.set('cgstamount', 0);
-			  rec.set('sgstamount', 0);
-			  rec.set('igstamount', 0);
-			  rec.set('cdamount', 0);
-			  rec.set('cdmt', 0);
-                   } 
-
         }
 
         var newcdamount = Number(gincdval) + Number(gincgstamt) + Number(ginsgstamt) + Number(ginigstamt);  
@@ -2186,8 +2165,8 @@ function getAdjustmentDetails2()
 
 		        if  (reccount == 0 )
 		        {  
-
-
+//alert(adjusted2);
+                        var newpendamt =  adjusted2 +  adjusted;
                         var RowCnt = flxAdjustDetails.getStore().getCount()+1 ;
 
 		        flxAdjustDetails.getStore().insert(
@@ -2201,7 +2180,7 @@ function getAdjustmentDetails2()
 		                    invamt: invamt,
 		                    payterms: crdays,
 		                    totamt: invamt,
-		                    pendingamt: adjusted ,
+		                    pendingamt:  newpendamt , //adjusted ,
 		                    pendingamt2: adjusted ,
 
 		                    adjamt: adjusted2,
@@ -2291,6 +2270,8 @@ adjusted = 0;
 
                //        Ext.getCmp('editchk').show();
 
+
+                       Ext.getCmp('btnConfirm').setDisabled(false); 
                        ECreditNote = "N";
                        flxAdjustDetails.getStore().removeAll();
                        flxAccounts.getStore().removeAll();
@@ -2401,6 +2382,8 @@ else
 		                      var cnt=loadECNStatus.getCount();
 		                      if (cnt>0)
 		                      {
+
+Ext.getCmp('btnConfirm').setDisabled(true);  
 		                              if (loadECNStatus.getAt(0).get('E_inv_confirm') == "Y")
 		                              {  
 		                       alert("E-Credit Note Already generated. You can't Modify this Bank Receipt...");
@@ -3116,7 +3099,7 @@ function grid_move() {
             // Check if the record already exists in the final store
             for (var j = 0; j < CDStore.getCount(); j++) {
                 var existing = CDStore.getAt(j);
-                if (Number(existing.get('cdpmt')) == Number(recData.cdmt) ) {
+                if (Number(existing.get('cdpmt')) == Number(recData.cdmt)) {
                     if ( Number(recData.adjamt) > 0)
                     { 
                     totcdqty = Number(existing.get('qty')) +  Number(recData.invwt);
@@ -3133,10 +3116,12 @@ function grid_move() {
                 cdvalue1 = (Number(recData.cdmt)+ Number(recData.ratediff)) * Number(recData.invwt);
                 cdvalue1 =    Ext.util.Format.number(Number(cdvalue1), '0.00') ;                
   
+                var iwt =    totinvwt =  Ext.util.Format.number(recData.invwt,'0.000');   
+
                 CDStore.add(new dgrecord({
                     cdpmt    : Number(recData.cdmt),
                     ratediff : Number(recData.ratediff),
-                    qty      : Number(recData.invwt),
+                    qty      : iwt,
                     invno    : recData.invno,
                     CDValue  : cdvalue1 ,
                 }));
@@ -3356,7 +3341,22 @@ var flxCD = new Ext.grid.EditorGridPanel({
 	//value: '2020-03-31',
     //    anchor: '100%',
         width: 100,
-labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+ 	enableKeyEvents: true,
+        listeners   :{
+/*
+          change: function (obj, newValue) {
+            loadCDDetails();
+          },
+           blur:function(){
+              loadCDDetails();
+           },
+           keyup:function(){
+              loadCDDetails();
+           },
+*/
+        }
+
     });
 
     var txtRecAmt = new Ext.form.NumberField({
@@ -3476,6 +3476,427 @@ labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
     }      
 
 
+
+function loadCDDetails() {
+
+        ClearAdjusted();
+        var cashdisc_value  = 0;
+        var cashdisc_cgst_amt = 0;
+        var cashdisc_sgst_amt = 0;
+        var cashdisc_igst_amt = 0;
+        var cashdisc_amount = 0;
+
+        var cashdisc_value_method1  = 0;
+        var cashdisc_value_method2  = 0;
+
+        var adjustedamount = 0;
+
+        Ext.getCmp('chkremark').setValue(false);
+        txtNarration.setRawValue("");
+
+    var dt_coll = dtpRefDate.getValue();
+    if (!dt_coll) return;
+
+    var store = flxAdjustDetails.getStore();
+    var rcnt = store.getCount();
+
+    for (var i = 0; i < rcnt; i++) {
+        var rec = store.getAt(i);
+
+        if (gstPaytype == "BB" && rec.get('invdate')) {
+            var invDate = rec.get('invdate');
+            dtpInvDate.setValue(Ext.util.Format.date(invDate, "Y-m-d"));
+            var dt_inv = dtpInvDate.getValue();
+
+            var diffdays = Math.ceil((dt_coll.getTime() - dt_inv.getTime()) / (1000 * 60 * 60 * 24));
+            diffdays -= Number(txtAddnlCDDays.getValue());
+            var PTGD = Number(rec.get('payterms')) + Number(rec.get('grdays'));
+
+
+            rec.set('adjdays', diffdays);
+
+            if (rec.get('voutype') !== 'AD' && Number(rec.get('pendingamt')) >1) {
+                cashdisc_value = 0;
+                ratediffmt = rec.get('ratediff');
+                if (PTGD <= 7 )
+                {
+			  rec.set('cdvalue', 0);
+			  rec.set('cgstamount', 0);
+			  rec.set('sgstamount', 0);
+			  rec.set('igstamount', 0);
+			  rec.set('cdamount', 0);
+			  rec.set('cdmt', 0);
+                }
+// for Payment Terms 30 Days
+                else if ( PTGD == 30)
+                {  
+                    if (diffdays < 8 )
+                    { 
+                       if (cdtype == 'Y')
+                       {
+                          cashdisc_value = rec.get('invwt')*(Number(rec.get('PMT30dayscdamt'))+Number(rec.get('ratediff')));
+                       }   
+                       else
+                       {
+                          cashdisc_value = Math.round(rec.get('invwt')*rec.get('PMT30dayscdamt') * 100) / 100;
+                          cashdisc_value = cashdisc_value.toFixed(0);
+                         cashdisc_value = (cashdisc_value)/1.12;
+                       }
+                       cdpermt = rec.get('PMT30dayscdamt');
+                    }
+                } 
+// for Payment Terms 45 Days - Start 
+                else if (PTGD == 45)
+                {  
+                    if (diffdays < 8 )
+                    { 
+                       if (cdtype == 'Y')
+                       {
+                          cashdisc_value = rec.get('invwt')*(Number(rec.get('PMT45dayscdamt1'))+Number(rec.get('ratediff')));
+                       }   
+                       else
+                       {
+                         cashdisc_value = Math.round(rec.get('invwt')*rec.get('PMT45dayscdamt1') * 100) / 100;
+                         cashdisc_value = cashdisc_value.toFixed(0);
+                         cashdisc_value = (cashdisc_value)/1.12;
+                       }
+                       cdpermt = rec.get('PMT45dayscdamt1');
+                    }
+                    else if (diffdays <= 35 )
+                    {
+                          if (cdtype == 'Y')
+                          {
+                              cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT45dayscdamt2'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT45dayscdamt2'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+                          cdpermt = rec.get('PMT45dayscdamt2');
+                    }
+
+                } 
+// for Payment Terms 60 Days - Start
+
+                else if (PTGD == 60)
+                {  
+                      if (diffdays < 8)
+                      {
+                          if (cdtype == 'Y')
+                          {
+//                              cashdisc_value = rec.get('invwt')*rec.get('PMT60dayscdamt1');
+                              cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT60dayscdamt1'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT60dayscdamt1'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+                          cdpermt = rec.get('PMT60dayscdamt1');
+                       } 
+                       else if (diffdays <= 35 )
+                       {
+                          if (cdtype == 'Y')
+                          {
+                             cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT60dayscdamt2'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT60dayscdamt2'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+                          cdpermt = rec.get('PMT60dayscdamt2');
+                       }
+                       else if (diffdays <= 45 )
+                       {
+                          if (cdtype == 'Y')
+                          {
+                             cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT60dayscdamt3'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*rec.get('PMT60dayscdamt3') * 100) / 100;
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT60dayscdamt3'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+         
+                          cdpermt = rec.get('PMT60dayscdamt3');
+                        }
+                   }
+ // for Payment Terms 90 Days - Start
+
+                   else if ( PTGD == 75 || PTGD == 90)
+                   {  
+                      if (diffdays < 8)
+                      {
+
+
+                          if (cdtype == 'Y')
+                          {
+//                              cashdisc_value = rec.get('invwt')*rec.get('PMT60dayscdamt1');
+                              cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT90dayscdamt1'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt1'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+
+                          cdpermt = rec.get('PMT90dayscdamt1');
+                       } 
+                       else if (diffdays <= 35 )
+                       {
+                          if (cdtype == 'Y')
+                          {
+                             cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT90dayscdamt2'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt2'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+                          cdpermt = rec.get('PMT90dayscdamt2');
+                       }
+                       else if (diffdays <= 45 )
+                       {
+                          if (cdtype == 'Y')
+                          {
+                             cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT90dayscdamt3'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt3'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+         
+                          cdpermt = rec.get('PMT90dayscdamt3');
+                        }
+
+                       else if (diffdays <= 60 )
+                       {
+                          if (cdtype == 'Y')
+                          {
+                             cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT90dayscdamt4'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt4'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+         
+                          cdpermt = rec.get('PMT90dayscdamt4');
+                       }
+                       else if (diffdays <= 75 && PTGD == 90 )
+                       {
+
+
+                          if (cdtype == 'Y')
+                          {
+                             cashdisc_value = rec.get('invwt')* (Number(rec.get('PMT90dayscdamt5'))+Number(rec.get('ratediff')));
+                          }   
+                          else
+                          {
+                              cashdisc_value = Math.round(rec.get('invwt')*(Number(rec.get('PMT90dayscdamt5'))+Number(rec.get('ratediff'))) * 100) / 100;
+                              cashdisc_value = cashdisc_value.toFixed(0);
+                              cashdisc_value = (cashdisc_value)/1.12;
+
+                          }
+         
+                          cdpermt = rec.get('PMT90dayscdamt5');
+                        }
+
+
+                      }
+
+
+  
+		               cashdisc_value = Math.round(cashdisc_value * 100) / 100;
+		               cashdisc_cgst_amt = 0;
+		               cashdisc_sgst_amt = 0;
+		               cashdisc_igst_amt = 0;
+
+	    
+		               if (Number(cashdisc_value) > 0 && Number(rec.get('cgstper')) > 0)
+		               {  
+		                  cashdisc_cgst_amt = Number(cashdisc_value)*Number(rec.get('cgstper'))/100;
+		               }
+		               if (Number(cashdisc_value) > 0 && Number(rec.get('sgstper')) > 0)
+		               {  
+		                  cashdisc_sgst_amt = Number(cashdisc_value)*Number(rec.get('sgstper'))/100;
+		               }
+
+		               if (Number(cashdisc_value) > 0 && Number(rec.get('igstper')) > 0)
+		               {  
+		                  cashdisc_igst_amt = Number(cashdisc_value)*Number(rec.get('igstper'))/100;
+		               }
+
+
+
+
+
+
+
+                       cashdisc_value =  Ext.util.Format.number(cashdisc_value,'0.00');
+                       cashdisc_cgst_amt =  Ext.util.Format.number(cashdisc_cgst_amt,'0.00');
+                       cashdisc_sgst_amt =  Ext.util.Format.number(cashdisc_sgst_amt,'0.00');
+                       cashdisc_igst_amt =  Ext.util.Format.number(cashdisc_igst_amt,'0.00');
+                       tobeadj =  Ext.util.Format.number(tobeadj,'0.00');
+
+
+                       cashdisc_amount = (Number(cashdisc_value) + Number(cashdisc_cgst_amt) + Number(cashdisc_sgst_amt)+ Number(cashdisc_igst_amt)); //.toFixed(0);
+                       cashdisc_amount = Math.round(cashdisc_amount*100/100);
+                       adjustedamount =  Number(rec.get('adjamt'));
+                       pendamount =  Number(rec.get('pendingamt2'));
+//alert(rec.get('adjamt'));
+
+                       var tobeadj = Number(rec.get('pendingamt')) - Number(cashdisc_amount); 
+
+                       rec.set('pendingamt2', tobeadj);
+                       rec.set('cdvalue', cashdisc_value);
+                       rec.set('cgstamount', cashdisc_cgst_amt);
+                       rec.set('sgstamount', cashdisc_sgst_amt);
+                       rec.set('igstamount', cashdisc_igst_amt);
+                       rec.set('cdamount', cashdisc_amount);
+                       rec.set('cdmt', cdpermt);
+                }
+          }
+        }
+
+rec.commit();
+flxAdjustDetails.getView().refresh();
+
+    var store1 = flxAdjustDetails.getStore();
+    var rcnt = store1.getCount();
+    var ledgerchecking = 0;
+
+    var invbalamt = 0;  
+    var Recptamt = Number(txtReceiptAmt.getValue());
+    for (var i = 0; i < rcnt; i++) {
+        var rec1 = store1.getAt(i);
+        var pending = Number(rec1.get('pendingamt2'));
+        if (gstPaytype === "BB" && pending > 2) {
+
+               
+		    if (Number(Recptamt) >= Number(pending)) {
+		        pending =  Ext.util.Format.number(pending,'0.00');
+		        rec1.set('adjamt', pending);
+	  
+		        Recptamt -= pending;
+		    } else if (Recptamt > 0) {
+		        Recptamt =  Ext.util.Format.number(Recptamt,'0.00');
+		        rec1.set('adjamt', Recptamt);
+		        Recptamt = 0;
+		    }
+
+
+            var balamt2 = Number(rec1.get('pendingamt')) -Number(rec1.get('adjamt'))- Number(rec1.get('cdamount'));  
+
+//alert(balamt2);
+            if (balamt2 > 1)
+            {  
+
+               invbalamt = Number(rec1.get('pendingamt')) -Number(rec1.get('adjamt')) 
+               invbalamt =  Ext.util.Format.number(invbalamt,'0.00');
+               rec1.set('balamt', invbalamt);
+            }    
+            else
+            {
+               invbalamt = Number(rec1.get('pendingamt')) -Number(rec1.get('adjamt'))- Number(rec1.get('cdamount'));
+               invbalamt =  Ext.util.Format.number(invbalamt,'0.00');
+               rec1.set('balamt', invbalamt);
+            } 
+
+            if ( Number(invbalamt) > 1)
+            {
+               rec1.set('cdvalue', 0);
+               rec1.set('cgstamount', 0);
+               rec1.set('sgstamount', 0);
+               rec1.set('igstamount', 0);
+               rec1.set('cdamount',0);
+            }    
+            if(Number(rec1.get('cdamount')) >0 && ledgerchecking == 0)
+            {
+		  var accseqno =  rec1.get('accrefseqno');
+		   LoadGSTDetailsdatastore.removeAll();
+		   LoadGSTDetailsdatastore.load({
+		   url: 'clsBankReceipt.php',
+		   params: {
+			task: 'LoadInvGSTDetails',
+		        seqno : accseqno,
+		  },
+		  callback: function () {
+		      var cnt=LoadGSTDetailsdatastore.getCount();
+		      if (cnt>0)
+		      {
+
+
+		          for(var j=0; j<cnt; j++) 
+		          {
+
+		            if (LoadGSTDetailsdatastore.getAt(j).get('cust_acc_group') == 72)
+		            {  
+		           salledcode = LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code');       
+		           salledname = LoadGSTDetailsdatastore.getAt(j).get('cust_name');       
+		            }
+		            if (LoadGSTDetailsdatastore.getAt(j).get('cust_acc_group') == 44 && LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code') == 1644  )
+		            {  
+		           cgstledcode = LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code');       
+		           cgstledname = LoadGSTDetailsdatastore.getAt(j).get('cust_name');       
+		            }
+		      if (LoadGSTDetailsdatastore.getAt(j).get('cust_acc_group') == 44 && LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code') == 1645  )
+		            {  
+		           sgstledcode = LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code');       
+		           sgstledname = LoadGSTDetailsdatastore.getAt(j).get('cust_name');       
+		            }
+		      if (LoadGSTDetailsdatastore.getAt(j).get('cust_acc_group') == 44 && LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code') == 1646  )
+		            {  
+		           igstledcode = LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code');       
+		           igstledname = LoadGSTDetailsdatastore.getAt(j).get('cust_name');       
+		            }
+	//alert(salledname);
+	//alert(cgstledname);
+
+		      }
+		     }
+	//	     grid_move();
+		  } 
+		  });
+
+            }  
+
+rec1.commit();
+        }
+
+    } 
+
+ 
+flxAdjustDetails.getView().refresh();
+grid_move();
+CalcSum();
+
+}
+
+
+
+
+/*
     function UpdateReceiptBillsAdjusted() {
 //alert("1");
 
@@ -3487,7 +3908,7 @@ if (editfind  == 0)
         var cashdisc_sgst_amt = 0;
         var cashdisc_igst_amt = 0;
         var cashdisc_amount = 0;
-        var cdincluding = 0; 
+
         var cashdisc_value_method1  = 0;
         var cashdisc_value_method2  = 0;
 
@@ -3504,12 +3925,6 @@ var adjustedamount = 0;
         txtTotNetAmt.setValue("");
         for (var i = 0; i < rcnt; i++) {
             var rec = flxAdjustDetails.getStore().getAt(i);
-
-            cdincluding =  0;
-            if ( Number(rec.get('cgstper')) + Number(rec.get('sgstper')) + Number(rec.get('igstper')) > 0)
-                 cdincluding =  (100 + Number(rec.get('cgstper')) + Number(rec.get('sgstper')) + Number(rec.get('igstper')))/100;
-       
-            
             if (rec.get('voutype') !== 'AD') {
 
 
@@ -3539,7 +3954,7 @@ var adjustedamount = 0;
 //alert(diffdays)
 
 
-        if (selrow.get('voutype') !== 'AD' && Number(selrow.get('pendingamt')) > 1 ) {
+        if (selrow.get('voutype') !== 'AD') {
 
                  cashdisc_value = 0;
                  ratediffmt = selrow.get('ratediff');
@@ -3580,9 +3995,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT30dayscdamt') * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3629,36 +4042,7 @@ var adjustedamount = 0;
 
 //Modified on 02/04/
 // start
-/*
-                          if (Number(cashdisc_amount) > 0 && Number(adjustedamount) > 0)
-                          {  
-                             var tadj = Number(cashdisc_amount)+Number(adjustedamount);
-//alert(Number(pendamount));
-//alert(Number(tadj));
-                             if (Number(tadj) > Number(pendamount)) 
-                             {
-//alert(Number(tadj));
-                          selrow.set('cdvalue', 0);
-                          selrow.set('cgstamount', 0);
-                          selrow.set('sgstamount', 0);
-                          selrow.set('igstamount', 0);
-                          selrow.set('cdamount', 0);
 
-
-                             }                              
-                 
-                          }
-
-                          if (Number(adjustedamount) == 0)
-                          {  
-		                  selrow.set('cdvalue', 0);
-		                  selrow.set('cgstamount', 0);
-		                  selrow.set('sgstamount', 0);
-		                  selrow.set('igstamount', 0);
-		                  selrow.set('cdamount', 0);
-                          }                              
-
-*/
 
 //below line added on 18/03/2024
           //                 selrow.set('adjamt', Number(pendamount) - Number(cashdisc_amount));
@@ -3690,9 +4074,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT45dayscdamt1'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3739,9 +4121,7 @@ var adjustedamount = 0;
 //                              cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt1')  * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT45dayscdamt2'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
                                  
@@ -3801,9 +4181,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT60dayscdamt1'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3852,9 +4230,7 @@ var adjustedamount = 0;
 //                              cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt1') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT60dayscdamt2'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
        
@@ -3907,9 +4283,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt3') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT60dayscdamt3'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3985,9 +4359,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt1'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
                           }
          
            
@@ -4034,9 +4406,7 @@ var adjustedamount = 0;
 //                              cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt1') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt2'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4088,9 +4458,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT90dayscdamt3') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt3'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4154,9 +4522,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT90dayscdamt4') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt4'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4220,9 +4586,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT90dayscdamt5') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt5'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4279,6 +4643,7 @@ var adjustedamount = 0;
                    }
 
 
+
                    if  (selrow.get('cdamount') > 0)
                    {
 
@@ -4328,16 +4693,13 @@ var adjustedamount = 0;
 
                               }
                              }
-
                              grid_move();
                           } 
                           });
 
 
     flxaccupdation(); 
-                   }    
- 
-       
+}               
                    } 
  // }
 
@@ -4392,13 +4754,6 @@ var adjustedamount = 0;
 
                if (selrow.get('balamt') >2 )
                {
-/*
-                          selrow.set('cdvalue', 0);
-                          selrow.set('cgstamount', 0);
-                          selrow.set('sgstamount', 0);
-                          selrow.set('igstamount', 0);
-                          selrow.set('cdamount', 0);
-*/
 
                }  
             }
@@ -4410,7 +4765,7 @@ var adjustedamount = 0;
     }
 
 
-
+*/
 
 
 var flxAccounts = new Ext.grid.EditorGridPanel({
@@ -4699,7 +5054,8 @@ alert(rec.get('adjamt'));
             {header: "Pend. Amt", dataIndex: 'pendingamt', sortable: true, width: 80, align: 'right'},
             {header: "To be Adj", dataIndex: 'pendingamt2', sortable: true, width: 80, align: 'right'},
             {header: "Adjusted", dataIndex: 'adjamt', sortable: true, width: 80, align: 'right',
-                editor: {
+/*   
+             editor: {
                     xtype: 'numberfield',
                     allowBlank: true,
                     enableKeyEvents: true,
@@ -4795,6 +5151,7 @@ var anna = 0;
                             }
                         }
                     }
+
                 },
                 listeners: {
                     click: function () {
@@ -4802,8 +5159,10 @@ var anna = 0;
                     },
                    
                 }
+*/
             },
             {header: "Balance", dataIndex: 'balamt', sortable: true, width: 70, align: 'right',
+/*
                 renderer: function (v, params, record) {
                     var retval;
                     if (Number(record.data.adjamt) > 0) {
@@ -4831,13 +5190,13 @@ var anna = 0;
 
                             {
                             var sm = flxAdjustDetails.getSelectionModel();
-                            var selrow = sm.getSelected();
-		                  selrow.set('cdvalue', 0);
-		                  selrow.set('cgstamount', 0);
-		                  selrow.set('sgstamount', 0);
-		                  selrow.set('igstamount', 0);
-		                  selrow.set('cdamount', 0);
-			          selrow.set('cdmt', 0);
+                            var rec = sm.getSelected();
+		                  rec.set('cdvalue', 0);
+		                  rec.set('cgstamount', 0);
+		                  rec.set('sgstamount', 0);
+		                  rec.set('igstamount', 0);
+		                  rec.set('cdamount', 0);
+			          rec.set('cdmt', 0);
   
                             }
 
@@ -4845,18 +5204,18 @@ var anna = 0;
 
                             {
                             var sm = flxAdjustDetails.getSelectionModel();
-                            var selrow = sm.getSelected();
-		                  selrow.set('cdvalue', 0);
-		                  selrow.set('cgstamount', 0);
-		                  selrow.set('sgstamount', 0);
-		                  selrow.set('igstamount', 0);
-		                  selrow.set('cdamount', 0);
-            			  selrow.set('cdmt', 0);
+                            var rec = sm.getSelected();
+		                  rec.set('cdvalue', 0);
+		                  rec.set('cgstamount', 0);
+		                  rec.set('sgstamount', 0);
+		                  rec.set('igstamount', 0);
+		                  rec.set('cdamount', 0);
+            			  rec.set('cdmt', 0);
                             }
 
                             else
                             {
-                                UpdateReceiptBillsAdjusted();
+       //                         UpdateReceiptBillsAdjusted();
                             } 
 
 
@@ -4879,10 +5238,11 @@ var anna = 0;
 
                     return retval;
                 }
+*/
             },
             {header: "Type", dataIndex: 'voutype', sortable: true, width: 40, align: 'center', hidden: true},
 
-            {header: "Accrefseqno", dataIndex: 'accrefseqno', sortable: true, width: 40, align: 'left', hidden: false},
+            {header: "Accrefseqno", dataIndex: 'accrefseqno', sortable: true, width: 40, align: 'left', hidden: true},
             {header: "AccrefVouno", dataIndex: 'accrefvouno', sortable: true, width: 60, align: 'left', hidden: true},
             {header: "Qty(t)", dataIndex: 'invwt', sortable: true, width: 60, align: 'right'},
             {header: "CD Amount", dataIndex: 'cdamount', sortable: true, width: 100, align: 'right'},
@@ -4915,6 +5275,7 @@ var anna = 0;
             {header: "IGST %", dataIndex: 'igstper', sortable: true, width: 60, align: 'center'},
             {header: "IGST Amt", dataIndex: 'igstamount', sortable: true, width: 60, align: 'right'},
             {header: "CD PMT", dataIndex: 'cdmt', sortable: true, width: 60, align: 'right'},
+            {header: "ADJ DAYS", dataIndex: 'adjdays', sortable: true, width: 60, align: 'right'},
         ],
         store:[],
         listeners:{
@@ -5392,7 +5753,15 @@ var tabAccounts = new Ext.TabPanel({
                 items: [dtpRefDate]
             },
 
-
+                    {
+                        xtype: 'fieldset',
+                        title: '',
+                        labelWidth: 1,
+                        x: 840,
+                        y: 70,
+                        border: false,
+                        items: [btnConfirm]
+                    },
 
                 ]
             },
@@ -5559,7 +5928,7 @@ var tabAccounts = new Ext.TabPanel({
             title: 'Credit Note',bodyStyle:{"background-color":"#ffffcc"},
             layout: 'absolute',
             items: [
-
+/*
                     { 
                         xtype       : 'fieldset',
                         title       : '',
@@ -5647,7 +6016,7 @@ var tabAccounts = new Ext.TabPanel({
                         border      : false,
                         items: [txtCredit]
                     }, btnSubmit, 
-
+*/
 
 
 		    {
@@ -5998,19 +6367,7 @@ var tabAccounts = new Ext.TabPanel({
                             },
 
 */
-
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                labelWidth: 70,
-                                width: 300,
-                                x: 900,
-                                y: 0,
-                                border: false,
-                                items: [txtPassword]
-                            },
-
-		                    {
+		{
                                 xtype: 'fieldset',
                                 title: '',
                                 labelWidth: 70,
@@ -6078,7 +6435,7 @@ var tabAccounts = new Ext.TabPanel({
 
 
          flxAccounts.getStore().removeAll();
-         Ext.getCmp('save').setDisabled(true);  
+         Ext.getCmp('save').setDisabled(false);  
          Ext.getCmp('btnAdd').setDisabled(false);  
          Ext.getCmp('editchk').hide();
         gstFlag = "Add";
@@ -6256,8 +6613,8 @@ var tabAccounts = new Ext.TabPanel({
 },
         listeners: {
             show: function () {
-                //  Ext.getCmp('save').setDisabled(true);
-           
+
+       
 //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');
                   dtpVouDate.setRawValue(new Date().format('d-m-Y'));
                   dtpRefDate.setRawValue(new Date().format('d-m-Y'));

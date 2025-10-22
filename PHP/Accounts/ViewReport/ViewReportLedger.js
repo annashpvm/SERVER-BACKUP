@@ -57,6 +57,7 @@ Ext.onReady(function() {
    var dgrecord3 = Ext.data.Record.create([]);
    var flagtypenw;
    var ledtype = ''; 
+   var suptype = "G";
    var ledger_debit = 0;   
    var ledger_credit = 0;
    var voutype = '';
@@ -8758,6 +8759,7 @@ function LedgerChangeRefresh()
 				ledcode  = selrow.get('cust_code');
 				custcode = selrow.get('cust_code');
 				ledtype  = selrow.get('cust_type');
+                suptype  = selrow.get('cust_type');
                                 txtAccountName.setRawValue(selrow.get('cust_ref'));   
                                 flxLedger.hide();   
 
@@ -8917,6 +8919,10 @@ function LedgerChangeRefresh()
             var param = (p1+p2+p3+p4+p5+p6+p7+p8) ;
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepARBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
+
+                    else if (printtype == "XLS") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepARBillwiseDue.rptdesign&__format=XLS&' + param, '_blank');
+        
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepARBillwiseDue.rptdesign' + param, '_blank');	
              }
@@ -8982,10 +8988,13 @@ function LedgerChangeRefresh()
 		    var p7 = "&grpcode="+encodeURIComponent(0);
 		    var p8 = "&dueopt="+encodeURIComponent('PT');
 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8) ;
+
+
+         //   alert(param)
 		    if (printtype == "PDF") 
 			window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepARBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
 		    else if (printtype == "XLS") 
-			    window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/AccRepARBillwiseDue.rptdesign&__format=xlsx&' + param, '_blank');
+			    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepARBillwiseDue.rptdesign&__format=xls&' + param, '_blank');
 		    else
 			    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepARBillwiseDue.rptdesign' + param, '_blank');
 
@@ -10523,6 +10532,7 @@ var balamt = 0;
                 ledcode   : ledcode,
                 alldueopt : 'N',
                 dueopt    : "PT",  
+                ledtype   : ledtype,
 		},
 		scope:this,
 		callback:function()
@@ -10538,7 +10548,19 @@ var balamt = 0;
  	             { 
 
 //alert(loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_date'));
-                       balamt = Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_value')) -Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_adj_value'))+ Number(loadBillsDetailsDatastore.getAt(j).get('adjamt'));
+            
+
+
+                     if (suptype == "C")
+                     {   
+                         balamt = Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_value')) -Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_adj_value'))+ Number(loadBillsDetailsDatastore.getAt(j).get('adjamt'));
+                         adjamt = Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_adj_value')) - Number(loadBillsDetailsDatastore.getAt(j).get('adjamt'));                     
+                     } 
+                     else   
+                     {
+                         balamt = Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_value')) -Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_adj_value'));
+                         adjamt = Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_adj_value')) ;
+                     }
 
                        balamt =  Ext.util.Format.number(balamt,"0.00")
 
@@ -10547,24 +10569,24 @@ var balamt = 0;
 
 
 
-                       adjamt = Number(loadBillsDetailsDatastore.getAt(j).get('acctrail_adj_value')) - Number(loadBillsDetailsDatastore.getAt(j).get('adjamt'));
+
 
                        adjamt =  Ext.util.Format.number(adjamt,"0.00")
 
                        flxBillsDetails.getStore().insert(
                        flxBillsDetails.getStore().getCount(),
                        new dgrecord({
-			   accref_vouno  : loadBillsDetailsDatastore.getAt(j).get('accref_vouno'),
-                           accref_voudate  : Ext.util.Format.date(loadBillsDetailsDatastore.getAt(j).get('accref_voudate'),"d-m-Y"),
-                           acctrail_inv_date  : Ext.util.Format.date(loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_date'),"d-m-Y"),
-			   acctrail_inv_no : loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_no'),
- 	                   acctrail_inv_value : loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_value'),
- 			   acctrail_adj_value  : adjamt,
-                           invbalamt : balamt,
- 			   acctrail_crdays  : loadBillsDetailsDatastore.getAt(j).get('acctrail_crdays'),
-                           duedate : loadBillsDetailsDatastore.getAt(j).get('duedate'),
-			   oddays : loadBillsDetailsDatastore.getAt(j).get('oddays'),
-			   acctrail_amtmode  : loadBillsDetailsDatastore.getAt(j).get('acctrail_amtmode'),
+			                accref_vouno  : loadBillsDetailsDatastore.getAt(j).get('accref_vouno'),
+                            accref_voudate  : Ext.util.Format.date(loadBillsDetailsDatastore.getAt(j).get('accref_voudate'),"d-m-Y"),
+                            acctrail_inv_date  : Ext.util.Format.date(loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_date'),"d-m-Y"),
+			                acctrail_inv_no : loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_no'),
+ 	                        acctrail_inv_value : loadBillsDetailsDatastore.getAt(j).get('acctrail_inv_value'),
+ 			                acctrail_adj_value  : adjamt,
+                            invbalamt : balamt,
+ 			                acctrail_crdays  : loadBillsDetailsDatastore.getAt(j).get('acctrail_crdays'),
+                            duedate : loadBillsDetailsDatastore.getAt(j).get('duedate'),
+			                oddays : loadBillsDetailsDatastore.getAt(j).get('oddays'),
+			                acctrail_amtmode  : loadBillsDetailsDatastore.getAt(j).get('acctrail_amtmode'),
 
                         })
                        );
@@ -11332,7 +11354,7 @@ var txtAccountName = new Ext.form.TextField({
             {header: "Debit", dataIndex: 'debit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
             {header: "Credit", dataIndex: 'credit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
             {header: "Balance", dataIndex: 'balance',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right', renderer: function(v) {
-            return '<span style="color:#5cb85c; font-weight:600;">' + v + '</span>';
+            return '<span style="color:#f5276c; font-weight:600;">' + v + '</span>';
           }},
 	    {header: "Type", dataIndex: 'type',width:80,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'}
         ],
@@ -11885,10 +11907,11 @@ style: {
         {header: "Vou Amount" , dataIndex: 'acctrail_inv_value',sortable:false,width:90,align:'right', menuDisabled: true},
         {header: "Adjusted"  , dataIndex: 'acctrail_adj_value',sortable:false,width:90,align:'right', menuDisabled: true},
         {header: "Balance"    , dataIndex: 'invbalamt',sortable:false,width:90,align:'right', menuDisabled: true},
+        {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:50,align:'right', menuDisabled: true},        
         {header: "Paymnt Terms", dataIndex: 'acctrail_crdays',sortable:false,width:70,align:'right', menuDisabled: true},
         {header: "Due Date"   , dataIndex: 'duedate',sortable:false,width:80,align:'right', menuDisabled: true},
         {header: "OD Days"   , dataIndex: 'oddays',sortable:false,width:80,align:'right', menuDisabled: true},
-        {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:70,align:'right', menuDisabled: true},
+
 
 
     ],

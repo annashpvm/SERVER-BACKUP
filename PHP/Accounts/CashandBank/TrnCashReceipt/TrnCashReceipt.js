@@ -676,7 +676,7 @@ var txtAccountName = new Ext.form.TextField({
           totalProperty: 'total',
           id: 'id'
         },['ref_slno', 'ref_docseqno', 'ref_docno', 'ref_docdate', 'ref_adjseqno', 'ref_adjvouno', 'ref_invno', 'ref_invdate', 'ref_adjamount', 'ref_paymt_terms', 'ref_adj_days', 'ref_adj_by', 'ref_adjusted_on',
-'acctrail_accref_seqno' , 'acctrail_inv_value',  'acctrail_led_code','acctrail_crdays','ref_adjvoutype',
+'acctrail_accref_seqno' , 'acctrail_inv_value',  'acctrail_led_code','acctrail_crdays','ref_adjvoutype','ref_adjvoudate',
 'acctrail_crdays',
 'invh_crd_days', 'invh_grace_days','rate_payterm_30days_cdamt', 'rate_payterm_60days_cdamt1' , 'rate_payterm_60days_cdamt2','invwt','invh_taxableamt','rate_cashdisc_per','invh_cgst_per','invh_sgst_per',
 'invh_igst_per','invh_frt_amt'])
@@ -856,6 +856,7 @@ function getAdjustmentDetails2()
 
 		        accrefseqno =  LoadAdjustmentDetailsdatastore.getAt(j).get('ref_adjseqno');
 		        accrefvouno = LoadAdjustmentDetailsdatastore.getAt(j).get('ref_adjvouno');
+                accrefvoudate = LoadAdjustmentDetailsdatastore.getAt(j).get('ref_adjvoudate');
 //alert(invoiceno);
 		        PMT30dayscdamt = LoadAdjustmentDetailsdatastore.getAt(j).get('rate_payterm_30days_cdamt');
 
@@ -930,6 +931,7 @@ function getAdjustmentDetails2()
                                     igstper  : igstper,
                                     igstamount: 0,
                                     cdamount: 0,
+                                    accrefvoudate : accrefvoudate,
 
 
 		                })
@@ -1556,7 +1558,8 @@ txtCredit.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
             },
             {header: "Type", dataIndex: 'voutype', sortable: true, width: 40, align: 'left'},
             {header: "Accrefseqno", dataIndex: 'accrefseqno', sortable: true, width: 40, align: 'left'},
-            {header: "AccrefVouno", dataIndex: 'accrefvouno', sortable: true, width: 60, align: 'left'}
+            {header: "AccrefVouno", dataIndex: 'accrefvouno', sortable: true, width: 60, align: 'left'},
+            {header: "AccrefVoudate", dataIndex: 'accrefvoudate', sortable: true, width: 60, align: 'left'}
         ]
     });
 
@@ -2402,7 +2405,9 @@ Number(ReceiptAdjBillDetdatastore.getAt(i).get('acctrail_inv_value')) -Number(Re
                                     balamt: Number(ReceiptAdjBillDetdatastore.getAt(i).get('acctrail_inv_value')) -
                                             Number(ReceiptAdjBillDetdatastore.getAt(i).get('acctrail_adj_value')),
                                     accrefseqno: ReceiptAdjBillDetdatastore.getAt(i).get('accref_seqno'),
-                                    accrefvouno: ReceiptAdjBillDetdatastore.getAt(i).get('accref_vouno')
+                                    accrefvouno: ReceiptAdjBillDetdatastore.getAt(i).get('accref_vouno'),
+                                    accrefvoudate: ReceiptAdjBillDetdatastore.getAt(i).get('accref_voudate')
+
                                 })
                                 );
                     }

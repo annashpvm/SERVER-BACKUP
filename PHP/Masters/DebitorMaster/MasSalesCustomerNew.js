@@ -41,7 +41,7 @@ var newcode = 0;
 
 
 var cmbGSTtype = new Ext.form.ComboBox({
-        fieldLabel      : 'GST TYPE',
+        fieldLabel      : 'GST REGISTERED',
         width           :  150,
         displayField    : 'field2', 
         valueField      : 'field1',
@@ -707,11 +707,11 @@ var cmbsalcuststate = new Ext.form.ComboBox({
 //               if ( loadsalesstatedatastore.getAt(0).get('state_code') == 24)
               if (cmbsalcuststate.getRawValue() == "TAMIL NADU")
                { 
-                cmbGST.setValue('2');         
+                cmbGST.setValue('7');         
                }
                else
                {
-                cmbGST.setValue('1');         
+                cmbGST.setValue('6');         
                }     
 	},
 
@@ -885,7 +885,7 @@ var txtsalcustweb = new Ext.form.TextField({
 });
 var cmbGST = new Ext.form.ComboBox({
         fieldLabel      : 'GST TYPE',
-        width           :  220,
+        width           :  240,
         displayField    : 'tax_name', 
         valueField      : 'tax_code',
         hiddenName      : '',
@@ -1821,7 +1821,7 @@ var MasSalesCustomerFormpanel = new Ext.FormPanel({
 			 xtype       : 'fieldset',
 			 title       : '',
 			 labelWidth  : 100,
-			 width       : 300,
+			 width       : 320,
 			 x           : 470,
 			 y           :  60,
 			 border      : false,
@@ -1866,7 +1866,7 @@ var MasSalesCustomerFormpanel = new Ext.FormPanel({
 			 xtype       : 'fieldset',
 			 title       : '',
 			 labelWidth  : 100,
-			 width       : 350,
+			 width       : 370,
 			 x           : 470,
 			 y           : 150,
 			 border      : false,
@@ -1878,7 +1878,7 @@ var MasSalesCustomerFormpanel = new Ext.FormPanel({
 			 title       : '',
 			 labelWidth  : 10,
 			 width       : 250,
-			 x           : 810,
+			 x           : 830,
 			 y           : 148,
 			 border      : false,
 			 items: [btnGST]
@@ -2053,6 +2053,8 @@ var MasSalesCustomerFormpanel = new Ext.FormPanel({
                show:function(){
    saveflag = "Add";
       flxSalesCustDetail.hide();     
+
+
        //  Ext.getCmp('cmbGST').setDisabled(true);  
                                 Ext.getCmp('chkAddrChange').setDisabled(true);
                                 Ext.getCmp('Edit').setDisabled(true);

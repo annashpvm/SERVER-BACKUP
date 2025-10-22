@@ -3104,6 +3104,7 @@ var btnSubmit = new Ext.Button({
                 var sel = flxDetail.getSelectionModel().getSelections();
 
 
+       
 
                 var cnt = 0;
                 for (var i=0;i<selrows;i++){
@@ -3149,7 +3150,8 @@ var btnSubmit = new Ext.Button({
 			sel[idx].set('totitemval', txtItemValue.getValue());
 	
 			sel[idx].set('inddate'   , txtinddate.getRawValue());
-			sel[idx].set('remarks'   , txtItemremark.getRawValue());
+//			sel[idx].set('remarks'   , txtItemremark.getRawValue());
+            sel[idx].set('remarks'   , PoPreparationFormPanel.getForm().findField('txtItemSpec').getValue());
 			sel[idx].set('purgrpname'   , cmbPurGroup.getRawValue());
 			sel[idx].set('purgrpcode'   , cmbPurGroup.getValue());
 			sel[idx].set('uomname'   , cmbUOM.getRawValue());
@@ -3199,7 +3201,8 @@ var btnSubmit = new Ext.Button({
                             tcsper:txtTCS.getValue(),
                             tcsvalue:txtTCSvalue.getValue(),
                             totitemval:txtItemValue.getValue(),
-                            remarks:txtItemremark.getRawValue(),
+               //             remarks:txtItemremark.getRawValue(),
+                            remarks:PoPreparationFormPanel.getForm().findField('txtItemSpec').getValue(),
                             purgrpname:cmbPurGroup.getRawValue(),
                             purgrpcode:cmbPurGroup.getValue(),
                             uomname:cmbUOM.getRawValue(),

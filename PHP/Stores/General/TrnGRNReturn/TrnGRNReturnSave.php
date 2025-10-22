@@ -494,7 +494,7 @@ $resulta6 = mysql_query($querya6);
 	$adjdays=$recdatenew['daysin'];
 
 
-$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$rrdate', '$grnaccseqno','$grnno','$billno','$billdate','$retamount',$adjdays,'StrRet',curdate(),0,$supcode,'DNG' );";
+$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$rrdate', '$grnaccseqno','$grnno','$billno','$billdate','$retamount',$adjdays,'StrRet',curdate(),0,$supcode,'DNG','$grndate' );";
 
 $result10 = mysql_query($query10);
 

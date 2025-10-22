@@ -43,8 +43,9 @@ if ($saveflag   == "Add")
 	{
 
 
-	  $query1="insert into maspur_gsttax values($taxledcode,upper('$taxname'), $taxcgst_ledcode,$taxsgst_ledcode,$taxigst_ledcode,'$taxcgst', '$taxsgst','$taxigst','$taxcgst_ledger','$taxsgst_ledger', '$taxigst_ledger', '$totgst','$state')"; 
+	  $query1="insert into maspur_gsttax values($taxledcode,upper('$taxname'), $taxcgst_ledcode,$taxsgst_ledcode,$taxigst_ledcode,'$taxcgst', '$taxsgst','$taxigst','$taxcgst_ledger','$taxsgst_ledger', '$taxigst_ledger','$state')"; 
 
+//echo $query1;
 
 	  $result1 = mysql_query($query1);
 	}

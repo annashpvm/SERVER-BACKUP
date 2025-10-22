@@ -1917,13 +1917,17 @@ style:{
 
 
 		    var p1 ="&compcode="+encodeURIComponent(compcode);      
-	            var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+	        var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
+            var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
 		    var p4 = "&ledcode="+encodeURIComponent(ledcode);
-			    var p5 = "&allopt="+encodeURIComponent('P');
+			var p5 = "&allopt="+encodeURIComponent('P');
   		    var p6 = "&ledname="+encodeURIComponent(ledname);     
+            var p7 = "&days1="+encodeURIComponent(0); 
+            var p8 = "&days2="+encodeURIComponent(0);             
+            var p9 = "&days3="+encodeURIComponent(0);             
+            var p10 = "&days4="+encodeURIComponent(0);             
 
- 		    var param = (p1+p2+p3+p4+p5+p6) ;
+ 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -1954,14 +1958,19 @@ style:{
 
 
 
-		    var p1 ="&compcode="+encodeURIComponent(compcode);      
+		        var p1 ="&compcode="+encodeURIComponent(compcode);      
 	            var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p4 = "&ledcode="+encodeURIComponent(ledcode);
-		    var p5 = "&allopt="+encodeURIComponent('P');
+                var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+		        var p4 = "&ledcode="+encodeURIComponent(ledcode);
+		        var p5 = "&allopt="+encodeURIComponent('P');
         	    var p6 = "&ledname="+encodeURIComponent(ledname);
 
- 		    var param = (p1+p2+p3+p4+p5+p6) ;
+                var p7 = "&days1="+encodeURIComponent(0); 
+                var p8 = "&days2="+encodeURIComponent(0);             
+                var p9 = "&days3="+encodeURIComponent(0);             
+                var p10 = "&days4="+encodeURIComponent(0);             
+    
+                 var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 

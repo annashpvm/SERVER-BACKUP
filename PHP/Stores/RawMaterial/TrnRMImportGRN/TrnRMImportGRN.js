@@ -1014,7 +1014,7 @@ var loadPurchaseGroupDatasore = new Ext.data.Store({
         totalProperty: 'total',
         id: 'id'
       },[
-          'cust_code', 'cust_name','qc_rm_supcode', 'cust_taxtag','cus_wp_gstinv_supplier_yn' 
+          'cust_code', 'cust_name','qc_rm_supcode', 'cust_taxtag','cus_wp_gstinv_supplier_yn' ,'cust_state'
       ]),
     });
 
@@ -1792,6 +1792,13 @@ function grid_chk_flxLedger()
 		supcode = selrow.get('qc_rm_supcode');
 		suptype = selrow.get('cust_taxtag');
 		supwp_gsttype = selrow.get('cust_wp_gst_dnote_yn');
+		
+        if (selrow.get('cust_state') == 24)
+           supstate = 1;
+        else if (selrow.get('cust_state') == 34)
+            supstate = 3;
+        else 
+           supstate = 2;
 
 		txtSupplierName.setValue(selrow.get('cust_name'));
 		flxLedger.hide();
@@ -1802,7 +1809,7 @@ function grid_chk_flxLedger()
 			params:
 			{
 				task:"loadPurGroup",
-				supptype : suptype,
+				supptype : supstate,
                             //    gsttype : dngsttype,  
 
 			},
@@ -2006,7 +2013,7 @@ var selected_rows = flxQCNoList.getSelectionModel().getSelections();
 		{header: "", dataIndex: 'qc_rm_supcode',sortable:true,width:50,align:'left'},
 		{header: "", dataIndex: 'cust_taxtag',sortable:true,width:50,align:'left'},
 		{header: "", dataIndex: 'cust_wp_gst_dnote_yn',sortable:true,width:50,align:'left'},
-
+		{header: "", dataIndex: 'cust_state',sortable:true,width:50,align:'left'},
         ],
         store:loadSearchLedgerListDatastore,
 

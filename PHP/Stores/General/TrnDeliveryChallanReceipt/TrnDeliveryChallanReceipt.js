@@ -883,6 +883,7 @@ var dgrecord = Ext.data.Record.create([]);
 		    xtype:'numberfield',
                     allowBlank: true,
                     enableKeyEvents: true,
+                    decimalPrecision: 3,
 	     	    listeners:{
              	    blur: function () {
 

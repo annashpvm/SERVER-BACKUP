@@ -167,7 +167,7 @@ var optRpttype = new Ext.form.FieldSet({
         rows : 1,
         id: 'optRpttype',
         items: [
-		{boxLabel: 'Datewise Finished Production', name: 'optRpttype', id:'optdatewise', inputValue: 1,checked:true,
+		{boxLabel: 'Datewise Finished Production-Sizewise', name: 'optRpttype', id:'optdatewise', inputValue: 1,checked:true,
 			listeners:{
 				check:function(rb,checked){
 					if(checked==true){
@@ -177,6 +177,16 @@ var optRpttype = new Ext.form.FieldSet({
 				}
 			}
 		},
+		{boxLabel: 'Datewise Finished Production-Abstract', name: 'optRpttype', id:'optdatewise2', inputValue: 1,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+						Rpttype="Datewise Finished Production-Abstract";
+
+					}
+				}
+			}
+		},		
 		{boxLabel: 'Sizewise Finished Production', name: 'optRpttype', id:'optsizewise', inputValue: 1,
 			listeners:{
 				check:function(rb,checked){
@@ -478,9 +488,14 @@ var RepGeneralFormPannel = new Ext.FormPanel({
 			   	window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptDailyFinishedProduction.rptdesign&__format=PDF&' + param, '_blank');
 
 			    }
+				if (Rpttype == "Datewise Finished Production-Abstract") {				
+					window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptDailyFinishedProductionAbstract.rptdesign&__format=PDF&' + param, '_blank');
+				 }
+			  				
 			    if (Rpttype == "Sizewise Finished Production") {				
 			   	window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSizewiseFinishedProduction.rptdesign&__format=PDF&' + param, '_blank');
 			    }
+
 			    if (Rpttype == "Qualitywise Finished Production") {	
 
 			   	window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptQualitywiseFinishedProduction.rptdesign&__format=PDF&' + param, '_blank');

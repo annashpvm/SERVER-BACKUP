@@ -214,7 +214,7 @@ a.cust_repr = d.repr_code  and   a.createdby = c.usr_code order by a.cust_ref
     {
         mysql_query("SET NAMES utf8");
 
-        $r=mysql_query("select * from massal_tax");
+        $r=mysql_query("select * from massal_tax where tax_code > 2");
 
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))

@@ -221,7 +221,7 @@ for ($i = 0; $i < $arowcnt; $i++) {
     $adjvouno    = $gridadjdet[$i]['accrefvouno'];
     $payterms    = (int)$gridadjdet[$i]['payterms'];
     $voutype     = $gridadjdet[$i]['voutype'];
-
+    $adjvoudate = $gridadjdet[$i]['accrefvoudate'];
 
 
 
@@ -241,7 +241,7 @@ for ($i = 0; $i < $arowcnt; $i++) {
 	$adjdays=$recdatenew['daysin'];
 
 
-$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'CR',curdate(),$payterms,$ledseq,'$voutype' );";
+$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'CR',curdate(),$payterms,$ledseq,'$voutype' ,'$adjvoudate');";
 
 $result10 = mysql_query($query10);
 

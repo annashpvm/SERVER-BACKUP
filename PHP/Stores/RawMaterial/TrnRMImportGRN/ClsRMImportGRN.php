@@ -639,9 +639,9 @@ function getpoitem()
         mysql_query("SET NAMES utf8");
         $ledname = strtoupper($_POST['ledger']);
         if ($ledname == '')
-	        $qry = "select * from (select  cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn from trn_qc_rm_inspection,massal_customer  where  cust_code = qc_rm_supcode  group by cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn) a1 order by cust_name";
+	        $qry = "select * from (select  cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn,cust_state from trn_qc_rm_inspection,massal_customer  where  cust_code = qc_rm_supcode  group by cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn,cust_state) a1 order by cust_name";
         else
-	        $qry = "select * from (select  cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn from trn_qc_rm_inspection,massal_customer where  cust_code = qc_rm_supcode group by cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn) a1 where cust_name like '%$ledname%'  order by cust_name";
+	        $qry = "select * from (select  cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn,cust_state from trn_qc_rm_inspection,massal_customer where  cust_code = qc_rm_supcode group by cust_code,cust_name,qc_rm_supcode,cust_taxtag,cust_wp_gst_dnote_yn,cust_state) a1 where cust_name like '%$ledname%'  order by cust_name";
 
         $r=mysql_query($qry);
 	$nrow = mysql_num_rows($r);

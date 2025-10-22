@@ -903,7 +903,7 @@ var cmbHSNList = new Ext.form.ComboBox({
         typeAhead       : true,
         mode            : 'local',
         store           : LoadHSNListDataStore,
-        forceSelection  : true,
+        forceSelection  : false,
         triggerAction   : 'all',
         selectOnFocus   : false,
         editable        : true,

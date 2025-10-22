@@ -26,6 +26,7 @@ var EditDays   = localStorage.getItem('editdays');
 
 var dnqty = 0;
 
+var adjamt = 0;
 var chkratediff = 0;
 var chkqcratediff = 0;
 
@@ -3387,7 +3388,23 @@ else
 
 
        txtDNAmount.setRawValue(Ext.util.Format.number(dnamt, "0.00"));
+
        
+
+    if (gstFlag == "Edit" &&  Number(dnamt) > 0 )
+        {        
+       
+           if (  Number(adjamt) > Number(txtDNAmount.getValue()) ){
+            Ext.getCmp('save').setDisabled(true);
+    
+            Ext.Msg.alert('RawMaterial-GRN','Sorry!!! Payment has been done.\n U can view the data, Edit Option not Allowed');
+        }
+        else{
+            Ext.getCmp('save').setDisabled(false);
+        }
+        }   
+
+
 
 //	txtotherchrgs.setRawValue(Number(txtcgstval.getValue())+Number(txtsgstval.getValue())+Number(txtigstval.getValue()));
 
@@ -3430,6 +3447,9 @@ else
 
 
 function grid_tot_acc(){
+
+
+
         var dr = 0;
         var cr = 0;
          txtTotDebit.setRawValue(0);
@@ -4022,6 +4042,13 @@ var btnSubmit = new Ext.Button({
   function editdatecheck()
   {
 
+
+
+
+    
+
+    if (gstFlag == "Edit")
+
         var dt_today = new Date();
         var dtgrn = dtpGRNDate.getValue();
         var diffdays = dt_today.getTime()-dtgrn.getTime();
@@ -4394,8 +4421,9 @@ chkratediff = 0
                         }
 
 
+                        adjamt =  loadgrndetaildatastore.getAt(0).get('acctrail_adj_value');
 
-                        txtfreight.setRawValue(loadgrndetaildatastore.getAt(0).get('rech_freight'));
+                            txtfreight.setRawValue(loadgrndetaildatastore.getAt(0).get('rech_freight'));
                         txtotherchrgs.setRawValue(loadgrndetaildatastore.getAt(0).get('rech_otheramt'));
                         txtvehicle.setRawValue(loadgrndetaildatastore.getAt(0).get('rech_truckno'));
 			txtgateno.setValue(loadgrndetaildatastore.getAt(0).get('rech_geno'));
@@ -4407,14 +4435,7 @@ chkratediff = 0
 			dtpNewBill.setValue(Ext.util.Format.date(loadgrndetaildatastore.getAt(0).get('rech_billdate'),'d-m-Y'));
 
 
-			if(loadgrndetaildatastore.getAt(0).get('acctrail_adj_value') > Number(txtDNAmount.getValue()) ){
-				Ext.getCmp('save').setDisabled(true);
-	
-				Ext.Msg.alert('RawMaterial-GRN','Sorry!!! Payment has been done.\n U can view the data, Edit Option not Allowed');
-			}
-			else{
-				Ext.getCmp('save').setDisabled(false);
-			}
+
 
 
 			cmbPONO.setValue(loadgrndetaildatastore.getAt(0).get('ordh_no'));
@@ -4606,6 +4627,7 @@ chkratediff = 0
                         grid_tot();
 
                         editdatecheck();
+
 
 
 		}
@@ -8761,6 +8783,7 @@ var tabgrn = new Ext.TabPanel({
                show:function(){
                    RefreshData();
 
+    
 /*
 
 //			Ext.getCmp('txtGRNNo').setDisabled(true);

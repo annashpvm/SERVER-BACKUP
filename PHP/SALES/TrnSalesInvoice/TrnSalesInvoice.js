@@ -80,6 +80,28 @@ new Ext.KeyMap( Ext.getBody(), [{
 
 
 
+var finsuffix = '';        
+
+function finyearcheck()
+{
+    var dt_invoice = dptInvNo.getValue();
+
+    var fyStart, fyEnd;
+
+    if (dt_invoice.getMonth() >= 3) {
+        // April or later in the year
+        fyStartYear = dt_invoice.getFullYear();
+        fyEndYear = dt_invoice.getFullYear() + 1;
+    } else {
+        // Jan, Feb, Mar
+        fyStartYear = dt_invoice.getFullYear() - 1;
+        fyEndYear = dt_invoice.getFullYear();
+    }
+
+    var startCode = ("0" + (fyStartYear % 100)).slice(-2);
+    var endCode = ("0" + (fyEndYear % 100)).slice(-2);
+    finsuffix = startCode +'-' +endCode;
+}
 
 /*
 function grid_move() {
@@ -2359,6 +2381,21 @@ var cmbCustomer = new Ext.form.ComboBox({
         listeners:{
         select: function(){
 
+            finyearcheck();
+
+            if (txtInvNo.getValue().slice(-5) != finsuffix)
+
+            if (txtInvNo.getValue().slice(-5) != finsuffix)
+            {
+               alert("Error in Invoice Number . Prease refresh and Continue...");
+               Ext.getCmp('save').setDisabled(true);
+               return;
+            }    
+            else
+            {
+               Ext.getCmp('save').setDisabled(false);
+            }
+            
 			findDistanceDataStore.load({
                         url: 'ClsTrnSalesInvoice.php',
                         params:
@@ -2636,6 +2673,17 @@ function getpackslipdetails()
 		    callback:function() 
 
 		    {
+
+
+                var totgst =  Number(PackslipAlldetailsDataStore.getAt(0).get('ordh_cgst')) + Number(PackslipAlldetailsDataStore.getAt(0).get('ordh_sgst')) + Number(PackslipAlldetailsDataStore.getAt(0).get('ordh_igst')) ;
+
+                
+                if (totgst != 18 && totgst !=0)
+                {
+                    alert("Error in GST.. Please change GST Type in Master and Continue...") ;
+                    return;   
+                }    
+
 		        txtCgstPer.setRawValue(PackslipAlldetailsDataStore.getAt(0).get('ordh_cgst'));
 		        txtSgstPer.setRawValue(PackslipAlldetailsDataStore.getAt(0).get('ordh_sgst'));
 		        txtIgstPer.setRawValue(PackslipAlldetailsDataStore.getAt(0).get('ordh_igst'));
@@ -2807,7 +2855,7 @@ var getTaxDataStore = new Ext.data.Store({
 
 var cmbTax = new Ext.form.ComboBox({
         fieldLabel      : 'GST Type ',
-        width           : 300,
+        width           : 210,
         displayField    : 'tax_name', 
         valueField      : 'tax_code',
         hiddenName      : '',
@@ -2819,7 +2867,7 @@ var cmbTax = new Ext.form.ComboBox({
         triggerAction   : 'all',
         selectOnFocus   : false,
         editable        : true,
-	tabIndex	: 0,
+    	tabIndex	: 0,
         allowblank      : true,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ",         
@@ -4164,8 +4212,8 @@ var TrnSalesInvoice = new Ext.TabPanel({
                                             { 
                                                   xtype       : 'fieldset',
                                                   title       : '',
-                                                  labelWidth  : 100,
-                                                  width       : 310,
+                                                  labelWidth  : 90,
+                                                  width       : 360,
                                                   x           : 0,
                                                   y           : 60,
                                                   border      : false,
@@ -4180,7 +4228,7 @@ var TrnSalesInvoice = new Ext.TabPanel({
                                                   title       : '',
           	                                  labelWidth  : 80,
                     		                  width       : 420,
-                                                  x           : 300,
+                                                  x           : 320,
           		                          y           : 60,
                         	                  border      : false,
                                                   items: [txtTotalSalesAmt]
@@ -4921,7 +4969,7 @@ function save_click()
                         fromdate = "04/01/"+gstfinyear.substring(0,4);
                         todate = "03/31/"+gstfinyear.substring(5,9);
 
-
+                        finyearcheck();
 
 var formattedStartDate = Ext.util.Format.date(finstartdate, 'Y-m-d');
 var formattedEndDate   = Ext.util.Format.date(finstartdate, 'Y-m-d');
@@ -4940,12 +4988,18 @@ var formattedInvDate   = Ext.util.Format.date(dptInvNo.getValue(), 'Y-m-d');
     else if(Ext.util.Format.date(dptInvNo.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
             Ext.MessageBox.alert("Alert","Invoice Date is not in current finance year. Please check");
     }
-
     else if (txtInvNo.getRawValue()==0 || txtInvNo.getRawValue()=="")
+        {
+            Ext.Msg.alert('Sales','Invoice no connot be Empty.....');
+            gstSave="false";
+        }
+        
+    else if (txtInvNo.getValue().slice(-5) != finsuffix)
     {
-        Ext.Msg.alert('Sales','Invoice no connot be Empty.....');
+        alert("Error in Invoice Number . Prease refresh and Continue...");
         gstSave="false";
     }
+    
     
     else if (flxDetailInv.getStore().getCount()==0)
             {
@@ -5502,6 +5556,7 @@ alert(itime);
 	listeners:{
                show:function(){
 
+        
 
                      Ext.getCmp('btnAccUpdate').hide();
                                   
@@ -5515,7 +5570,7 @@ alert(itime);
 	             Ext.getCmp('btnTruckChange').hide();
 	             Ext.getCmp('btnEwayUpdate').hide();
 
-                     Ext.getCmp('cmbTax').setDisabled(true);  
+                    Ext.getCmp('cmbTax').setDisabled(true);  
                      Ext.getCmp('cmbTransport').hide();
                      RefreshData();
 

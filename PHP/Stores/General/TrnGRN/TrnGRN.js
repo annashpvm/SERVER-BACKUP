@@ -696,6 +696,7 @@ lblStockQty.show();
 		    finid:txtpoindyr.getValue(),
 		    supcode:supcode,
 		    flag:grnflag,
+            grnflag : gstFlag,
                     searchedby : 'item',
                     itemcode : fitemcodeSearch,
 		},
@@ -712,6 +713,7 @@ lblStockQty.show();
 			    finid:txtpoindyr.getValue(),
 			    compcode:Gincompcode,
 			    pono:LoadindnoDatastore.getAt(0).get('ind_no'),
+                grnflag : gstFlag,
      		 	},
      		 	callback : function (){
                         cmbindno.setValue(LoadPOindnoDatastore.getAt(0).get('indfincode'));
@@ -5178,6 +5180,7 @@ lblStockQty.show();
 			    finid:txtpoindyr.getValue(),
 			    compcode:Gincompcode,
 			    pono:LoadindnoDatastore.getAt(0).get('ind_no'),
+                grnflag : gstFlag,
      		 	},
      		 	callback : function (){
                         cmbindno.setValue(LoadPOindnoDatastore.getAt(0).get('indfincode'));
@@ -5366,7 +5369,8 @@ function getIndentDetails()
 				    indno:cmbindno.getRawValue(),
                            
 				    flag:grnflag,
-				    supcode:supcode
+				    supcode:supcode,
+                    grnopt : gstFlag,
 				},
 
 
@@ -5443,6 +5447,7 @@ function loadPOINDENTDetials()
 					    finid:txtpoindyr.getValue(),
 					    compcode:Gincompcode,
 					    pono:cmbPONO.getRawValue(),
+                        grnflag : gstFlag,
                      		 	},
                      		 	callback : function (){
 //annadurai
@@ -5468,7 +5473,8 @@ function loadPOINDENTDetials()
 				    pono:cmbPONO.getRawValue(),
 		 		    indno:cmbPONO.getRawValue(),
 				    flag:grnflag,
-				    supcode:supcode
+				    supcode:supcode,
+                    grnopt : gstFlag,
 				},
 				callback:function(){
 					dtppo.setRawValue(Ext.util.Format.date(LoadItemDatastore.getAt(0).get('ind_date'),"d-m-Y"));	
@@ -5516,6 +5522,7 @@ specialkey:function(f,e){
 					    finid:txtpoindyr.getValue(),
 					    compcode:Gincompcode,
 					    pono:cmbPONO.getRawValue(),
+                        grnflag : gstFlag,
                      		 	},
                      		 	callback : function (){
 //annadurai
@@ -5540,7 +5547,8 @@ specialkey:function(f,e){
 				    pono:cmbPONO.getRawValue(),
 		 		    indno:cmbPONO.getRawValue(),
 				    flag:grnflag,
-				    supcode:supcode
+				    supcode:supcode,
+                    grnopt : gstFlag,
 				},
 				callback:function(){
 					dtppo.setRawValue(Ext.util.Format.date(LoadItemDatastore.getAt(0).get('ind_date'),"d-m-Y"));	
@@ -5571,7 +5579,8 @@ specialkey:function(f,e){
 				    pono:cmbPONO.getRawValue(),
                  		    indno:cmbPONO.getRawValue(),
 				    flag:grnflag,
-				    supcode:supcode
+				    supcode:supcode,
+                    grnopt : gstFlag,
 				},
 
 					callback:function()
@@ -5598,6 +5607,7 @@ specialkey:function(f,e){
 					    finid:txtpoindyr.getValue(),
 					    compcode:Gincompcode,
 					    pono:cmbPONO.getRawValue(),
+                        grnflag : gstFlag,
                      		 	},
 			         });
                                  Ext.getCmp('cmbItem').setDisabled(true);                             
@@ -6334,7 +6344,8 @@ var igstledname = '';
 		    finid:txtpoindyr.getValue(),
 		    supcode:supcode,
 		    flag:grnflag,
-                    searchedby : 'supplier'
+                    searchedby : 'supplier',
+                    grnflag : gstFlag,
 		},
                callback:function() 
               	 {
@@ -6349,6 +6360,7 @@ var igstledname = '';
 			    finid:txtpoindyr.getValue(),
 			    compcode:Gincompcode,
 			    pono:LoadindnoDatastore.getAt(0).get('ind_no'),
+                grnflag : gstFlag,
      		 	},
      		 	callback : function (){
                         cmbindno.setValue(LoadPOindnoDatastore.getAt(0).get('indfincode'));
@@ -7024,7 +7036,8 @@ defaultType : 'textfield',
 		    finid:txtpoindyr.getValue(),
 		    supcode:supcode,
 		    flag:'P',
-                    searchedby : 'supplier'
+                    searchedby : 'supplier',
+                    grnflag : gstFlag,
 		},
                callback:function() 
               	 {
@@ -7070,7 +7083,8 @@ defaultType : 'textfield',
 		    finid:txtpoindyr.getValue(),
 		    supcode:supcode,
 		    flag:'I',
-                    searchedby : 'supplier'
+                    searchedby : 'supplier',
+                    grnflag : gstFlag,
 		},
                callback:function() 
               	 {

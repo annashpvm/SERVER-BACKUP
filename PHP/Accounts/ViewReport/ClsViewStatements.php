@@ -314,11 +314,21 @@ ini_set('max_execution_time', 300); // 5 minutes
 	$startdate = $_POST['startdate'];
 	$enddate = $_POST['enddate'];
 
-//        $r=mysql_query("select accref_vou_type , vou_name,count(*) as nos  from acc_ref  a1 left join acc_voutype  b1 on  a1.accref_vou_type = b1.vou_type  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' group by  accref_vou_type  order by   vou_name");
-        $r=mysql_query("  select * from (select accref_vou_type , vou_name,count(*) as nos  from acc_ref  a1 left join acc_voutype  b1 on  a1.accref_vou_type = b1.vou_type  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' group by  accref_vou_type  order by   vou_name  ) a 
-union all 
+//        $r=mysql_query("  select * from (select accref_vou_type , vou_name,count(*) as nos  from acc_ref  a1 left join acc_voutype  b1 on  a1.accref_vou_type = b1.vou_type  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' group by  accref_vou_type  order by   vou_name  ) a 
+//union all 
+//  select 'PUR' accref_vou_type, 'ALL PURCHASES' vou_name,count(*) as nos   from acc_ref  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' and  accref_vou_type in ('PDE','PFU','PGS','PIC','PIW','PWP')");
+
+  $r=mysql_query("  select * from (
+    select accref_vou_type , vou_name ,count(*) as nos from (
+  select accref_vou_type , vou_name , accref_vouno  from acc_ref  ref   join acc_tran trn  on trn.acctran_accref_seqno = ref.accref_seqno   and  acctran_totamt > 0  
+  left join acc_voutype  vtype on  ref.accref_vou_type = vtype.vou_type  
+  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate'  and  acctran_totamt > 0 group by accref_vou_type , vou_name , accref_vouno) aa1
+  group by accref_vou_type, vou_name  order by accref_vou_type, vou_name
+   ) a 
+  union all 
   select 'PUR' accref_vou_type, 'ALL PURCHASES' vou_name,count(*) as nos   from acc_ref  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' and  accref_vou_type in ('PDE','PFU','PGS','PIC','PIW','PWP')");
 
+	
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))
 	{
@@ -727,6 +737,7 @@ $qry = "call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$endd
 	$ledcode   = $_POST['ledcode'];
 	$alldueopt = $_POST['alldueopt'];
 	$dueopt    = $_POST['dueopt'];
+	$ledtype   = $_POST['ledtype'];
 /*
         if ($alldueopt == 0) 
         $r = mysql_query("call spacc_rep_receivables_Party_overdue_outstanding($compcode,'$startdate', '$enddate',$ledcode,$alldueopt)");
@@ -736,15 +747,22 @@ $qry = "call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$endd
 //        $r = mysql_query("call spacc_rep_receivables_Party_overdue_outstanding($compcode,'$startdate', '$enddate',$ledcode,0,$dueopt)");
 
 
+     if ($ledtype == "S")
+	 {
+
+		   $x = "call accsp_rep_ap_billwisedue($compcode, '$startdate','$enddate',$ledcode,'P',0,0,0,0);";
+	 }
+     else
+	 {
        if ($alldueopt == 0) 
 //        $x = "call spacc_rep_receivables_Party_overdue_outstanding($compcode,'$startdate', '$enddate',$ledcode,0,'$dueopt')";
 
         $x = "call spacc_rep_receivables_outstanding($compcode, '$startdate','$enddate',$ledcode,0, '$alldueopt' ,'$dueopt')";
        else
         $x = "call accsp_rep_ar_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'$alldueopt',0,'$dueopt')";
-   
+	 }
 
-// echo $x;
+ //echo $x;
 
 
         $r = mysql_query($x);

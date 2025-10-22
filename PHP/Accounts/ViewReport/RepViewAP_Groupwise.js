@@ -1565,16 +1565,41 @@ var btnProcess = new Ext.Button({
     var monthstartdate = new Ext.form.DateField({
 	fieldLabel: 'From Date',
         id: 'monthfirstdate',
-	format: 'd-m-Y',
+	    format: 'd-m-Y',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-        value: new Date()   
+        value: new Date(),
+        enableKeyEvents: true,
+        listeners:{
+                 specialkey:function(f,e){
+                 if (e.getKey() == e.ENTER)
+                 {
+                    ProcessGroupData();
+                  }
+                },
+               blur:function(){
+                ProcessGroupData();
+               },
+            }              
     });
     var monthenddate = new Ext.form.DateField({
 	fieldLabel: 'To Date',
         id: 'monthenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
-        value: new Date()   
+	    format: 'd-m-Y',
+        value: new Date(),
+        enableKeyEvents: true,
+        listeners:{
+                 specialkey:function(f,e){
+                 if (e.getKey() == e.ENTER)
+                 {
+                    ProcessGroupData();
+                  }
+                },
+               blur:function(){
+                ProcessGroupData();
+               },
+            }           
+
     });
 
 
@@ -2404,10 +2429,10 @@ style:{
             click: function () {
 
 
-                    var p1 = "&ledname=" + encodeURIComponent('G');
+            var p1 = "&ledname=" + encodeURIComponent('G');
 		    var p2 ="&compcode="+encodeURIComponent(compcode);      
-                    var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	          
-                    var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+            var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	          
+            var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
 
 		    var p5 = "&ledcode="+encodeURIComponent(grpcode);
        		    var p6 = "&allopt="+encodeURIComponent('G');

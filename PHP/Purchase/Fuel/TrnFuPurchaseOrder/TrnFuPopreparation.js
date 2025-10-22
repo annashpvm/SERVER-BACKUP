@@ -200,7 +200,7 @@ var loadPurchaseGroupDetailDatasore = new Ext.data.Store({
         totalProperty: 'total',
         id: 'id'
       },[
-          'cust_code', 'cust_name','cust_taxtag' 
+          'cust_code', 'cust_name','cust_taxtag','cust_state' 
       ]),
     });
 
@@ -610,7 +610,7 @@ var cmbPurchaseLedger = new Ext.form.ComboBox({
 
 var cmbPurchaseLedger = new Ext.form.ComboBox({
     fieldLabel      : 'Purchase Ledger',
-    width           : 170,
+    width           : 220,
     displayField    : 'tax_purname',
     valueField      : 'tax_purcode',
     hiddenName      : 'tax_purname',
@@ -1038,6 +1038,16 @@ function grid_chk_flxLedger()
 	if ((selrow != null)){
 		supcode = selrow.get('cust_code');
 		suptype = selrow.get('cust_taxtag');
+        supstate = selrow.get('cust_state');
+     
+        if (supstate == 24)
+        {
+            suptype = '1';
+        }
+        else
+        {
+            suptype = '2';
+        }
 		txtSupplierName.setValue(selrow.get('cust_name'));
 		flxLedger.hide();
    	        lblItem.show();
@@ -1083,7 +1093,7 @@ function grid_chk_flxLedger()
 		{header: "Led Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
 		{header: "", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
 		{header: "", dataIndex: 'cust_taxtag',sortable:true,width:50,align:'left'},
-
+		{header: "", dataIndex: 'cust_state',sortable:true,width:50,align:'left'},
         ],
         store:loadSearchLedgerListDatastore,
 
@@ -4024,8 +4034,8 @@ var TrnPoFormPanel = new Ext.FormPanel({
 			 {
                             xtype       : 'fieldset',
                             title       : '',
-                            labelWidth  : 100,
-                            width       : 350,
+                            labelWidth  : 140,
+                            width       : 450,
                             x           : 940,
                             y           : 45,
                             border      : false,

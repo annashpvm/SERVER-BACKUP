@@ -388,10 +388,10 @@ $rowcntacc = $_REQUEST['cntacc'];
             #Insert AccTrail
                if ($ledtype != 'G')
                {
-//Modified on 18/02/2025
-//               $querya2 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt2' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$crdays','0')";
+//Modified on 18/02/2025 && ON 29/09/2025
+               $querya2 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt2' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$crdays','0')";
 
-               $querya2 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt2' ,'0' ,'$ledseq' ,'$amtmode','$crdays','0')";
+//               $querya2 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt2' ,'0' ,'$ledseq' ,'$amtmode','$crdays','0')";
 
 
                $resulta2 = mysql_query($querya2);
@@ -501,7 +501,8 @@ if ($ginaccrefseqDN > 0)
 
 		if ($ginaccrefseqDN > 0)
 		{
-               $DNquery5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseqDN','$slno','$billno', '$billdate', '$debitnoteamount' ,'0' ,'$ledseq' ,'$amtmode','$crdays','0')";
+//               $DNquery5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseqDN','$slno','$billno', '$billdate', '$debitnoteamount' ,'0' ,'$ledseq' ,'$amtmode','$crdays','0')";
+			   $DNquery5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseqDN','$slno','$billno', '$billdate', '$debitnoteamount' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$crdays','0')";
                $DNresult5 = mysql_query($DNquery5);
 
 //echo $DNquery5;
@@ -607,9 +608,8 @@ $DNresult10=mysql_query($DNquery10);
 	{
 
 
-$DNquery9 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseqDN','$vouno','$grndate', '$ginaccrefseq', '$rech_no','$billno','$billdate','$debitnoteamount',$adjdays,'DN',curdate(),$payterms,$supcode,'$dntype' );";
-
-// $DNresult9 = mysql_query($DNquery9);
+$DNquery9 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseqDN','$vouno','$grndate', '$ginaccrefseq', '$rech_no','$billno','$billdate','$debitnoteamount',$adjdays,'DN',curdate(),$payterms,$supcode,'$dntype' ,'$grndate' );";
+$DNresult9 = mysql_query($DNquery9);
 
 //echo $DNquery9;
 //echo "<br>";

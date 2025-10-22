@@ -117,7 +117,7 @@ session_start();
 //echo $query2;
 //echo "<br>";
 
- $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode = 1 and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
+ $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode =  '$compcode' and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
 
  $result3 = mysql_query($query3,$dbMain);
 
@@ -133,7 +133,7 @@ session_start();
 
 if($dbSub)
 {
- $query1 = "select * from trn_weighbridge_entry where t_wb_compcode = 1 and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and  t_wb_ticketno >= 1  and ((t_wb_net_weight > 0 and  t_wb_upd = 'N') or  t_wb_upd = 'C')and t_wb_type = 'Z' ";
+ $query1 = "select * from trn_weighbridge_entry where t_wb_compcode =  '$compcode' and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and  t_wb_ticketno >= 1  and ((t_wb_net_weight > 0 and  t_wb_upd = 'N') or  t_wb_upd = 'C')and t_wb_type = 'Z' ";
 
 
 
@@ -236,7 +236,7 @@ if($dbSub)
 //echo $query2;
 //echo "<br>";
 
- $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode = 1 and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
+ $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode =  '$compcode' and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
 
  $result3 = mysql_query($query3,$dbMain);
 
@@ -257,7 +257,7 @@ if($dbSub)
 
 
 
- $query4 = "select * from trn_weighbridge_entry where t_wb_compcode = 1 and  t_wb_date < CURDATE() and t_wb_year >= 24 and  t_wb_net_weight > 0 and t_wb_ticketno >= 1  and t_wb_upd = 'Y'   and t_wb_type = 'Z' ";
+ $query4 = "select * from trn_weighbridge_entry where t_wb_compcode =  '$compcode' and  t_wb_date < CURDATE() and t_wb_year >= 24 and  t_wb_net_weight > 0 and t_wb_ticketno >= 1  and t_wb_upd = 'Y'   and t_wb_type = 'Z' ";
 
 // $query4 = "select * from trn_weighbridge_entry where t_wb_compcode = 1 and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and t_wb_ticketno >= 1 and ((t_wb_net_weight > 0 and t_wb_upd = 'N') or t_wb_upd = 'C') and t_wb_type = 'Z'";
 

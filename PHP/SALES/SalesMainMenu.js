@@ -568,7 +568,7 @@ var map = new Ext.KeyMap(document, [
                                    group: 'theme',
                                    handler: function(){
                                           localStorage.setItem("GSTTYPE",'TN');   
-                                          window.location.href=('http://10.0.0.251/SHVPM/SALES/TrnSalesInvoice/TrnSalesInvoiceNew.php');
+                                 //         window.location.href=('http://10.0.0.251/SHVPM/SALES/TrnSalesInvoice/TrnSalesInvoiceNew.php');
                                           }
                                 },
                              ]

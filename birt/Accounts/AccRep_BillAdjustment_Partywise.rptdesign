@@ -203,46 +203,51 @@
                     </structure>
                     <structure>
                         <property name="position">5</property>
+                        <property name="name">balamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
                         <property name="name">acctrail_crdays</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">acctrail_gracedays</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">cust_ref</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">ref_adjseqno</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">ref_docseqno</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">ref_docno</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">ref_docdate</property>
                         <property name="dataType">date-time</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">ref_adjamount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">ref_adj_days</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -276,54 +281,60 @@
                 </structure>
                 <structure>
                     <property name="position">5</property>
+                    <property name="name">balamt</property>
+                    <property name="nativeName">balamt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">acctrail_crdays</property>
                     <property name="nativeName">acctrail_crdays</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">acctrail_gracedays</property>
                     <property name="nativeName">acctrail_gracedays</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">cust_ref</property>
                     <property name="nativeName">cust_ref</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">ref_adjseqno</property>
                     <property name="nativeName">ref_adjseqno</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">ref_docseqno</property>
                     <property name="nativeName">ref_docseqno</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">ref_docno</property>
                     <property name="nativeName">ref_docno</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">ref_docdate</property>
                     <property name="nativeName">ref_docdate</property>
                     <property name="dataType">date-time</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">ref_adjamount</property>
                     <property name="nativeName">ref_adjamount</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">ref_adj_days</property>
                     <property name="nativeName">ref_adj_days</property>
                     <property name="dataType">integer</property>
@@ -431,6 +442,18 @@
                     <property name="dataType">float</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">balance_in_trail</property>
+                    <expression name="expression" type="javascript">row["acctrail_inv_value"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">balamt</property>
+                    <text-property name="displayName">balamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["balamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
             </list-property>
             <column id="750"/>
             <column id="751">
@@ -450,7 +473,7 @@
             </column>
             <column id="756">
                 <property name="textAlign">center</property>
-                <property name="width">1in</property>
+                <property name="width">1.2in</property>
             </column>
             <column id="757">
                 <property name="textAlign">center</property>
@@ -1086,6 +1109,22 @@ true</expression>
                             <property name="borderRightWidth">1px</property>
                             <property name="borderTopStyle">dotted</property>
                             <property name="borderTopWidth">1px</property>
+                            <data id="858">
+                                <property name="color">purple</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["balamt"] == 0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">balamt</property>
+                            </data>
                         </cell>
                         <cell id="799">
                             <property name="fontSize">9pt</property>

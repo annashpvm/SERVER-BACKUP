@@ -636,6 +636,7 @@ function getLedLedgerName(){
 //        $r=mysql_query("select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_vouno  desc");
 
 $r=mysql_query("select * from acc_ref ref left join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   left join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode");
+$r=mysql_query("select * from acc_ref ref left join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   left join massal_customer mas on  tran.acctran_led_code = mas.cust_code  left join  acc_trail trail on  trail.acctrail_accref_seqno = ref.accref_seqno  and  acctran_led_code = acctrail_led_code where accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode");
 
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))

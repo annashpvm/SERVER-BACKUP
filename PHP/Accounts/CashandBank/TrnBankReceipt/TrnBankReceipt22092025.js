@@ -64,51 +64,6 @@ Ext.onReady(function () {
     var ratediffmt = 0;
     var totinvwt = 0;
 
-
-    
-  function check_password()
-  {
-     if (txtPassword.getRawValue() == "admin@123")
-     {
-       Ext.getCmp('save').setDisabled(false);
-     }
-     else
-     {
-       Ext.getCmp('save').setDisabled(true);
-     }    
-
-  }   
-    
-   var txtPassword = new Ext.form.TextField({
-    fieldLabel  : 'Password',
-    id          : 'txtPassword',
-    name        : 'txtPassword',
-    inputType   : 'password',
-    fieldStyle  : 'text-transform:uppercase',
-    width       :  100,
-//	readOnly    : true,
-    labelStyle  : "font-size:12px;font-weight:bold;",
-    style       :"border-radius: 5px;",
- enableKeyEvents: true,
-    listeners   :{
-
-      change: function (obj, newValue) {
-    //    console.log(newValue);
-//            obj.setRawValue(newValue.toUpperCase());
-        check_password();
-      },
-
-
-       blur:function(){
-          check_password();
-       },
-       keyup:function(){
-          check_password();
-       },
-    }
-
-});
-
     var lblAcctname = new Ext.form.Label({
         fieldLabel  : 'Account Name',
         id          : 'lblAcctname',
@@ -3487,7 +3442,7 @@ if (editfind  == 0)
         var cashdisc_sgst_amt = 0;
         var cashdisc_igst_amt = 0;
         var cashdisc_amount = 0;
-        var cdincluding = 0; 
+
         var cashdisc_value_method1  = 0;
         var cashdisc_value_method2  = 0;
 
@@ -3504,12 +3459,6 @@ var adjustedamount = 0;
         txtTotNetAmt.setValue("");
         for (var i = 0; i < rcnt; i++) {
             var rec = flxAdjustDetails.getStore().getAt(i);
-
-            cdincluding =  0;
-            if ( Number(rec.get('cgstper')) + Number(rec.get('sgstper')) + Number(rec.get('igstper')) > 0)
-                 cdincluding =  (100 + Number(rec.get('cgstper')) + Number(rec.get('sgstper')) + Number(rec.get('igstper')))/100;
-       
-            
             if (rec.get('voutype') !== 'AD') {
 
 
@@ -3580,9 +3529,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT30dayscdamt') * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3690,9 +3637,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT45dayscdamt1'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3739,9 +3684,7 @@ var adjustedamount = 0;
 //                              cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt1')  * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT45dayscdamt2'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
                                  
@@ -3801,9 +3744,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT60dayscdamt1'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3852,9 +3793,7 @@ var adjustedamount = 0;
 //                              cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt1') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT60dayscdamt2'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
        
@@ -3907,9 +3846,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt3') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT60dayscdamt3'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -3985,9 +3922,7 @@ var adjustedamount = 0;
                           {
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt1'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
                           }
          
            
@@ -4034,9 +3969,7 @@ var adjustedamount = 0;
 //                              cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT60dayscdamt1') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt2'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4088,9 +4021,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT90dayscdamt3') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt3'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4154,9 +4085,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT90dayscdamt4') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt4'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -4220,9 +4149,7 @@ var adjustedamount = 0;
                               cashdisc_value = Math.round(selrow.get('invwt')*selrow.get('PMT90dayscdamt5') * 100) / 100;
                               cashdisc_value = Math.round(selrow.get('invwt')*(Number(selrow.get('PMT90dayscdamt5'))+Number(selrow.get('ratediff'))) * 100) / 100;
                               cashdisc_value = cashdisc_value.toFixed(0);
-
-                              if (cdincluding > 0)                          
-                                cashdisc_value = (cashdisc_value)/cdincluding;
+                              cashdisc_value = (cashdisc_value)/1.12;
 
                           }
          
@@ -5998,19 +5925,7 @@ var tabAccounts = new Ext.TabPanel({
                             },
 
 */
-
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                labelWidth: 70,
-                                width: 300,
-                                x: 900,
-                                y: 0,
-                                border: false,
-                                items: [txtPassword]
-                            },
-
-		                    {
+		{
                                 xtype: 'fieldset',
                                 title: '',
                                 labelWidth: 70,
@@ -6078,7 +5993,7 @@ var tabAccounts = new Ext.TabPanel({
 
 
          flxAccounts.getStore().removeAll();
-         Ext.getCmp('save').setDisabled(true);  
+         Ext.getCmp('save').setDisabled(false);  
          Ext.getCmp('btnAdd').setDisabled(false);  
          Ext.getCmp('editchk').hide();
         gstFlag = "Add";
@@ -6256,8 +6171,7 @@ var tabAccounts = new Ext.TabPanel({
 },
         listeners: {
             show: function () {
-                //  Ext.getCmp('save').setDisabled(true);
-           
+
 //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');
                   dtpVouDate.setRawValue(new Date().format('d-m-Y'));
                   dtpRefDate.setRawValue(new Date().format('d-m-Y'));

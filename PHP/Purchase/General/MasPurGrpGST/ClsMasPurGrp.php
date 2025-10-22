@@ -65,7 +65,8 @@
          $r=mysql_query(" select cust_code,cust_ref,cust_name from
 (select cust_code,cust_ref,cust_name from massal_customer where cust_type = 'G' and cust_name regexp'%' and cust_acc_group not in (46,44,85,72)
 union all
-select cust_code,cust_ref,cust_name from massal_customer where cust_type = 'G' and cust_acc_group in (74,75) order by cust_name ) a where left(cust_name,2) != 'ZZ'  group by cust_code,cust_ref,cust_name order by cust_name");
+select cust_code,cust_ref,cust_name from massal_customer where cust_type = 'G' and cust_name regexp'%' and cust_acc_group in (74,75) order by cust_name ) a where left(cust_name,2) != 'ZZ'  group by cust_code,cust_ref,cust_name order by cust_name");
+
 
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))
@@ -83,8 +84,9 @@ select cust_code,cust_ref,cust_name from massal_customer where cust_type = 'G' a
         $gsttype = $_POST['gsttype'];
         $gst = $_POST['gst'];
 
-
-        $r=mysql_query("select * from acc_ledger_master where led_type = 'G' and led_name like '%INPUT%$gsttype%$gst%'");
+        $qry= "select * from massal_customer where cust_type = 'G' and cust_name like '%INPUT%$gsttype%$gst%'";
+//echo $qry;
+        $r=mysql_query("select * from massal_customer where cust_type = 'G' and cust_name like '%INPUT%$gsttype%$gst%'");
 
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))

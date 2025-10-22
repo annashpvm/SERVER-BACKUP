@@ -324,7 +324,8 @@ function getissdetail()
 
 
         $party     = $_POST['ledger'];
-        $qry = "select * from massal_customer where cust_type = 'S' and  cust_ref like '%$party%' order by cust_name";
+//        $qry = "select * from massal_customer where cust_type = 'S' and  cust_ref like '%$party%' order by cust_name";
+		$qry = "select * from massal_customer where left(cust_name,2) != 'zz' and  cust_type = 'S' and replace(replace(cust_name,' ','')  ,'.','')  like '%$party%' order by cust_name";
         $r=mysql_query($qry);
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))

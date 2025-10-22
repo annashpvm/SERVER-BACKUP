@@ -487,7 +487,7 @@ onEsc:function(){
         listeners:
             {
                 show:function(){
-
+alert("test");
                 }
             }
 

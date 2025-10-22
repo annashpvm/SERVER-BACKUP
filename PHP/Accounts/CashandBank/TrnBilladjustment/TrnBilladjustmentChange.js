@@ -23,7 +23,7 @@ var partycode  = 0;
 
 var vouchertype = 'BKR';
 var vouseqno = 0;
-
+var voudrcr = 'D';
 const formatter = new Intl.NumberFormat('en-IN', {
 //  style: 'currency',
   currency: 'inr',
@@ -64,7 +64,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
         totalProperty: 'total',
         id: 'id'
       },[
-          'accref_seqno', 'voudate', 'accref_voudate', 'accref_vouno', 'acctran_totamt', 'ref_invno', 'ref_invdate', 'ref_adjamount'
+          'accref_seqno', 'voudate', 'accref_voudate', 'accref_vouno', 'acctrail_inv_value', 'ref_invno', 'ref_invdate', 'ref_adjamount','acctrail_amtmode'
       ]),
     });
 
@@ -83,7 +83,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
         totalProperty: 'total',
         id: 'id'
       },[
-          'accref_seqno', 'ref_adjseqno', 'acctrail_inv_no', 'acctrail_inv_date','invdate','ref_paymt_terms', 'acctrail_inv_value', 'pendingamt', 'ref_adjamount','accref_vouno','accref_vou_type'
+           'ref_slno' , 'ref_docseqno', 'ref_docno','ref_docdate','ref_adjseqno', 'acctrail_inv_no', 'acctrail_inv_date','invdate','ref_paymt_terms', 'acctrail_inv_value', 'pendingamt', 'ref_adjamount','accref_vouno','accref_vou_type' ,'ref_adjvouno','ref_adjvoudate','acctrail_amtmode','mdrcr','adrcr'
       ]),
     });
 
@@ -127,7 +127,8 @@ function LedgerSearch()
     var cmbVoucherList = new Ext.form.ComboBox({
         fieldLabel: 'Voucher Type',
         width: 100,
-        store: loadVoucherTypeListDataStore,
+   //     store: loadVoucherTypeListDataStore,
+        store: ['BKR','BKP','CHR','CHP','GJV','DNG','DNN'],
         displayField: 'accref_vou_type',
         valueField: 'accref_vou_type',
         hiddenName: 'accref_vou_type',
@@ -140,7 +141,25 @@ function LedgerSearch()
         editable: true,
         allowblank: false,
         listeners: {
-
+                select: function(){
+            loadVoucherDetailDatastore.removeAll();
+            loadVoucherListDatastore.removeAll();
+            loadVoucherListDatastore.load({
+                url: 'ClsBillAdjustments.php',
+                params:
+                        {
+                            task: "loadVouNoList",
+                                fincode : GinFinid,
+                                compcode: GinCompcode,
+                                ledcode : ledgercode , 
+                                voutype : cmbVoucherList.getValue(), 
+                        },
+                callback: function () {
+             var cnt = loadVoucherListDatastore.getCount();
+    
+                }
+            });
+        } 
         }
     });
 function grid_chk_flxLedger()
@@ -157,6 +176,9 @@ function grid_chk_flxLedger()
 	    txtAccountName.setValue(selrow.get('cust_name'));
 	    flxLedger.hide();  
 
+
+        txtTotAdjAmount.setRawValue('');
+        txtVouAmount.setRawValue('');
             loadVoucherDetailDatastore.removeAll();
 	    loadVoucherListDatastore.removeAll();
 	    loadVoucherListDatastore.load({
@@ -172,12 +194,29 @@ function grid_chk_flxLedger()
 	        callback: function () {
 	 	var cnt = loadVoucherListDatastore.getCount();
 
+
+
 	        }
 	    }); 
 
 	}
 }
 
+
+function grid_tot(){
+
+
+
+    var selrows = flxAdjdocDetail.getStore().getCount();
+    var ginadjtotal = 0;
+    txtTotAdjAmount.setValue("");
+    for (var i=0;i<selrows;i++){
+        var rec = flxAdjdocDetail.getStore().getAt(i);
+        ginadjtotal = ginadjtotal + Number(rec.get('ref_adjamount'));
+
+    }
+    txtTotAdjAmount.setRawValue(Ext.util.Format.number(ginadjtotal,"0.00"));
+}
  var flxVoucherList = new Ext.grid.EditorGridPanel({
         frame: false,
         sm: new Ext.grid.RowSelectionModel(),
@@ -195,24 +234,24 @@ function grid_chk_flxLedger()
 		{header: "Seq NO.", dataIndex: 'accref_seqno',sortable:true,width:100,align:'center',hidden : false},   
 		{header: "Vou. Date  ", dataIndex: 'voudate',sortable:true,width:110,align:'center'},
 		{header: "Vou. Date  ", dataIndex: 'accref_voudate',sortable:true,width:110,align:'center',hidden : true},
-		{header: "Voucher NO.", dataIndex: 'accref_vouno',sortable:true,width:100,align:'center'},   
-		{header: "Amount", dataIndex: 'acctran_totamt',sortable:true,width:120,align:'right',
+		{header: "Voucher NO.", dataIndex: 'accref_vouno',sortable:true,width:140,align:'center'},   
+		{header: "Amount", dataIndex: 'acctrail_inv_value',sortable:true,width:120,align:'right',
                 renderer: function (val, metaData, r){
-    if (val > 0) 
-    { 
-     return  parseFloat(val).toLocaleString('en-In', {
-         maximumFractionDigits: 2,
-         minimumFractionDigits: 2,
-//         style: 'currency',
-         currency: 'INR',
-         });
-      }
-   } 
-           },
-		{header: "Inv NO.", dataIndex: 'ref_invno',sortable:true,width:130,align:'center',hidden : false},   
+        if (val > 0) 
+        { 
+        return  parseFloat(val).toLocaleString('en-In', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+    //         style: 'currency',
+            currency: 'INR',
+            });
+        }
+        } 
+       },
+		{header: "Inv NO.", dataIndex: 'ref_invno',sortable:true,width:180,align:'center',hidden : false},   
 		{header: "Inv. Date  ", dataIndex: 'ref_invdate',sortable:true,width:110,align:'center'},
-		{header: "Adj. Amount AS  ", dataIndex: 'ref_adjamount',sortable:true,width:120,align:'right',}
-
+		{header: "Adj. Amount AS  ", dataIndex: 'ref_adjamount',sortable:true,width:140,align:'right',},
+        {header: "Adj Type", dataIndex: 'acctrail_amtmode',sortable:true,width:110,align:'left',hidden : false},
 
 
         ],
@@ -225,10 +264,11 @@ function grid_chk_flxLedger()
 	            var selrow = sm.getSelected();
 	            vouseqno =  Number(selrow.get('accref_seqno')); 
 
+                    txtVouAmount.setRawValue(selrow.get('acctrail_inv_value'));
                     txtVouNo.setRawValue(selrow.get('accref_vouno'));
                     txtVouDate.setRawValue(selrow.get('accref_voudate'));
                     txtInvNo.setRawValue(selrow.get('ref_invno'));
-
+                    voudrcr = selrow.get('acctrail_amtmode');
              
 	    loadVoucherDetailDatastore.removeAll();
 	    loadVoucherDetailDatastore.load({
@@ -239,7 +279,7 @@ function grid_chk_flxLedger()
                             fincode : GinFinid,
                             compcode: GinCompcode,
                             seqno   : vouseqno , 
-
+                            voudrcr : voudrcr,
 	                },
 	        callback: function () {
 
@@ -249,9 +289,11 @@ function grid_chk_flxLedger()
 			var rcnt = flxAdjdocDetail.getStore().getCount();
 			for (var i=0;i<rcnt;i++){
 			    var rec = flxAdjdocDetail.getStore().getAt(i);
-                            rec.set('newadjusted',rec.get('ref_adjamount'));
+                        rec.set('newadjusted',rec.get('ref_adjamount'));
 	
 			}
+
+            grid_tot();
 		}
 
 	    }); 
@@ -262,6 +304,7 @@ function grid_chk_flxLedger()
    });
 
  
+
 
 function UpdateReceiptBillsAdjusted(){
         var sm = flxAdjdocDetail.getSelectionModel();
@@ -285,9 +328,12 @@ function UpdateReceiptBillsAdjusted(){
         id: 'my-grid',  
 
         columns: [         
-            {header: "BR SeqNO", dataIndex: 'accref_seqno',sortable:true,width:110,align:'left',hidden : true},
+            {header: "Adj SlNO", dataIndex: 'ref_slno',sortable:true,width:110,align:'left',hidden : true},
+            {header: "BR SeqNO", dataIndex: 'ref_docseqno',sortable:true,width:110,align:'left',hidden : true},
             {header: "Adj SeqNO", dataIndex: 'ref_adjseqno',sortable:true,width:110,align:'left',hidden : true},
-            {header: "Inv. No.", dataIndex: 'acctrail_inv_no',sortable:true,width:140,align:'center'},
+            {header: "Vou. No.", dataIndex: 'ref_docno',sortable:true,width:100,align:'center',hidden : true},
+            {header: "VouDate", dataIndex: 'ref_docdate',sortable:true,width:100,align:'center',hidden : true},            
+            {header: "Inv. No.", dataIndex: 'acctrail_inv_no',sortable:true,width:180,align:'center'},
             {header: "Date", dataIndex: 'acctrail_inv_date',sortable:true,width:110,align:'center',hidden : true},
             {header: "Date", dataIndex: 'invdate',sortable:true,width:110,align:'center'},
             {header: "PayTerms", dataIndex: 'ref_paymt_terms',sortable:true,width:110,align:'center'},
@@ -305,6 +351,7 @@ function UpdateReceiptBillsAdjusted(){
 
                         },
                         blur:function(){
+                            grid_tot();
                         },
                         keyup: function(){
                             var sm = flxAdjdocDetail.getSelectionModel();
@@ -315,20 +362,30 @@ function UpdateReceiptBillsAdjusted(){
                                 Ext.MessageBox.alert("Bill Adjustment","Adjusted amount cannot be greater than Invoice amount");
                                 this.setValue("");
                                 selrow.set('newadjusted',"");
-                                CalcSum();
-                            }
 
+                            }
+                            if (Number(this.getRawValue())>Number(txtVouAmount.getValue())){
+                                Ext.MessageBox.alert("Bill Adjustment","Adjusted amount cannot be greater than Voucher   amount");
+                                this.setValue("");
+                                selrow.set('newadjusted',"");
+
+                            }                            
+                            grid_tot();
                         }
                     }
                 },
                 listeners: {
                     click: function(){
                         UpdateReceiptBillsAdjusted();
+                        grid_tot();
                     }
                 }
             },
             {header: "Adj NO", dataIndex: 'accref_vouno',sortable:true,width:110,align:'left',hidden : true},
             {header: "Adj Voutype", dataIndex: 'accref_vou_type',sortable:true,width:110,align:'left',hidden : true},
+            {header: "MDrCr", dataIndex: 'mdrcr',sortable:true,width:110,align:'left',hidden : false},
+            {header: "ADrCr", dataIndex: 'adrcr',sortable:true,width:110,align:'left',hidden : false},
+
         ],
         store:loadVoucherDetailDatastore,
     });
@@ -403,12 +460,31 @@ function UpdateReceiptBillsAdjusted(){
     var txtInvNo = new Ext.form.TextField({
         fieldLabel  : 'Inv. No.',
         id          : 'txtInvNo',
-        width       : 150,
+        width       : 110,
         name        : 'txtInvNo',
         readOnly    : true,
         labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
     });
+
+
+    var txtVouAmount = new Ext.form.NumberField ({
+        fieldLabel  : 'Vou. Amount',
+        id          : 'txtVouAmount',
+        width       : 110,
+        name        : 'txtVouAmount',
+        readOnly    : true,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    });
     
+    var txtTotAdjAmount = new Ext.form.NumberField ({
+        fieldLabel  : 'Adj. Amount',
+        id          : 'txtTotAdjAmount',
+        width       : 110,
+        name        : 'txtTotAdjAmount',
+        readOnly    : true,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    });
+        
 
 
  
@@ -521,7 +597,7 @@ var txtAccountName = new Ext.form.TextField({
                                                 compcode:GinCompcode,
                                                 vouseqno :vouseqno,
                                                 vouno    :txtVouNo.getRawValue(),
-		                                voudate  : Ext.util.Format.date(txtVouDate.getRawValue(),"Y-m-d"),
+		                                        voudate  : Ext.util.Format.date(txtVouDate.getRawValue(),"Y-m-d"),
                                                 ledgercode :ledgercode,
 
                 
@@ -644,7 +720,28 @@ var txtAccountName = new Ext.form.TextField({
                                 y: 320,
                                 border: false,
                                 items: [txtInvNo]
-                            }
+                            },
+
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                labelWidth: 110,
+                                width: 550,
+                                x: 1050,
+                                y: 350,
+                                border: false,
+                                items: [txtVouAmount]
+                            } ,
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                labelWidth: 110,
+                                width: 550,
+                                x: 1050,
+                                y: 390,
+                                border: false,
+                                items: [txtTotAdjAmount]
+                            }                            
 
             ]
 

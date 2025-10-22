@@ -66,7 +66,7 @@ Ext.onReady(function () {
           root: 'results',
           totalProperty: 'total',
           id: 'id'
-        },['acctrail_inv_no','acctrail_inv_date','dbcr_invvalue','acctrail_inv_value','accref_finid',
+        },['acctrail_inv_no','acctrail_inv_date','dbcr_invvalue','acctrail_inv_value','accref_finid','accref_voudate',
             'acctrail_adj_value','accref_vou_type','accref_seqno','accref_vouno','acctrail_crdays' ])
     });
 
@@ -340,6 +340,7 @@ function UpdateReceiptBillsAdjusted(){
         y: 5,
         columns: [         
             {header: "Vouno", dataIndex: 'accrefvouno',sortable:true,width:110,align:'left'},
+            {header: "Vou Date", dataIndex: 'accrefvoudate',sortable:true,width:110,align:'left'},
             {header: "Inv No", dataIndex: 'invno',sortable:true,width:110,align:'left'},
             {header: "Date", dataIndex: 'invdate',sortable:true,width:90,align:'left'},
             {header: "P.Terms", dataIndex: 'payterms', sortable: true, width: 80, align: 'center'},
@@ -477,12 +478,13 @@ function InsertUnAdjustedBillDetail(){
                             payterms: UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_crdays'),
                             dbcramt: Ext.util.Format.number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue'),"0.00"),
                             totamt: Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value')) -
-                                    Number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue')),
+                            Number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue')),
                             pendingamt: Ext.util.Format.number(Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value')) - Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_adj_value')),"0.00"),
                             voutype: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vou_type'),
                             Year:gstfin,
                             accrefseqno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_seqno'),
-                            accrefvouno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vouno')
+                            accrefvouno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vouno'),
+                            accrefvoudate: UnAdjustedBillDetaildatastore.getAt(i).get('accref_voudate')
                         })
                     );
                 }

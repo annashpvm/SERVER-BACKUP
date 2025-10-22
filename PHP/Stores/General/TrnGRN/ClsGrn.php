@@ -166,7 +166,7 @@ function getpono()
 	$supcode = $_POST['supcode'];
 	$searchedby = $_POST['searchedby'];
 	$itemcode = $_POST['itemcode'];
-
+	$grnflag = $_POST['grnflag'];
 	if($flag=="I")
 	{
 	$r=mysql_query("call sppur_pending_indent($compcode,$finid)");
@@ -175,12 +175,17 @@ function getpono()
 	}
 	else
 	{
+
+
+
+
+
          if ($searchedby == 'supplier')
-             $r=mysql_query("call sppur_pending_po('$compcode','$finid','$supcode')");
+             $r=mysql_query("call sppur_pending_po('$compcode','$finid','$supcode','$grnflag')");
          else
              $r=mysql_query("call sppur_pending_po_supplier_withitem('$compcode','$finid','$supcode','$itemcode')");
 
-             
+
 
 	}
 	$nrow = mysql_num_rows($r);
@@ -236,10 +241,15 @@ function getindentnos()
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$pono    = $_POST['pono'];
-
+	$grnflag    = $_POST['grnflag'];
+	if ($grnflag == "Add")
 	$r=mysql_query("select   ptr_podate  podate ,ptr_ind_no  indno, ptr_ind_fin_code  indfincode,phd_credit_days,phd_tol from trnpur_purchase_trailer a,   trnpur_purchase_header b where 
 phd_comp_code = ptr_comp_code and phd_fin_code  = ptr_fin_code  and phd_pono = ptr_pono  and
 phd_comp_code = $compcode and phd_fin_code  = $finid and  phd_pono = '$pono' and (ptr_ord_qty-ptr_rec_qty)> 0  group by  ptr_podate,ptr_ind_no , ptr_ind_fin_code");
+   else
+   $r=mysql_query("select   ptr_podate  podate ,ptr_ind_no  indno, ptr_ind_fin_code  indfincode,phd_credit_days,phd_tol from trnpur_purchase_trailer a,   trnpur_purchase_header b where 
+   phd_comp_code = ptr_comp_code and phd_fin_code  = ptr_fin_code  and phd_pono = ptr_pono  and
+   phd_comp_code = $compcode and phd_fin_code  = $finid and  phd_pono = '$pono'   group by  ptr_podate,ptr_ind_no , ptr_ind_fin_code");   
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))
 	{
@@ -259,6 +269,8 @@ function getitem()
 	$pono    = $_POST['pono'];
 	$indno    = $_POST['indno'];
 	$supcode  = $_POST['supcode'];
+	$grnopt  = $_POST['grnopt'];
+
 	if($flag=="N") 
 	{
 	$r=mysql_query("select item_code ptr_item_code, item_name from maspur_item_header order by item_name");
@@ -271,8 +283,10 @@ function getitem()
 	{
 //	$r=mysql_query("call sppur_po_details_new('$compcode','$finid','$supcode','$indno')");
 
-	$r=mysql_query("select * from trnpur_purchase_header a,  trnpur_purchase_trailer b , maspur_item_header c , mas_uom d where phd_sup_code = $supcode and phd_comp_code = ptr_comp_code and phd_fin_code = ptr_fin_code  and phd_pono = ptr_pono and phd_comp_code = $compcode and phd_fin_code = $finid and phd_pono = '$pono'  and ptr_pono = '$pono' and ptr_ind_no = $indno and ptr_item_code = item_code and item_uom = uom_code and (ptr_ord_qty-ptr_rec_qty)> 0 ");
-
+    if ($grnopt == "Add")
+	    $r=mysql_query("select * from trnpur_purchase_header a,  trnpur_purchase_trailer b , maspur_item_header c , mas_uom d where phd_sup_code = $supcode and phd_comp_code = ptr_comp_code and phd_fin_code = ptr_fin_code  and phd_pono = ptr_pono and phd_comp_code = $compcode and phd_fin_code = $finid and phd_pono = '$pono'  and ptr_pono = '$pono' and ptr_ind_no = $indno and ptr_item_code = item_code and item_uom = uom_code and (ptr_ord_qty-ptr_rec_qty)> 0 ");
+	else
+	    $r=mysql_query("select * from trnpur_purchase_header a,  trnpur_purchase_trailer b , maspur_item_header c , mas_uom d where phd_sup_code = $supcode and phd_comp_code = ptr_comp_code and phd_fin_code = ptr_fin_code  and phd_pono = ptr_pono and phd_comp_code = $compcode and phd_fin_code = $finid and phd_pono = '$pono'  and ptr_pono = '$pono' and ptr_ind_no = $indno and ptr_item_code = item_code and item_uom = uom_code ");
 
 	}
 	$nrow = mysql_num_rows($r);

@@ -2,6 +2,8 @@
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 session_start();
 
+
+$savetype       = $_POST['savetype'];
 $taxname        = $_POST['taxname'];
 $taxshortname   = $_POST['taxshortname'];
 $taxsalled_code = (int)$_POST['taxsalled_code'];
@@ -12,39 +14,58 @@ $taxsgst        = (float)$_POST['taxsgst'];
 $taxcgst        = (float)$_POST['taxcgst'];
 $taxigst        = (float)$_POST['taxigst'];
 $taxtype        = (int)$_POST['taxtype'];
+$taxseq         = (int)$_POST['taxcode'];
 
 
-$query  = "select ifnull(max(tax_code),0)+1 as taxseq from massal_tax";
-$result = mysql_query($query);
-$rec    = mysql_fetch_array($result);
-$taxseq = $rec['taxseq'];
-
-
-$qry = "select count(*) as cnt from massal_tax where tax_name = '$taxname'";
-$res  = mysql_query($qry);
-$recvar = mysql_fetch_array($res);
-$cnt=$recvar['cnt'];
-
-if($cnt==0)
+if ($savetype == "Add")
 {
-  $query1="insert into massal_tax values($taxseq,upper('$taxname'),upper('$taxshortname'),'$taxsalled_code','$taxsgst_ledcode','$taxcgst_ledcode', '$taxigst_ledcode','$taxsgst','$taxcgst','$taxigst','$taxtype')"; 
+    $query  = "select ifnull(max(tax_code),0)+1 as taxseq from massal_tax";
+    $result = mysql_query($query);
+    $rec    = mysql_fetch_array($result);
+    $taxseq = $rec['taxseq'];
 
 
+    $qry = "select count(*) as cnt from massal_tax where tax_name = '$taxname'";
+    $res  = mysql_query($qry);
+    $recvar = mysql_fetch_array($res);
+    $cnt=$recvar['cnt'];
+
+    if($cnt==0)
+    {
+      $query1="insert into massal_tax values($taxseq,upper('$taxname'),upper('$taxshortname'),'$taxsalled_code','$taxsgst_ledcode','$taxcgst_ledcode', '$taxigst_ledcode','$taxsgst','$taxcgst','$taxigst','$taxtype')"; 
+
+  //    echo $query1;
+
+      $result1 = mysql_query($query1);
+    }
+
+    if ($result1 && $cnt==0) {
+    mysql_query("COMMIT");
+      echo '({"success":"true","msg":"' . $taxname . '"})';
+  } 
+    else if ($cnt>0) {
+      mysql_query("ROLLBACK");
+      echo '({"success":"false","cnt":"' . $cnt . '"})';
+    
+  }else {
+      mysql_query("ROLLBACK");
+      echo '({"success":"false","msg":"' . $taxname . '"})';
+  }
+}
+else
+{
+
+  $query1=" update massal_tax set tax_name = upper('$taxname'),  tax_shortname = upper('$taxshortname') , tax_sal_led_code = '$taxsalled_code' , tax_sgst_ledcode = '$taxsgst_ledcode' , tax_cgst_ledcode = '$taxcgst_ledcode', tax_igst_ledcode = '$taxigst_ledcode', tax_sgst = '$taxsgst', tax_cgst = '$taxcgst', tax_igst = '$taxigst', tax_type = '$taxtype' where tax_code =  $taxseq";  
   $result1 = mysql_query($query1);
-}
-
-  if ($result1 && $cnt==0) {
-   mysql_query("COMMIT");
-    echo '({"success":"true","msg":"' . $taxname . '"})';
+   
+  if ($result1) {
+    mysql_query("COMMIT");
+      echo '({"success":"true","msg":"' . $taxname . '"})';
+  } 
+  else {
+      mysql_query("ROLLBACK");
+      echo '({"success":"false","msg":"' . $taxname . '"})';
+  }
 } 
-  else if ($cnt>0) {
-    mysql_query("ROLLBACK");
-    echo '({"success":"false","cnt":"' . $cnt . '"})';
-	
-}else {
-    mysql_query("ROLLBACK");
-    echo '({"success":"false","msg":"' . $taxname . '"})';
-}
- 
    
 ?>

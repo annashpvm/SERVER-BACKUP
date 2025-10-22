@@ -349,9 +349,9 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 
-        $query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid',
+        $query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid',
 '$mainseqno','$maindocno','$maindocdate','$adjseqno','$adjvouno', '$adjinvno','$adjvoudate', 
-'$adjamt',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' );";
+'$adjamt',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU','$adjvoudate' );";
 
         $result3 = mysql_query($query3);
 
@@ -410,9 +410,9 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 
-		$query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid',
+		$query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid',
 	'$invseqno','$invno','$invdate','$ref_docseqno','$vouno', '$vouno','$voudate', 
-	'$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' );";
+	'$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'$adjvoudate');";
 
 		$result3 = mysql_query($query3);
 

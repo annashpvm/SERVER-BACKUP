@@ -374,7 +374,7 @@ function LedgerSearch()
 
         loadcrdrlistdatastore.removeAll();
         loadcrdrlistdatastore.load({
-		url: 'ClsMasSalesCustomer.php',
+		url: 'ClsMasCreditor.php',
 		params:
 		{
 			task:"loadSearchLedgerlist",
@@ -688,11 +688,11 @@ var cmbcrstate = new Ext.form.ComboBox({
                 if (cmbcrstate.getValue() == 24)
                 {
                    cmbcrcountry.setValue(1);
-                   cmbcrtype.setValue(1);
+                   cmbcrtype.setValue(6);
                 }   
                 else
                 {
-                   cmbcrtype.setValue(2);
+                   cmbcrtype.setValue(7);
                 }   
 	}
 	}
@@ -842,7 +842,7 @@ var cmbGSTtype = new Ext.form.ComboBox({
 
 
 var cmbcrtype = new Ext.form.ComboBox({
-        fieldLabel      : 'TYPE',
+        fieldLabel      : 'Purchase TYPE',
         width           :  230,
         displayField    : 'field2', 
         valueField      : 'field1',
@@ -850,7 +850,7 @@ var cmbcrtype = new Ext.form.ComboBox({
         id              : 'cmbcrtype',
         typeAhead       : true,
         mode            : 'local',
-        store           : [['1','1.INTRASTATE (TN)'],['2','2.INTERSTATE - OTHER THAN (TN)'],['3','3.IMPORT']],
+        store           : [['6','1.INTRASTATE (TN)'],['7','2.INTERSTATE - OTHER THAN (TN)'],['3','3.IMPORT']],
         forceSelection  : true,
         triggerAction   : 'all',
         selectOnFocus   : false,
@@ -1120,6 +1120,7 @@ function cust_flx_grid_click()
 
 	flxCreditorDetail.getSelectionModel().clearSelections();
         flxCreditorDetail.hide();
+        newcode = 1;
 
 
 }
@@ -1846,7 +1847,7 @@ var MasCreditorFormpanel = new Ext.FormPanel({
     function RefreshData()
     {
 
-       
+      newcode = 0 ;
       flxCreditorDetail.hide();
       Ext.getCmp('chkAddrChange').setDisabled(true);
       Ext.getCmp('Edit').setDisabled(true);

@@ -712,8 +712,9 @@ grid_tot();
 //                                           txtreceiptno.setValue(cmbDCNo.getValue());
                                            dtDCNO.setRawValue(Ext.util.Format.date(loadDCNoDetailDataStore.getAt(0).get('dch_date'),"d-m-Y"));
 		                           cmbdept.setValue(loadDCNoDetailDataStore.getAt(0).get('dch_dept')); 
-		                           cmbparty.setRawValue(loadDCNoDetailDataStore.getAt(0).get('dch_party')); 
+		                           cmbparty.setValue(loadDCNoDetailDataStore.getAt(0).get('dch_party')); 
 
+        
 /*
                                            dtref.setRawValue(Ext.util.Format.date(loadDCNoDetailDataStore.getAt(0).get('dch_refdate'),"d-m-Y"));
                            
@@ -878,9 +879,10 @@ var dgrecord = Ext.data.Record.create([]);
  		{dataIndex:'qty',header: "Bal.Qty",width: 100, align: 'left',sortable: true},
             	{dataIndex:'recdqty',header: "Recd.Qty", width: 60,align: 'left', sortable: true,
                	editor:{
-		    xtype:'numberfield',
+		               xtype:'numberfield',
                     allowBlank: true,
                     enableKeyEvents: true,
+                    decimalPrecision: 3,
 	     	    listeners:{
              	    blur: function () {
 

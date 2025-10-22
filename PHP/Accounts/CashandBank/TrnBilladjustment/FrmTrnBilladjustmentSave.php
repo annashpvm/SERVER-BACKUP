@@ -7,6 +7,7 @@ $rowcnt = $_REQUEST['adjcnt'];
 $ref_docseqno = $_REQUEST['accrefseq'];
 //$vouno = $_REQUEST['vouno'];
 $vouno = substr(trim($_POST['vouno']),0,29);
+$MainInvno = substr(trim($_POST['Invno']),0,29);
 
 $accvoudate = $_REQUEST['accvoudate'];
 
@@ -42,6 +43,7 @@ for ($i = 0; $i < $rowcnt; $i++) {
 
     $ginrefslno = $ginrefslno + 1;
     $adjvouno  = $gridadjdet[$i]['accrefvouno'];
+    $adjvoudate  = $gridadjdet[$i]['accrefvoudate'];
     $invno = $gridadjdet[$i]['invno'];
     $invdate = $gridadjdet[$i]['invdate'];
     $invnonew = $gridadjdet[$i]['invno'];
@@ -86,7 +88,7 @@ for ($i = 0; $i < $rowcnt; $i++) {
 
 
 
-        $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ref_docseqno','$vouno', '$accvoudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'BA',curdate(),$payterms,'$ledcode','$voutype' );";
+        $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ref_docseqno','$vouno', '$accvoudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'BA',curdate(),$payterms,'$ledcode','$voutype','$adjvoudate' );";
 
         $result1 = mysql_query($query1);
 
@@ -94,7 +96,7 @@ for ($i = 0; $i < $rowcnt; $i++) {
 //echo "<br>";
 
 
-        $query2 = "call acc_sp_trn_updacc_trail_seq_no_New('$ref_docseqno','$vouno','$adjamt','$ledcode' , '$doctype_selected')";
+        $query2 = "call acc_sp_trn_updacc_trail_seq_no_New('$ref_docseqno','$MainInvno','$adjamt','$ledcode' , '$doctype_selected')";
         $result2 = mysql_query($query2);
 
 

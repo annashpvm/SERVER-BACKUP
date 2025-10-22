@@ -415,7 +415,7 @@ function grid_chk_flxLedger()
           totalProperty: 'total',
           id: 'id'
         },['ref_slno', 'ref_docseqno', 'ref_docno', 'ref_docdate', 'ref_adjseqno', 'ref_adjvouno', 'ref_invno', 'ref_invdate', 'ref_adjamount', 'ref_paymt_terms', 'ref_adj_days', 'ref_adj_by', 'ref_adjusted_on',
-'acctrail_accref_seqno' , 'acctrail_inv_value',  'acctrail_led_code','acctrail_crdays','ref_adjvoutype',
+'acctrail_accref_seqno' , 'acctrail_inv_value',  'acctrail_led_code','acctrail_crdays','ref_adjvoutype','ref_adjvoudate',
 'acctrail_crdays','invh_crd_days', 'invh_grace_days','rate_payterm_30days_cdamt', 'rate_payterm_60days_cdamt1' , 'rate_payterm_60days_cdamt2','invwt','invh_taxableamt','rate_cashdisc_per','invh_cgst_per','invh_sgst_per',
 'invh_igst_per','invh_frt_amt'])
     });
@@ -493,7 +493,7 @@ function getAdjustmentDetails2()
 
 		        accrefseqno =  LoadAdjustmentDetailsdatastore.getAt(j).get('ref_adjseqno');
 		        accrefvouno = LoadAdjustmentDetailsdatastore.getAt(j).get('ref_adjvouno');
-
+		        accrefvoudate = LoadAdjustmentDetailsdatastore.getAt(j).get('ref_adjvoudate');
                         rowadjusted = 0;  
                         rowpending= 0;  
                         var PendAmount = Number(invamt); //- Number(adjusted);
@@ -532,6 +532,7 @@ function getAdjustmentDetails2()
 		                            Narrate: "",
 		                            accrefseqno: accrefseqno,
 		                            accrefvouno: accrefvouno,
+                                    accrefvoudate : accrefvoudate,
 		                        })
 	 	                        );
 	                      CalcSum();
@@ -1592,7 +1593,8 @@ if (voufound == 0)
                 }
             },
             {header: "Accrefseqno", dataIndex: 'accrefseqno', sortable: true, width: 40, align: 'left', hidden: true},
-            {header: "AccrefVouno", dataIndex: 'accrefvouno', sortable: true, width: 60, align: 'left', hidden: false}
+            {header: "Vouno", dataIndex: 'accrefvouno', sortable: true, width: 100, align: 'left', hidden: false},
+            {header: "Vou date", dataIndex: 'accrefvoudate', sortable: true, width: 100, align: 'left', hidden: false}
         ]
     });
 
@@ -2579,7 +2581,8 @@ else if (Number(txtTotNetAmt.getRawValue()) > Number(txtTotDebit.getRawValue()) 
                                     balamt: Number(PaymentAdjBillDetdatastore.getAt(i).get('acctrail_inv_value')) -
                                             Number(PaymentAdjBillDetdatastore.getAt(i).get('acctrail_adj_value')),
                                     accrefseqno: PaymentAdjBillDetdatastore.getAt(i).get('accref_seqno'),
-                                    accrefvouno: PaymentAdjBillDetdatastore.getAt(i).get('accref_vouno')
+                                    accrefvouno: PaymentAdjBillDetdatastore.getAt(i).get('accref_vouno'),
+                                    accrefvoudate: PaymentAdjBillDetdatastore.getAt(i).get('accref_voudate')
                                 })
                                 );
                     }

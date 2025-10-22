@@ -46,7 +46,7 @@
     {
         mysql_query("SET NAMES utf8");
 
-        $r=mysql_query("select * from acc_ledger_master where led_type = 'G' and led_name like '%SALES%'");
+        $r=mysql_query("select * from massal_customer where cust_type = 'G' and cust_name like '%SALES%'");
 
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))
@@ -68,8 +68,8 @@
 
 
 
-        $r=mysql_query("select * from acc_ledger_master where led_type = 'G' and led_name like '$gsttype%$gst%'");
-        $r=mysql_query("select * from acc_ledger_master where led_type = 'G' and  (led_name like '%GST%COLLEC%' or (led_name like '%GST' and length(led_name) < 10 ))
+        $r=mysql_query("select * from massal_customer where cust_type = 'G' and cust_name like '$gsttype%$gst%'");
+        $r=mysql_query("select * from massal_customer where cust_type = 'G' and  (cust_name like '%GST%COLLEC%' or (cust_name like '%GST' and length(cust_name) < 10 ))
 ");
 
 	$nrow = mysql_num_rows($r);
@@ -84,7 +84,7 @@
  function getgstlist()
     {
         mysql_query("SET NAMES utf8");
-        $r=mysql_query("select  tax_code,tax_name,tax_shortname , b.led_name sales_ledger, c.led_name cgst_ledger,d.led_name sgst_ledger,e.led_name igst_ledger ,tax_sgst,tax_cgst,tax_igst from massal_tax a, acc_ledger_master b , acc_ledger_master c  ,  acc_ledger_master d , acc_ledger_master e  where a.tax_sal_led_code = b.led_code and a.tax_cgst_ledcode = c.led_code  and a.tax_sgst_ledcode = d.led_code  and a.tax_igst_ledcode = e.led_code  order by tax_code");
+        $r=mysql_query("select  tax_code,tax_name,tax_shortname , b.cust_name sales_ledger, c.cust_name cgst_ledger,d.cust_name sgst_ledger,e.cust_name igst_ledger ,tax_sgst,tax_cgst,tax_igst ,tax_sal_led_code, tax_sgst_ledcode, tax_cgst_ledcode, tax_igst_ledcode ,tax_type from massal_tax a, massal_customer b , massal_customer c  ,  massal_customer d , massal_customer e  where a.tax_sal_led_code = b.cust_code and a.tax_cgst_ledcode = c.cust_code  and a.tax_sgst_ledcode = d.cust_code  and a.tax_igst_ledcode = e.cust_code  order by tax_code");
 
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))

@@ -2,10 +2,11 @@
 Ext.onReady(function(){
 
 
+
    Ext.QuickTips.init();
 
 
-
+  
    var Gincompcode = localStorage.getItem('gincompcode');
    var GinFinid = localStorage.getItem('ginfinid');
 
@@ -15,7 +16,7 @@ Ext.onReady(function(){
    var gstfinyear = localStorage.getItem('gstyear');
    var finstdate = localStorage.getItem('gfinstdate');   
    var finenddate = localStorage.getItem('gfineddate');    
-
+   var emailid = '';
    var grnno = '';
    var gstStatus = "N";
    var gstFlag = "Add";
@@ -38,6 +39,217 @@ var dedrate = 0;
 var originalrate = 0; 
 
 var TickWt = 0;
+
+var findTicketNo = 0;
+
+function isValidEmail(value) {
+    var emailRegex = /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/;
+    return emailRegex.test(value);
+}
+
+
+
+var btnQCEMail = new Ext.Button({
+    style: 'text-align:center;',
+    text: "SEND E-MAIL",
+    width: 100, id: 'btnQCEMail',
+    x: 10,
+    y: 200,
+      style: {
+          borderColor: 'blue',
+          borderStyle: 'solid',
+          fontSize  : '14px',
+
+      },
+    listeners: {
+        click: function () {
+
+            var email =   emailid ;
+if (isValidEmail(email)) {
+
+            loadQCEntryNoDetailDatastore.load({
+                url:'/SHVPM/QC/ClsQC.php',
+               params:
+                  {
+               task:"loadQCEntryNoDetail",
+               finid    : GinFinid,
+               compcode : Gincompcode,
+                           entryno  : cmbQCEntNo.getRawValue(),
+                           gstFlag  : gstFlag,
+               },
+    scope:this,
+    callback:function()
+           {
+            var cnt=loadQCEntryNoDetailDatastore.getCount();
+            if(cnt>0)
+            {
+                unloadingdate = "Unloading Date :    <b>" +   Ext.util.Format.date(loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_ticketdate'),"d-m-Y") + "</b>";                
+                qcentryno  =  "QC Entry No. : <b> "  + cmbQCEntNo.getRawValue() + "</b>";
+                qcentrydate = "         Date :    <b>" +   Ext.util.Format.date(loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_entrydate'),"d-m-Y") + "</b>";                
+                qcentryticketdate =  loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_ticketdate');
+                custname   =  loadQCEntryNoDetailDatastore.getAt(0).get('cust_name');
+                truckno   =   "Vehicle No.  :    <b> " + loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_truck') + "</b>";
+                emailid = loadQCEntryNoDetailDatastore.getAt(0).get('cust_email');
+                areaname   =  "Area Name  :    <b> " + loadQCEntryNoDetailDatastore.getAt(0).get('area_name') + "</b>";
+                
+
+
+                mailtrailer = "";
+
+                var totacceptedqty = 0;
+      
+                for(var j=0; j<cnt; j++)
+                { 
+
+                    itemname  = loadQCEntryNoDetailDatastore.getAt(j).get('itmh_name');
+                    recdqty   = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_ticketwt');
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_millboard')> 0 )
+                        millboard = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_millboard');
+                    else
+                    millboard = '';
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_rejectqty') > 0)
+                        rejectqty  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_rejectqty');
+                    else
+                    rejectqty  = '';
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_llessqty') > 0)
+                       llessqty  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_llessqty');
+                    else
+                       llessqty  = '';
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisper_totalmaterial') > 0)
+                       totalmoisqty  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisper_totalmaterial');
+                    else
+                       totalmoisqty  = '';
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisforqty') > 0)
+                       moisforqty  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisforqty');
+                    else
+                       moisforqty  =  '';
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisper') > 0)
+                       actmoisper  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisper');
+                    else
+                       actmoisper  = '';
+
+                     if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_itemmois') >0)
+                       allowedmoisper  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_itemmois');
+                     else
+                       allowedmoisper  = '';
+
+                    if (Number(actmoisper)  >  Number(allowedmoisper))
+                       exmoisper =  Number(actmoisper) - Number(allowedmoisper);
+                    else
+                       exmoisper = '';
+
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisqty') > 0)
+                       exmoisqty = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_moisqty');
+                    else
+                    exmoisqty = '';
+
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_degradeqty') > 0)
+                       degradeqty  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_degradeqty');
+                    else
+                       degradeqty  = '';
+                    acceptqty  = loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_acceptqty');
+
+                    totacceptedqty += Number(acceptqty);
+                    if (loadQCEntryNoDetailDatastore.getAt(j).get('qc_rm_packtype') == "B")
+                    {
+                        packtype = "BUNDLES";
+                    }
+                    else
+                    {
+                        packtype = "LOOSE ITEMS";
+                    }
+
+
+
+        
+                 mailtrailer = mailtrailer + '<tr>' + '<td align="left" width =200px; >' + itemname + '</td>' +
+                 '<td align="right"  width =120px>' + recdqty  + '</td>' +  
+                 '<td align="right"   width =120px>'  + millboard + '</td>' +  
+                 '<td align="right"   width =150px>'  + rejectqty + '</td>' +  
+                 '<td align="right"   width =150px>'  + llessqty + '</td>'  +   
+                 '<td align="right"  width =120px>' + totalmoisqty + '</td>' +  
+                 '<td align="right"   width =120px>'  + moisforqty + '</td>' +  
+                 '<td align="right"   width =150px>'  + actmoisper + '</td>' +  
+                 '<td align="right"   width =150px>'  + allowedmoisper + '</td>'  +   
+                 '<td align="right"  width =120px>' + exmoisper + '</td>' +  
+                 '<td align="right"   width =120px>'  + exmoisqty + '</td>' +  
+                 '<td align="right"   width =150px>'  + degradeqty + '</td>' +  
+                 '<td align="right"   width =150px>'  + acceptqty + '</td>'  +
+                 '<td align="left"   width =150px>'  + packtype + '</td>'  +   '</tr>'; 
+
+                }
+
+
+                totacceptedqty = Ext.util.Format.number(totacceptedqty,"0.0");
+
+// Existing table rows (mailtrailer) are already built
+// Add a total row at the end
+mailtrailer += '<tr style="font-weight:bold;">' +
+    '<td colspan="12" align="right">Total Accepted Qty (Kgs):</td>' +
+    '<td align="right">' + totacceptedqty + '</td>' +
+    '<td></td>' +  // empty if you have more columns
+    '</tr>';
+
+
+
+
+
+
+
+                mailheader = Ext.util.Format.trim('<table border = "1" , height = 70px  ;><tr>' +'<th bgcolor= "yellow" >' + 'Item Name' + '</th>' + '<th bgcolor= "yellow">' + 'Recd Qty.' + '</th>' +  '<th bgcolor= "yellow">' + 'Mill Board' + '</th>' + '<th bgcolor= "yellow">' + 'Reject Qty' + '</th>' + '<th bgcolor= "yellow">' + 'Life Less' + '</th>' + '<th bgcolor= "yellow">' + '%of Material having Moist' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Mosis for the Qty' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Actual Mois %' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Mois Allowed%' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Ex-Mois%' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Ex-Mois.Qty' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Degrade Qty' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Accepted Qty' + '</th>'
+                    + '<th bgcolor= "yellow">' + 'Material Type' + '</th>'                    
+                     + '\n' + mailtrailer) +'</table>' +  '\n' +'<br>';
+
+
+
+
+//                            mailmessage = "     <style> body {height: 842px; width: 700px;  margin-left: 5px;}    </style> <h2> SRI HARI VENKATESWARA PAPER MILLS (P) LTD </h2> <br> 2/151, Keelanmarai Nadu Village, A.Lakshmiapuram-Post, Sivakasi - 626127<br> <hr> <br> <br>";
+
+                          mailmessage = "<style> body {height: 842px; width: 700px;  margin-left: 5px;} </style> <h2> SRI HARI VENKATESWARA PAPER MILLS (P) LTD </h2> ";
+
+
+//                          mailmessage =  mailmessage + "<td align='center'> 2/151, Keelanmarai Nadu Village, A.Lakshmiapuram-Post, Sivakasi - 626127 </td><br> <hr> <br> <br>";
+              mailmessage =  mailmessage + " <hr> <br> <br>"; 
+              mailmessage =  mailmessage +  "To :  <br>  <br>  <b>  "+ custname + '  </b> ' + '<br>  <br> <br>' + unloadingdate+  '<br>  <br>' + qcentryno + qcentrydate +  '<br>  <br>'   + truckno + '<br>  <br>' 
+               + mailheader+ "<br> <br> <br>" 
+
+
+              Ext.Ajax.request({
+                        url: 'TrnQCEmail.php',
+                  params :
+                  {
+                         mailmessage : mailmessage,
+                         idemail     : emailid,
+
+                  },
+                  callback: function(options, success, response)
+                  {
+                 Ext.MessageBox.alert("EMAIL Send to Supplier - "); 
+//                                         mailcount = 1;
+                  }
+                  }); 
+
+                }
+            }         
+  });
+   
+
+     }
+     else
+     {
+        Ext.Msg.alert('Invalid', 'Please enter a valid Email ID in Master and Continue...');
+      }
+        }
+    }
+});
+
 
    var optCalcNeed = new Ext.form.FieldSet({
     xtype: 'fieldset',
@@ -142,8 +354,7 @@ var loadareadatastore = new Ext.data.Store({
       },[
           'qc_rm_entrydate', 'qc_rm_ticketdate', 'qc_rm_supcode', 'qc_rm_truck', 'qc_rm_ticketno', 'qc_rm_ticketwt', 'qc_rm_itemcode', 'qc_rm_moisper', 'qc_rm_moisqty', 'qc_rm_llessper', 'qc_rm_llessqty', 'qc_rm_rejectper','qc_rm_moisfor',  'qc_rm_rejectqty', 'qc_rm_degradeqty', 'qc_rm_acceptqty', 'qc_rm_remarks','qc_rm_remarks2', 'qc_rm_packtype', 'itmh_name',  'cust_code','cust_ref','qc_rm_itemmois', 'sup_name','qc_rm_moisper_totalmaterial', 'qc_rm_moisforqty','qc_rm_millboard','qc_rm_billqty','qc_rm_millqty', 'cust_ref','qc_rm_slno','wc_area_code','wc_unloadingtime','area_name','qc_rm_area','qc_rm_unloadingtime',
 'qc_rm_itemtype','qc_rm_rate','qc_rm_calc_need','qc_rm_shortage','qc_rm_bales','qc_rm_dn_raised','qc_rm_grn_status','qc_rm_ded_rate',
-'qc_rm_debitnote_no','qc_rm_grnno','qc_rm_act_moisure_qty','qc_rm_mois_tolarance'
-      ]),
+'qc_rm_debitnote_no','qc_rm_grnno','qc_rm_act_moisure_qty','qc_rm_mois_tolarance','cust_name','cust_email' ]),
     });
 
  var loadQCEntryNoListDatastore = new Ext.data.Store({
@@ -1297,6 +1508,14 @@ var txtTicketNo = new Ext.form.NumberField({
     });
 
 
+    var lblEMailid = new Ext.form.Label({
+        fieldLabel  : 'Email',
+        id          : 'lblEMailid',
+        width       : 100,
+         labelStyle : "font-size:11px;font-weight:bold;color:#cc00cc",
+    });
+    
+
 var lblNoofBales = new Ext.form.Label({
     fieldLabel  : 'Bales(nos)',
     id          : 'lblNoofBales',
@@ -1895,7 +2114,8 @@ function find_qty_matching(){
             var selticket=flxTicket.getSelectionModel().getSelections();
             for(var k=0;k<Row;k++)
             {
-                 if (Number(selticket[k].get('diff')) != 0)
+                findTicketNo =  selticket[k].get('wc_ticketno');
+                if (Number(selticket[k].get('diff')) != 0)
                     savechk = 1;  
             }  
 
@@ -2097,8 +2317,12 @@ txtBillWT.setRawValue('');
 //                        cmbSupplier.setRawValue(loadQCEntryNoDetailDatastore.getAt(0).get('cust_ref'));
                         cmbSupplier.setValue(loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_supcode'));
                         cmbSupplier.setRawValue(loadQCEntryNoDetailDatastore.getAt(0).get('cust_ref'));
-
+                   
+                         lblEMailid.setText(loadQCEntryNoDetailDatastore.getAt(0).get('cust_email'))
+                                  
                         areacode = loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_area');
+                        
+                        emailid = loadQCEntryNoDetailDatastore.getAt(0).get('cust_email');
 
                         unloaddate = loadQCEntryNoDetailDatastore.getAt(0).get('qc_rm_unloadingtime');
 
@@ -2728,9 +2952,9 @@ var cmbTruckNo = new Ext.form.ComboBox({
    function save_data()
    {
 
-                   Ext.getCmp('save').setDisabled(true);
+                Ext.getCmp('save').setDisabled(true);
 
-                   var grnData = flxDetail.getStore().getRange();                                        
+                var grnData = flxDetail.getStore().getRange();                                        
 	            var grnupdData = new Array();
 	            Ext.each(grnData, function (record) {
 	                grnupdData.push(record.data);
@@ -2749,48 +2973,52 @@ var cmbTruckNo = new Ext.form.ComboBox({
 	            params :
 	             {
 	             	griddet : Ext.util.JSON.encode(grnupdData),
-			cnt     : grnData.length,
-
+			        cnt     : grnData.length,
 	             	griddetTicket : Ext.util.JSON.encode(TicketupdData),
-			cntTicket     : TicketData.length,
-
-			gstFlag    : gstFlag,                                 
-			compcode   : Gincompcode,
+        			cntTicket     : TicketData.length,
+        			gstFlag    : gstFlag,                                 
+		        	compcode   : Gincompcode,
 	                finid      : GinFinid,
 	                entryno    : txtQCEntNo.getValue() ,
-			entrydate  : Ext.util.Format.date(dtEntDate.getValue(),"Y-m-d"),
-	 		ticketdate : Ext.util.Format.date(dtTicketDate.getValue(),"Y-m-d"),
-			truckno    : cmbTruckNo.getRawValue(),
-			supcode    : supcode,
+			        entrydate  : Ext.util.Format.date(dtEntDate.getValue(),"Y-m-d"),
+	 		        ticketdate : Ext.util.Format.date(dtTicketDate.getValue(),"Y-m-d"),
+			        truckno    : cmbTruckNo.getRawValue(),
+			        supcode    : supcode,
 	                areacode   : cmbArea.getValue(),
 	                unloadtime : txtUnloadingTime.getValue(),
 	                fsctype    : fsctype,
 	                calcyn     : valuecalYN,
+                    findTicketNo : findTicketNo,
 
 			},
 	              callback: function(options, success, response)
 	              {
 	                var obj = Ext.decode(response.responseText);
 	                 if (obj['success']==="true")
-				{                                
+			     	{                                
 	                    Ext.MessageBox.alert("QC -RM Inspection Entry SAVED No.-" + obj['EntryNo']);
-	                         flxDetail.getStore().removeAll();
-	                         flxTicket.getStore().removeAll();
-	                         flxItem.getStore().removeAll();
-
-
-
-// 				    QCPanel.getForm().reset();
-	                     RefreshData();
-	                  }else
-				{
-QCPanel.getForm().reset(); 
-   RefreshData();  
-		Ext.MessageBox.alert("QC -RM Inspection Entry Not Saved! Pls Check!- " + obj['EntryNo']);         
-QCPanel.getForm().reset(); 
-   RefreshData();                                        
-	                    }
+	                    flxDetail.getStore().removeAll();
+	                    flxTicket.getStore().removeAll();
+	                    flxItem.getStore().removeAll();
+                        QCPanel.getForm().reset();
+	                    RefreshData();
 	                }
+                    else  
+                    if (obj['success']==="Available")
+                     {                                
+                       Ext.MessageBox.alert("Ticket Number Already Saved - " + obj['EntryNo'] + " - Please check ... ");
+                       QCPanel.getForm().reset(); 
+                       RefreshData();  
+                    }                    
+                    else
+         			{
+                        QCPanel.getForm().reset(); 
+                        RefreshData();  
+		                Ext.MessageBox.alert("QC -RM Inspection Entry Not Saved! Pls Check!- " + obj['EntryNo']);         
+                        QCPanel.getForm().reset(); 
+                        RefreshData();                                        
+	                }
+	              }
 	           });     
    }    
    
@@ -2884,8 +3112,10 @@ QCPanel.getForm().reset();
                             var gstSave;
 	                    gstSave="true";
                             savechk = 0;
-                            
+                            findTicketNo = 0;
                             find_qty_matching(); 
+
+
 
 
         var SameRate = 0;
@@ -3729,7 +3959,7 @@ QCPanel.getForm().reset();
                                 	title       : '',
                                 	labelWidth  : 140,
                                 	width       : 400,
-                                	x           : 580,
+                                	x           : 480,
                                 	y           : 400,
                                     	border      : false,
                                 	items: [txttotAcceptWt]
@@ -3741,7 +3971,7 @@ QCPanel.getForm().reset();
                                 title       : '',
                                 labelWidth  : 140,
                                 width       : 400,
-                                x           : 980,
+                                x           : 780,
                                 y           : 400,
                                     border      : false,
                                 items: [btnDelete]
@@ -3751,12 +3981,30 @@ QCPanel.getForm().reset();
                             title       : '',
                             labelWidth  : 70,
                             width       : 400,
-                            x           : 1100,
+                            x           : 900,
                             y           : 400,
                                 border      : false,
                               items: [txtPassword]
                        },
 
+                       {
+                        xtype       : 'fieldset',
+                        x           : 1150,
+                        y           : 400,
+                        border      : false,
+                        width       :250,
+                                labelWidth  : 50,
+                        items : [btnQCEMail]
+                    },                       
+                    {
+                        xtype       : 'fieldset',
+                        x           : 1070,
+                        y           : 380,
+                        border      : false,
+                        width       :300,
+                                labelWidth  : 50,
+                        items : [lblEMailid]
+                    },    
 
                 ]
 

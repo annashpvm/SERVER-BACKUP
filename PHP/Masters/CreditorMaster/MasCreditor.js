@@ -699,7 +699,7 @@ var cmbGSTtype = new Ext.form.ComboBox({
 
 
 var cmbcrtype = new Ext.form.ComboBox({
-        fieldLabel      : 'TYPE',
+        fieldLabel      : 'Purchase Type',
         width           :  200,
         displayField    : 'field2', 
         valueField      : 'field1',
@@ -707,7 +707,7 @@ var cmbcrtype = new Ext.form.ComboBox({
         id              : 'cmbcrtype',
         typeAhead       : true,
         mode            : 'local',
-        store           : [['1','1.INTRASTATE (TN)'],['2','2.INTERSTATE - OTHER THAN (TN)'],['3','3.IMPORT']],
+        store           : [['6','1.INTRASTATE (TN)'],['7','2.INTERSTATE - OTHER THAN (TN)'],['3','3.IMPORT']],
         forceSelection  : true,
         triggerAction   : 'all',
         selectOnFocus   : false,
@@ -1745,6 +1745,7 @@ var MasCreditorFormpanel = new Ext.FormPanel({
 	listeners:{
                show:function(){
 
+                alert("Test");
                                  RefreshData();
 				 loadcrdrstatedatastore.load({
                 		 url: 'ClsMasCreditor.php', 

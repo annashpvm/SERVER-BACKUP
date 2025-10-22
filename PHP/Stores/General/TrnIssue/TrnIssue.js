@@ -374,7 +374,7 @@ style: {
 
         diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24)); 
 //alert(diffdays);
-        if (diffdays > 30)
+        if (diffdays > 90)
         {     
              alert("You are Not Allowed to Raise the ISSUE in the date of " +  Ext.util.Format.date(dtgrn,"d-m-Y"));
              dtpgrn.setRawValue(Ext.util.Format.date(dt_today,"d-m-Y"));

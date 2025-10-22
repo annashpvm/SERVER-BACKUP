@@ -240,7 +240,7 @@
         
 
  $cquerya2 = "call acc_sp_trn_insacc_ref(".$ref_docseqno.",'".$vouno."',".$compcode.",".$finid.",'".$voudate."','BKR','".$bankname."','".$paymode."','$refno','$refdate','".$narration."');";
- $cresulta2 = mysql_query($cquerya2);
+ $resulta2 = mysql_query($cquerya2);
  //    echo ($cquerya2);
 
 
@@ -422,7 +422,7 @@ if ($generateCN == "YES")
 
         $query2 = "select ifnull(max(convert(substring(accref_vouno,5),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'CNG' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
   
-      $result2 = mysql_query($query2);
+        $result2 = mysql_query($query2);
         $rec2 = mysql_fetch_array($result2);
         $conval2=$rec2['vou_no'];
         if ($conval2 < 10)
@@ -442,10 +442,10 @@ if ($generateCN == "YES")
         } 
         $vouno2="CNG-".$vno ;
 
-	$query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
-	$result3 = mysql_query($query3);
-	$rec3 = mysql_fetch_array($result3);
-	$gindbcrseq = $rec3['con_value'];
+        $query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
+        $result3 = mysql_query($query3);
+        $rec3 = mysql_fetch_array($result3);
+        $gindbcrseq = $rec3['con_value'];
       }  
       else
       {
@@ -519,7 +519,7 @@ if ($ref_docseqno2 > 0) {
 
 
     $querya2 = "call acc_sp_trn_insacc_ref('$ref_docseqno2','$vouno2','$compcode','$finid','$voudate','CNG', '','$paymode','$billnolist', '$adjinvdate','$CNRemarks');";
-    $resulta2 = mysql_query($querya2);
+    $resulta2CN = mysql_query($querya2);
 
 
 // echo $querya2;
@@ -553,7 +553,7 @@ $cresulta3 = mysql_query($cquerya3);
                if ($ledtype != 'G')
                {
                $querya3 = "call acc_sp_trn_insacc_trail ('$ref_docseqno2','$slno','$vouno2', '$voudate', '$totamt' ,'$totamt' ,'$ledseq' ,'$amtmode','0','0')";
-               $resulta3 = mysql_query($querya3);
+               $resulta3CN = mysql_query($querya3);
 //echo  $querya3;
 //echo "<br>";
 
@@ -563,7 +563,7 @@ $cresulta3 = mysql_query($cquerya3);
             #Insert AccTran
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ref_docseqno2','$slno','$ledseq','$dbamt','$cramt','$totamt','CNG','');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4CN = mysql_query($querya4);
 
 //echo  $querya4;	 
 // echo "<br>";  
@@ -690,8 +690,8 @@ $cresulta3 = mysql_query($cquerya3);
 
               }
 
-		$querya7 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$taxable' ,'$cdamount','$igstval', '$cgstval','$sgstval','$igstper','$cgstper','$sgstper','$igstledcode','$cgstledcode','$sgstledcode',0,0,0,0,0,'$rounding',0,0,$taxable ,  $invwt)";
-		$resulta7 = mysql_query($querya7);
+		$querya8 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$taxable' ,'$cdamount','$igstval', '$cgstval','$sgstval','$igstper','$cgstper','$sgstper','$igstledcode','$cgstledcode','$sgstledcode',0,0,0,0,0,'$rounding',0,0,$taxable ,  $invwt)";
+		$resulta8 = mysql_query($querya8);
 
 
        $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
@@ -729,36 +729,34 @@ $result12 = mysql_query($query12);
 
 }
 
-if($resulta2)
-   $vouno = $vouno.' And Credit Note Number '.$vouno2;
-        
-    if ($flagtype == "Add")
-    {
-	      if($cresulta2 && $resulta9  )
-		{
-		    mysql_query("COMMIT");
-		    echo '({"success":"true","vouno":"'.$vouno.'"})';
-		}
-		else
-		{
-		    mysql_query("ROLLBACK");
-		    echo '({"success":"false","vouno":"'.$vouno.'"})';
-		}
-     } 
-     else
-      {
-	      if( $result1 &&  $result2 &&  $result3 &&  $cresulta2 && $resulta9   )
-		{
-		    mysql_query("COMMIT");
-		    echo '({"success":"true","vouno":"'.$vouno.'"})';
-		}
-		else
-		{
-		    mysql_query("ROLLBACK");
-		    echo '({"success":"false","vouno":"'.$vouno.'"})';
-		}
-     } 
 
+if ( $CreditValue  > 0) {
+      $vouno = $vouno.' And Credit Note Number '.$vouno2;
+      if($resulta2 &&  $resulta3 && $resulta4 && $resulta9 && $result10 && $resulta2CN && $resulta3CN && $resulta4CN  && $resulta6 && $resulta7 && $resulta8 && $result10)
+      {
+        mysql_query("COMMIT");
+        echo '({"success":"true","vouno":"'.$vouno.'"})'; 
+      }
+      else
+      {
+        mysql_query("ROLLBACK");
+        echo '({"success":"false","vouno":"'.$vouno.'"})';
+      }
+}
+else
+{
+    if( $resulta2 && $resulta4 && $resulta9 )
+    {
+      mysql_query("COMMIT");
+      echo '({"success":"true","vouno":"'.$vouno.'"})'; 
+    }
+    else
+    {
+      mysql_query("ROLLBACK");
+      echo '({"success":"false","vouno":"'.$vouno.'"})';
+    }  
+
+}
 
 
   

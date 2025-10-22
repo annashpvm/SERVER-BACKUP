@@ -158,7 +158,7 @@
 
 
         $ledname = strtoupper($_POST['ledger']);
-        $qry = "select * from massal_customer where cust_type = 'G' and cust_name like '%$ledname%'";
+        $qry = "select * from massal_customer where cust_type = 'G' and cust_name like '%$ledname%' order by cust_name";
         $r=mysql_query($qry);
 	$nrow = mysql_num_rows($r);
 	while($re = mysql_fetch_array($r))
