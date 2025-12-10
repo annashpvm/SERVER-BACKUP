@@ -18,12 +18,12 @@ $rrollwt        =$_POST['rrollwt'];
 if ($savetype === "Edit")
 {
         $query1   = "delete from trn_dayprod_rewinder where r_w_date = '$rwdate' and  r_fincode = '$rfincode'  and  r_compcode = '$rcompcode' and r_entryno = '$rentryno'  and r_process = 'N'";
-	$result=mysql_query($query1);            
+	$result=mysqli_query($conn, $query1);            
 
 }
 
 $query1   = "insert into  trn_dayprod_rewinder values  ('1','21','2022-01-01','1','2022-01-01','1','A','1','1','1','A', '1','1','1','1','1','1','1','0','1','1','19','$reelno','N','0','0','0','1','2022-01-01','0','1','0','0')";
-           	$result=mysql_query($query1); 
+           	$result=mysqli_query($conn, $query1); 
 
 /*
 
@@ -75,13 +75,15 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($savetype == "Add") {
 	if ($result)  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $rentryno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $rentryno . '"})';
 
 	}
@@ -89,13 +91,15 @@ if ($savetype == "Add") {
 else
  {
 	if ($result) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $rentryno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $rentryno . '"})';
 
 	}

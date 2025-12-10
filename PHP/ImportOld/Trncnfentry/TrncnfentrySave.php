@@ -6,8 +6,8 @@ $rowcnt = $_POST['cnt'];
 
  //echo"$GroupName";
 $query = "select ifnull(max(cnft_hdcode),0)+1 as cnft_hdcode from mas_cnftrailer";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $cnft_hdcode=$rec['cnft_hdcode'];
 
 //'slno','cnfname','ContainerLength','ContailerFrom','ContainerTo','WhaftCharges','Trailerhirecharges','movecharges','portlabcharge','contlabcharge',
@@ -39,14 +39,16 @@ $cancelflag = "N";
 $query1="insert into mas_cnftrailer values('$cnft_hdcode','$cnft_seqno','$cnft_cont_len','$cnft_cont_from','$cnft_cont_to','$cnft_wharfchrg','$cnft_tlrhirechrg',
 '$cnft_movechrg','$cnft_portlabrchrg','$cnft_contractlabrchrg','$cnft_docchrg','$cnft_procchrg','$cnft_stuffchrg','$cnft_commchrg','$cnft_servchrg','$cnft_servtax','$cnft_linthcchrg',
 '$cnft_lindochrg','$cnft_surveyins','$cnft_othchrg','$cancelflag')";
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
        }
 
   if ($result1) {
-    //mysql_query("COMMIT");
+    //mysqli_begin_transaction($conn);
     echo '({"success":"true","msg"})';
 } else {
-  //  mysql_query("ROLLBACK");
+  //  mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg"})';
 }
   

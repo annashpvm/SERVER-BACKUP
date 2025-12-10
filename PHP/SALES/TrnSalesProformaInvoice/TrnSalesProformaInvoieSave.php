@@ -48,13 +48,13 @@ $invhdelivery_gst  = trim(strtoupper($_POST['invhdelivery_gst']));
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") {
 
     $query1 = "select IFNULL(max(invh_no),0)+1 as invh_no from trnsal_proforma_invoice where invh_fincode = '$invhfincode' and invh_comp_code= '$invhcompcode' ";
-    $result1= mysql_query($query1);
-    $rec2 = mysql_fetch_array($result1);
+    $result1= mysqli_query($conn, $query1);
+    $rec2 = mysqli_fetch_array($result1);
     $invhno=$rec2['invh_no'];
 
 }
@@ -62,7 +62,7 @@ else
 {
 
     $query3 = "delete  from trnsal_proforma_invoice where invh_fincode = $invhfincode and invh_comp_code= $invhcompcode and invh_no = $invhno";
-    $result3= mysql_query($query3);
+    $result3= mysqli_query($conn, $query3);
 
 }
 
@@ -86,7 +86,7 @@ for ($i=0;$i<$rowcnt;$i++)
 '$invhinsper','$invhfrtrate',$frtqty, '$invhfrtamt','$taxvalue','$invhtcsper', '$invhtcsamt','$invhsgstper','$invhcgstper','$invhigstper','$invhsgstamt','$invhcgstamt','$invhigstamt',
 $invhroff,$invhnetamt,'$invhdelivery_add1','$invhdelivery_add2','$invhdelivery_add3','$invhdelivery_city', 
 '$invhstatecode','$invhdelivery_pin' ,'$invhdelivery_gst')";
-    $result2=mysql_query($query2);   
+    $result2=mysqli_query($conn, $query2);   
 
 //echo $query2;
 
@@ -100,12 +100,14 @@ $invhroff,$invhnetamt,'$invhdelivery_add1','$invhdelivery_add2','$invhdelivery_a
 if ($result2 )
 //if ($result1)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $invhno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $invhno . '"})';
 }
   

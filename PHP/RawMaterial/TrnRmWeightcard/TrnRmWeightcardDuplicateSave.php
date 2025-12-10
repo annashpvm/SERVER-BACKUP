@@ -46,18 +46,20 @@ wc_compcode, wc_fincode, wc_ticketno, wc_date, wc_time, wc_area_code, wc_sup_cod
 
 //echo $query2;
 
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
 //$query2 = "update trn_weight_card set wc_partyloadwt =  $loadwt2  , wc_partyemptywt =  $emptywt2 , wc_partynetwt =  $netwt2, wc_acceptedwt =  $Acceptedwt2, wt_type = '$wttype2' where wc_compcode = '$compcode' and wc_fincode = '$finid' and  wc_ticketno=$ticketno2"; 
 
 
-//$result3 = mysql_query($query3);
+//$result3 = mysqli_query($conn, $query3);
 
 if ($result2 ) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","wtno":"' . $ticketno . '"})';
 }
   

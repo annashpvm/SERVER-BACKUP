@@ -49,16 +49,16 @@ $po_sgstvalue= $_REQUEST['po_sgst_value'];
 $po_cgstvalue= $_REQUEST['po_cgst_value'];
 
  $query1 = "select IFNULL(max(po_seqno),0)+1 as po_seqno from hometexstorespoheader";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $po_seqno=$rec1['po_seqno'];
 
  $query2 = "select IFNULL(max(po_no),0)+1 as po_no from hometexstorespoheader where po_finid = '$po_finid' and po_company_code='$po_company_code'";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $po_no=$rec2['po_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  
  if ($po_seqno > 0 && $po_no > 0 && $po_finid > 0 && $po_company_code > 0)
  { 
@@ -75,7 +75,7 @@ $po_cgstvalue= $_REQUEST['po_cgst_value'];
                             '$po_cst_per','$po_others_per','$po_discount_per',
                             '$po_logo_code','$po_handling','$po_fright',
                             '$po_igstvalue','$po_sgstvalue','$po_cgstvalue')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++){
@@ -111,7 +111,7 @@ $poseqno=$griddet[$i]['poseqno'];
                             '0','P','$po_qoseqno','$po_currency','$po_exrate',
                             '$po_igstper','$po_igstval','$po_sgstper','$po_sgstval',
                             '$po_cgstper','$po_cgstval','$po_disper','$po_disval','$po_disflag','$potype')";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
    if ($result4){
     $inscnt = $inscnt + 1;
@@ -119,12 +119,14 @@ $poseqno=$griddet[$i]['poseqno'];
     
 if($result3 && $result4)
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$po_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","pono":"'.$po_no.'"})';
         }   
         

@@ -10,19 +10,21 @@ $opstk=$_POST['opstk'];
 $opval=$_POST['opval'];
 $usercode=$_POST['usercode'];
 $stkdt=$_POST['stkdt'];
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $query1="call sprm_insupd_lotitemstock('$compcode','$finid','$lotcode','$itemcode','$opstk','$opval','$usercode')";
 //echo $query1;
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 if ($result1){
-	mysql_query("COMMIT");
+	mysqli_begin_transaction($conn);
 	echo '({"success":"true"})';
 }
 else{
-	mysql_query("ROLLBACK");
+	mysqli_rollback($conn);
+
+
 	echo '({"success":"false"})';
 }
  

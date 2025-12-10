@@ -27,7 +27,7 @@ $date= date_format($date,"Y/m/d H:i:s");
 
 
 
-  mysql_query("BEGIN");
+  mysqli_query($conn, "BEGIN");
 
 
 
@@ -35,7 +35,7 @@ $date= date_format($date,"Y/m/d H:i:s");
 
 
     $query3  = "call spst_rep_stores_Itemwise_stock ($compcode)";
-    $result3 = mysql_query($query3);
+    $result3 = mysqli_query($conn, $query3);
 
      while ($row = mysql_fetch_assoc($result3)) 
      {  
@@ -49,7 +49,7 @@ if ($clo_val  >0 )
 {
            $queryupd =  "update maspur_item_trailer  set item_stock = $cloqty ,item_avg_rate = $clo_rate,item_yr_opqty = $cloqty , item_yr_opval = $clo_val where item_comp_code= $compcode and item_fin_code = $nextfinid  and item_code =  $itemcode";  
 //
-  //    $resultupd = mysql_query($queryupd);
+  //    $resultupd = mysqli_query($conn, $queryupd);
 
 
 
@@ -68,12 +68,14 @@ if ($clo_val  >0 )
 
 	if( $cnnt > 0 )
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true"})';
 	}
 	else
 	       {
-mysql_query("ROLLBACK");       
+mysqli_rollback($conn);
+
+       
 		echo '({"success":"false"})';
 		     
 		    

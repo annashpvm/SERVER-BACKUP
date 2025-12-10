@@ -6,22 +6,24 @@ $subject = $_POST['subject'];
 $newpw   = $_POST['newpw'];
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 $query1="update mas_password set pw_password = '$newpw'  where pw_subject = '$subject'"; 
 
 //echo $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 
   if ($result1) {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $subject . '"})';
   }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $subject . '"})';
 }
   

@@ -8,7 +8,7 @@ $finid = $_POST['finid'];
 $fromdate = $_POST['fromdate'];
 $todate = $_POST['todate'];
 $RPT = $_POST['RPT'];
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  
  if ($RPT == "GST") {
 

@@ -26,21 +26,21 @@
 
     if ($flagtype == "ADD"){
         $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $result1 = mysql_query($query1);
-        $rec1 = mysql_fetch_array($result1);
+        $result1 = mysqli_query($conn, $query1);
+        $rec1 = mysqli_fetch_array($result1);
         $ginaccrefseq=$rec1['con_value'];
         
         $query2 = "select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'CT' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
-        $result2 = mysql_query($query2);
-        $rec2 = mysql_fetch_array($result2);
+        $result2 = mysqli_query($conn, $query2);
+        $rec2 = mysqli_fetch_array($result2);
         $ginvouno=$rec2['vou_no'];
         $vouno="CT".$ginvouno;
 
-        mysql_query("BEGIN");
+        mysqli_query($conn, "BEGIN");
 
         $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate',
                 'CT','','$paymode','$payno','$paydate','$narration',0,0,'$entrypoint');";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
         
         $inscnt = 0;
         for ($i=0;$i<$rowcnt;$i++){
@@ -66,11 +66,11 @@
          //   if ($ledtype <> "G") {  // Updated 21-Oct-2021           
 //               $querya3 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$refno','$refdate','$totamt','0','$ledseq','$amtmode');";
                $querya3 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$vouno','$voudate','$totamt','0','$ledseq','$amtmode')";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
           //  } // Updated 21-Oct-2021
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$curseq','$amount','$exgrate','','$paytype');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
             if($resulta3 & $resulta4){
                 $inscnt = $inscnt + 1;
@@ -79,12 +79,14 @@
 
         if ($resulta2 && ($rowcnt == $inscnt))
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             
             echo '({"success":"false","vouno":"'.$vouno.'"})';
         }

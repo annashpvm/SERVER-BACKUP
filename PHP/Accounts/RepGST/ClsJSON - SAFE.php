@@ -7,9 +7,9 @@
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
 	
-        $result=mysql_query("call spacc_rep_json($compcode,'$finid','$startdate','$enddate')");
+        $result=mysql_query("call spacc_rep_json($compcode,'$finid','$startdate','$enddate')";
 /*
-	while($re = mysql_fetch_array($r))
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -37,7 +37,7 @@ echo $jsondata2;
 
 /*
 
-$myfile = fopen("gstjson.json", "w") or die("Unable to open file!");
+$myfile = fopen("gstjson.json", "w") or die("Unable to open file!";
 
 fwrite($myfile, $jsondata2);
 
@@ -58,17 +58,17 @@ if (file_exists($file)) {
     exit;
 }
 
-echo file_get_contents("gstjson.json");
+echo file_get_contents("gstjson.json";
 
 */
 
-//$response = file_get_contents("10.0.0.151/SHVPM/Accounts/RepGST/ClsJSON.php");
+//$response = file_get_contents("10.0.0.151/SHVPM/Accounts/RepGST/ClsJSON.php";
 
 //echo $response;
 
 
 
-//$myfile = fopen("gstjson.json"", "r") or die("Unable to open file!");
+//$myfile = fopen("gstjson.json"", "r") or die("Unable to open file!";
 //echo fread($myfile,filesize("gstjson.json"));
 //fclose($myfile);
 

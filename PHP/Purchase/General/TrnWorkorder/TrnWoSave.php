@@ -57,17 +57,17 @@ $wohfrtparty1  = $_POST['wohfrtparty1'];
 $wohfrtparty2  = $_POST['wohfrtparty2'];
 $cancelflag = $_POST['cancelflag'];
  
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 if ($savetype == "Add") {
  $query1 = "select IFNULL(max(woh_no),0)+1 as woh_no from trnpur_workorder_header where woh_fin_code = $wohfincode and woh_comp_code=$wohcompcode";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $wohno=$rec1['woh_no'];
 
 
  $query = "select IFNULL(max(woh_seqno),0)+1 as woh_seqno from trnpur_workorder_header";
- $result = mysql_query($query);
- $rec = mysql_fetch_array($result);
+ $result = mysqli_query($conn, $query);
+ $rec = mysqli_fetch_array($result);
  $wohseqno=$rec['woh_seqno'];
 
 
@@ -76,7 +76,7 @@ if ($savetype == "Add") {
 '$wohsheamt','$wohtransrate','$wohtransamt','$wohotheramt','$wohlessamt','$wohamount','$wohcgstper','$wohcgstamt','$wohsgstper','$wohsgstamt',
 '$wohigstper','$wohigstamt','$wohlabcgstper','$wohlabcgstamt','$wohlabsgstper','$wohlabsgstamt','$wohlabigstper','$wohlabigstamt','$wohpriceterms',
 '$wohpayterms','$wohcreditdays','$wohremarks','$wohfrtamt1','$wohfrtamt2','$wohfrtparty1','$wohfrtparty2','$wohdcneeded','$wohstartdate','$wohenddate','$cancelflag')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 echo $query3;
 
@@ -85,12 +85,12 @@ else
 {
 
  $query = "select * from trnpur_workorder_header  where woh_fin_code = $wohfincode and woh_comp_code= $wohcompcode and woh_no =  $wohno ";
- $result = mysql_query($query);
- $rec = mysql_fetch_array($result);
+ $result = mysqli_query($conn, $query);
+ $rec = mysqli_fetch_array($result);
  $wohseqno=$rec['woh_seqno'];
 
  $query = "delete from trnpur_workorder_trailer  where wot_hdseqno =  $wohseqno";
- $result = mysql_query($query);
+ $result = mysqli_query($conn, $query);
 
 /*
  $query3 = "update trnpur_workorder_header set woh_dept = $wohdepte',
@@ -104,7 +104,7 @@ woh_frt_amt1 = '$wohfrtamt1', woh_frt_amt2 = '$wohfrtamt2', woh_frt_party1 = '$w
 woh_startdate ='$wohstartdate',woh_enddate   = '$wohenddate' where woh_fin_code = $wohfincode and woh_comp_code= $wohcompcode and woh_no =  $wohno";
 
 
- $result3 = mysql_query($query3);
+ $result3 = mysqli_query($conn, $query3);
 
 }
 
@@ -153,7 +153,7 @@ $query4= "insert into trnpur_workorder_trailer values('$wohseqno','$wotslno','$w
 '$wotvatper','$wotcstper','$wottaxamt','$wototheramt','$wotcenvat','$wotvat','$wotcgstper','$wotcgstamt','$wotsgstper','$wotsgstamt','$wotigstper',
 '$wotigstamt','$wotamount','$cancelflag')";
 
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
 echo $query4;  
 }
 
@@ -161,12 +161,14 @@ echo $query4;
       
 if($result3 && $result4 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","wono":"'.$wohno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","wono":"' . $wohno . '"})';
         }   

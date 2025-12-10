@@ -5108,8 +5108,8 @@ Ext.util.Format.date(dtpNewBill.getValue(),"d-m-Y")
 
 			txtCessPerMT.setValue('400.00');
 			txtHandlingPMT.setValue('400.00');
-			txtHandlingcgst.setValue('9');
-			txtHandlingsgst.setValue('9');
+			txtHandlingcgst.setValue('0');
+			txtHandlingsgst.setValue('0');
 		                if (loadCheck_QC_TicketNoDatastore.getAt(0).get('cust_taxtag') == 1) 	
 		                    cmbPurchaseLedger.setValue(1756);
 		                else

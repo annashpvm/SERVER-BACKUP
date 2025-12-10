@@ -35,28 +35,28 @@ for ($p = 0; $p < $rowcnt; $p++) {
 $dbamtnew = $dbamtnew + $taxvalnewcal;
 
 $querynewdel = "delete from expense_temp_vm";
-$resultnewdel = mysql_query($querynewdel);
+$resultnewdel = mysqli_query($conn, $querynewdel);
 
 $querynew = "insert into expense_temp_vm values('$dbamtnew','$cramtnew')";
-$resultnew = mysql_query($querynew);
+$resultnew = mysqli_query($conn, $querynew);
 
 if ($refdate > 0 && $finid > 0 && $compcode > 0) {
     $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-    $result1 = mysql_query($query1);
-    $rec1 = mysql_fetch_array($result1);
+    $result1 = mysqli_query($conn, $query1);
+    $rec1 = mysqli_fetch_array($result1);
     $ginaccrefseq = $rec1['con_value'];
 
     $query2 = "select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'EX' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
-    $result2 = mysql_query($query2);
-    $rec2 = mysql_fetch_array($result2);
+    $result2 = mysqli_query($conn, $query2);
+    $rec2 = mysqli_fetch_array($result2);
     $ginvouno = $rec2['vou_no'];
     $vouno = "EX" . $ginvouno;
 
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
     $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate',
                 'EX','','','$refno','$refdate','$narration',0,0);";
-    $resulta2 = mysql_query($querya2);
+    $resulta2 = mysqli_query($conn, $querya2);
 
 	if($ExTypeMtr=='METER'){
 		$newmtr=$_REQUEST['exqty'];
@@ -68,7 +68,7 @@ if ($refdate > 0 && $finid > 0 && $compcode > 0) {
 
 	if($exqty>0){
         $queryex = "insert into acc_expense_details values ('$ginaccrefseq','$exqty','$extype','$newmtr','$newkgs','$Nature')";
-        $resultex = mysql_query($queryex);
+        $resultex = mysqli_query($conn, $queryex);
    	}
 
     $inscnt = 0;
@@ -87,24 +87,24 @@ if ($refdate > 0 && $finid > 0 && $compcode > 0) {
 
         if ($ledseq > 0) {
             $querya3 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$refno','$refdate', '$totamt','0','$ledseq','0');";
-            $resulta3 = mysql_query($querya3);
+            $resulta3 = mysqli_query($conn, $querya3);
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$curseq','','$exgrate','$hsn','EX');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
             $querytds = "select led_grp_code from acc_ledger_master where led_code='$ledseq'";
-            $resulttds = mysql_query($querytds);
-            $rectds = mysql_fetch_array($resulttds);
+            $resulttds = mysqli_query($conn, $querytds);
+            $rectds = mysqli_fetch_array($resulttds);
             $tedled = $rectds['led_grp_code'];
 
             $querytdsmax = "select ifnull(max(id),0) + 1 as id from acc_tds";
-            $resulttdsmax = mysql_query($querytdsmax);
-            $rectdsmax = mysql_fetch_array($resulttdsmax);
+            $resulttdsmax = mysqli_query($conn, $querytdsmax);
+            $rectdsmax = mysqli_fetch_array($resulttdsmax);
             $tedledmax = $rectdsmax['id'];
 
             if ($tedled == 65 && $pertdsnew > 0) {
                 $querytdsins = "insert into acc_tds values('$tedledmax','$ginaccrefseq','$pertdsnew','$tdsvaluenew','$ledseq',curdate(),'$cramt','$finid','$compcode','$vouno')";
-                $resulttdsins = mysql_query($querytdsins);
+                $resulttdsins = mysqli_query($conn, $querytdsins);
             }
 
             if ($resulta3 & $resulta4) {
@@ -117,56 +117,58 @@ if ($refdate > 0 && $finid > 0 && $compcode > 0) {
         if ($compcode == 1) {
             if ($taxtype == "CS") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','33201','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
 
                 $querya6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','11','33202','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta6 = mysql_query($querya6);
+                $resulta6 = mysqli_query($conn, $querya6);
             } else if ($taxtype == "I") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','33200','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
             }
         } else if ($compcode == 11) {
             if ($taxtype == "CS") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','34192','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
 
                 $querya6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','11','34193','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta6 = mysql_query($querya6);
+                $resulta6 = mysqli_query($conn, $querya6);
             } else if ($taxtype == "I") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','34194','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
             }
         }else if ($compcode == 8) {
             if ($taxtype == "CS") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','34977','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
 
                 $querya6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','11','34979','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta6 = mysql_query($querya6);
+                $resulta6 = mysqli_query($conn, $querya6);
             } else if ($taxtype == "I") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','34975','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
             }
         } else if ($compcode == 4) {
             if ($taxtype == "CS") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','33204','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
 
                 $querya6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','11','33205','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta6 = mysql_query($querya6);
+                $resulta6 = mysqli_query($conn, $querya6);
             } else if ($taxtype == "I") {
                 $querya5 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','10','33203','$taxval','0','$taxval','','$amount','','','EX');";
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
             }
         }
     }
 }
 
 if ($resulta2 && ($rowcnt == $inscnt)) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","vouno":"' . $dbamtnewval . $cramtnew . '"})';
 }
 ?>

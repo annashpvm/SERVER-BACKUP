@@ -29,19 +29,19 @@
 
 
 
-   mysql_query("BEGIN");
+   mysqli_query($conn, "BEGIN");
 
         #Get Max AccRef Seqno from acc_ref
         $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $result1 = mysql_query($query1);
-        $rec1 = mysql_fetch_array($result1);
+        $result1 = mysqli_query($conn, $query1);
+        $rec1 = mysqli_fetch_array($result1);
         $ginaccrefseq=$rec1['con_value'];
 
 
         #Insert AccRef
         $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$refno','$compcode','$finyear','$voudate','$voutype','--', '$paymode','$refno', '$refdate','$narration');";
 
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 
 //echo $querya2;
 //echo "<br>";	
@@ -78,7 +78,7 @@
 
 
                $querya3 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$billno','$billdt','$totamt','$adjamt','$ledseq','$amtmode',0,0 );";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 
 
 //echo $querya3;
@@ -89,7 +89,7 @@
             #Insert AccTran
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 
 
@@ -99,7 +99,7 @@
         }
 
          $querya5 = "update trn_other_sales set os_acc_seqno = '$ginaccrefseq'  ,  os_accupd = 'Y' where os_compcode = $compcode  and os_fincode  = $finyear and os_invno =  '$refno' ";
-        $resulta5 = mysql_query($querya5);
+        $resulta5 = mysqli_query($conn, $querya5);
 
  
 
@@ -108,12 +108,14 @@
 
         if($resulta2 && $resulta3 && $resulta4 && $resulta5  )
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vno":"'.$vno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             echo '({"success":"false","vno":"'.$vno.'"})';
         }
 ?>

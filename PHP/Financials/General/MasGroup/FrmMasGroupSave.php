@@ -10,14 +10,14 @@ session_start();
  //echo"$GroupName";
  $query = "select ifnull(max(grp_code),0)+1 as con_value from acc_group_master where grp_comp_code = '$CompCode'";
 
- $result = mysql_query($query);
+ $result = mysqli_query($conn, $query);
 
-        $rec = mysql_fetch_array($result);
+        $rec = mysqli_fetch_array($result);
 	$fin_groupcode=$rec['con_value'];
 
 
   $query1="call acc_sp_insgroupmaster('$fin_groupcode','$CompCode','$GroupName','$ParentGroup','$Status')";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 
   
 

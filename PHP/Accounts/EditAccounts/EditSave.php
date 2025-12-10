@@ -21,41 +21,41 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
     $today = date("Y-m-d H:i:s");  
 
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
             $queryins= "insert into acc_correction_ref select * from acc_ref where accref_seqno='$accref_seqno'";
-            $resultins= mysql_query($queryins);
+            $resultins= mysqli_query($conn, $queryins);
 
 //echo  $queryins;
             $queryins2= "insert into acc_correction_tran select acctran_accref_seqno, acctran_serialno, acctran_led_code, acctran_dbamt, acctran_cramt, acctran_totamt, acctran_paytype , now() cdate from acc_tran where acctran_accref_seqno='$accref_seqno'";
-            $resultins2= mysql_query($queryins2);
+            $resultins2= mysqli_query($conn, $queryins2);
 
 
 
 
 //echo  $queryins2;
             $queryins3= "insert into acc_correction_trail select * from acc_trail where acctrail_accref_seqno='$accref_seqno'";
-            $resultins3= mysql_query($queryins3);
+            $resultins3= mysqli_query($conn, $queryins3);
 
 //echo  $queryins3;
 	    $queryDel2="delete from acc_trail where acctrail_accref_seqno='$accref_seqno'";
 //echo  $queryDel2;
-	    $resultDel2= mysql_query($queryDel2);
+	    $resultDel2= mysqli_query($conn, $queryDel2);
 	    
 	    $queryDel1="delete from acc_tran where acctran_accref_seqno='$accref_seqno'";
-	    $resultDel1= mysql_query($queryDel1);
+	    $resultDel1= mysqli_query($conn, $queryDel1);
 //echo  $queryDel1;	    
 	    $queryDel="delete from acc_ref where accref_seqno='$accref_seqno'";
 //echo  $queryDel;	
-	    $resultDel= mysql_query($queryDel);
+	    $resultDel= mysqli_query($conn, $queryDel);
 
 	$cquery1 = "select ifnull(max(accvou_slno),0) + 1 as reccount  from acc_voucher_logs where accvou_seqno = '$accref_seqno';";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
         $cquerya3 = "insert into acc_voucher_logs values ($accref_seqno,$reccount,'$today',$usercode,'MODIFIED IN ACCOUNTS EDIT ENTRY')";
-        $cresulta3 = mysql_query($cquerya3);	    
+        $cresulta3 = mysqli_query($conn, $cquerya3);	    
 //echo $cquerya3;
 	 
         for($i=0;$i<$refcnt;$i++){
@@ -71,7 +71,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
             $accref_bank_name=$ref[$i]['accref_bank_name'];
 
 //            $queryip= "insert into accountscorrectionip values('$accref_seqno','$ip','$accref_vouno','$accref_comp_code','$accref_finid','$boxuser',NOW(),'$Approve','$Request')";
-//            $resultip= mysql_query($queryip);
+//            $resultip= mysqli_query($conn, $queryip);
 
              $query= "insert into acc_ref
                         (
@@ -102,7 +102,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
                                 '$accref_narration'
                         )";
 //echo  $query;
-            $result= mysql_query($query);
+            $result= mysqli_query($conn, $query);
         }
 
         for($j=0;$j<$trancnt;$j++){
@@ -123,7 +123,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
             $query1= "call acc_sp_trn_insacc_tran('$accref_seqno','$slnotran','$acctran_led_code','$acctran_dbamt','$acctran_cramt','$acctran_totamt','$acctran_paytype','$acctran_narration')";
 //echo  $query1;
-            $result1= mysql_query($query1);
+            $result1= mysqli_query($conn, $query1);
 
 
 
@@ -131,7 +131,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
             $querystr = "update trnpur_min_trailer set mint_purgroup = $acctran_led_code where mint_comp_code = $accref_comp_code and mint_fin_code = $accref_finid and mint_minno = '$vouno' and mint_purgroup =  $old_led_code";
 
 //echo  $query1;
-            $resultstr= mysql_query($querystr);
+            $resultstr= mysqli_query($conn, $querystr);
 	
         }
 
@@ -150,7 +150,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
 	    $query2= "call acc_sp_trn_insacc_trail('$accref_seqno','$slnotrail','$acctrail_inv_no','$acctrail_inv_date','$acctrail_inv_value','$acctrail_adj_value','$acctrail_led_code','$acctrail_amtmode',$acctrail_crdays,$acctrail_gracedays)";
 //echo  $query2;
-	    $result2= mysql_query($query2);
+	    $result2= mysqli_query($conn, $query2);
 	    if($result2){
 	        $trailchk=$trailchk+1;
 	    }
@@ -164,11 +164,13 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
             if($result  && $result1 && $result2   )
 
             {
-                mysql_query("COMMIT");
+                mysqli_begin_transaction($conn);
                 echo '({"success":"true","msg":"'.$accref_vouno.'"})';
 	       
             }else{
-                mysql_query("ROLLBACK");
+                mysqli_rollback($conn);
+
+
               echo '({"success":"false","msg":"'.$error1.'"})';
               // echo '({"success":"false","msg":"'.$ip.'"})';
 	    }
@@ -178,11 +180,13 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
             if($result  && $result1)
 
             {
-                mysql_query("COMMIT");
+                mysqli_begin_transaction($conn);
                 echo '({"success":"true","msg":"'.$accref_vouno.'"})';
 	       
             }else{
-                mysql_query("ROLLBACK");
+                mysqli_rollback($conn);
+
+
               echo '({"success":"false","msg":"'.$error1.'"})';
               // echo '({"success":"false","msg":"'.$ip.'"})';
 	    }

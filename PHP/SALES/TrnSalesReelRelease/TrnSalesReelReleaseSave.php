@@ -12,22 +12,24 @@ $wt = $_POST['wt'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
  $query1 = "update trnsal_finish_stock set stk_wt = '$wt' , stk_destag = '' where stk_comp_code = 1 and stk_destag = 'C' and stk_sono = '$sono' and stk_sr_no = '$reelno'";
-   $result1=mysql_query($query1);            
+   $result1=mysqli_query($conn, $query1);            
 
 
 
 
 if ($result1) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $reelno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $reelno . '"})';
 }
   

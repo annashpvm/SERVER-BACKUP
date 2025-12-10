@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
 
     switch($task){
 
@@ -24,48 +24,39 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
 
  function getDeliveryAddress()
     {
-        mysql_query("SET NAMES utf8");
-	$custcode = $_POST['custcode'];
+        global $conn;  
+	    $custcode = $_POST['custcode'];
+        $sql = "select * from trnsal_delivery_address, mas_state  where delivery_state = state_code and  d_custcode = '$custcode'";
+        $r = mysqli_query($conn, $sql);
 
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
 
-
-        $r=mysql_query("select * from trnsal_delivery_address, mas_state  where delivery_state = state_code and  d_custcode = '$custcode'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
    function getstatelist()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select state_code,state_name from mas_state order by state_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "select state_code,state_name from mas_state order by state_name";
+        $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 

@@ -1,34 +1,47 @@
+
 <?php
+
+
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
+
 $servernameMain = "10.0.0.251";
-$databaseMain = "shvpb";
+$databaseMain = "shvpm";
 
 $servernameSub = "10.0.0.150";
-$databasesub = "shvpmb";
+$databaseSub = "shvpmb";
 
 $username = "root";
 $password = "P@ssw0rD";
 
 
-$dbMain =  mysql_connect($servernameMain,$username,$password) or die("connect : failure" . mysql_error());
-$dbSub  =  mysql_connect($servernameSub,$username,$password); // or die("connect : failure" . mysql_error());
+$dbMain = mysqli_connect($servernameMain, $username, $password, $databaseMain)
+    or die("Main DB connect failure: " . mysqli_connect_error());
 
-mysql_select_db($databaseMain,$dbMain);
+$dbSub = mysqli_connect($servernameSub, $username, $password, $databaseSub)
+    or die("Sub DB connect failure: " . mysqli_connect_error());
+
+
+    mysqli_set_charset($dbMain, "utf8");
+    mysqli_set_charset($dbSub, "utf8");
+
+    
+mysqli_select_db($dbMain, $databaseMain);
 
 //echo $dbsub;
 
 if($dbSub)
 {
-    mysql_select_db($databasesub,$dbSub);
+  mysqli_select_db($dbSub, $databaseSub);
+
     session_start();
 
  $query1 = "select * from mas_wb_party";
 
 
- $result1 = mysql_query($query1,$dbMain);
+ $result1 = mysqli_query($dbMain, $query1);
 
- while ($row = mysql_fetch_assoc($result1)) {
+ while ($row = mysqli_fetch_assoc($result1)) {
 
     $code          = $row['party_code'];
     $name          = $row['party_name'];
@@ -36,9 +49,9 @@ if($dbSub)
 
 
 
-    $queryfind = "select count(*) as nos from mas_wb_party where party_code = $code";
-    $resultfind = mysql_query($queryfind,$dbSub);
-    $rec1 = mysql_fetch_array($resultfind);
+    $queryfind = "select count(*) as nos from mas_wb_party where party_code = '$code'";
+    $resultfind = mysqli_query($dbSub, $queryfind);
+    $rec1 = mysqli_fetch_array($resultfind);
     $seqno=$rec1['nos'];
 
 
@@ -48,7 +61,7 @@ if($dbSub)
     if ($seqno == 0)
     {
     $query2 = "insert into mas_wb_party (party_code, party_name, party_type) values ($code , '$name',$partytype)";
-    $result2 = mysql_query($query2,$dbSub);
+    $result2 = mysqli_query($dbSub, $query2);
 
 
 //echo $query2;
@@ -62,7 +75,7 @@ if($dbSub)
 //echo $query2;
 //echo "<br>";
   } 
-  mysql_free_result($result1);
+  mysqli_free_result($result1);
 
 
 // Master
@@ -70,9 +83,9 @@ if($dbSub)
  $query1 = "select * from massal_customer";
 
 
- $result1 = mysql_query($query1,$dbMain);
+ $result1 = mysqli_query($dbMain, $query1);
 
- while ($row = mysql_fetch_assoc($result1)) {
+ while ($row = mysqli_fetch_assoc($result1)) {
 
     $code          = $row['cust_code'];
     $refname       = $row['cust_ref'];
@@ -95,16 +108,20 @@ if($dbSub)
 
 
 
-    $queryfind = "select count(*) as nos from massal_customer where cust_code = $code";
-    $resultfind = mysql_query($queryfind,$dbSub);
-    $rec1 = mysql_fetch_array($resultfind);
+    $queryfind = "select count(*) as nos from massal_customer where cust_code = '$code'";
+
+    $resultfind = mysqli_query($dbSub, $queryfind);
+
+    $rec1 = mysqli_fetch_array($resultfind);
     $newno=$rec1['nos'];
 
 
 
-    $queryfind = "select count(*) as nos from massal_customer where left(cust_ref,2) = 'ZZ' and  cust_code = $code";
-    $resultfind = mysql_query($queryfind,$dbSub);
-    $rec1 = mysql_fetch_array($resultfind);
+    $queryfind = "select count(*) as nos from massal_customer where left(cust_ref,2) = 'ZZ' and  cust_code = '$code'";
+
+  $resultfind = mysqli_query($dbSub, $queryfind);
+
+    $rec1 = mysqli_fetch_array($resultfind);
     $oldno=$rec1['nos'];
 
       
@@ -114,7 +131,7 @@ if($dbSub)
  cust_state, cust_country, cust_zip, cust_gstin,cust_repr,cust_acc_group) values ($code , '$refname','$partyname','$cust_add1','$cust_add2',  '$cust_add3','$cust_city','$cust_state', '$cust_country', '$cust_zip', '$cust_gstin' , '$cust_repr','$cust_acc_group')";
 
 
-    $result2 = mysql_query($query2,$dbSub);
+    $result2 = mysqli_query($dbSub, $query2);
 
 
 //echo $query2;
@@ -127,7 +144,7 @@ if($dbSub)
 cust_repr = '$cust_repr',cust_acc_group = $cust_acc_group
   where cust_code = '$code'"; 
 
-    $result2 = mysql_query($query2,$dbSub);
+    $result2 = mysqli_query($dbSub, $query2);
     }   
 
 
@@ -136,7 +153,7 @@ cust_repr = '$cust_repr',cust_acc_group = $cust_acc_group
 //echo $query2;
 //echo "<br>";
   } 
-  mysql_free_result($result1);
+  mysqli_free_result($result1);
 
   }
 

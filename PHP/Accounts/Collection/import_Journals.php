@@ -93,8 +93,8 @@ $skip = 8;
 
 //echo $query1;
 
-		$result1  = mysql_query($query1);
-		$rec1     = mysql_fetch_array($result1);
+		$result1  = mysqli_query($conn, $query1);
+		$rec1     = mysqli_fetch_array($result1);
 		$recfound = $rec1['recfound'];
 
                 if ($recfound == 0)
@@ -119,8 +119,8 @@ $skip = 8;
 
 
 	$query1   = "select * from acc_collections where c_upd = 'N' and c_type ='J'";
-	$result1  = mysql_query($query1);
-	 while($row = mysql_fetch_array($result1)){
+	$result1  = mysqli_query($conn, $query1);
+	 while($row = mysqli_fetch_array($result1)){
 	      $invno   =  $row['c_invno'];
 	      $collamt =  $row['c_collamt'];
               $insert = $pdo->prepare("update acc_trail set acctrail_adj_value = acctrail_adj_value + $collamt  where acctrail_inv_no = '$invno'");
@@ -135,7 +135,7 @@ $skip = 8;
                }
 	 }
 	$query1   = "update acc_trail  set acctrail_adj_value = acctrail_inv_value where   acctrail_adj_value > acctrail_inv_value  and acctrail_accref_seqno > 0";
-	$result1  = mysql_query($query1);
+	$result1  = mysqli_query($conn, $query1);
 
 
 

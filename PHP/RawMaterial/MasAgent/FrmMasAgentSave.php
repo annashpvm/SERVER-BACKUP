@@ -5,31 +5,35 @@ session_start();
  $agentname=strtoupper($_POST['agentname']);
 
 $query = "select ifnull(max(sagt_code),0)+1 as sagt_code from mas_supagent";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $agtseq=$rec['sagt_code'];
 
 $qry = "select count(*) as cnt from mas_supagent where sagt_name = '$agentname'";
-$resag = mysql_query($qry);
-$recagent = mysql_fetch_array($resag);
+$resag = mysqli_query($conn, $qry);
+$recagent = mysqli_fetch_array($resag);
 $cnt=$recagent['cnt'];
 
 if($cnt==0)
 {
   $query1="insert into mas_supagent values('$agtseq','$agentname')";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 }
 
   if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $agentname . '"})';
 } 
   else if ($cnt>0) {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $agentname . '"})';
 }
   

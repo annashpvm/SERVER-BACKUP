@@ -50,20 +50,20 @@ $cust_gst_type = $_POST['cust_gst_type'];
 $accgrp = (int)$_POST['accgrp'];
 
 
-mysql_query("BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype === "Add")
 {
 
 	 $query1 = "select IFNULL(max(cust_code),0)+1 as custcode from massal_customer";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $custcode=$rec1['custcode'];
 
 
-	$qry = "select count(*) as cnt from massal_customer where cust_name = '$custname' or cust_ref = '$custref'";
-	$result1 = mysql_query($qry);
-	$rec2  = mysql_fetch_array($result1);
+	$sql = "select count(*) as cnt from massal_customer where cust_name = '$custname' or cust_ref = '$custref'";
+	$result1 = mysqli_query($conn, $sql);
+	$rec2  = mysqli_fetch_array($result1);
 	$cnt=$rec2['cnt'];
 
 
@@ -77,21 +77,21 @@ cust_code, cust_ref, cust_name, cust_add1, cust_add2, cust_add3, cust_city, cust
 
 //echo $query3;
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 
 
 
           $query5 = "select ifnull(max(curbal_seqno),0)+1 as curbal_seqno from acc_current_balance";
-          $result5 = mysql_query($query5);
-          $rec5= mysql_fetch_array($result5);
+          $result5 = mysqli_query($conn, $query5);
+          $rec5= mysqli_fetch_array($result5);
           $curbalseqno=$rec5['curbal_seqno'];
 
 
           $query6="call acc_sp_inscurrent_balance('$curbalseqno','$custcode','$finid','1')";
-          $result6= mysql_query($query6);  
+          $result6= mysqli_query($conn, $query6);  
           $curbalseqno = $curbalseqno + 1; 
           $query6="call acc_sp_inscurrent_balance('$curbalseqno','$custcode','$finid','90')";
-          $result6= mysql_query($query6);  
+          $result6= mysqli_query($conn, $query6);  
 
 //echo $query6;
 
@@ -100,18 +100,18 @@ else
 {
 
         $query2 = "insert into massal_customer_logs  select * from massal_customer where cust_code = '$custcode'"; 
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 
 	$cquery1 = "select ifnull(max(seqno),0) + 1 as reccount  from massal_customer where cust_code = '$custcode'";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
  $query3 = "update massal_customer set cust_ref = upper('$custref'),cust_name = upper('$custname'),cust_add1 = upper('$custadd1') ,cust_add2 = upper('$custadd2'),cust_add3 = upper('$custadd3'),cust_city = upper('$custcity'),cust_state = '$custstate',cust_country = '$custcountry',cust_zip = '$custzip',cust_phone = '$custphone',cust_email ='$custemail',cust_web = '$custweb',cust_contact =  '$custcont', cust_taxtag = '$custtaxtag',cust_cr_days = '$custcrdays',cust_grace_days =   '$custgrdays',cust_repr = '$custrepr',cust_dealer = '$custdealer',cust_panno =  '$custpanno',cust_gstin = upper('$custgstin') , cust_smsno =  '$custsmsno' , cust_partygroup =  '$custgroup' , cust_distance = $distance ,createdby  = '$usercode', createddate = '$today' , seqno = $reccount, cust_area = $custArea,
 cust_acc_group = '$accgrp'   where cust_code = '$custcode'"; 
 
 
-$result3=mysql_query($query3);
+$result3=mysqli_query($conn, $query3);
 
 
 }
@@ -120,32 +120,38 @@ if ($savetype === "Add")
 {
 	if($result3 && $result6  && $cnt==0 )
 	{
-	  mysql_query("COMMIT");                        
+		mysqli_commit($conn);                  
 	  echo '({"success":"true","custcode":"'.$custref.'"})';
 	}
 	else if ($cnt>0)
 	{
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 
 	}
 	else
         {
            echo '({"success":"false","custcode":"'.$custref.'"})';
-	   mysql_query("ROLLBACK");            
+	   mysqli_rollback($conn);
+
+            
 	} 
 }
 else
 {
 	if($result3)
 	{
-	  mysql_query("COMMIT");                        
+		mysqli_commit($conn);                      
 	  echo '({"success":"true","custcode":"'.$custref.'"})';
 	}
 	else
         {
            echo '({"success":"false","custcode":"'.$custref.'"})';
-	   mysql_query("ROLLBACK");            
+	   mysqli_rollback($conn);
+
+            
 	} 
 }
 

@@ -83,7 +83,7 @@ $paymodetype ='';
 // QC 
 	$query1= "update trn_qc_rm_inspection set qc_rm_grn_status = 'N',qc_rm_grnno = '' , qc_rm_dn_raised = 'N', qc_rm_debitnote_no = '' where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = '$qcinsno'";
 
-        $result1=mysql_query($query1);
+        $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -92,28 +92,28 @@ $paymodetype ='';
 
 
         $query2= "delete from trnrm_receipt_trailer where rect_hdseqno = '$rech_seqno'";
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 //echo $query2;
 //echo "<br>";
 
         $query3= "delete from trnrm_receipt_header where rech_compcode = $compcode and rech_fincode = $finid  and rech_seqno = '$rech_seqno'";
-        $result3=mysql_query($query3);
+        $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 //ACCOUNTS
 	$querya1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $resulta1 = mysql_query($querya1);
+        $resulta1 = mysqli_query($conn, $querya1);
 
 //echo $querya1;
 //echo "<br>";
 	$querya2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 //echo $querya2;
 //echo "<br>";	
         $querya3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $resulta3 = mysql_query($querya3);
+        $resulta3 = mysqli_query($conn, $querya3);
 //echo $querya3;
 //echo "<br>";	
 
@@ -153,11 +153,11 @@ $paymodetype ='';
 
 
 	$query5= "update trn_weight_card set wt_grn_process = 'N' where wc_compcode = '$compcode' and wc_fincode = '$finid'  and wc_ticketno = $ticketno";
-	 $result5=mysql_query($query5);
+	 $result5=mysqli_query($conn, $query5);
 
 
 	 $query6= "call sprm_upd_itemtrailer_avgrate ('$compcode','$finid','$itemcode','$grnqty','$costrate',1)";
-         $result6=mysql_query($query6);
+         $result6=mysqli_query($conn, $query6);
 
 //echo $query6;
 //echo "<br>";
@@ -169,14 +169,16 @@ $paymodetype ='';
 
 	if($result1 && $result2 && $result3 &&  $result5  &&  $resulta1 &&  $resulta2 &&  $resulta3 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 

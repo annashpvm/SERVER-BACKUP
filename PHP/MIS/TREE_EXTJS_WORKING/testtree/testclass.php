@@ -1,6 +1,6 @@
 <?php
 
-mysql_query("SET NAMES utf8");
+mysqli_set_charset($conn, "utf8");
 require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
 
 //$result = mysql_query("select yarn_cust_name,yarn_cust_address1,yarn_cust_address2,yarn_gstno,yarn_cust_comp_code from yarn_customer_master limit 20")or die(mysql_error());

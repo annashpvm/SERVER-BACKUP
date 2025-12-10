@@ -7,16 +7,18 @@ $invfincode  = $_POST['invfincode'];
 $invno       = $_POST['invno'];
 
 $query1= "update trn_other_sales set E_inv_confirm = 'Y' where os_invno = '$invno'  and os_fincode = '$invfincode'  and os_compcode = '$invcompcode'";
-$result1=mysql_query($query1); 
+$result1=mysqli_query($conn, $query1); 
 
 if ($result1)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $invno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $invno . '"})';
 }
    

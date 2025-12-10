@@ -84,13 +84,20 @@ $cdCRDR     = $_POST['cdCRDR'];
 $finsuffix   = $_POST['finsuffix'];
 
 
+$amtmode = "D";
+if ($cdCRDR == "C")
+    $amtmode = "C";
+else
+    $amtmode = "D";
+  
+
 $otheramt = 0;
 $otherled = 0;
 $frtamt   = 0;
 $frtled   = 0;
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
     $itemname  = substr(trim($_POST['itemname']),0,38);
 
@@ -98,14 +105,14 @@ if ($savetype == 'Add')
 {
 	#Get Max AccRef Seqno from acc_ref
 	$query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-	$result1 = mysql_query($query1);
-	$rec1 = mysql_fetch_array($result1);
+	$result1 = mysqli_query($conn, $query1);
+	$rec1 = mysqli_fetch_array($result1);
 	$ginaccrefseq = $rec1['con_value'];
 
 	#Get Voucher Number
 	$query2 = "select ifnull(max(dbcr_no),0) + 1 as dbcr_no from acc_dbcrnote_header where dbcr_type = '$voutype' and dbcr_finid = '$finid' and dbcr_comp_code = '$compcode';";
-	$result2 = mysql_query($query2);
-	$rec2 = mysql_fetch_array($result2);
+	$result2 = mysqli_query($conn, $query2);
+	$rec2 = mysqli_fetch_array($result2);
 	$conval = $rec2['dbcr_no'];
 // to be modified in the new fin year
 ////	$vouno = $voutype . $conval;
@@ -135,8 +142,8 @@ if ($savetype == 'Add')
 	#Get Max DBCR Seqno from acc_dbcrnote_header
 
 	$query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
-	$result3 = mysql_query($query3);
-	$rec3 = mysql_fetch_array($result3);
+	$result3 = mysqli_query($conn, $query3);
+	$rec3 = mysqli_fetch_array($result3);
 	$gindbcrseq = $rec3['con_value'];
 
 
@@ -147,30 +154,30 @@ else
 
 
 	$cquery1 = "select ifnull(max(accvou_slno),0) + 1 as reccount  from acc_voucher_logs where accvou_seqno = '$ginaccrefseq';";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
 
 
 
 	$query1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
 
 	$query2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 	
         $query3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 
         $query4 = "update acc_dbcrnote_header set dbcr_date = '$voudate' , dbcr_partycode = '$party',dbcr_partyledcode = '$partyledcode',dbcr_ledcode = '$drcrledger', dbcr_value = '$debitvalue', dbcr_narration =  '$narration' , dbcr_party_type = '$gltype'  , dbcr_output = '$output' ,dbcr_modifydate = '$today' where dbcr_vouno = '$vouno'  and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid'";
-        $result4 = mysql_query($query4);
+        $result4 = mysqli_query($conn, $query4);
 
   //      $query5 = "update acc_dbcrnote_trailer set dbcrt_inv_no = '$invno' , dbcrt_inv_date = '$invdate' , dbcrt_grossvalue = '$taxable', dbcrt_value ='$debitvalue', dbcrt_igstvalue = '$igstval' , dbcrt_cgstvalue = '$cgstval', dbcrt_sgstvalue = '$sgstval', dbcrt_igstper = '$igstper', dbcrt_cgstper = '$cgstper', dbcrt_sgstper = '$sgstper', dbcrt_igstledcode ='$igstledcode', dbcrt_csgstledcode =  '$cgstledcode' , dbcrt_cgstledcode = '$cgstledcode where dbcrt_seqno = '$gindbcrseq'";
 
         $query5 = "update acc_dbcrnote_trailer set dbcrt_inv_no = '$invno' , dbcrt_inv_date = '$invdate'  , dbcrt_grossvalue = '$taxable',dbcrt_value ='$debitvalue',dbcrt_igstvalue = '$igstval' ,dbcrt_cgstvalue = '$cgstval' ,dbcrt_sgstvalue = '$sgstval', dbcrt_igstper = '$igstper', dbcrt_cgstper = '$cgstper', dbcrt_sgstper = '$sgstper', dbcrt_igstledcode ='$igstledcode' , dbcrt_cgstledcode =  '$cgstledcode' , dbcrt_sgstledcode =  '$sgstledcode' ,dbcrt_rounding = '$rounding', dbcrt_otheramt  = '$otheramt', dbcrt_otherledcode = '$otherled', dbcrt_frtamt = '$frtamt' , dbcrt_frtledcode = '$frtled' , dbcrt_taxable = '$taxable'  where dbcrt_seqno = '$gindbcrseq'";
 
-       $result5 = mysql_query($query5);
+       $result5 = mysqli_query($conn, $query5);
 
 }
 
@@ -182,13 +189,13 @@ if ($conval > 0) {
 
 
     $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate','$voutype', '$bankname','$paymode','$invno', '$invdate','$narration');";
-    $resulta2 = mysql_query($querya2);
+    $resulta2 = mysqli_query($conn, $querya2);
 
 //echo $querya2;
 //echo "<br>";
 
 $cquerya3 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-$cresulta3 = mysql_query($cquerya3);
+$cresulta3 = mysqli_query($conn, $cquerya3);
 
 
 //echo $cquerya3;
@@ -216,7 +223,7 @@ $cresulta3 = mysql_query($cquerya3);
                if ($ledtype != 'G')
                {
                $querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$vouno', '$voudate', '$totamt' ,'$totamt' ,'$ledseq' ,'$amtmode','0','0')";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 
 //echo  $querya3;
 //echo "<br>";
@@ -228,7 +235,7 @@ $cresulta3 = mysql_query($cquerya3);
             #Insert AccTran
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 //echo  $querya4;	  
 //echo "<br>"; 
@@ -249,7 +256,7 @@ if ($savetype == 'Add')
 
 #Insert AccDbcrNoteHeader
     $querya6 = "call acc_sp_insdbcrnoteheader('$gindbcrseq','$compcode','$finid','$voutype','$conval','$vouno','$voudate','$party','$partyledcode','$drcrledger', '$debitvalue','$narration','$gltype' , '$output', '$ginaccrefseq','$hsncode',$usercode,'$qty','$cdreason','0','$itemname','$today','$today');";
-    $resulta6 = mysql_query($querya6);
+    $resulta6 = mysqli_query($conn, $querya6);
    
 
 //echo $querya6;
@@ -260,7 +267,7 @@ if ($savetype == 'Add')
 
 $querya7 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$invno','$invdate','$taxable' ,'$debitvalue','$igstval', '$cgstval','$sgstval','$igstper','$cgstper','$sgstper','$igstledcode','$cgstledcode','$sgstledcode',0,0,0,'$otheramt',
 '$otherled','$rounding','$frtamt','$frtled','$taxable')";
-    $resulta7 = mysql_query($querya7);
+    $resulta7 = mysqli_query($conn, $querya7);
 
 //echo $querya7;
 //echo "<br>";
@@ -272,10 +279,12 @@ if ($savetype == 'Add')
 {
 	if ($resulta2 && $resulta4  && $resulta6 && $resulta7) 
 	{
-	  mysql_query("COMMIT");
+	  mysqli_begin_transaction($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","vouno":"' . $vouno . '"})';
 	}
 }
@@ -283,10 +292,12 @@ else
 {
 	if ($result1  && $result2 && $result3 && $result4 && $result5) 
 	{
-	  mysql_query("COMMIT");
+	  mysqli_begin_transaction($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","vouno":"' . $vouno . '"})';
 	}
 }

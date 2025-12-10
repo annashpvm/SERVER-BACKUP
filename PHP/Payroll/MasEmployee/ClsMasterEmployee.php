@@ -8,7 +8,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        global $conn;
     switch($task){
 		case "loadQualification":
 		getQualification();
@@ -35,101 +35,99 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getQualification()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select qualification_code,qualification_name from mas_qualification order by qualification_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select qualification_code,qualification_name from mas_qualification order by qualification_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
  function getDepartment()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select department_code,department_name from mas_department order by department_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select department_code,department_name from mas_department order by department_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
    function getDesignation()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select design_code,design_name from mas_designation order by design_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select design_code,design_name from mas_designation order by design_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 		
 
  function getReligion()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select religion_code,religion_name from mas_religion order by religion_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select religion_code,religion_name from mas_religion order by religion_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
  function getCommunity()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select comm_code,comm_name from mas_community order by comm_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select comm_code,comm_name from mas_community order by comm_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getCaste()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select caste_code,caste_name from mas_caste order by caste_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select caste_code,caste_name from mas_caste order by caste_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 ?>

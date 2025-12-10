@@ -26,19 +26,19 @@ session_start();
 //echo '$itemname';
 if ($AEDFlag === "Add") {
 $query = "select ifnull(max(item_code),0)+1 as item_code from maspur_item_header";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $item_code=$rec['item_code'];
 
 $qry = "select count(*) as cnt from maspur_item_header where item_name = '$itemname'";
-$resgrp = mysql_query($qry);
-$recgrp = mysql_fetch_array($resgrp);
+$resgrp = mysqli_query($conn, $qry);
+$recgrp = mysqli_fetch_array($resgrp);
 $cnt=$recgrp['cnt']; 
 
 if($cnt==0)
 {
   $query1="insert into maspur_item_header values('$item_code','$itemgrp',UPPER('$itemname'),UPPER('$itemusage'), '$unit','$qualitychk','$hsncode','','','','','','','','','','',0,'N')";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
   
  // $instrailer = mysql_query("call sppur_ins_itemtrailer"); 
 }
@@ -47,30 +47,36 @@ else if ($AEDFlag === "Edit") {
  $item_code =$_POST['item_code'];
  
   $query2="Update maspur_item_header set item_name = UPPER('$itemname'),item_usage = UPPER('$itemusage'),item_group_code = '$itemgrp', item_uom = '$unit', item_hsncode = '$hsncode'  where item_code = '$item_code'"; 
-  $result2 = mysql_query($query2);
+  $result2 = mysqli_query($conn, $query2);
 }
 
 if ($AEDFlag === "Add") {
   if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $itemname2 . '"})';
 } 
 else if ($cnt>0) {
- mysql_query("ROLLBACK");
+ mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 }
  else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $itemname2 . '"})';
 }
 }
 else {
 if ($result2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $itemname2 . '"})';
 } 
  else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $itemname2 . '"})';
 }
 }

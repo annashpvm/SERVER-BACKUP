@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    global $conn;
 
     switch($task){
 
@@ -41,15 +41,7 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -61,39 +53,39 @@
     {
   	$fincode = $_POST['fincode'];
 	$compcode = $_POST['compcode'];      
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_no  desc");
-       $r=mysql_query("select * from acc_ref where accref_comp_code = '$compcode' and accref_finid = '$fincode' and accref_vou_type = 'GJV' order by substring(ltrim(accref_vouno),4,4) desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;
+        $sql = "select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_no  desc";
+       $sql = "select * from acc_ref where accref_comp_code = '$compcode' and accref_finid = '$fincode' and accref_vou_type = 'GJV' order by substring(ltrim(accref_vouno),4,4) desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getSearchLedgerlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
         $ledname = strtoupper($_POST['ledger']);
         $ledname = trim(str_replace(" ", "", $ledname)); 
         $ledname = trim(str_replace(".", "", $ledname)); 
 
-      $qry = "select * from massal_customer where  left(cust_name,2) != 'zz' and  replace(replace(cust_name,' ','')  ,'.','')  like '%$ledname%' order by cust_name";
+      $sql = "select * from massal_customer where  left(cust_name,2) != 'zz' and  replace(replace(cust_name,' ','')  ,'.','')  like '%$ledname%' order by cust_name";
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 /*
@@ -104,24 +96,25 @@
 	$compcode = $_POST['compcode'];
        	$vouno    = $_POST['vouno'];
 
-        mysql_query("SET NAMES utf8");
-//        $r=mysql_query("select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_vouno  desc");
+        global $conn;
+//        $sql = "select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_vouno  desc";
 
-$r=mysql_query("select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode");
+$sql = "select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 */
 
  function getVouNoList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
   	$fincode  = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
@@ -131,109 +124,120 @@ $r=mysql_query("select * from acc_ref ref  join acc_tran tran on  tran.acctran_a
         // $voutype  =  "'".$voutype. "', 'GJV', 'CNG', 'DNG'";
 
 
-        $qry = " select accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctran_cramt   from acc_ref ref left join acc_tran trn  on ref.accref_seqno = trn.acctran_accref_seqno and accref_vou_type = '$voutype' where accref_comp_code = $compcode  and accref_finid = $fincode and trn.acctran_led_code = $ledcode  order by accref_voudate desc ,accref_vouno desc";
+        $sql = " select accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctran_cramt   from acc_ref ref left join acc_tran trn  on ref.accref_seqno = trn.acctran_accref_seqno and accref_vou_type = '$voutype' where accref_comp_code = $compcode  and accref_finid = $fincode and trn.acctran_led_code = $ledcode  order by accref_voudate desc ,accref_vouno desc";
 
-        $qry = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctran_totamt,ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount from  acc_ref ref left join acc_tran trn  on ref.accref_seqno = trn.acctran_accref_seqno and accref_vou_type in ('$voutype')  left  join acc_adjustments on accref_comp_code = ref_compcode  and accref_finid = ref_finid and  accref_seqno = ref_docseqno  where accref_comp_code = $compcode and accref_finid =  $fincode and trn.acctran_led_code = $ledcode  and ref_adjamount > 0  order by accref_voudate desc ,ref_invno desc";
+        $sql = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctran_totamt,ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount from  acc_ref ref left join acc_tran trn  on ref.accref_seqno = trn.acctran_accref_seqno and accref_vou_type in ('$voutype')  left  join acc_adjustments on accref_comp_code = ref_compcode  and accref_finid = ref_finid and  accref_seqno = ref_docseqno  where accref_comp_code = $compcode and accref_finid =  $fincode and trn.acctran_led_code = $ledcode  and ref_adjamount > 0  order by accref_voudate desc ,ref_invno desc";
 
-		$qry = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctran_totamt,ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount from  acc_ref ref left join acc_tran trn  on ref.accref_seqno = trn.acctran_accref_seqno and accref_vou_type in ('$voutype')  left  join acc_adjustments on accref_comp_code = ref_compcode  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno OR  accref_seqno = ref_adjseqno)   where accref_comp_code = $compcode and accref_finid =  $fincode and trn.acctran_led_code = $ledcode  and ref_adjamount > 0  order by accref_voudate desc ,ref_invno desc";
+		$sql = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctran_totamt,ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount from  acc_ref ref left join acc_tran trn  on ref.accref_seqno = trn.acctran_accref_seqno and accref_vou_type in ('$voutype')  left  join acc_adjustments on accref_comp_code = ref_compcode  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno OR  accref_seqno = ref_adjseqno)   where accref_comp_code = $compcode and accref_finid =  $fincode and trn.acctran_led_code = $ledcode  and ref_adjamount > 0  order by accref_voudate desc ,ref_invno desc";
 
-		$qry = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno, acctrail_inv_value,ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount ,acctrail_amtmode 
+		$sql = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno,acctrail_inv_no,acctrail_inv_value,acctrail_adj_value,
+ acctrail_inv_value-acctrail_adj_value balamt, ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount ,acctrail_amtmode 
 from  acc_ref ref left join acc_trail trn  on ref.accref_seqno = trn.acctrail_accref_seqno and accref_vou_type in ('$voutype')  left  join acc_adjustments on accref_comp_code = ref_compcode  
-and accref_finid = ref_finid and  (accref_seqno = ref_docseqno OR  accref_seqno = ref_adjseqno)  where accref_comp_code = $compcode and accref_finid = $fincode   and trn.acctrail_led_code = $ledcode   and ref_adjamount > 0  order by accref_voudate desc ,ref_invno desc";
+and accref_finid = ref_finid and  (accref_seqno = ref_docseqno OR  accref_seqno = ref_adjseqno)  where accref_comp_code = $compcode and accref_finid = $fincode   and trn.acctrail_led_code = $ledcode   and ref_adjamount > 0  order by accref_voudate desc ,accref_vouno desc,ref_invno desc";
 
-// echo $qry;
+//echo $sql;
 
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
  function getVouNoDetail()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
   	$fincode  = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
 	$ledcode  = $_POST['ledcode'];
     $seqno    = $_POST['seqno'];
 	$voudrcr  = $_POST['voudrcr'];
+	$ledcode  = $_POST['ledcode'];
+
 
 	if ($voudrcr == "D") 
 	   $voutype = "C";
 	else 
 	   $voutype = "D";
 
-        $qry = " select accref_seqno, ref_adjseqno, acctrail_inv_no , DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y')  acctrail_inv_date ,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  accref_seqno = ref_docseqno join acc_trail on acctrail_accref_seqno = ref_adjseqno   where accref_comp_code = $compcode and accref_finid = $fincode  and accref_seqno = $seqno  ";
 
-//        $qry = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type from (select ref_slno,ref_docseqno, ref_adjseqno, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno   where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
+/*
+        $sql = " select accref_seqno, ref_adjseqno, acctrail_inv_no , DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y')  acctrail_inv_date ,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  accref_seqno = ref_docseqno join acc_trail on acctrail_accref_seqno = ref_adjseqno   where accref_comp_code = $compcode and accref_finid = $fincode  and accref_seqno = $seqno  ";
+
+//        $sql = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type from (select ref_slno,ref_docseqno, ref_adjseqno, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno   where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
 
 
 	if ($voudrcr  == "D")
-        $qry = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type from
-(select ref_slno,ref_docseqno, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno   where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
+        $sql = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type from
+(select ref_slno,ref_docseqno, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid  and ref_ledcode = $ledcode   and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno and acctrail_led_code = $ledcode  where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
+
      else 
-	   $qry = "select ref_slno, ref_docseqno, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no, acctrail_inv_date, DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate, ref_paymt_terms, acctrail_inv_value,  acctrail_inv_value - acctrail_adj_value  pendingamt, ref_adjamount, acctrail_amtmode, accref_vouno, accref_vou_type   from acc_adjustments join acc_ref on ref_docseqno = accref_seqno  join acc_trail  on ref_docseqno = acctrail_accref_seqno where ( ref_adjseqno = $seqno  or  ref_docseqno = $seqno  )";
+//	   $sql = "select ref_slno, ref_docseqno, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no, acctrail_inv_date, DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate, ref_paymt_terms, acctrail_inv_value,  acctrail_inv_value - acctrail_adj_value  pendingamt, ref_adjamount, acctrail_amtmode, accref_vouno, accref_vou_type   from acc_adjustments join acc_ref on ref_docseqno = accref_seqno  join acc_trail  on ref_docseqno = acctrail_accref_seqno where ( ref_adjseqno = $seqno  or  ref_docseqno = $seqno  )";
 
 
-	   $qry = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type , '$voudrcr'  mdrcr from
-	   (select ref_slno,ref_docseqno,ref_docno,ref_docdate, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode ,acctrail_amtmode adrcr from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno  and acctrail_amtmode = '$voutype'  where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
+	   $sql = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type , '$voudrcr'  mdrcr from
+	   (select ref_slno,ref_docseqno,ref_docno,ref_docdate, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode ,acctrail_amtmode adrcr from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid   and ref_ledcode = $ledcode  and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno and acctrail_led_code = $ledcode   and acctrail_amtmode = '$voutype'  where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
+
+//	   $sql = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type , '$voudrcr'  mdrcr from
+//	   (select ref_slno,ref_docseqno,ref_docno,ref_docdate, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode ,acctrail_amtmode adrcr from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on (acctrail_accref_seqno = ref_adjseqno OR acctrail_accref_seqno = ref_docseqno )  and acctrail_amtmode = '$voutype'  where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
 	   
- //echo $qry;
+*/
+    $sql = "select a1.*, b1.accref_vouno ,  b1.accref_vou_type , '$voudrcr'  mdrcr from
+    (select ref_slno,ref_docseqno,ref_docno,ref_docdate, ref_adjseqno,ref_adjvouno,ref_adjvoudate, acctrail_inv_no , acctrail_inv_date ,DATE_FORMAT(acctrail_inv_date, '%d-%m-%Y') invdate ,ref_paymt_terms,acctrail_inv_value , acctrail_inv_value - acctrail_adj_value pendingamt,ref_adjamount ,acctrail_amtmode ,ref_adjvoutype_db_cr adrcr from acc_ref ref left join acc_adjustments adj on ref_compcode = accref_comp_code  and accref_finid = ref_finid   and ref_ledcode = $ledcode   and ref_adjvoutype_db_cr = '$voutype'  and  (accref_seqno = ref_docseqno or accref_seqno = ref_adjseqno)   join acc_trail on acctrail_accref_seqno = ref_adjseqno and acctrail_led_code = $ledcode   and acctrail_amtmode = '$voutype'  where accref_comp_code = $compcode and accref_finid = $fincode and accref_seqno = $seqno) a1 join  acc_ref b1 on  b1.accref_seqno = a1.ref_adjseqno ";
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+
+
+//echo $sql;
+
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 
  function getUnAdjustedBills()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
   	$fincode  = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
 	$ledcode  = $_POST['ledcode'];
 	$rdate     = $_POST['asondate'];
 
-        $qry = "select  accref_seqno,cust_name,acctrail_led_code,accref_vouno, acctrail_inv_no,  acctrail_inv_date,
+        $sql = "select  accref_seqno,cust_name,acctrail_led_code,accref_vouno, acctrail_inv_no,  acctrail_inv_date,
    DATE_FORMAT(acctrail_inv_date ,'%d-%m-%Y') as  invdate,   acctrail_inv_value, acctrail_adj_value,
   acctrail_inv_value - acctrail_adj_value balance,  acctrail_amtmode, acctrail_crdays  from acc_ref ref  left join acc_trail trail  on ref.accref_seqno = trail.acctrail_accref_seqno join massal_customer mas   on trail.acctrail_led_code = mas.cust_code  and acctrail_inv_value > acctrail_adj_value and acctrail_led_code = $ledcode  and accref_voudate <= '$rdate' where accref_comp_code= $compcode ";
 
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
  function getVouTypeList()
  {
-        $qry = "select accref_vou_type from acc_ref  where length(accref_vou_type) = 3  group by accref_vou_type  order by accref_vou_type  asc";
+        $sql = "select accref_vou_type from acc_ref  where length(accref_vou_type) = 3  group by accref_vou_type  order by accref_vou_type  asc";
 
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
 
  }
 ?>

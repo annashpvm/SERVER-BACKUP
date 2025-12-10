@@ -18,7 +18,7 @@ var UserId   = localStorage.getItem('ginuserid');
 
    function check_password()
    {
-      if (txtPassword.getRawValue() == "REELCLOSE")
+      if (txtPassword.getRawValue() == "closereel")
       {
         Ext.getCmp('save').setDisabled(false);
       }

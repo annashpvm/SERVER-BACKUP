@@ -25,17 +25,19 @@ for ($i=0;$i<$rowcnt;$i++)
 
 //	$query1= "update massal_customer set cust_cr_days = $crdays ,cust_desp_target = $target , cust_noof_visits = $visits ,cust_payperf = '$payperf' where cust_code = '$custcode'";
 
-	$result1=mysql_query($query1);            
+	$result1=mysqli_query($conn, $query1);            
 }
 
 
 if ($result1) {
 
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $maadvno . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $maadvno . '"})';
 }
   

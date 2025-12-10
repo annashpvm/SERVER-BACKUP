@@ -1,20 +1,30 @@
 <?php
-
-    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
 session_start();
-$username=$_POST['username']; 
-$_SESSION["modflag"]=$_POST['flag'];
 
-//$query = mysql_query("select userid,userpwd,userrole from usersmaster where userid='$username'");
+$username = $_POST['username'] ?? '';
+$_SESSION["modflag"] = $_POST['flag'] ?? '';
 
-//$query=mysql_query("select usr_code as userid,usr_name as username,usr_type as userrole from mas_users  where usr_code = '$username'");
+// Use the existing MySQLi connection ($conn) from dbConn.php
+// Make sure $conn is properly initialized there using mysqli_connect()
 
-$query=mysql_query("select usr_code as userid,usr_name as username,usr_type as userrole from userMaster  where usr_code = '$username'");
+$sql = "SELECT usr_code AS userid, usr_name AS username, usr_type AS userrole 
+        FROM userMaster 
+        WHERE usr_code = ?";
 
-if(mysql_num_rows($query) > 0) 
-{
-	$arr = mysql_fetch_array($query);
-	$_SESSION["user"] = $arr['userrole'];
-        echo "success";
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "s", $username);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+if (mysqli_num_rows($result) > 0) {
+    $arr = mysqli_fetch_assoc($result);
+    $_SESSION["user"] = $arr['userrole'];
+    echo "success";
+} else {
+    echo "failed";
 }
+
+mysqli_stmt_close($stmt);
+mysqli_close($conn);
 ?>

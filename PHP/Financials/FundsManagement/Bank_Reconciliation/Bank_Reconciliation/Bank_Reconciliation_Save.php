@@ -5,11 +5,11 @@ mysql_query('SET NAMES utf8');
 $useridd = $_POST['userid'];
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $query = "select ifnull(max(seqno),0)+1  as seq from maintenance.mms_maintenance_planMaster";
-$res = mysql_query($query);
-$rec = mysql_fetch_array($res);
+$res = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($res);
 $seqno = $rec['seq'];
 
 
@@ -26,7 +26,7 @@ for ($i = 0; $i < $rowcnt; $i++) {
 
     $query = "INSERT IGNORE INTO accref_bankrecon(accref_seqno,created_by,created_date) VALUES ('$seqno','$useridd',now())";
 
-    $result = mysql_query($query);
+    $result = mysqli_query($conn, $query);
     
     $queryy = "update accref_bankrecon
   set
@@ -39,7 +39,7 @@ for ($i = 0; $i < $rowcnt; $i++) {
   where
   accref_seqno='$seqno'
   ";
-    $resultt = mysql_query($queryy);
+    $resultt = mysqli_query($conn, $queryy);
     if ($resultt) {
         $intcnt = $intcnt + 1;
     }
@@ -65,7 +65,7 @@ for ($i = 0; $i < $rowcnt2; $i++) {
   where
   seqno='$seqno'
   ";
-    $resultt2 = mysql_query($queryy2);
+    $resultt2 = mysqli_query($conn, $queryy2);
     if ($resultt2) {
         $intcnt2 = $intcnt2 + 1;
     }
@@ -74,9 +74,11 @@ for ($i = 0; $i < $rowcnt2; $i++) {
 
 
 if ($resultt || $resultt2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $num . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $num . '"})';
 }

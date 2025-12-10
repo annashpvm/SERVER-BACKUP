@@ -23,7 +23,7 @@
 
          $today = date("Y-m-d H:i:s"); 
 
-	mysql_query("BEGIN");
+	mysqli_query($conn, "BEGIN");
 
 	for ($i=0;$i<$rowcnt;$i++)
 	{
@@ -71,7 +71,7 @@
 
 
                 $query1 = "update trn_qc_rm_inspection set qc_rm_act_moisure_qty = $actmois,  qc_rm_mois_tolarance = $moistol , qc_rm_moisper = $moisper   where qc_rm_compcode = $compcode and qc_rm_fincode = '$finid' and qc_rm_entryno = '$rmentryno' and qc_rm_slno = $slno and  qc_rm_itemcode =$itemcode";
-                $result1=mysql_query($query1);
+                $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -81,7 +81,7 @@
 
 //echo $query2;
 //echo "<br>";	
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 
 
 }
@@ -89,14 +89,16 @@
 
 if($result1 && $result2 )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","EntryNo":"' . $rmentryno . '"})';
 
 	    
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","EntryNo":"' . $rmentryno . '"})';
 }
  

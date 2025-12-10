@@ -351,6 +351,7 @@ var btnStkChange = new Ext.Button({
       else
       {
         btnStkChange.hide();
+        btnStkChange.show();
         Ext.getCmp('txtYearOpeningStock').setReadOnly(true);   
         Ext.getCmp('txtYearOpeningValue').setReadOnly(true);   
         Ext.getCmp('txtTodayClosingStock').setReadOnly(true);   
@@ -524,7 +525,7 @@ var btnStkChange = new Ext.Button({
         fieldLabel  : 'Avg. Rate',
         id          : 'txtAvgRate',
         name        : 'txtAvgRate',
-        width       :  90,
+        width       :  100,
 	readOnly : true,
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
@@ -533,7 +534,7 @@ var btnStkChange = new Ext.Button({
             'style': 'Helvetica',
             'font-size': '14px','font-weight':'bold'
         },
-        decimalPrecision: 2,
+        decimalPrecision: 5,
     });
 
 
@@ -844,7 +845,7 @@ var flxMonth = new Ext.grid.EditorGridPanel({
                 url: 'ClsItemStock.php',      // File to connect to
                 method: 'POST'
             }),
-            baseParams:{task:"loaditemDetail"}, // this parameter asks for listing
+            baseParams:{task:"item_code"}, // this parameter asks for listing
       reader: new Ext.data.JsonReader({
                   // we tell the datastore where to get his data from
         root: 'results',
@@ -858,7 +859,7 @@ var flxMonth = new Ext.grid.EditorGridPanel({
  'item_spec6', 'item_spec7', 'item_spec8', 'item_spec9', 'item_spec10', 'item_loc_code', 
 'item_close',  'item_stock', 'item_avg_rate', 'item_reorder_stock', 'item_yr_opqty', 'item_yr_opval',
    'subgrp_code', 'subgrp_name', 'subgrp_grpcode', 'grp_code', 'grp_name', 'uom_code', 'uom_name', 
-'uom_short_name' 
+'uom_short_name' ,'item_stockvalue'
 
       ]),
     });
@@ -1321,13 +1322,16 @@ function grid_chk_flxItem()
 // txtItemName2.setValue(loadItemDetailDatastore.getAt(0).get('item_name'));
         Ext.getCmp('lblItem').setText(loadItemDetailDatastore.getAt(0).get('item_name'));
  var clval  = Number(loadItemDetailDatastore.getAt(0).get('item_stock')) * Number(loadItemDetailDatastore.getAt(0).get('item_avg_rate'));
+
+
                clval = clval.toFixed(2);      
 
                txtYearOpeningStock.setRawValue(Ext.util.Format.number(loadItemDetailDatastore.getAt(0).get('item_yr_opqty'),'0.000'));
                txtYearOpeningValue.setRawValue(Ext.util.Format.number(loadItemDetailDatastore.getAt(0).get('item_yr_opval'),'0.00'));
                txtTodayClosingStock.setRawValue(Ext.util.Format.number(loadItemDetailDatastore.getAt(0).get('item_stock'),'0.000'));
-               txtTodayClosingValue.setRawValue(clval,'0.00');
-               txtAvgRate.setRawValue( Ext.util.Format.number(loadItemDetailDatastore.getAt(0).get('item_avg_rate'),'0.0000'));
+               //txtTodayClosingValue.setRawValue(clval,'0.00');
+               txtTodayClosingValue.setRawValue(Ext.util.Format.number(loadItemDetailDatastore.getAt(0).get('item_stockvalue'),'0.00'));
+               txtAvgRate.setRawValue( Ext.util.Format.number(loadItemDetailDatastore.getAt(0).get('item_avg_rate'),'0.00000'));
 
                cmbUnit.setValue(loadItemDetailDatastore.getAt(0).get('uom_code'));
                cmbGroup.setValue(loadItemDetailDatastore.getAt(0).get('subgrp_code'));
@@ -1817,7 +1821,7 @@ function grid_chk_flxItem()
         txtOpeningValue.setValue('');
         txtClosingStock.setValue('');
         txtClosingValue.setValue('');
-        btnStkChange.hide();
+        btnStkChange.show();
 
     }
 

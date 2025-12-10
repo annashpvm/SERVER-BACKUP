@@ -10,7 +10,7 @@
 <script type="text/javascript" src="MasCreditorNew.js"></script>
 <!-- <script type="text/javascript" src="/SHVPM/Purchase/PurchaseMenus.js""></script>  -->
 <?php
-  //   require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/Purchase/PurchaseMainPage.php");
+  //   require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/Purchase/PurchaseMainPage.php";
 ?>
 </head>
 <body>

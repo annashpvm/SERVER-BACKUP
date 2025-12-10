@@ -9,39 +9,43 @@ session_start();
 if ($savetype  ==  "Add")
 {
 	$query = "select ifnull(max(mas_area_repgrp_code),0)+1 as areaseq from mas_area_report_group";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$areaseq=$rec['areaseq'];
 
 	$qry = "select count(*) as cnt from mas_area_report_group where mas_area_repgrp_name = '$AreaGroup'";
-	$res = mysql_query($qry);
-	$reclot = mysql_fetch_array($res);
+	$res = mysqli_query($conn, $qry);
+	$reclot = mysqli_fetch_array($res);
 	$cnt=$reclot['cnt'];
 
 	if($cnt==0)
 	{
 	  $query1="insert into mas_area_report_group values('$areaseq','$AreaGroup')";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	}
 }
 else
 {
 	  $query1="update mas_area_report_group set mas_area_repgrp_name='$AreaGroup' where mas_area_repgrp_code=$oldareagrp";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
           $cnt=0;
 
 
 }
   if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $AreaGroup . '"})';
 } 
   else if ($cnt>0) {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $AreaGroup . '"})';
 }
   

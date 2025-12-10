@@ -8,7 +8,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadVariety":
 		getVarietyList();
@@ -35,111 +35,107 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getVarietyList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select var_groupcode,var_desc from masprd_variety order by var_desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select var_groupcode,var_desc from masprd_variety order by var_desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
  function getvarietydetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
      	$grpcode = $_POST['grpcode'];
-        $r=mysql_query("select * from masprd_variety a, masprd_type b where a.var_typecode = b.vargrp_type_code and a.var_groupcode = $grpcode");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from masprd_variety a, masprd_type b where a.var_typecode = b.vargrp_type_code and a.var_groupcode = $grpcode";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 		
  function getallSizeList()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select a.var_code,var_name,var_desc,var_grpcode,var_bf,var_gsm,var_size1, var_size2 ,var_inchcm,var_shade,
-case var_inchcm when 'I' then 'Inch' else 'CMS' end as sizein,case var_shade when 'NS' then 'NAT'  when  'GY' then 'GYT'  when  'DP' then 'DP' when  'SY' then 'SHYS' when  'B' then 'GB' when  'VV' then 'SHVV+' when  'BB' then 'BB' end  as shade ,var_typecode ,vargrp_type_hsncode,var_sheets,var_reams from massal_variety a ,masprd_variety b , masprd_type c where b.var_typecode = c.vargrp_type_code and  a.var_grpcode = b.var_groupcode order by var_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "select a.var_code,var_name,var_desc,var_grpcode,var_bf,var_gsm,var_size1, var_size2 ,var_inchcm,var_shade,
+case var_inchcm when 'I' then 'Inch' else 'CMS' end as sizein,case var_shade when 'NS' then 'NAT'  when  'GY' then 'GYT'  when  'DP' then 'DP' when  'SY' then 'SHYS' when  'B' then 'GB' when  'VV' then 'SHVV+' when  'BB' then 'BB' end  as shade ,var_typecode ,vargrp_type_hsncode,var_sheets,var_reams from massal_variety a ,masprd_variety b , masprd_type c where b.var_typecode = c.vargrp_type_code and  a.var_grpcode = b.var_groupcode order by var_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getShades()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select  * from massal_shade order by shade_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "select  * from massal_shade order by shade_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
 
     }
 
  function getShadecode()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
      	$shadecode = $_POST['shadecode'];
-        $r=mysql_query("select  * from massal_shade where shade_code =  '$shadecode'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select  * from massal_shade where shade_code =  '$shadecode'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getSearchSizelist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
         $size  = $_POST['size'];
         $size = trim(str_replace(" ", "", $size)); 
 
   
 
-        $qry = "select * from massal_variety where var_name like '$size%' order by var_name ";
+        $sql = "select * from massal_variety where var_name like '$size%' order by var_name ";
 
 //echo $qry;
 //echo "<br>";
+    $r = mysqli_query($conn, $sql);
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 ?>

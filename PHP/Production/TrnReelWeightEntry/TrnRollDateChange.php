@@ -18,22 +18,24 @@ $cnt = 0;
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 	$query4= "update trnsal_finish_stock set stk_ent_date = '$entrydate'   where stk_comp_code = '$compcode' and stk_finyear = '$fincode' and CHAR_LENGTH(stk_sr_no) = 10 and stk_rollno  >= $rollnofrom  and stk_rollno  <= $rollnoto and stk_yymm = '$yymm' ";
 
-	$result4=mysql_query($query4);            
+	$result4=mysqli_query($conn, $query4);            
 
        
 
 	if (result4)  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $rollnofrom . '"})';
      	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $rollnofrom . '"})';
 
 	}

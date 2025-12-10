@@ -29,7 +29,7 @@ $gindbcrseq  = (int)$_POST['dnseqno'];
 
 
         $query1 = "update trnrm_receipt_header set rech_billno = '$newbillno' , rech_billdate = '$NewBillDt'  where rech_compcode = $compcode and rech_fincode = $finid  and rech_no = '$rech_no'";
-        $result1=mysql_query($query1);
+        $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -39,12 +39,12 @@ $gindbcrseq  = (int)$_POST['dnseqno'];
 
 //ACCOUNTS
         $query2 = "update acc_ref set accref_payref_no = '$newbillno'  , accref_payref_date = '$NewBillDt'   where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid' and accref_vouno = '$rech_no'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 //echo $query2;
 //echo "<br>";	
 
         $query3 = "update acc_trail set acctrail_inv_no = '$newbillno'  , acctrail_inv_date = '$NewBillDt'   where acctrail_accref_seqno ='$ginaccrefseq'";
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";	
@@ -55,14 +55,14 @@ $gindbcrseq  = (int)$_POST['dnseqno'];
 //echo $queryQC1;
 //echo "<br>";
 
-$resultQC1 = mysql_query($queryQC1);
+$resultQC1 = mysqli_query($conn, $queryQC1);
 
 
 if ($gindbcrseq >0 )
 {
         $DNquery8 = "update acc_dbcrnote_trailer set dbcrt_inv_no = '$newbillno' , dbcrt_inv_date = '$NewBillDt'  where dbcrt_seqno = '$gindbcrseq'";
 
-       $DNresult8 = mysql_query($DNquery8);
+       $DNresult8 = mysqli_query($conn, $DNquery8);
 }
 
 
@@ -71,14 +71,16 @@ if ($gindbcrseq >0 )
 
 	if($result1 && $result2 && $result3 && $resultQC1)
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 

@@ -32,18 +32,18 @@ if ($savetype === "Add")
 {
 
 	$query   = "select ifnull(max(usr_code),0)+1 as usrcode from userMaster";
-	$result  = mysql_query($query);
-	$rec     = mysql_fetch_array($result);
+	$result  = mysqli_query($conn, $query);
+	$rec     = mysqli_fetch_array($result);
 	$usr_code = $rec['usrcode'];
 
 	$qry = "select count(*) as cnt from userMaster where usr_name = '$username'";
-	$resag = mysql_query($qry);
-	$recvar = mysql_fetch_array($resag);
+	$resag = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($resag);
 	$cnt=$recvar['cnt'];
 
 	$qry1 = "select count(*) as cnt2 from userMaster where usr_login = '$loginname'";
-	$resag1 = mysql_query($qry1);
-	$recvar1 = mysql_fetch_array($resag1);
+	$resag1 = mysqli_query($conn, $qry1);
+	$recvar1 = mysqli_fetch_array($resag1);
 	$cnt2=$recvar1['cnt2'];
 
 
@@ -53,7 +53,7 @@ if ($savetype === "Add")
 //	  $query1="insert into userMaster values('$usr_code','$department','$username','$loginname', '$pw', '$usrtype','$accounts','$sales','$production','$purchase','$stores','$rawmaterial','$fuel','$imports','$payroll','Y')";
 
 	  $query1="insert into userMaster values('$usr_code','$department','$username','$loginname', '$pw', '$usrtype', 'NO', 'NO','NO','NO','NO','NO','NO','NO','NO','NO','NO','NO','Y')";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
 //          echo $query1;
 
@@ -66,59 +66,59 @@ if ($savetype === "Add")
                 if ($seqno == 1)
                 {   
                    $query2 = "update  userMaster set usr_accounts = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                 if ($seqno == 2)
                 {
                    $query2 = "update  userMaster set usr_sales = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 3)
                 {
                    $query2 = "update  userMaster set usr_stores = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
  
                 if ($seqno == 4)
                 {
                    $query2 = "update  userMaster set usr_rawmaterial = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 5)
                 {
                    $query2 = "update  userMaster set usr_purchase = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 7)
                 {
                    $query2 = "update  userMaster set usr_fuel = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 8)
                 {
                    $query2 = "update  userMaster set usr_production = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                 if ($seqno == 9)
                 {
                    $query2 = "update  userMaster set usr_payroll = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 10)
                 {
                    $query2 = "update  userMaster set usr_indent = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
  
                 if ($seqno == 11)
                 {
                    $query2 = "update  userMaster set usr_import = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 12)
                 {
                    $query2 = "update  userMaster set usr_inward = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
 
 
@@ -131,21 +131,27 @@ if ($savetype === "Add")
 
 
 	  if ($result1 && $cnt==0) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $username . '"})';
 	} 
 	  else if ($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 	}
 	  else if ($cnt2>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt2":"' . $cnt2 . '"})';
 	
 	}
        else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $username . '"})';
 	}
  }
@@ -159,59 +165,59 @@ if ($savetype === "Add")
                 if ($seqno == 1)
                 {   
                    $query2 = "update  userMaster set usr_accounts = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                 if ($seqno == 2)
                 {
                    $query2 = "update  userMaster set usr_sales = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 3)
                 {
                    $query2 = "update  userMaster set usr_stores = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
  
                 if ($seqno == 4)
                 {
                    $query2 = "update  userMaster set usr_rawmaterial = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 5)
                 {
                    $query2 = "update  userMaster set usr_purchase = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 7)
                 {
                    $query2 = "update  userMaster set usr_fuel = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 8)
                 {
                    $query2 = "update  userMaster set usr_production = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                 if ($seqno == 9)
                 {
                    $query2 = "update  userMaster set usr_payroll = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 10)
                 {
                    $query2 = "update  userMaster set usr_indent = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
  
                 if ($seqno == 11)
                 {
                    $query2 = "update  userMaster set usr_import = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
                  if ($seqno == 12)
                 {
                    $query2 = "update  userMaster set usr_inward = '$flag' where usr_code = $usr_code";
-                   $result2 = mysql_query($query2); 
+                   $result2 = mysqli_query($conn, $query2); 
                 }
 
 
@@ -221,12 +227,14 @@ if ($savetype === "Add")
 
 
 	  if ($result2) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $username . '"})';
 	  } 
 	
 	  else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $username . '"})';
 	   }
      } 

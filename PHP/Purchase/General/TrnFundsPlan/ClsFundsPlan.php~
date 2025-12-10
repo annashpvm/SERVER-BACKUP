@@ -1,0 +1,75 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task="loadFundPlanDetails";
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadFundPlanDetails":
+		getFundsPlan();
+		break;
+
+		case "loadFundPaidDetails":
+		getFundsPaid();
+		break;
+
+	        default:
+		break;
+               	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getFundsPlan()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+
+        $startdate = $_POST['startdate'];
+        $enddate   = $_POST['enddate'];
+
+$r=mysql_query("select fp_date,DATE_FORMAT(fp_date, '%d-%m-%Y') fp_date2,fp_ilc,fp_dpda,fp_gst,fp_salary,fp_eb, fp_wp,fp_biomass,fp_duty,fp_chemicals,fp_coal,fp_emi, fp_spares,fp_total from trn_funds_plan where fp_date between '$startdate' and '$enddate' order by fp_date");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }	
+
+
+ function getFundsPaid()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+
+        $repdate = $_POST['repdate'];
+
+
+        $r=mysql_query("select * from trn_funds_plan where fp_date =  '$repdate'");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }	
+?>
+
+
+
+

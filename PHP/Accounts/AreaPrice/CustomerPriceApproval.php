@@ -8,22 +8,24 @@ $compcode   = $_POST['compcode'];
 $usercode   = (int) $_POST['usercode']; 
 $product    = (int) $_POST['product']; 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 $query1="update massal_rate set rate_approved = 'Y' , rate_verified = $usercode  where rate_comp_code= $compcode and rate_fincode = $finid   and rate_code = $apprno and rate_vartype = $product"; 
 
 //echo $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 
   if ($result1) {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $apprno . '"})';
   }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $apprno . '"})';
 }
   

@@ -20,23 +20,25 @@ $invhslipdt   = $_POST['invhslipdt'];
 
 $query1= "update trnsal_invoice_header set invh_vehi_no = '$invhvehino' where invh_invrefno = '$invhrefno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
 
-$result1=mysql_query($query1);   
+$result1=mysqli_query($conn, $query1);   
  
 
 $query2= "update trnsal_packslip_header set pckh_truck = '$invhvehino' where pckh_no = $invhslipno  and pckh_fincode = '$invhfincode'  and pckh_comp_code = '$invhcompcode'";
 	      
-$result2=mysql_query($query2);    
+$result2=mysqli_query($conn, $query2);    
 
 
 
 if ($result1 && $result2)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $invhrefno . '"})';
 }
   

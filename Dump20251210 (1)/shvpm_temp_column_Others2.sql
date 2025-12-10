@@ -1,0 +1,74 @@
+CREATE DATABASE  IF NOT EXISTS `shvpm` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `shvpm`;
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+--
+-- Host: 10.0.0.251    Database: shvpm
+-- ------------------------------------------------------
+-- Server version	8.0.42-0ubuntu0.20.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `temp_column_Others2`
+--
+
+DROP TABLE IF EXISTS `temp_column_Others2`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `temp_column_Others2` (
+  `accref_seqno` int NOT NULL,
+  `accref_vou_type` varchar(13) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '',
+  `accref_vouno` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `accrefvoudate` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `accref_voudate` datetime NOT NULL,
+  `vou_refno` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `billdate` datetime NOT NULL,
+  `accref_narration` varchar(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `accrefno` int DEFAULT NULL,
+  `cust_ref` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `cust_gstin` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `Qty` decimal(35,3) DEFAULT NULL,
+  `invamt` decimal(36,2) DEFAULT NULL,
+  `uom` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `value1` decimal(40,2) DEFAULT NULL,
+  `rate` decimal(47,6) DEFAULT NULL,
+  `INPUT IGST @18%` decimal(36,2) DEFAULT NULL,
+  `MACHINERY MAINTENANCE -IGST 18%` decimal(36,2) DEFAULT NULL,
+  `PACKING CHARGES - IGST` decimal(36,2) DEFAULT NULL,
+  `ROUNDED OFF` decimal(36,2) DEFAULT NULL,
+  `ELECTRICAL MAINTENANCE-IGST 18%` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `CHEMICAL-IGST 18%` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `FREIGHT INWARD - IGST` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `OTHER CHARGES` decimal(12,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `temp_column_Others2`
+--
+
+LOCK TABLES `temp_column_Others2` WRITE;
+/*!40000 ALTER TABLE `temp_column_Others2` DISABLE KEYS */;
+INSERT INTO `temp_column_Others2` VALUES (120085,'Stores','GS0432','08-07-2025','2025-07-08 00:00:00','046','2025-07-08 00:00:00','Received Material(s) GM SHAFT FOR BF MACHINE Qty : 1 @ 3800LIMIT SWITCH Qty : 1 @ 485SPIDER COUPLING BUSH M-075 STAR TYPE  Qty : 1 @ 150',120085,'SHREYAS INSTRUMENTS','29AIGPR8392C1ZS',3.000,5470.00,'NOS',4435.00,1478.333333,834.30,4435.00,200.00,0.70,0.00,0.00,0.00,0.00),(120336,'Stores','GS0450','11-07-2025','2025-07-11 00:00:00','KKI/U2/019/25-26','2025-07-03 00:00:00','Received Material(s) VACUUM SEPARATER PUMP KPS-90 Qty : 1 @ 130500',120336,'KAKATI KARSHAK INDUSTRIES PRIVATE LIMITED','36AAACK8301R1Z6',1.000,142749.00,'NOS',117450.00,117450.000000,21775.23,117450.00,3523.50,0.27,0.00,0.00,0.00,0.00);
+/*!40000 ALTER TABLE `temp_column_Others2` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-12-10 11:47:23

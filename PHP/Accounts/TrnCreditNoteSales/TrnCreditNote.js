@@ -3748,7 +3748,7 @@ onEsc:function(){
 
         dtpDate.focus();
 
-        alert("test");
+
       if (gstfincompcode == 90)
            Ext.getCmp('EInv').setVisible(false);
               Ext.getCmp('txtPass').hide();
@@ -3768,6 +3768,7 @@ onEsc:function(){
 //                                     var vno = "00"+ControlmasterDataStore.getAt(0).get('accref_vouno');   
 //                                     vno =  "CNG-"+vno.slice(-4);  
 //  	                             txtCNNo.setValue(vno);
+
 
                                        if (ControlmasterDataStore.getAt(0).get('accref_vouno') < 10)
                                         {                                              

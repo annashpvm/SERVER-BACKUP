@@ -942,6 +942,7 @@ var cmbIGSTledger = new Ext.form.ComboBox({
                         invvouno = InvoicNoDetailDataStore.getAt(0).get('invh_vouno');
                         payterms = InvoicNoDetailDataStore.getAt(0).get('invh_crd_days');
 
+                  
 
 
 		        loadCreditLedgerDataStore.removeAll();
@@ -952,6 +953,8 @@ var cmbIGSTledger = new Ext.form.ComboBox({
 		                gsttype : InvoicNoDetailDataStore.getAt(0).get('reth_taxtag'),
 		            },
 		            callback: function () {
+
+      
                                cmbDRCRledger.setValue(loadCreditLedgerDataStore.getAt(0).get('cust_code')); 
                             }
                         });   

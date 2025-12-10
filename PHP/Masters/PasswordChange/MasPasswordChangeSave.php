@@ -1,5 +1,5 @@
 <?php
-require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php";
 session_start();
 
 
@@ -8,26 +8,28 @@ session_start();
  $password    = $_POST['password'];
  $usercode    = $_POST['usercode'];
  $reccount    = 1;
- $today       = date("Y-m-d H:i:s");  
+ $today       = date("Y-m-d H:i:s";  
 
 
 
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN";
 
 
       $query  = "update userMaster set usr_pw = '$password'  where usr_code = $usercode";
-      $result = mysql_query($query);
+      $result = mysqli_query($conn, $query);
 
       if (($result ))
       {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $username . '"})';
       }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $username . '"})';
 
      }

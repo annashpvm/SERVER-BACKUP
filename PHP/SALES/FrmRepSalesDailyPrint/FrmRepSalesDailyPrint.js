@@ -162,6 +162,7 @@ Ext.onReady(function(){
 	listeners:{
                show:function(){
 
+    
 				 loadinvoiceprint.load({
                 		 url: '/SHVPM/SALES/ClsSalesRep.php', 
                         	 params:

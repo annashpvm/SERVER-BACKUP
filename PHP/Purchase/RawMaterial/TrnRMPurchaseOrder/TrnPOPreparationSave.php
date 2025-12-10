@@ -32,17 +32,17 @@ $po_seqno          = $_POST['poseqno'];
 $po_no             = $_POST['pono'];
 $potax             = $_POST['potax'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") {
 	 $query1 = "select IFNULL(max(ordh_seqno),0)+1 as po_seqno from trnrm_order_header";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $po_seqno=$rec1['po_seqno'];
 
 	 $query2 = "select IFNULL(max(ordh_no),0)+1 as po_no from trnrm_order_header where ordh_fincode = '$po_finid' and ordh_compcode='$po_company_code'";
-	 $result2= mysql_query($query2);
-	 $rec2 = mysql_fetch_array($result2);
+	 $result2= mysqli_query($conn, $query2);
+	 $rec2 = mysqli_fetch_array($result2);
 	 $po_no=$rec2['po_no'];
 
 
@@ -51,18 +51,18 @@ if ($savetype == "Add") {
 
 //echo $query3;
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 }
 else
 {
 
 	 $query3 = "update trnrm_order_header set  ordh_sup_code = '$po_vendor_code' , ordh_carriagetype = '$po_transport_mode' , ordh_terms = '$po_terms', ordh_paymode = '$po_paymode' , ordh_creditdays = '$creditdays',ordh_tcsper  = '$tcsper' , ordh_cgstper = '$cgstper' , ordh_sgstper = '$sgstper' , ordh_igstper = '$igstper' , ordh_itemvalue = '$totval', ordh_roundingoff = '$roundoff', ordh_totalvalue = '$totval' ,  ordh_refno = '$po_refno' ,ordh_refdate = '$po_refdate' ,ordh_preparedby =  '$po_preparedby' , ordh_wef = '$wefdate' where ordh_compcode  = '$po_company_code' and ordh_fincode = '$po_finid' and  ordh_seqno =  '$po_seqno'";
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 	 $query4 = "delete from trnrm_order_trailer where ordt_hdseqno =  '$po_seqno'";
-	 $result4=mysql_query($query4);
+	 $result4=mysqli_query($conn, $query4);
 
 }
 
@@ -79,7 +79,7 @@ $moisper      = (float)$griddet[$i]['moisture'];
 if ($po_ordqty >0)
 {
 	 $query4 = "call sprm_ins_ordertrailer('$po_seqno','$sno',$po_areacode,'$po_item_code','$po_ordqty','0',0,'$po_ordqty','$po_itemrate','$val','$moisper','',0,NULL,'$wefdate')";
-	 $result4=mysql_query($query4);    
+	 $result4=mysqli_query($conn, $query4);    
 
 //	echo $query4;
 }       
@@ -90,12 +90,14 @@ if ($po_ordqty >0)
      
 if( $result3 && $result4 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$po_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' .$po_no. '"})';
         }   

@@ -52,20 +52,20 @@ $payterms   = (int) $_POST['payterms'];
 
 
 
-mysql_query("BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype === "Add")
 {
 
 	 $query1 = "select IFNULL(max(cust_code),0)+1 as custcode from massal_customer";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $custcode=$rec1['custcode'];
 
 
-	$qry = "select count(*) as cnt from massal_customer where cust_name = '$sup_name' or cust_ref = '$sup_refname'";
-	$result1 = mysql_query($qry);
-	$rec2  = mysql_fetch_array($result1);
+	$sql = "select count(*) as cnt from massal_customer where cust_name = '$sup_name' or cust_ref = '$sup_refname'";
+	$result1 = mysqli_query($conn, $sql);
+	$rec2  = mysqli_fetch_array($result1);
 	$cnt=$rec2['cnt'];
 
 
@@ -91,23 +91,23 @@ cust_tds_type,cust_tds_yn,cust_wp_gst_dnote_yn ,cust_type, cust_lock,
 */
 //echo $query3;
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 
 
           $query5 = "select ifnull(max(curbal_seqno),0)+1 as curbal_seqno from acc_current_balance";
-          $result5 = mysql_query($query5);
-          $rec5= mysql_fetch_array($result5);
+          $result5 = mysqli_query($conn, $query5);
+          $rec5= mysqli_fetch_array($result5);
           $curbalseqno=$rec5['curbal_seqno'];
 
 
           $query6="call acc_sp_inscurrent_balance('$curbalseqno','$custcode','$finid','1')";
-          $result6= mysql_query($query6);  
+          $result6= mysqli_query($conn, $query6);  
 
 //echo $query6;
           $curbalseqno = $curbalseqno + 1;
 
           $query6="call acc_sp_inscurrent_balance('$curbalseqno','$custcode','$finid','90')";
-          $result6= mysql_query($query6);  
+          $result6= mysqli_query($conn, $query6);  
 
 //echo $query6;
       }
@@ -118,15 +118,15 @@ else
 
 
         $query2 = "insert into massal_customer_logs  select * from massal_customer where cust_code = '$custcode'"; 
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 
 
 //echo $query2;
 //echo "<br>";
 
 	$cquery1 = "select ifnull(max(seqno),0) + 1 as reccount  from massal_customer where cust_code = '$custcode'";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
 
@@ -138,7 +138,7 @@ cust_tcs_applied = '$sup_tcs_yn' , cust_acc_group = '$sup_acc_group',cust_gst_ty
 cust_tds_type = '$sup_tds_type',cust_tds_yn = '$sup_tds_yn' ,cust_cr_days = '$payterms' , cust_wp_gst_dnote_yn = 'N'  where cust_code = '$custcode'"; 
 
 
-$result3=mysql_query($query3);
+$result3=mysqli_query($conn, $query3);
 
 //echo  $query3;
 //echo "<br>";
@@ -150,32 +150,39 @@ if ($savetype === "Add")
 {
 	if($result3 && $result5 && $result6 && $cnt==0 )
 	{
-	  mysql_query("COMMIT");                        
+		mysqli_commit($conn);
+                
 	  echo '({"success":"true","supcode":"'.$sup_refname.'"})';
 	}
 	else if ($cnt>0)
 	{
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 
 	}
 	else
         {
            echo '({"success":"false","supcode":"'.$sup_refname.'"})';
-	   mysql_query("ROLLBACK");            
+	   mysqli_rollback($conn);
+
+            
 	} 
 }
 else
 {
 	if( $result3 )
 	{
-	  mysql_query("COMMIT");                        
+		mysqli_commit($conn);                      
 	  echo '({"success":"true","supcode":"'.$sup_refname.'"})';
 	}
 	else
         {
            echo '({"success":"false","supcode":"'.$sup_refname.'"})';
-	   mysql_query("ROLLBACK");            
+	   mysqli_rollback($conn);
+
+            
 	} 
 }
 

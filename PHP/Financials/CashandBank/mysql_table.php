@@ -91,7 +91,7 @@ function AddCol($field=-1,$width=-1,$caption='',$align='L')
 function Table($query,$prop=array())
 {
 	//Issue query
-	$res=mysql_query($query) or die('Error: '.mysql_error()."<BR>Query: $query");
+	$res=mysqli_query($conn, $query) or die('Error: '.mysql_error()."<BR>Query: $query");
 	//Add all columns if none was specified
 	if(count($this->aCols)==0)
 	{
@@ -137,7 +137,7 @@ function Table($query,$prop=array())
 	$this->SetFont('Arial','',6);
 	$this->ColorIndex=0;
 	$this->ProcessingTable=true;
-	while($row=mysql_fetch_array($res))
+	while($row=mysqli_fetch_array($res))
 		$this->Row($row);
 	$this->ProcessingTable=false;
 	$this->cMargin=$cMargin;

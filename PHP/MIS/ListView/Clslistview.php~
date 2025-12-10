@@ -1,0 +1,39 @@
+	<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+
+        mysqli_set_charset($conn, "utf8");
+
+	$compcode  = $_POST['fcompcode'];
+	$finid     = $_POST['finid'];
+	$startdate = $_POST['startdate'];
+	$enddate   = $_POST['enddate'];
+	$ledcode   = $_POST['ledcode'];
+	$tablename = $_POST['tablename'];
+
+
+
+
+
+
+        $r = mysql_query("select * from massal_customer ");      
+
+
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+
+	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+   
+
+
+?>

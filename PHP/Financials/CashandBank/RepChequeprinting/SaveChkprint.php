@@ -4,7 +4,7 @@
         $accseqno =$_POST['accseqno'];
 
         $query="call acc_sp_rep_updaccref_chequestatus('$accseqno')";
-        $result = mysql_query($query);
+        $result = mysqli_query($conn, $query);
 
    if ($result)
     {

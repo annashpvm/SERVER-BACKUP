@@ -12,7 +12,7 @@ session_start();
 $data = '';
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
@@ -25,18 +25,20 @@ mysql_query("BEGIN");
 		$query1 = "update massal_customer set cust_wp_gst_dnote_yn = '$gst' where cust_code = $supcode;";
 
 //echo $query1;
-		$result1=mysql_query($query1);   
+		$result1=mysqli_query($conn, $query1);   
   
             }
 
       if ($result1)
       {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $data  . '"})';
       }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $data  . '"})';
 
      }

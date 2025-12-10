@@ -12,8 +12,8 @@ $bankifsc = $_POST['bankifsc'];
 $bankacno = $_POST['bankacno'];
 
 	$qry = "select count(*) as cnt from maspur_supplier_bank where sup_name = '$supname'";
-	$res  = mysql_query($qry);
-	$recvar = mysql_fetch_array($res);
+	$res  = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($res);
 	$cnt=$recvar['cnt'];
 
 	if($cnt==0)
@@ -22,25 +22,27 @@ $bankacno = $_POST['bankacno'];
 ( sup_name, sup_bank_bankname, sup_bank_branch, sup_bank_ifsc, sup_bank_bank_acno)
 values(upper('$supname'),upper('$bankname'),upper('$bankbranch'),upper('$bankifsc'),'$bankacno' )"; 
 
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	}
         else
          {
 	  $query1="update maspur_supplier_bank set sup_name  = upper('$supname'), sup_bank_bankname = upper('$bankname'), sup_bank_branch = upper('$bankbranch'), sup_bank_ifsc = upper('$bankifsc'), sup_bank_bank_acno = upper('$bankacno')  where sup_name  = upper('$supname')"; 
 
 //echo $query1;
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
          }   
 
 
 
 	  if ($result1 ) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $supname . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $supname . '"})';
 	}
    

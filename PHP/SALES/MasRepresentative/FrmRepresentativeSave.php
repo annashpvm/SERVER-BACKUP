@@ -19,31 +19,35 @@ if ($savetype === "Add")
 {
 
 	$query   = "select ifnull(max(repr_code),0)+1 as reprcode from massal_repr";
-	$result  = mysql_query($query);
-	$rec     = mysql_fetch_array($result);
+	$result  = mysqli_query($conn, $query);
+	$rec     = mysqli_fetch_array($result);
 	$reprcode = $rec['reprcode'];
 
 	$qry = "select count(*) as cnt from massal_repr where repr_name = '$reprname'";
-	$resag = mysql_query($qry);
-	$recvar = mysql_fetch_array($resag);
+	$resag = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($resag);
 	$cnt=$recvar['cnt'];
 
 	if($cnt==0)
 	{
 	  $query1="insert into massal_repr values('$reprcode','$reprname','$reprmobile','$repradd1','$repradd2','$repradd3','$reprpin','$reprgroup','Y')";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	}
 
 	  if ($result1 && $cnt==0) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $reprname . '"})';
 	} 
 	  else if ($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $reprname . '"})';
 	}
      }
@@ -54,14 +58,16 @@ if ($savetype === "Add")
 
 //echo $query1;
 
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	  if ($result1 ) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $reprname . '"})';
 	  } 
 	
 	  else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $reprname . '"})';
 	   }
      } 

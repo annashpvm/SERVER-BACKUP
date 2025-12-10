@@ -27,30 +27,30 @@
     
         #Get Max AccRef Seqno from acc_ref
         $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $result1 = mysql_query($query1);
-        $rec1 = mysql_fetch_array($result1);
+        $result1 = mysqli_query($conn, $query1);
+        $rec1 = mysqli_fetch_array($result1);
         $ginaccrefseq=$rec1['con_value'];
         
         #Get Ledger Prefix for Head Account
         $query2 = "select led_prefix from acc_ledger_master where led_code = '$headacct' and led_comp_code = '$compcode';";
-        $result2 = mysql_query($query2);
-        $rec2 = mysql_fetch_array($result2);
+        $result2 = mysqli_query($conn, $query2);
+        $rec2 = mysqli_fetch_array($result2);
         $ledprefix=$rec2['led_prefix'];
         
         #Get Current Balance Rec Seqno for Head Account
         $query3 = "select curbal_rec_seqno from acc_current_balance where curbal_led_code = '$headacct' and curbal_finid = '$finid';";
-        $result3 = mysql_query($query3);
-        $rec3 = mysql_fetch_array($result3);
+        $result3 = mysqli_query($conn, $query3);
+        $rec3 = mysqli_fetch_array($result3);
         $recseqno=$rec3['curbal_rec_seqno'];
                
         $vouno=$ledprefix."R".$recseqno;
         
         #Begin Transaction
-        mysql_query("BEGIN");
+        mysqli_query($conn, "BEGIN");
         #Insert AccRef
         $querya2 = "call acc_sp_trn_insacc_ref(".$ginaccrefseq.",'".$vouno."',".$compcode.",".$finid.",'".$voudate."','BR','".$bankname."','"
             .$paymode."','".$payno."','".$paydate."','".$narration."',0,0);";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
         
         $inscnt = 0;
         for($i=0;$i<$rowcnt;$i++){
@@ -67,7 +67,7 @@
 
             #Insert AccTran
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$curseq','$amount','$exgrate','','$paytype');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
             if($resulta4){
                 $inscnt = $inscnt + 1;
             }
@@ -76,16 +76,16 @@
         if ($refno!=''){
             #Insert AccTrail for Head Account
             $querya8 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$refno','$refdate','$rcptamt','$totadjamt','$headacct');";
-            $resulta8 = mysql_query($querya8);
+            $resulta8 = mysqli_query($conn, $querya8);
         }
         
         #Insert AccTran for Head Account
         $querya9 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$headacct','$rcptamt','0','$rcptamt','$curseq','$amount','$exgrate','','$paytype');";
-        $resulta9 = mysql_query($querya9);
+        $resulta9 = mysqli_query($conn, $querya9);
         $recseqno += 1;
         #Update Currenct Balance Rec Seqno for Head Account
         $querya10 = "call acc_sp_trn_updcurbal_recpay_seqno('REC','$recseqno','$headacct','$finid');";
-        $resulta10 = mysql_query($querya10);
+        $resulta10 = mysqli_query($conn, $querya10);
         
         #Insert Expo Realisation Detail
         for($i=0;$i<$arowcnt;$i++){
@@ -107,21 +107,23 @@
                 #Insert Expo Realisation Detail
                 $querya5 = "call expo_sp_trn_HomeTexinsrealiseddetails('$rslno','$invseq','$voudate','$finid','$realusd','$exrate','$ginaccrefseq','$valuedt');";
             }
-            $resulta5 = mysql_query($querya5);
+            $resulta5 = mysqli_query($conn, $querya5);
 
             #Update Adjamt in Acc Trail
             $querya7 = "call acc_sp_trn_updrealiseddetails('$invno','$amount');";
-            $resulta7 = mysql_query($querya7);
+            $resulta7 = mysqli_query($conn, $querya7);
         }
         
         if($resulta2 && ($rowcnt == $inscnt) && $resulta9 && $resulta5)
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             echo '({"success":"false","vouno":"'.$vouno.'"})';
         }
   

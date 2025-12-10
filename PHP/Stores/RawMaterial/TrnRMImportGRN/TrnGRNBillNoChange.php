@@ -26,7 +26,7 @@ $ginaccrefseq = (int)$_POST['accseqno'];
 
 
         $query1 = "update trnrm_receipt_header set rech_billno = '$newbillno' , rech_billdate = '$NewBillDt'  where rech_compcode = $compcode and rech_fincode = $finid  and rech_no = '$rech_no'";
-        $result1=mysql_query($query1);
+        $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -36,12 +36,12 @@ $ginaccrefseq = (int)$_POST['accseqno'];
 
 //ACCOUNTS
         $query2 = "update acc_ref set accref_payref_no = '$newbillno'  , accref_payref_date = '$NewBillDt'   where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid' and accref_vouno = '$rech_no'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 //echo $query2;
 //echo "<br>";	
 
         $query3 = "update acc_trail set acctrail_inv_no = '$newbillno'  , acctrail_inv_date = '$NewBillDt'   where acctrail_accref_seqno ='$ginaccrefseq'";
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 //echo $query3;
 //echo "<br>";	
 
@@ -50,14 +50,16 @@ $ginaccrefseq = (int)$_POST['accseqno'];
 
 	if($result1 && $result2 && $result3 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 

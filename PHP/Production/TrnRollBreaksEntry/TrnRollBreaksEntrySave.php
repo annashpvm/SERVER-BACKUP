@@ -35,19 +35,21 @@ $prdhshift      = $_POST['prdhshift'];
 	$reason   = $griddet[$i]['reason'];
 	$rwdeck    = (float)$griddet[$i]['rwdeck'];
 	$query1= "update trn_dayprod_roll_details set prd_breaks = '$breaks', prd_breakmins = '$breakmins' , prd_shade = '$shade' , prd_rwdeck =  '$rwdeck' where prd_seqno =  $prdhseqno  and prd_compcode = $prdhcompcode and prd_fincode = $prdhfincode and prd_date = '$prdhdate '  and prd_shift = '$prdhshift' and prd_rollno = $rollno and prd_variety = $qlycode";
-	$result1=mysql_query($query1);            
+	$result1=mysqli_query($conn, $query1);            
 	  
 	}
 
 
 	if ($result1)  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $prdhseqno . '"})';
 
 	}

@@ -7,7 +7,7 @@ session_start();
  $itemname=strtoupper($_POST['itemname']);
 
  $itemname=str_replace("'","",$itemname);
-
+ $itemname=ltrim($itemname);
 
  $itemname2=str_replace(' ','',$itemname);
  $itemname2=str_replace('.','',$itemname2);
@@ -58,22 +58,22 @@ session_start();
  $spec9=str_replace("'","",$spec9);
  $spec10=str_replace("'","",$spec10);
 
-
+ mysqli_begin_transaction($conn);
 
 
 //echo '$itemname';
 if ($SaveFlag === "Add") {
 $query = "select ifnull(max(item_code),0)+1 as item_code from maspur_item_header";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $item_code=$rec['item_code'];
 
-//$qry = "select count(*) as cnt from maspur_item_header where item_name = '$itemname'";
-$qry = "select count(*) as cnt from maspur_item_header where replace(replace(item_name,' ','') ,'.','') = '$itemname2'";
-//echo $qry;
+//$sql = "select count(*) as cnt from maspur_item_header where item_name = '$itemname'";
+$sql = "select count(*) as cnt from maspur_item_header where replace(replace(item_name,' ','') ,'.','') = '$itemname2'";
+//echo $sql;
 //echo "<br>";
-$resgrp = mysql_query($qry);
-$recgrp = mysql_fetch_array($resgrp);
+$resgrp = mysqli_query($conn, $sql);
+$recgrp = mysqli_fetch_array($resgrp);
 $cnt=$recgrp['cnt']; 
 
 //echo $cnt;
@@ -82,9 +82,9 @@ $cnt=$recgrp['cnt'];
 if($cnt==0)
 {
   $query1="insert into maspur_item_header values('$item_code','$itemgrp',UPPER('$itemname'),UPPER('$itemusage'), '$unit','$qualitychk','$hsncode','$spec1','$spec2','$spec3','$spec4','$spec5','$spec6','$spec7','$spec8','$spec9','$spec10',0,'N')";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
   
- // $instrailer = mysql_query("call sppur_ins_itemtrailer"); 
+ // $instrailer = mysql_query("call sppur_ins_itemtrailer"; 
 }
 }
 else if ($SaveFlag === "Edit") {
@@ -98,7 +98,7 @@ else if ($SaveFlag === "Edit") {
 	  $query2="Update maspur_item_header set item_usage = UPPER('$itemusage'),item_group_code = '$itemgrp', item_uom = '$unit', item_hsncode = '$hsncode' ,item_spec1 = '$spec1',item_spec2 = '$spec2',item_spec3 = '$spec3',item_spec4 = '$spec4',item_spec5 = '$spec5',item_spec6 = '$spec6',item_spec7 = '$spec7',item_spec8 = '$spec8',item_spec9 = '$spec9',item_spec10 = '$spec10'  where item_code = '$item_code'"; 
   
 
-  $result2 = mysql_query($query2);
+  $result2 = mysqli_query($conn, $query2);
 
 //echo $query2;
 
@@ -107,25 +107,31 @@ else if ($SaveFlag === "Edit") {
 
 if ($SaveFlag === "Add") {
 	if ($result1 && $cnt==0) {
-	    mysql_query("COMMIT");
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $itemname . '"})';
 	} 
 	else if ($cnt>0) {
-	 mysql_query("ROLLBACK");
+	 mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	}
 	 else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $itemname . '"})';
 	}
 }
 if ($SaveFlag === "Edit"){
 	if ($result2) {
-	    mysql_query("COMMIT");
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $itemname3 . '"})';
 	} 
 	 else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $itemname3 . '"})';
 	}
 }

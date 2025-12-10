@@ -1,0 +1,59 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+    $task='loadindentdet';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadDept":
+		getDept();
+		break;
+		case "loadindentdet":
+		getindentdetail();
+		break;
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getindentdetail()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+	$compcode = $_POST['compcode'];
+	$fincode  = $_POST['fincode'];
+	$deptcode = $_POST['dept'];
+
+        $r=mysql_query("call sppur_dept_indent('$compcode','$fincode','$deptcode')");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+ function getDept()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("call sp_sel_dept_new()");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }	
+ 
+?>

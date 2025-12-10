@@ -24,7 +24,7 @@ var fin = localStorage.getItem('ginfinid');
                     text: '<b>RAWMATERIAL ITEM MASTER</b>',
                     group: 'theme',
                     handler: function(){
-                        window.location.href=('http://10.0.0.251/SHVPM/RawMaterial/MasRawItem/FrmMasRawItem.php');
+                        window.location.href=('http://10.0.0.251/SHVPM/Purchase/RawMaterial/MasRawItem/FrmMasRawItem.php');
                     }
                 },
 /*

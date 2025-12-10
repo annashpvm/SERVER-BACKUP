@@ -83,7 +83,7 @@ $paymodetype ='';
 // QC 
 	$query1= "update trn_qc_fuel_inspection set qc_fuel_grn_status = 'N',qc_fuel_grnno = '' where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and qc_fuel_entryno = '$qcinsno'";
 
-        $result1=mysql_query($query1);
+        $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -92,12 +92,12 @@ $paymodetype ='';
 
 
         $query2= "delete from trnfu_receipt_trailer where rect_hdseqno = '$rech_seqno'";
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 //echo $query2;
 //echo "<br>";
 
         $query3= "delete from trnfu_receipt_header where rech_compcode = $compcode and rech_fincode = $finid  and rech_seqno = '$rech_seqno'";
-        $result3=mysql_query($query3);
+        $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
@@ -138,7 +138,7 @@ $paymodetype ='';
 
 
 	$query5= "update trn_weight_card set wt_grn_process = 'N' where wc_compcode = '$compcode' and wc_fincode = '$finid'  and wc_ticketno = $ticketno";
-	 $result5=mysql_query($query5);
+	 $result5=mysqli_query($conn, $query5);
 
 	}    
 
@@ -147,14 +147,16 @@ $paymodetype ='';
 
 	if($result1 && $result2 && $result3 &&  $result5  &&  $resulta1 &&  $resulta2 &&  $resulta3 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 

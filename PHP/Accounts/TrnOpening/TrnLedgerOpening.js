@@ -467,7 +467,10 @@ var MasLedgerFormPanel = new Ext.form.FormPanel({
                 LedCodeLedgerDataStore.load({
                     url:'clsLedgerOpening.php',
                     params:{
-                        task:'loadLedgerDetails'
+                        task:'loadLedgerDetails',
+                        compcode : gincompcode,
+                        fincode : ginfinid,
+
                     },
                     callback:function(){
 

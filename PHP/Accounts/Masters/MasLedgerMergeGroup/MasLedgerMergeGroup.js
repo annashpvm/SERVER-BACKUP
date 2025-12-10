@@ -28,7 +28,7 @@ var ledmergecode  = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-          'led_code', 'led_name','led_type'
+          'cust_code', 'cust_name','led_type'
       ]),
     });
 
@@ -46,7 +46,7 @@ var ledmergecode  = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-          'rep_merge_name', 'rep_merge_code', 'rep_ledcode', 'led_name'
+          'rep_merge_name', 'rep_merge_code', 'rep_ledcode', 'cust_name'
       ]),
     });
 
@@ -123,17 +123,17 @@ function grid_chk_flxLedger()
 	var sm = flxLedger.getSelectionModel();
 	var selrow = sm.getSelected();
 
-	var chkitem = (selrow.get('led_code'));
+	var chkitem = (selrow.get('cust_code'));
 	if ((selrow != null)){
 
 	
 
-//				cmbAccountName.setValue(selrow.get('led_code'));
-		txtLedgerName.setValue(selrow.get('led_name'));
+//				cmbAccountName.setValue(selrow.get('cust_code'));
+		txtLedgerName.setValue(selrow.get('cust_name'));
                 flxLedger.hide();  
 
-				ledgercode = selrow.get('led_code');
-				ledgername = selrow.get('led_name');
+				ledgercode = selrow.get('cust_code');
+				ledgername = selrow.get('cust_name');
                         
                   		flxPartySelected.getSelectionModel().selectAll();
 			        var selrows = flxPartySelected.getSelectionModel().getCount();
@@ -185,8 +185,8 @@ function grid_chk_flxLedger()
     	style      :"border-radius: 5px;textTransform: uppercase; ",  
         columns: [   
 //            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
-		{header: "Ledger Code", dataIndex: 'led_code',sortable:true,width:60,align:'left',hidden:true},   
-		{header: "Selected Ledger List", dataIndex: 'led_name',sortable:true,width:330,align:'left'},
+		{header: "Ledger Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
+		{header: "Selected Ledger List", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
         ],
         store:[],
 
@@ -232,8 +232,8 @@ function grid_chk_flxLedger()
     	style      :"border-radius: 5px;textTransform: uppercase; ",  
         columns: [   
 //            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
-		{header: "Led Code", dataIndex: 'led_code',sortable:true,width:60,align:'left',hidden:true},   
-		{header: "", dataIndex: 'led_name',sortable:true,width:330,align:'left'},
+		{header: "Led Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
+		{header: "", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
 		{header: "", dataIndex: 'led_type',sortable:true,width:330,align:'left'},
 
         ],
@@ -315,7 +315,7 @@ function grid_chk_flxLedger()
 		{header: "Ledger Group Name", dataIndex: 'rep_merge_name',sortable:true,width:330,align:'left'},   
 		{header: "Ledger Group Code", dataIndex: 'rep_merge_code',sortable:true,width:90,align:'left', hidden:true},
 		{header: "Ledger Code", dataIndex: 'rep_ledcode',sortable:true,width:90,align:'left',hidden:true},   
-		{header: "Ledger Name", dataIndex: 'led_name',sortable:true,width:500,align:'left'},
+		{header: "Ledger Name", dataIndex: 'cust_name',sortable:true,width:500,align:'left'},
 
         ],
        store:loadGroupListDatastore,

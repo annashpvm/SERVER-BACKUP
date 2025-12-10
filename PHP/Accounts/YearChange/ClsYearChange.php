@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadFinYears":
 		getFinYears();
@@ -19,15 +19,7 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -36,13 +28,13 @@
 
  function getFinYears()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $r=mysql_query("select * from mas_finyear where fin_code > 21 order by fin_code desc");
+        $sql = "select * from mas_finyear where fin_code > 21 order by fin_code desc";
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }

@@ -11,31 +11,35 @@ session_start();
 
  //echo"$GroupName";
 $query = "select ifnull(max(tax_code),0)+1 as taxcode from mas_tax";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $taxcode=$rec['taxcode'];
 
 $qry = "select count(*) as cnt from mas_tax where tax_name = '$taxname'";
-$resgrp = mysql_query($qry);
-$recgrp = mysql_fetch_array($resgrp);
+$resgrp = mysqli_query($conn, $qry);
+$recgrp = mysqli_fetch_array($resgrp);
 $cnt=$rec['cnt'];
 
 if($cnt==0)
 {
   $query1="insert into mas_tax values($taxcode,'$taxname',0,0,0,0,0,$cgst,$sgst,$igst,$cgstled,$sgstled,$igstled)";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 }
 
   if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $taxname . '"})';
 } 
 else if ($cnt>0) {
- mysql_query("ROLLBACK");
+ mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 }
  else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $taxname . '"})';
 }
   

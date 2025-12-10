@@ -496,8 +496,8 @@ var txtItemName = new Ext.form.TextField({
                                var cnt = loadItemStockDatastore.getCount(); 
                                if (cnt > 0) {
                                        txtUOM.setRawValue(loadItemStockDatastore.getAt(0).get('uom_short_name'));                        
-                                       txtAvgCost.setValue(loadItemStockDatastore.getAt(0).get('item_avg_rate'));
-                                       txtStock.setValue(loadItemStockDatastore.getAt(0).get('item_stock'));
+                                       txtAvgCost.setRawValue(loadItemStockDatastore.getAt(0).get('item_avg_rate'));
+                                       txtStock.setRawValue(loadItemStockDatastore.getAt(0).get('item_stock'));
 
                                        txtAdjQty.focus();
 
@@ -731,9 +731,8 @@ function checkqty()
 	     txtAdjQty.setValue(txtStock.getValue()); 
 	 }  
  */   
-         var IssVal = Number(txtAdjQty.getValue())*Number(txtAvgCost.getValue());
 
-
+         var IssVal = Number(txtAdjQty.getRawValue())*Number(txtAvgCost.getRawValue());
          txtAdjValue.setRawValue(Ext.util.Format.number(IssVal, "0.00"));
          
 }
@@ -850,17 +849,17 @@ var flxDetail = new Ext.grid.EditorGridPanel({
 
 			var sm = flxDetail.getSelectionModel();
 			var selrow = sm.getSelected();
-         		gridedit = "true";
+            gridedit = "true";
 			editrow = selrow;
-                      	txtItemName.setRawValue(selrow.get('item'));
-                       	strItemCode = selrow.get('itemcode');
+            txtItemName.setRawValue(selrow.get('item'));
+            strItemCode = selrow.get('itemcode');
 	
-		    	txtAvgCost.setValue(selrow.get('rate'));
-		    	txtAdjQty.setValue(selrow.get('adjqty'));
-		    	txtStock.setValue(selrow.get('stock'));
-		    	txtAdjQty.setRawValue(selrow.get('adjqty'));
-		    	txtAdjValue.setRawValue(selrow.get('adjval'));
-                        txtUOM.setRawValue(selrow.get('uom')); 
+		    txtAvgCost.setRawValue(selrow.get('rate'));
+		    txtAdjQty.setRawValue(selrow.get('adjqty'));
+		    txtStock.setRawValue(selrow.get('stock'));
+		    txtAdjQty.setRawValue(selrow.get('adjqty'));
+		    txtAdjValue.setRawValue(selrow.get('adjval'));
+            txtUOM.setRawValue(selrow.get('uom')); 
 
 
 			flxDetail.getSelectionModel().clearSelections();

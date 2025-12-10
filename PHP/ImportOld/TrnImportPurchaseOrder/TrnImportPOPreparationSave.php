@@ -43,16 +43,16 @@ $ordhwef_date      = $_POST['ordhwef_date'];
 $varty             = $_POST['varty'];
 
  $query1 = "select IFNULL(max(ordh_seqno),0)+1 as po_seqno from trnirm_order_header";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $po_seqno=$rec1['po_seqno'];
 
  $query2 = "select IFNULL(max(ordh_no),0)+1 as po_no from trnirm_order_header where ordh_fincode = '$ordhfincode' and ordh_compcode='$ordhcompcode'";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $po_no=$rec2['po_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  
 
 
@@ -60,7 +60,7 @@ $varty             = $_POST['varty'];
 '$ordhoriginport','$ordharrivalport','$ordhpaymode',  '$ordhlcdays',  '$ordhnagodays',  '$ordhcreditdays',  '$ordhinterstatus',  '$ordhpayterms',  '$ordhremarks',  
 '$ordhfrttype',  '$ordhfrtparty_code',  '$ordhitemcurvalue',  '$ordhexrate',  '$ordhtotalcurvalue',  '$ordhitemvalue', '$ordhroundingoff',  '$ordhtotalvalue',  
 '$ordhstatus', '$ordhamndstatus',  '$ordhamndposeqno',  '$ordhusr_code',  '$ordhentry_date','$ordhwef_date','0' )";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 
 
@@ -82,7 +82,7 @@ $prohibitive  = $griddet[$i]['prohibitive'];
 
      
  $query4= "call spirm_ins_ordertrailer('$po_seqno','$sno','$po_item_code','0','0','$po_ordqty','0',0,'$po_ordqty',0,0,'$po_itemrate','$val','0','$moisper','$tareper','$outthrow','$prohibitive','O','$varty','0')";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
 
 }
 
@@ -96,7 +96,7 @@ $deliremarks = $deligriddet[$j]['deliremarks'];
 
      
  $query5= "call spirm_ins_delschedule ('$po_seqno','$slno','$deldate','$deliremarks','0')";
- $result5=mysql_query($query5);            
+ $result5=mysqli_query($conn, $query5);            
   
   
 }
@@ -104,12 +104,14 @@ $deliremarks = $deligriddet[$j]['deliremarks'];
      
 if( $result3 && $result4 && $result5 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$po_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' .$po_no. '"})';
         }   

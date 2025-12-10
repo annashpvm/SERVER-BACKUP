@@ -60,21 +60,21 @@
     if ($phdsupcode  != $phdnewsupplier &&  $phdnewsupplier > 0 )
          $phdsupcode  = $phdnewsupplier;
         
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
 
 
  $query1   ="select ifnull(max(amd_no),0)+1 as amendno from   trnpur_amendment_header where amd_comp_code = '$phdcompcode' and amd_fin_code = '$phdfincode'" ;
 
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $amendno=$rec1['amendno'];
 
 
 
 
 $query2 = "call sppur_ins_order_amendment ('$phdcompcode','$phdfincode','$pono','$amendno','$phdamenddate')";
-$result2=mysql_query($query2);
+$result2=mysqli_query($conn, $query2);
 
 
 //echo $query2;
@@ -90,7 +90,7 @@ $today  = date("Y-m-d H:i:s");
 '$phdfreight','$roundneed', $amendno,'$today')";
 
 
-    $result3=mysql_query($query3);
+    $result3=mysqli_query($conn, $query3);
 
 
 //echo $query3;
@@ -148,14 +148,14 @@ for ($i=0;$i<$rowcnt;$i++)
  $query4= "insert into trnpur_purchase_trailer values(
 '$phdcompcode', '$phdfincode','$pono' ,'$phdpodate' ,'$ptritem_code' ,'$ptrslno' ,'$ptrind_fin_code','$ptrind_no', '$ptrunit_rate' ,'$ptrord_qty' , '$ptrrec_qty','$ptrdiscount' ,'$ptrpf_per' ,'$ptrfreight_amt' ,'$ptroth_amt' , '$ptrdisval' ,'$ptrpfval','$ptrcgst_per' ,  '$ptrcgst_amt' ,'$ptrsgst_per' ,  '$ptrsgst_amt' ,  '$ptrigst_per' ,  '$ptrigst_amt' , '$ptritcs_per' , '$ptritcs_amt','$ptrfrt2','$rebate' ,'$ptrremarks' ,'','','$purgrpcode', '$ptruom' )"; 
 
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
 
 //echo $query4;
 //echo "<br>";
 
 
  $query5 = "update trnpur_indent set ind_po_qty =  ind_po_qty +$ptrord_qty where ind_no = '$ptrind_no' and ind_item_code = '$ptritem_code' and ind_comp_code = '$phdcompcode' and ind_fin_code  ='$ptrind_fin_code'";                                                                     
- $result5=mysql_query($query5); 
+ $result5=mysqli_query($conn, $query5); 
 
 //echo $query5;
 //echo "<br>";  
@@ -170,12 +170,14 @@ $result4=mysql_query($query4);
 if($result2 && $result3 && $result4 && $result5)
 
        {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$pono.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' . $pono . '"})';
         }   

@@ -5,23 +5,41 @@ $servernameMain = "10.0.0.251";
 $databaseMain = "shvpm";
 
 $servernameSub = "10.0.0.150";
-$databasesub = "shvpmb";
+$databaseSub = "shvpmb";
 
 $username = "root";
 $password = "P@ssw0rD";
 
 
-$dbMain =  mysql_connect($servernameMain,$username,$password) or die("connect : failure" . mysql_error());
-$dbSub  =  mysql_connect($servernameSub,$username,$password); // or die("connect : failure" . mysql_error());
+$mainupd = 0;
+$subupd = 0;
+$delupd = 0;
+session_start();
 
-mysql_select_db($databaseMain,$dbMain);
+$dbMain = mysqli_connect($servernameMain, $username, $password, $databaseMain)
+    or die("Main DB connect failure: " . mysqli_connect_error());
 
-//echo $dbsub;
+$dbSub = mysqli_connect($servernameSub, $username, $password, $databaseSub)
+    or die("Sub DB connect failure: " . mysqli_connect_error());
+
+
+    mysqli_set_charset($dbMain, "utf8");
+    mysqli_set_charset($dbSub, "utf8");
+
+
+    mysqli_begin_transaction($dbMain);
+    mysqli_begin_transaction($dbSub);
+
+    mysqli_select_db($dbMain, $databaseMain);
+
+
+ //echo $dbMain;
 
 if($dbSub)
-mysql_select_db($databasesub,$dbSub);
 
-session_start();
+mysqli_select_db($dbSub, $databaseSub);
+
+
 
 
  $compcode = $_POST['compcode'];									
@@ -38,14 +56,15 @@ session_start();
 
  $query1 = "select * from trn_weighbridge_entry where t_wb_compcode = $compcode and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and  t_wb_net_weight > 0 and t_wb_ticketno >= 1 and t_wb_upd = 'N'  and t_wb_type != 'Z'";
 
-
- $result1 = mysql_query($query1,$dbMain);
-
-
-
- while ($row = mysql_fetch_assoc($result1)) {
+ //echo $query1;
+ //echo "<br>";
+ $result1Main = mysqli_query($dbMain, $query1);
 
 
+
+ while ($row = mysqli_fetch_assoc($result1Main)) {
+
+    $mainupd = 1;
 
     $yr             = $row['t_wb_year'];
     $compcode       = $row['t_wb_compcode'];
@@ -87,7 +106,8 @@ session_start();
 
 
 
-
+     $emptywt = 0;
+     $loadwt  = 0;
 
     $wbdate   = $row['t_wb_date'];
 
@@ -107,7 +127,7 @@ session_start();
 
 
     $query2 = "insert into trn_weight_card (wc_compcode, wc_fincode, wc_ticketno, wc_date,wc_first_time,wc_second_time, wc_area_code, wc_sup_code, wc_item, wc_vehicleno, wc_emptywt, wc_loadwt, wc_netwt, wc_supplier,wc_acceptedwt) VALUES ($compcode , $yr,$ticketno,'$wbdate','$first_wt_time', '$second_wt_time', 0,0,'$item' ,'$truck' , $emptywt, $loadwt ,$netwt ,'$party',$netwt)";
-    $result2 = mysql_query($query2,$dbMain);
+    $result2Main  = mysqli_query($dbMain, $query2);
 
 
 
@@ -118,15 +138,14 @@ session_start();
 //echo "<br>";
 
  $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode =  '$compcode' and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
-
- $result3 = mysql_query($query3,$dbMain);
+ $result3Main = mysqli_query($dbMain, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 
   } 
-  mysql_free_result($result11);
+  mysqli_free_result($result1Main);
 
 // for updating testing
 //star
@@ -134,19 +153,21 @@ session_start();
 if($dbSub)
 {
  $query1 = "select * from trn_weighbridge_entry where t_wb_compcode =  '$compcode' and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and  t_wb_ticketno >= 1  and ((t_wb_net_weight > 0 and  t_wb_upd = 'N') or  t_wb_upd = 'C')and t_wb_type = 'Z' ";
-
-
+ 
+// $query1 = "select * from trn_weighbridge_entry where t_wb_compcode =  '$compcode' and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and  t_wb_ticketno >= 1  and ((t_wb_net_weight > 0 and  t_wb_upd = 'N'))and t_wb_type = 'Z' ";
+//$query1 = "select * from trn_weighbridge_entry where t_wb_date = '2025-11-04' and  t_wb_type = 'Z'";
+ 
 
 //echo $query1;
 //echo "<br>";
 
- $result1 = mysql_query($query1,$dbMain);
+ $result1Sub = mysqli_query($dbMain, $query1);
 
 
 
- while ($row = mysql_fetch_assoc($result1)) {
+ while ($row = mysqli_fetch_assoc($result1Sub)) {
 
-
+    $subupd = 1;
 
     $yr             = $row['t_wb_year'];
     $compcode       = $row['t_wb_compcode'];
@@ -205,30 +226,27 @@ if($dbSub)
 
 
 
-    $query2 = "insert into trn_weight_card (wc_compcode, wc_fincode, wc_ticketno, wc_date,wc_first_time,wc_second_time, wc_area_code, wc_sup_code, wc_item, wc_vehicleno, wc_emptywt, wc_loadwt, wc_netwt, wc_supplier,wc_acceptedwt) VALUES ($compcode , $yr,$ticketno,'$wbdate','$first_wt_time', '$second_wt_time', 0,0,'$item' ,'$truck' , $emptywt, $loadwt ,$netwt ,'$party',$netwt)";
+      $query2 = "insert into trn_weight_card (wc_compcode, wc_fincode, wc_ticketno, wc_date,wc_first_time,wc_second_time, wc_area_code, wc_sup_code, wc_item, wc_vehicleno, wc_emptywt, wc_loadwt, wc_netwt, wc_supplier,wc_acceptedwt) VALUES ($compcode , $yr,$ticketno,'$wbdate','$first_wt_time', '$second_wt_time', 0,0,'$item' ,'$truck' , $emptywt, $loadwt ,$netwt ,'$party',$netwt)";
 
-      $result2 = mysql_query($query2,$dbSub);
+      $result2Sub = mysqli_query($dbSub, $query2);
 
 
-//echo $query2;
+
+// echo $query2;
 //echo "<br>";
        $querySub = "insert into trn_weighbridge_entry values('$yr', '$compcode','$ticketno', '$wbtype' , '$wbdate' , '$truck', '$item' , '$party' , '$area' , '$t_wb_1st_loadtype', '$t_wb_1st_weight', '$t_wb_1st_time', '$t_wb_2nd_loadtype', '$t_wb_2nd_time', '$t_wb_2nd_weight', '$t_wb_net_weight', '$t_wb_upd' , '$t_wb_cancel_reason')";
 
-
-         $resultSub = mysql_query($querySub,$dbSub);
-
+       $result3Sub = mysqli_query($dbSub, $querySub);
 
 //echo $querySub;
 //echo "<br>";
 
        $querySub2 = "insert into trn_weighbridge_entryTOBEDELETED values('$yr', '$compcode','$ticketno', '$wbtype' , '$wbdate' , '$truck', '$item' , '$party' , '$area' , '$t_wb_1st_loadtype', '$t_wb_1st_weight', '$t_wb_1st_time', '$t_wb_2nd_loadtype', '$t_wb_2nd_time', '$t_wb_2nd_weight', '$t_wb_net_weight', '$t_wb_upd' , '$t_wb_cancel_reason')";
-
-
-       $resultSub = mysql_query($querySub2,$dbMain);
+       $result4Sub = mysqli_query($dbMain , $querySub2);
 
 
 
-//echo $querySub;
+//echo $querySub2;
 //echo "<br>";
 
 
@@ -236,21 +254,21 @@ if($dbSub)
 //echo $query2;
 //echo "<br>";
 
- $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode =  '$compcode' and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
+ $query5 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode =  '$compcode' and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
+ $result5Main = mysqli_query($dbMain, $query5);
 
- $result3 = mysql_query($query3,$dbMain);
+// $query6 = "delete from trn_weighbridge_entry  where t_wb_compcode = '$compcode' and t_wb_year = '$yr' and  t_wb_net_weight > 0 and t_wb_upd = 'Y' and t_wb_type = 'Z' and  t_wb_ticketno = $ticketno";
+ //$result6Sub = mysqli_query($dbMain, $query6);
 
-// $query3 = "delete from trn_weighbridge_entry  where t_wb_compcode = '$compcode' and t_wb_year = '$yr' and  t_wb_net_weight > 0 and t_wb_upd = 'Y' and t_wb_type = 'Z' and  t_wb_ticketno = $ticketno";
 
-
-// $result3 = mysql_query($query3,$dbMain);
+// $result3 = mysqli_query($conn, $query3,$dbMain);
 
 //echo $query3;
 //echo "<br>";
 
 
   } 
-  mysql_free_result($result11);
+  mysqli_free_result($result1Sub);
 }
 //end
 
@@ -262,34 +280,34 @@ if($dbSub)
 // $query4 = "select * from trn_weighbridge_entry where t_wb_compcode = 1 and  t_wb_date >= '2024-01-02' and t_wb_year >= 24 and t_wb_ticketno >= 1 and ((t_wb_net_weight > 0 and t_wb_upd = 'N') or t_wb_upd = 'C') and t_wb_type = 'Z'";
 
 //echo $query4;
-///echo "<br>";
+//echo "<br>";
 
 
 
- $result4 = mysql_query($query4,$dbMain);
- while ($row = mysql_fetch_assoc($result4)) {
+ $result4 = mysqli_query( $dbMain,$query4);
+ while ($row = mysqli_fetch_assoc($result4)) {
     $yr             = $row['t_wb_year'];
     $compcode       = $row['t_wb_compcode'];
     $ticketno       = $row['t_wb_ticketno'];
     $wbdate         = $row['t_wb_date'];
 
-    $query5 = "select  count(*) as noofrec  from trn_weighbridge_entry where t_wb_compcode = $compcode and  t_wb_date = '$wbdate' and t_wb_year= $yr and ((t_wb_net_weight > 0 and  t_wb_upd = 'N') or t_wb_upd = 'C') and t_wb_ticketno = $ticketno and t_wb_type = 'Z' ";
+    //$query5 = "select  count(*) as noofrec  from trn_weighbridge_entry where t_wb_compcode = $compcode and  t_wb_date = '$wbdate' and t_wb_year= $yr and ((t_wb_net_weight > 0 and  t_wb_upd = 'N') or t_wb_upd = 'C') and t_wb_ticketno = $ticketno and t_wb_type = 'Z' ";
 
-    $query5 = "select  count(*) as noofrec  from trn_weighbridge_entry where t_wb_compcode = $compcode and  t_wb_date = '$wbdate' and t_wb_year= $yr and t_wb_net_weight > 0 and  t_wb_upd = 'Y'  and t_wb_ticketno = $ticketno and t_wb_type = 'Z' ";
+    $query5 = "select  count(*) as noofrec  from trn_weighbridge_entry where t_wb_compcode = $compcode and  t_wb_date = '$wbdate' and t_wb_year= $yr and t_wb_net_weight > 0   and t_wb_ticketno = $ticketno and t_wb_type = 'Z' ";
 
 //echo $query5;
 //echo "<br>";
 
-    $result5 = mysql_query($query5,$dbSub);
-    $rec1    = mysql_fetch_array($result5);
+    $result5 = mysqli_query($dbSub,$query5);
+    $rec1    = mysqli_fetch_array($result5);
     $noofrec = $rec1['noofrec'];
 
     if ($noofrec > 0 ) {
 
  $query6 = "delete from trn_weighbridge_entry  where t_wb_compcode = '$compcode' and t_wb_year = '$yr' and  t_wb_net_weight > 0 and  t_wb_upd = 'Y' and t_wb_type = 'Z' and  t_wb_ticketno = $ticketno";
- $result6 = mysql_query($query6,$dbMain);
+ $result6 = mysqli_query($dbMain,$query6);
 
-
+ $delupd = 1;
 //echo $query6;
 //echo "<br>";
 
@@ -300,14 +318,77 @@ if($dbSub)
 
 
 
-
-if ($result2 && $result3 ) {
-    mysql_query("COMMIT");
-  //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
-} else {
-    mysql_query("ROLLBACK");
-//    echo '({"success":"false","wtno":"' . $ticketno . '"})';
-}
+ if ($mainupd == 0 && $subupd == 1 )
+ {
+    if ($result2Sub  && $result3Sub ) {
+    
+        mysqli_commit($dbSub);
+      //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
+    } else {
+        mysqli_rollback($dbSub);
+    
+    
+    //    echo '({"success":"false","wtno":"' . $ticketno . '"})';
+    }
   
+ }
+
+ if ($mainupd == 1 && $subupd == 0 )
+ {
+    if ($result2Main  && $result3Main ) {
+        
+        mysqli_commit($dbMain);
+    //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
+    } else {
+        mysqli_rollback($dbMain);
+
+
+    //    echo '({"success":"false","wtno":"' . $ticketno . '"})';
+    }
+}
+
+
+ if ($mainupd == 1 && $subupd == 1 )
+ {
+    if ($result2Main  && $result3Main ) {
+        
+        mysqli_commit($dbMain);
+    //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
+    } else {
+        mysqli_rollback($dbMain);
+
+
+    //    echo '({"success":"false","wtno":"' . $ticketno . '"})';
+    }
+
+
+    if ($result2Sub  && $result3Sub ) {
+    
+        mysqli_commit($dbSub);
+      //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
+    } else {
+        mysqli_rollback($dbSub);
+    
+    
+    //    echo '({"success":"false","wtno":"' . $ticketno . '"})';
+    }    
+}
+
+
+
+if ($delnupd == 1 )
+{
+   if ($result6 ) {
+   
+       mysqli_commit($dbMain);
+     //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
+   } else {
+       mysqli_rollback($dbMain);
+   
+   
+   //    echo '({"success":"false","wtno":"' . $ticketno . '"})';
+   }
+ 
+}
 
 ?>

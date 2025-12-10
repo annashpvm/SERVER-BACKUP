@@ -13,24 +13,26 @@ $dncrseqno   = $_REQUEST['dncrseqno'];
 $narration   = strtoupper($_REQUEST['narration']);
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($vouno != '')
 {
 
         $query1 = "update acc_dbcrnote_header set  dbcr_narration = '$narration '  where dbcr_vouno = '$vouno' and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid'";
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
 
         $query2 = "update acc_ref set  accref_narration = '$narration '  where accref_vouno = '$vouno' and accref_comp_code = '$compcode' and accref_finid = '$finid' and accref_seqno = '$accseqno'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 
 }
 if ($result1 && $result2) 
 {
-  mysql_query("COMMIT");
+  mysqli_begin_transaction($conn);
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","vouno":"' . $vouno . '"})';
 }
 

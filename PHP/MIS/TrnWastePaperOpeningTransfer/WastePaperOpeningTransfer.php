@@ -10,10 +10,10 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
     $query1= "select * from masrm_item_header order by itmh_code";
-    $result11=mysql_query($query1);
+    $result11=mysqli_query($conn, $query1);
 
 //echo $query1;
     while ($row = mysql_fetch_assoc($result11)) {
@@ -27,7 +27,7 @@ and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
            if ($findrow[0]  == 0)
            {
 		$query1="insert into masrm_item_trailer values($itemcode,1, $nextfinid, 0, 0, 0, 0, 0);";
-		$result1=mysql_query($query1);       
+		$result1=mysqli_query($conn, $query1);       
 
             } 
 
@@ -37,7 +37,7 @@ and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
            if ($findrow[0]  == 0)
            {
 		$query1="insert into masrm_item_trailer values($itemcode,90, $nextfinid, 0, 0, 0, 0, 0);";
-		$result1=mysql_query($query1);       
+		$result1=mysqli_query($conn, $query1);       
 
             } 
 
@@ -51,12 +51,14 @@ and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
 
      if ($result11)
      {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $compcode . '"})';
      }
      while ($row = mysql_fetch_assoc($result11)) 

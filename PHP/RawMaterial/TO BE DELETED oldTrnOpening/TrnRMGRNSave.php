@@ -94,8 +94,8 @@ else
 $pononew=$edpono;
 $rech_seqno=$edgrnno;
 	 $queryjk = "select rech_no from trnrm_receipt_header where rech_fincode = '$finid' and rech_compcode='$compcode' and rech_seqno = '$edgrnno' ";
-	 $resultjk= mysql_query($queryjk);
-	 $recjk = mysql_fetch_array($resultjk);
+	 $resultjk= mysqli_query($conn, $queryjk);
+	 $recjk = mysqli_fetch_array($resultjk);
 	 $chkgrn=$recjk['rech_no'];
  }
 
@@ -105,33 +105,33 @@ $rech_seqno=$edgrnno;
 if ($gstFlaggrn === "Add") {
 
 	 $query1 = "select IFNULL(max(rech_seqno),0)+1 as rech_seqno from trnrm_receipt_header";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $rech_seqno=$rec1['rech_seqno'];
 
 	 $query2 = "select IFNULL(max(rech_no),0)+1 as rech_no from trnrm_receipt_header where rech_fincode = '$finid' and rech_compcode='$compcode'";
-	 $result2= mysql_query($query2);
-	 $rec2 = mysql_fetch_array($result2);
+	 $result2= mysqli_query($conn, $query2);
+	 $rec2 = mysqli_fetch_array($result2);
 	 $rech_no=$rec2['rech_no'];
 
-	 mysql_query("BEGIN");
+	 mysqli_query($conn, "BEGIN");
  
 	 $query3= "call sprm_ins_receipt_header('$rech_seqno','$compcode','$finid','$rech_no','$supcode','$ordseqno','$grndate','$wtcardno','$areacode','$truck','$frtype','$itemval',  '$sgstper','$sgstamt','$cgstper','$cgstamt','$igstper','$igstamt','$tcsper','$tcsamt','$freight','$otheramt','$roundoff','$totamt','$billno',  '$billdate','$billval',	'$usrcode','$entrydate','$gateentryno','$gatedate',0)";
 
 //echo $query3;
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 }
 else
 {
 
       $query11= "call sprm_del_receipt_trailer ('$compcode','$finid','$edgrnno','$edpono')";
-      $result11=mysql_query($query11);
+      $result11=mysqli_query($conn, $query11);
 
 //echo $query11;
 
 	 $query14= "call sprm_upd_receipt_header('$edgrnno','$grndate','$wtcardno','$areacode','$truck','$frtype','$itemval','$sgstper','$sgstamt', '$cgstper','$cgstamt','$igstper','$igstamt','$tcsper','$tcsamt','$freight','$otheramt','$roundoff','$totamt','$billno',	'$billdate', '$billval','$gateentryno','$gatedate')";
-	$result14=mysql_query($query14);
+	$result14=mysqli_query($conn, $query14);
 //echo $query14;
 
 }
@@ -168,16 +168,16 @@ else
 	$lotcode=$griddet[$i]['lotcode'];
 
 	 $query4= "insert into trnrm_receipt_trailer values('$rech_seqno','$sno','$itemcode','$lotcode','$billqty','$millqty','$itemrate','$tareqty','$moisper','$moisqty','$lifelessqty','$rejqty', '$totdedqty','$degradeqty','$grnqty','$itemcode','$itemvalue','$costrate','$costvalue','',upper('$remarks'))";
-	 $result4=mysql_query($query4);
+	 $result4=mysqli_query($conn, $query4);
 //  echo $query4;
 	 $query5= "call sprm_insupd_stockdetails ('$compcode','$lotcode','$itemcode','$grnqty'	)";
-	$result5=mysql_query($query5);
+	$result5=mysqli_query($conn, $query5);
 //  echo $query5;
 	 $query6= "call sprm_upd_itemtrailer_avgrate ('$compcode','$finid','$itemcode','$grnqty','$costrate',1)";
-         $result6=mysql_query($query6);
+         $result6=mysqli_query($conn, $query6);
 //  echo $query6;
 	 $query7= "call sprm_upd_orderreceiptdets ('$pononew','$itemcode',('$degradeqty'+'$grnqty'),0)";
-	$result7=mysql_query($query7);
+	$result7=mysqli_query($conn, $query7);
 //   echo $query7;
 	}    
 
@@ -204,13 +204,13 @@ else
 
 		$query8 ="insert into trnrm_receipt_trailer values('$rech_seqno','$sno','$degrtoitemcode','$degrlotcode','0','0','$degritemrate','0','0','0','0','0','0','0','$drdegrqty',
 '$degritemcode','$degritemvalue','$degritemrate','$degritemvalue','','$degrremarks')";
-		 $result8=mysql_query($query8);
+		 $result8=mysqli_query($conn, $query8);
 
 	 $query9= "call sprm_insupd_stockdetails ('$compcode','$degrlotcode','$degrtoitemcode','$degrgrnqty')";
-	$result9=mysql_query($query9);
+	$result9=mysqli_query($conn, $query9);
  //  echo $query9;
 	 $query10= "call sprm_upd_itemtrailer_avgrate ('$compcode','$finid','$degrtoitemcode','$degrgrnqty','$costrate',1)";
-	$result10=mysql_query($query10);
+	$result10=mysqli_query($conn, $query10);
   // echo $query10;
 
 		}
@@ -220,28 +220,32 @@ else
 if ($gstFlaggrn === "Add") {    
 	if($result3 && $result4 && $result5 && $result6 && $result7 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 }
 if ($gstFlaggrn === "Edit") {   
 	if( $result11 && $result14 &&  $result4  &&$result6 && $result7     )
 	{
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","GRNNo":"'. $chkgrn . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $chkgrn . '"})';
 	} 
 } 
@@ -250,13 +254,15 @@ if ($gstFlaggrn === "Confirm") {
 	{
 		$cfmacc = mysql_query("Update trnrm_receipt_header Set rech_acctflag='Y' Where rech_fincode = '$finid' and rech_compcode='$compcode' and rech_seqno = '$edgrnno' ");
 		if ($cfmacc) {
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","GRNNo":"'. $chkgrn . '"})';
 		}
 		
 		else
 		{
-	    		mysql_query("ROLLBACK");            
+	    		mysqli_rollback($conn);
+
+            
 	    		echo '({"success":"false","GRNNo":"' . $chkgrn . '"})';
 		} 
 
@@ -264,7 +270,9 @@ if ($gstFlaggrn === "Confirm") {
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $chkgrn . '"})';
 	} 
 } 

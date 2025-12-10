@@ -7,9 +7,9 @@
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
 	
-        $result=mysql_query("call spacc_rep_json($compcode,'$finid','$startdate','$enddate')");
+        $result=mysql_query("call spacc_rep_json($compcode,'$finid','$startdate','$enddate')";
 /*
-	while($re = mysql_fetch_array($r))
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }

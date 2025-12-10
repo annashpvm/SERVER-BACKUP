@@ -1713,6 +1713,14 @@ function save_click()
 			},
                         });
 
+
+                        Ext.Ajax.request({
+                            url: 'TrnRmWeightcardImportMain.php',
+                               params:
+                    {
+                        compcode : Gincompcode,
+                    },
+                                });                        
 			Ext.Ajax.request({
 	            	url: 'TrnRmWeightcardImportParty.php',
 	       	        params:

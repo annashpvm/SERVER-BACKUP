@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadsupplier":
 		getsupplier();
@@ -83,134 +83,133 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getsupplier()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	//$supplier_id = $_POST['supplierid'];
-	$r=mysql_query("select sup_code,sup_refname from maspur_supplier_master where sup_acc_group = 78 order by sup_refname");
-	$r=mysql_query("select sup_refname ,sup_code from trnrm_order_header , maspur_supplier_master where ordh_sup_code = sup_code group by sup_refname ,sup_code order by sup_refname ,sup_code");
-	//$r=mysql_query("call sp_pur_supplier_actgrp($supplier_id)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select sup_code,sup_refname from maspur_supplier_master where sup_acc_group = 78 order by sup_refname");
+	$sql = "select sup_refname ,sup_code from trnrm_order_header , maspur_supplier_master where ordh_sup_code = sup_code group by sup_refname ,sup_code order by sup_refname ,sup_code");
+	//$sql = "call sp_pur_supplier_actgrp($supplier_id)");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getthird()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	//$supplier_id = $_POST['supplierid'];
-	$r=mysql_query("select sup_code,sup_refname from maspur_supplier_master where sup_acc_group = 143 order by sup_refname");
-	//$r=mysql_query("call sp_pur_supplier_actgrp($supplier_id)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select sup_code,sup_refname from maspur_supplier_master where sup_acc_group = 143 order by sup_refname");
+	//$sql = "call sp_pur_supplier_actgrp($supplier_id)");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getagent()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$sup_code   = $_POST['supcode'];
-	$r=mysql_query("call sprm_sel_agentparties ('$sup_code')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})'; 
+	$sql = "call sprm_sel_agentparties ('$sup_code')");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]); 
     }
 	
  function getlotno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-	$r=mysql_query("call sp_sel_lot ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sp_sel_lot ");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
  function getgrndetail()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$grnno   = $_POST['grnno'];
-	$r=mysql_query("call sprm_sel_recheddet ('$grnno') ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sprm_sel_recheddet ('$grnno') ");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
 
  function getgrnitemdetail()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$grnno   = $_POST['grnno'];
 	$ordno   = $_POST['ordno'];
 
-//	$r=mysql_query("call sprm_sel_recitems ('$compcode','$grnno','$ordno','0')");
-//	$r=mysql_query("select a.*,b.*,c.* ,partyitemname.itmh_name as party_item ,millitemname.itmh_name as grn_item from     trnrm_receipt_header a, trnrm_receipt_trailer b, mas_lot c, masrm_item_header partyitemname  , masrm_item_header millitemname where b.rect_item_code = millitemname.itmh_code and b.rect_partyitemcode = partyitemname.itmh_code and b.rect_lotno = c.lot_code and a.rech_seqno = b.rect_hdseqno and a.rech_compcode ='$compcode' and a.rech_fincode = '$finid' and rech_no = '$grnno' order by rect_seqno");
-	$r=mysql_query("select a1.* , case when b1.ordt_pen_qty > 0 then b1.ordt_pen_qty else 0 end as pendqty from 
+//	$sql = "call sprm_sel_recitems ('$compcode','$grnno','$ordno','0')");
+//	$sql = "select a.*,b.*,c.* ,partyitemname.itmh_name as party_item ,millitemname.itmh_name as grn_item from     trnrm_receipt_header a, trnrm_receipt_trailer b, mas_lot c, masrm_item_header partyitemname  , masrm_item_header millitemname where b.rect_item_code = millitemname.itmh_code and b.rect_partyitemcode = partyitemname.itmh_code and b.rect_lotno = c.lot_code and a.rech_seqno = b.rect_hdseqno and a.rech_compcode ='$compcode' and a.rech_fincode = '$finid' and rech_no = '$grnno' order by rect_seqno");
+	$sql = "select a1.* , case when b1.ordt_pen_qty > 0 then b1.ordt_pen_qty else 0 end as pendqty from 
 (select a.*,b.*,c.* ,partyitemname.itmh_name as party_item ,millitemname.itmh_name as grn_item from     trnrm_receipt_header a, trnrm_receipt_trailer b, mas_lot c, masrm_item_header partyitemname  , masrm_item_header millitemname where b.rect_item_code = millitemname.itmh_code and b.rect_partyitemcode = partyitemname.itmh_code and b.rect_lotno = c.lot_code and a.rech_seqno = b.rect_hdseqno and a.rech_compcode = '$compcode'  and a.rech_fincode = '$finid' and rech_no = '$grnno'  ) a1 left outer join trnrm_order_trailer b1 on  a1.rech_ordhdseqno = b1.ordt_hdseqno and  a1.rect_item_code = b1.ordt_item_code order by rect_seqno
 ");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getpoheader()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$ordcode   = $_POST['ordcode'];
-	$r=mysql_query("call sprm_sel_orderheader ('$ordcode') ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sprm_sel_orderheader ('$ordcode') ");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
  function getwtcard()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$wc_fincode    = $_POST['finid'];
 	$wc_compcode = $_POST['compcode'];
 	$wc_sup_code   = $_POST['supcode'];
@@ -218,48 +217,50 @@
 	$rech_type   = $_POST['finrecpttype'];
 	$grnno   = $_POST['grnno'];
 
-	$r=mysql_query("call sp_sel_wtcards('$wc_compcode','$wc_fincode','$wc_sup_code','0','0','$grnno')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sp_sel_wtcards('$wc_compcode','$wc_fincode','$wc_sup_code','0','0','$grnno')");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
  function getwtcarddt()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$wc_fincode    = $_POST['finid'];
 	$wc_compcode = $_POST['compcode'];
 	$wc_seqno   = $_POST['wtcode'];
 
 
-	$r=mysql_query("call sp_sel_wtcarddet('$wc_seqno')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sp_sel_wtcarddet('$wc_seqno')");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
  function getfreight()
     {
-        //mysql_query("SET NAMES utf8");
+        //mysqli_set_charset($conn, "utf8");
 	$wc_fincode    = $_POST['finid'];
 	$wc_compcode = $_POST['compcode'];
 	$freightJ   = $_POST['freightJ'];
 	$supcode   = $_POST['supcode'];
 	$fareacode   = $_POST['fareacode'];
 	$itemcode   = $_POST['itemcode'];
-	mysql_query("SET NAMES utf8");
+	mysqli_set_charset($conn, "utf8");
 
 	if ( $freightJ = "Tonn")
 	{
-		$r=mysql_query("call sp_sel_tonfreight('$supcode','$fareacode','$itemcode','4')");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		$sql = "call sp_sel_tonfreight('$supcode','$fareacode','$itemcode','4')");
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 			$arr[]= $re ;
 		}
@@ -269,9 +270,9 @@
 	}
 	else if ($freightJ = "LoadJ")
 	{
-		$r=mysql_query("call sp_sel_loadfreight('$wc_seqno')");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		$sql = "call sp_sel_loadfreight('$wc_seqno')");
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 			$arr[]= $re ;
 		}
@@ -283,80 +284,84 @@
     }
  function getgrnno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$gstFlag = $_POST['gstFlag'];
 	if($gstFlag === "Add")
 	{
-        	$r=mysql_query("select ifnull(max(rech_no),0)+1 as grnno from trnrm_receipt_header where rech_fincode=$finid and rech_compcode=$compcode");
+        	$sql = "select ifnull(max(rech_no),0)+1 as grnno from trnrm_receipt_header where rech_fincode=$finid and rech_compcode=$compcode");
 	}
 	else if($gstFlag === "Edit")
 	{
-		$r=mysql_query("call sprm_sel_receiptnos ('$compcode','$finid')");
+		$sql = "call sprm_sel_receiptnos ('$compcode','$finid')");
 	}
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getpono()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$supcode   = $_POST['supcode'];
-	//$r=mysql_query("select ordh_seqno,ordh_no from trnrm_order_header where ordh_sup_code= '$supcode' and ordh_compcode=$compcode and ordh_fincode=$finid ");
-	$r=mysql_query("call sprm_sel_partyorders('$compcode','$finid','$supcode',0)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "select ordh_seqno,ordh_no from trnrm_order_header where ordh_sup_code= '$supcode' and ordh_compcode=$compcode and ordh_fincode=$finid ");
+	$sql = "call sprm_sel_partyorders('$compcode','$finid','$supcode',0)");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 function getpoitem()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$ordcode   = $_POST['ordcode'];
-	$r=mysql_query("call sprm_sel_orditems ('$ordcode')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sprm_sel_orditems ('$ordcode')");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getdegritem()
     {
-//        mysql_query("SET NAMES utf8");
+//        mysqli_set_charset($conn, "utf8");
 
-	$r=mysql_query("call sprm_sel_itemdetails ('0')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call sprm_sel_itemdetails ('0')");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 function getamnd()
 {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$item = $_POST['item'];
 	$pono = $_POST['pono'];
 	$billdate = $_POST['billdate'];
@@ -370,8 +375,8 @@ function getamnd()
 		$r = mysql_query("call sprm_sel_amndorddets('$pono','$item','$billdate')");
 	}
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 		$arr[]= $re ;
         }
@@ -380,60 +385,63 @@ function getamnd()
     }
 function getitemqty()
 {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$item = $_POST['item'];
 	$pono = $_POST['pono'];
 	$status = $_POST['status'];	
 	$r = mysql_query("call sprm_sel_orditem_dets('$pono','$item','$status')");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 function getdegritemqty()
 {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$item = $_POST['item'];
 	$supno = $_POST['supno'];
 	
 	$r = mysql_query("call sprm_sel_supitemrate('$supno','$item')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 function getuserdet()
 {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	
 	$userid = $_POST['userid'];
 	
 	$r = mysql_query("select * from mas_users where usr_code = '$userid'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  function getfreightton()
     {
 
 	$suplrcode = $_POST['suplrcode'];
-	mysql_query("SET NAMES utf8");
+	mysqli_set_charset($conn, "utf8");
 
-	$r=mysql_query("select * from mas_areaitemfreight where aif_type=1 and aif_party_code='$suplrcode'");
+	$sql = "select * from mas_areaitemfreight where aif_type=1 and aif_party_code='$suplrcode'");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 		$arr[]= $re ;
 	}
@@ -445,12 +453,12 @@ function getuserdet()
     {
 
 	$suplrcode = $_POST['suplrcode'];
-	mysql_query("SET NAMES utf8");
+	mysqli_set_charset($conn, "utf8");
 
-	$r=mysql_query("select * from mas_areafreight where arf_type=1 and arf_party_code='$suplrcode'");
+	$sql = "select * from mas_areafreight where arf_type=1 and arf_party_code='$suplrcode'");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 		$arr[]= $re ;
 	}
@@ -462,12 +470,12 @@ function getuserdet()
     {
 
 	$edgrnno = $_POST['edgrnno'];
-	mysql_query("SET NAMES utf8");
+	mysqli_set_charset($conn, "utf8");
 
-	$r=mysql_query("call sprm_sel_receiptheader ('$edgrnno')");
+	$sql = "call sprm_sel_receiptheader ('$edgrnno')");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 		$arr[]= $re ;
 	}
@@ -479,12 +487,12 @@ function getuserdet()
     {
 
 	$edgrnno = $_POST['edgrnno'];
-	mysql_query("SET NAMES utf8");
+	mysqli_set_charset($conn, "utf8");
 
-	$r=mysql_query("call sprm_sel_receipttrailer ('$edgrnno')");
+	$sql = "call sprm_sel_receipttrailer ('$edgrnno')");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 		$arr[]= $re ;
 	}
@@ -495,15 +503,16 @@ function getuserdet()
    
  function getAreaList()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select area_name,area_code from mas_area order by area_name asc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select area_name,area_code from mas_area order by area_name asc");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 ?>

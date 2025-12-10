@@ -24,7 +24,7 @@ $party = $_POST['party'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
@@ -44,12 +44,12 @@ if ($Update != 'Y')
 { 
 $query2= "insert into trnsal_finish_stock 
  (stk_comp_code,stk_finyear,stk_ent_no,stk_ent_date,stk_var_code,stk_sr_no, stk_wt,stk_sono,stk_yymm, stk_rollno,stk_source) VALUES ('$compcode','$finid','1000','$receiptdate','$sizecode','$newreelno','$Weight',$sono,0,0,'C')";
-	$result2=mysql_query($query2);   
+	$result2=mysqli_query($conn, $query2);   
 
 //echo $query2;
 
 	$query3= "update trn_delivery_challan_reel_receipt set dccr_upd = 'Y'  where dcrr_comp_code = $compcode and dcrr_fincode ='$finid' and dcrr_no ='$receiptno'and dccr_newreelno ='$newreelno' ";
-	$result3=mysql_query($query3);        
+	$result3=mysqli_query($conn, $query3);        
 
 //echo $query3;
 }
@@ -62,12 +62,14 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3 ) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dcno":"' . $receiptno . '"})';
 	}
  
@@ -79,12 +81,14 @@ else
      { 
 	if ( $result2 && $result3) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dcno":"' . $receiptno . '"})';
 	}
       }
@@ -92,12 +96,14 @@ else
        { 
 	if ($result2 && $result3  && $result4  &&  $result5 && $result6 && $result7) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dcno":"' . $receiptno . '"})';
 	}
       } 

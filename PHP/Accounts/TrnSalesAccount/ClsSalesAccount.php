@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    global $conn;
 
     switch($task){
 		case "loadCGSTledgers":
@@ -33,15 +33,7 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -54,23 +46,24 @@
         $gsttype = $_POST['gsttype'];
         $gstper  = $_POST['gstper'];
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($ledtype == "I")
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like '%INPUT%CGST%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like '%INPUT%CGST%$gstper%'";
 
 		}
 		else
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like 'CGST'");
+		    $sql = "select * from massal_customer where cust_name like 'CGST'";
 		}  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getSGSTledgers()
@@ -80,23 +73,24 @@
         $gsttype = $_POST['gsttype'];
         $gstper  = $_POST['gstper'];
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($ledtype == "I")
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like '%INPUT%SGST%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like '%INPUT%SGST%$gstper%'";
 
 		}
 		else
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like 'SGST'");
+		    $sql = "select * from massal_customer where cust_name like 'SGST'";
 		}  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -107,87 +101,85 @@
         $gsttype = $_POST['gsttype'];
         $gstper  = $_POST['gstper'];
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($ledtype == "I")
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like '%INPUT%IGST%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like '%INPUT%IGST%$gstper%'";
 
 		}
 		else
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like 'IGST%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like 'IGST%$gstper%'";
 		}  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getSearchPartylist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
         $party  = $_POST['party'];
         $party = trim(str_replace(" ", "", $party)); 
         $party = trim(str_replace(".", "", $party)); 
-        $qry = "select * from massal_customer where cust_type <> 'G' and  replace(replace(cust_name,' ','')  ,'.','')  like '%$party%' order by cust_name";
+        $sql = "select * from massal_customer where cust_type <> 'G' and  replace(replace(cust_name,' ','')  ,'.','')  like '%$party%' order by cust_name";
 
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getPartyType()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
         $partydrcr = $_POST['partydrcr'];
         $partycode = $_POST['partycode'];
 
-        $qry = "select cust_state statecode from massal_customer where cust_code = $partycode" ;
+        $sql = "select cust_state statecode from massal_customer where cust_code = $partycode" ;
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getSalVouNoDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
         $compcode = $_POST['compcode'];
         $finid    = $_POST['fincode'];
         $vouno    = $_POST['vouno'];
-        $qry = "select * from  acc_direct_sales , massal_customer where cust_code = sal_partycode and  sal_compcode = '$compcode' and sal_finid = '$finid' and sal_vouno = '$vouno'" ;
+        $sql = "select * from  acc_direct_sales , massal_customer where cust_code = sal_partycode and  sal_compcode = '$compcode' and sal_finid = '$finid' and sal_vouno = '$vouno'" ;
            
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 ?>

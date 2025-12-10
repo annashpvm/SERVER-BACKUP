@@ -202,8 +202,8 @@ if (isset($_POST["Import"])) {
 //echo $query1;
 //echo "<br>"; 
 
-		$result1  = mysql_query($query1);
-		$rec1     = mysql_fetch_array($result1);
+		$result1  = mysqli_query($conn, $query1);
+		$rec1     = mysqli_fetch_array($result1);
 		$recfound = $rec1['nos'];
         
         if ($recfound == 0)     
@@ -212,8 +212,8 @@ if (isset($_POST["Import"])) {
         {
                 $sno = 0;
 		$query1       = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-		$result1      = mysql_query($query1);
-		$rec1         = mysql_fetch_array($result1);
+		$result1      = mysqli_query($conn, $query1);
+		$rec1         = mysqli_fetch_array($result1);
 		$ginaccrefseq = $rec1['con_value'];
 
 // For voucher Number
@@ -252,8 +252,8 @@ if (isset($_POST["Import"])) {
 //echo $query12;
 //echo "<br>"; 
 
-		$result12      = mysql_query($query12);
-		$rec12         = mysql_fetch_array($result12);
+		$result12      = mysqli_query($conn, $query12);
+		$rec12         = mysqli_fetch_array($result12);
 		$ginadjseqno   = $rec12['acctrail_accref_seqno'];
 		$gininvno      = $rec12['acctrail_inv_no'];
 		$gininvdate    = $rec12['acctrail_inv_date'];
@@ -263,18 +263,18 @@ if (isset($_POST["Import"])) {
   
 
 		$query12       = "update acc_ref set accref_payref_no = '$colC' , accref_payref_date = '$ginvoudate'  where accref_seqno = '$ginaccrefseq' and accref_vouno = '$ginvouno' ";
-		$result12      = mysql_query($query12);
+		$result12      = mysqli_query($conn, $query12);
 
 
 		$query13       = "update acc_trail set acctrail_adj_value = acctrail_adj_value + $colE  where acctrail_accref_seqno = '$ginadjseqno'";
-		$result13      = mysql_query($query13);
+		$result13      = mysqli_query($conn, $query13);
 
 //echo $query13;
 //echo "<br>"; 
 
        $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-       $result = mysql_query($query);
-       $rec = mysql_fetch_array($result);
+       $result = mysqli_query($conn, $query);
+       $rec = mysqli_fetch_array($result);
        $ginrefslno = $rec['refslno'];
 
         $ginrefslno = $ginrefslno + 1;
@@ -282,15 +282,15 @@ if (isset($_POST["Import"])) {
 //echo "<br>";
 
 	$querydate = "select datediff('$ginvoudate','$gininvdate') as daysin";
-	$resultdate = mysql_query($querydate);
-	$recdatenew = mysql_fetch_array($resultdate);
+	$resultdate = mysqli_query($conn, $querydate);
+	$recdatenew = mysqli_fetch_array($resultdate);
 	$adjdays=$recdatenew['daysin'];
 
 //echo $adjdays;
 //echo "<br>";
 $query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$ginvouno', '$ginvoudate', '$ginadjseqno','$ginadjvouno','$gininvno','$gininvdate','$colE',$adjdays,'CN',curdate(),$ginpayterms,$ginledcode,'$voutype' );";
 
-$result10 = mysql_query($query10);
+$result10 = mysqli_query($conn, $query10);
 //echo $query10;
 //echo "<br>";
 
@@ -435,8 +435,8 @@ if ($totamt > 0)
 //echo "<br>"; 
 
 
-		$result1  = mysql_query($query1);
-		$rec1     = mysql_fetch_array($result1);
+		$result1  = mysqli_query($conn, $query1);
+		$rec1     = mysqli_fetch_array($result1);
 		$recfound = $rec1['nos'];
                 if ($recfound == 0)     
                 { 
@@ -445,7 +445,7 @@ if ($totamt > 0)
 
 
 
-	$result123 = mysql_query($query123);
+	$result123 = mysqli_query($conn, $query123);
                 } 
              }
 

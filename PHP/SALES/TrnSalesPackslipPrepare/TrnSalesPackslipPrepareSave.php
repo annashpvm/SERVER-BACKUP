@@ -23,12 +23,12 @@ $vehicleno = $_POST['vehicleno'];
 if ($gstFlag === "Add")
 {
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 	 $query1 = "insert into trnware_packslip_header (wpckh_comp_code, wpckh_fincode, wpckh_no, wpckh_date,
 	 		wpckh_socno, wpckh_socdt, wpckh_dano, wpckh_dadt, wpckh_noofbun, wpckh_noofreels, wpckh_totwt,
 	 		wpckh_slipno, wpckh_slipstat, wpckh_vehicleno) Values ( '$compcode', '$finid','$slipno','$slipdt','$socno', 
 	 		'$socdt', '$advno' , '$advdt', 0,'$nofreel','$totwt', '$slipnow', '$slipstat',UPPER('$vehicleno'))";
-	$result1=mysql_query($query1);
+	$result1=mysqli_query($conn, $query1);
 
 	for ($i=0;$i<$cnt;$i++)
 	{
@@ -44,13 +44,13 @@ if ($gstFlag === "Add")
 	 $query2= "insert into trnware_packslip_trailer (wpckt_comp_code, wpckt_fincode, wpckt_no, wpckt_var, wpckt_sr_no, wpckt_unit,
 	 		wpckt_wt, wpckt_selected, wpckt_srno_fincode) values ('$compcode', '$finid', '$slipno', '$icode', '$num','$unitcode',
 	 		'$weight','N', '$fincode' )";
-	 $result2=mysql_query($query2);      
+	 $result2=mysqli_query($conn, $query2);      
 
 	}
 	
 	$query3 = "call spsal_upd_packslip ( '$compcode', '$finid', '$socno', '$advno')";
                   
-	$result3= mysql_query($query3);
+	$result3= mysqli_query($conn, $query3);
 
 	
 }
@@ -59,13 +59,15 @@ if ($gstFlag === "Add")
 {
 	if($result1 && $result2 && $result3)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","PSNo":"'.$slipno.'"})';
 	}
 	else
 	       {
 		echo '({"success":"false","PSNo":"'.$slipno.'"})';
-		mysql_query("ROLLBACK");            
+		mysqli_rollback($conn);
+
+            
 		    
 		} 
 }

@@ -24,34 +24,36 @@ $qcinsno = (int)$_POST['qcinsno'];
 
 
         $query1 = "update trnrm_receipt_header set rech_no = '$newgrnno'  where rech_compcode = $compcode and rech_fincode = $finid  and rech_seqno = '$rech_seqno' and rech_no = '$rech_no'";
-        $result1=mysql_query($query1);
+        $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
 
 //ACCOUNTS
         $query2 = "update acc_ref set accref_vouno = '$newgrnno'  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid' and accref_vouno = '$rech_no'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 //echo $query2;
 //echo "<br>";	
 
 //QC
         $query3 = "update trn_qc_rm_inspection  set qc_rm_grnno = '$newgrnno' where qc_rm_entryno = '$qcinsno' and qc_rm_fincode = '$finid' and qc_rm_compcode = '$compcode'";
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 //echo $query2;
 //echo "<br>";	
 
 
 	if($result1 && $result2 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 

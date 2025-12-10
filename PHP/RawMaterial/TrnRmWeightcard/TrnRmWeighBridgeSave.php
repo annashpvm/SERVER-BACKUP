@@ -85,7 +85,7 @@ if ($loadwttype == 2 && $loadwt >0)
 
 $query2="update trn_weight_card set wc_vehicleno =  '$vehicleno' where wc_compcode = $compcode and wc_fincode = $finid and wc_ticketno = '$ticketno'";
 // echo $query2;
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
 
 
@@ -97,7 +97,7 @@ $query2="update trn_weighbridge_entry set t_wb_vehicle =  '$vehicleno',  t_wb_pa
 
 
 // echo $query2;
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
 
 if ($IWt  == 0 || $IIwt == 0)
@@ -105,14 +105,16 @@ if ($IWt  == 0 || $IIwt == 0)
 $query3="update trn_weighbridge_entry set t_wb_upd = 'N' where t_wb_year = $finid  and t_wb_compcode = $compcode  and t_wb_ticketno = '$ticketno'";
 
 // echo $query2;
-$result3 = mysql_query($query3);
+$result3 = mysqli_query($conn, $query3);
 }
 
 if ($result2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","wtno":"' . $ticketno . '"})';
 }
   

@@ -1,0 +1,82 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+    $task='loadledger';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+
+
+             	case "loadWBItemList":
+		getWBItemList();
+		break;
+
+             	case "loadGroupList":
+		getGroupList();
+		break;
+
+             	case "loadSearchWBItemList":
+		getSearchWBItemList();
+		break;
+
+
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+
+
+ function getWBItemList()
+    {
+        mysqli_set_charset($conn, "utf8");
+       	$grpcode = $_POST['grpcode'];
+	$r=mysql_query("select * from mas_wb_item left join mas_wb_itemgroup on item_group = item_grpcode");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+
+
+ function getGroupList()
+    {
+        mysqli_set_charset($conn, "utf8");
+       	$grpcode = $_POST['grpcode'];
+	$r=mysql_query("select * from  mas_wb_itemgroup");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+
+ function getSearchWBItemList()
+    {
+        mysqli_set_charset($conn, "utf8");
+       	$iname = $_POST['iname'];
+	$r=mysql_query("select * from  mas_wb_item  where item_name like '%$iname%'");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+?>

@@ -12,7 +12,7 @@ $invhnetamt = $_POST['invhnetamt'];
 $smsnumber  = $_POST['smsnumber'];
 
 $query1= "update trnsal_invoice_header set SMSsent = 'Y' where invh_invrefno = '$invhrefno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
-$result1=mysql_query($query1); 
+$result1=mysqli_query($conn, $query1); 
 
 
 $msg = "Dear $invhparty, your bill details, Inv.No: $invhrefno Dt: $invhdate  Qty: $invhtotwt Amt:  $invhnetamt Thanking you, Sri Hari Venkateswara Paper Mills (P) Ltd"; 

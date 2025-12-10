@@ -47,19 +47,19 @@ $deliverygst=   strtoupper($_POST['deliverygst']);
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") {
    $query2    = "select ifnull(max(os_seqno),0)+1 as seqno from trn_other_sales where  os_fincode = '$snhfincode' and os_compcode = '$snhcompcode'";
-   $result2   = mysql_query($query2);
-   $rec2      = mysql_fetch_array($result2);
+   $result2   = mysqli_query($conn, $query2);
+   $rec2      = mysqli_fetch_array($result2);
    $seqno     = $rec2['seqno'];
    $invhvouno = 'OSI'.trim((String)$seqno);
 
    #Get Max AccRef Seqno from acc_ref
    $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-   $result1 = mysql_query($query1);
-   $rec1 = mysql_fetch_array($result1);
+   $result1 = mysqli_query($conn, $query1);
+   $rec1 = mysqli_fetch_array($result1);
    $ginaccrefseq=$rec1['con_value'];
 
 }
@@ -67,23 +67,23 @@ else
 {
 
 	$querya1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $resulta1 = mysql_query($querya1);
+        $resulta1 = mysqli_query($conn, $querya1);
 
 //echo $querya1;
 //echo "<br>";
 	$querya2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 //echo $querya2;
 //echo "<br>";	
         $querya3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$snhcompcode' and accref_finid ='$snhfincode'";
-        $resulta3 = mysql_query($querya3);
+        $resulta3 = mysqli_query($conn, $querya3);
 
 //echo $querya3;
 //echo "<br>";
 
 
    $query2  = "delete from trn_other_sales where os_fincode = '$snhfincode' and os_compcode='$snhcompcode' and os_invno = '$snhinvno'";
-   $result2 = mysql_query($query2);
+   $result2 = mysqli_query($conn, $query2);
 
 //echo $query2;
 //echo "<br>";
@@ -93,7 +93,7 @@ else
    #Insert AccRef
    $querya1 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$snhinvno','$snhcompcode','$snhfincode', '$snhdate','OSI','--', '$paymode','$snhinvno', '$snhdate','$snhremarks');";
 
-   $resulta1 = mysql_query($querya1);
+   $resulta1 = mysqli_query($conn, $querya1);
 
 //echo $querya1;
 //echo "<br>";
@@ -125,7 +125,7 @@ else
 
 
                $querya3 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$snhinvno','$snhdate','$totamt','$adjamt','$ledseq','$amtmode',0,0 );";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 
 
 //echo $querya3;
@@ -136,7 +136,7 @@ else
             #Insert AccTran
 
             $querya2 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $resulta2 = mysql_query($querya2);
+            $resulta2 = mysqli_query($conn, $querya2);
 
 
 
@@ -182,7 +182,7 @@ os_delivery_addr1, os_delivery_addr2, os_delivery_addr3, os_delivery_city, os_de
 
 
 
- $result4=mysql_query($query4); 
+ $result4=mysqli_query($conn, $query4); 
 
 
 
@@ -193,12 +193,14 @@ os_delivery_addr1, os_delivery_addr2, os_delivery_addr3, os_delivery_city, os_de
         
    if ( $result4 && $resulta1  && $resulta2)
    {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","saleno":"'.$snhinvno.'"})';
    }
    else
    {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","saleno":"'.$snhinvno.'"})';
    }  
        

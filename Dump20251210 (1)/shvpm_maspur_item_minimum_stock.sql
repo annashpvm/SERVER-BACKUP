@@ -1,0 +1,55 @@
+CREATE DATABASE  IF NOT EXISTS `shvpm` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `shvpm`;
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+--
+-- Host: 10.0.0.251    Database: shvpm
+-- ------------------------------------------------------
+-- Server version	8.0.42-0ubuntu0.20.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `maspur_item_minimum_stock`
+--
+
+DROP TABLE IF EXISTS `maspur_item_minimum_stock`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `maspur_item_minimum_stock` (
+  `minstk_dept` int NOT NULL,
+  `minstk_grpcode` int NOT NULL,
+  `minstk_itemcode` int NOT NULL,
+  `minstk_qty` decimal(10,3) DEFAULT '0.000',
+  PRIMARY KEY (`minstk_dept`,`minstk_grpcode`,`minstk_itemcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `maspur_item_minimum_stock`
+--
+
+LOCK TABLES `maspur_item_minimum_stock` WRITE;
+/*!40000 ALTER TABLE `maspur_item_minimum_stock` DISABLE KEYS */;
+INSERT INTO `maspur_item_minimum_stock` VALUES (6,23,1259,1.000),(10,23,1193,2.000),(10,23,1194,4.000),(10,23,1195,5.000),(10,23,1199,3.000),(10,23,1202,2.000),(10,23,1203,6.000),(10,23,1205,1.000),(10,23,1206,2.000),(10,23,1210,2.000),(10,23,1212,20.000),(10,23,1213,4.000),(10,23,1214,1.000),(10,23,1215,1.000),(10,23,1216,10.000),(10,23,1217,1.000),(10,23,1218,6.000),(10,23,1219,1.000),(10,23,1221,1.000),(10,23,1223,1.000),(10,23,1224,1.000),(10,23,1225,2.000),(10,23,1226,1.000),(10,23,1228,1.000),(10,23,1229,2.000),(10,23,1230,2.000),(10,23,1231,2.000),(10,23,1232,1.000),(10,23,1233,1.000),(10,23,1235,1.000),(10,23,1236,1.000),(10,23,1238,1.000),(10,23,1281,4.000),(10,23,1303,2.000),(10,23,1323,2.000),(10,23,1328,2.000),(10,23,1336,1.000),(10,23,1337,1.000),(10,23,1346,1.000),(10,23,1353,4.000),(10,23,1358,2.000),(10,23,1359,2.000),(10,23,4831,2.000),(10,23,4832,1.000),(10,23,4833,1.000),(10,23,6067,1.000);
+/*!40000 ALTER TABLE `maspur_item_minimum_stock` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-12-10 11:47:32

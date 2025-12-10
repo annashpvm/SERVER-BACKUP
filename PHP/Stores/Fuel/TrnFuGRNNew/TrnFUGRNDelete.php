@@ -98,7 +98,7 @@ $paymodetype ='';
 // QC 
 	$query1= "update trn_qc_fuel_inspection set qc_fuel_grn_status = 'N',qc_fuel_grnno = '' , qc_fuel_dn_raised = 'N', qc_fuel_debitnote_no = '' where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and qc_fuel_entryno = '$qcinsno'";
 
-       $result1=mysql_query($query1);
+       $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -108,45 +108,45 @@ $paymodetype ='';
 
 
 	$query3 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_clqty = itmt_clqty -  rect_grnqty ,itmt_clvalue = itmt_clvalue - rect_costvalue  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result3=mysql_query($query3);
+        $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 	$query4 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_avgrate = case when itmt_clvalue > 0 and itmt_clqty > 0 then itmt_clvalue / itmt_clqty else 0 end  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result4=mysql_query($query4);
+        $result4=mysqli_query($conn, $query4);
 
 
 
         $query2= "delete from trnfu_receipt_trailer where rect_hdseqno = '$rech_seqno'";
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 //echo $query2;
 //echo "<br>";
 
         $query3= "delete from trnfu_receipt_header where rech_compcode = $compcode and rech_fincode = $finid  and rech_seqno = '$rech_seqno'";
-       $result3=mysql_query($query3);
+       $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 //ACCOUNTS
 	$querya1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $resulta1 = mysql_query($querya1);
+        $resulta1 = mysqli_query($conn, $querya1);
 //echo $querya1;
 //echo "<br>";
 	$querya2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 //echo $querya2;
 //echo "<br>";	
         $querya3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $resulta3 = mysql_query($querya3);
+        $resulta3 = mysqli_query($conn, $querya3);
 //echo $querya3;
 //echo "<br>";	
 
 
 
 	$query5= "update trn_weight_card set wt_grn_process = 'N' where wc_compcode = '$compcode' and wc_fincode = '$finid'  and wc_ticketno = $ticketno";
-	 $result5=mysql_query($query5);
+	 $result5=mysqli_query($conn, $query5);
 
 //echo $query5;
 //echo "<br>";	
@@ -156,14 +156,16 @@ $paymodetype ='';
     
 	if($result1 && $result2 && $result3 &&  $result5  &&  $resulta1 &&  $resulta2 &&  $resulta3 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $grnno . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $grnno . '"})';
 	}   
 

@@ -3220,7 +3220,7 @@ else
 
 
 
-	txttotitemqty.setValue(Ext.util.Format.number(Number(totgrnqty),"0.000"));
+	txttotitemqty.setRawValue(Ext.util.Format.number(Number(totgrnqty),"0.000"));
 	txttotitemval.setRawValue(Ext.util.Format.number(Number(pdb_totval),"0.00"));
         txtAcutalValue.setRawValue(Ext.util.Format.number(Number(pdb_totval),"0.00"));
         txtBilledValue.setRawValue(Ext.util.Format.number(Number(partyitemvalue),"0.00"));
@@ -8783,7 +8783,7 @@ var tabgrn = new Ext.TabPanel({
                show:function(){
                    RefreshData();
 
-    
+
 /*
 
 //			Ext.getCmp('txtGRNNo').setDisabled(true);

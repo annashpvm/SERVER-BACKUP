@@ -594,7 +594,13 @@ var MasLedgerFormPanel = new Ext.form.FormPanel({
                             voutype : 'OPB'
                         },
                         callback: function(){
+                            var cnt=VouNodatastore.getCount();
+              
+                            if (cnt>0)
+                            {
+  
                             txtVouNo.setValue("OPB"+VouNodatastore.getAt(0).get('con_value'));
+                            }
                         }
                     });
 

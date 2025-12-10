@@ -7,30 +7,34 @@ session_start();
 
 
 $query = "select ifnull(max(itmg_code),0)+1 as grpseq from masrm_item_group";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $grpseq = $rec['grpseq'];
 
 $qry = "select count(*) as cnt from masrm_item_group where itmg_name = '$groupname'";
-$resgrp = mysql_query($qry);
-$recgrp = mysql_fetch_array($resgrp);
+$resgrp = mysqli_query($conn, $qry);
+$recgrp = mysqli_fetch_array($resgrp);
 $cnt=$recgrp['cnt'];
 
 if($cnt==0)
 {
   $query1="insert into masrm_item_group values('$grpseq','$groupname','$shortname')";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 }
 
   if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $groupname . '"})';
 } 
 else if($cnt>0) {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $groupname . '"})';
 }
   

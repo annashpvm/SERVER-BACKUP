@@ -7,7 +7,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadsalcustomer":
 		getsalcustomer();
@@ -42,129 +42,127 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
   function getsaladvice()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $finid = $_POST['finid'];
         $reelno = $_POST['reelno'];
         $sizecode = $_POST['sizecode'];        
 
 
-        $r=mysql_query("select * from trnsal_finish_stock , massal_variety  where stk_var_code = 43 and stk_var_code = var_code and  stk_sr_no = 21072630913201  and stk_comp_code = 1 ");
+        $sql = "select * from trnsal_finish_stock , massal_variety  where stk_var_code = 43 and stk_var_code = var_code and  stk_sr_no = 21072630913201  and stk_comp_code = 1 ");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
   function getsalcustomer()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $finid = $_POST['finid'];
 
-        $r=mysql_query("select * from massal_customer");
-        $r=mysql_query("select cust_ref,cust_code from trnsal_desp_advice a , massal_customer b where da_cust = b.cust_code and da_fincode = $finid and (da_desqty - da_slipqty) > 0  and da_close <> 'Y' and da_comp_code = $compcode  group by cust_ref,cust_code order by cust_ref,cust_code");
+        $sql = "select * from massal_customer");
+        $sql = "select cust_ref,cust_code from trnsal_desp_advice a , massal_customer b where da_cust = b.cust_code and da_fincode = $finid and (da_desqty - da_slipqty) > 0  and da_close <> 'Y' and da_comp_code = $compcode  group by cust_ref,cust_code order by cust_ref,cust_code");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }    
 
   function getsaldelslip()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $finid = $_POST['finid'];
-	$r=mysql_query("select IFNULL(max(wpckh_no),0)+1 as wpckh_no from trnware_packslip_header where wpckh_comp_code ='$compcode' and wpckh_fincode ='$finid'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select IFNULL(max(wpckh_no),0)+1 as wpckh_no from trnware_packslip_header where wpckh_comp_code ='$compcode' and wpckh_fincode ='$finid'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  
    
   function getsalessocno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $finid = $_POST['finid'];
         $custno = $_POST['custno'];
-        $r=mysql_query("select da_ackno from trnsal_desp_advice a , massal_customer b where da_cust = b.cust_code and da_fincode = '$finid' and (da_desqty - da_slipqty) > 0  and da_close <> 'Y' and da_comp_code = '$compcode' and cust_code = '$custno' group by  da_ackno  ");
+        $sql = "select da_ackno from trnsal_desp_advice a , massal_customer b where da_cust = b.cust_code and da_fincode = '$finid' and (da_desqty - da_slipqty) > 0  and da_close <> 'Y' and da_comp_code = '$compcode' and cust_code = '$custno' group by  da_ackno  ");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  
   function getsalesdespadno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $finid = $_POST['finid'];
         $custno = $_POST['custno'];
         $socno = $_POST['socno'];
-        $r=mysql_query("select da_no,da_date from trnsal_desp_advice a , massal_customer b where da_cust = b.cust_code and da_fincode = '$finid' and (da_desqty - da_slipqty) > 0  and da_close <> 'Y' and da_comp_code = '$compcode' and cust_code = '$custno' and da_ackno = '$socno' group by da_no,da_date ");
+        $sql = "select da_no,da_date from trnsal_desp_advice a , massal_customer b where da_cust = b.cust_code and da_fincode = '$finid' and (da_desqty - da_slipqty) > 0  and da_close <> 'Y' and da_comp_code = '$compcode' and cust_code = '$custno' and da_ackno = '$socno' group by da_no,da_date ");
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
    
   function getsocdetails()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $finid = $_POST['finid'];
         $custno = $_POST['custno'];
         $socno = $_POST['socno'];
-        $r=mysql_query("select ordh_dest,ordh_ackdate,var_name,d.var_code,var_desc,var_gsm,var_unit,var_size1,var_size2,da_desqty,da_slipqty from trnsal_order_header  a , trnsal_order_trailer b , trnsal_desp_advice c , massal_variety d , masprd_variety e where ordh_comp_code = ordt_comp_code and ordh_fincode   = ordt_fincode   and ordh_ackno     = ordt_ackno  and ordh_comp_code =  da_comp_code and ordh_fincode = da_fincode   and ordh_ackno =  da_ackno  and ordt_var_code  =  d.var_code and d.var_grpcode  =  e.var_code and ordt_var_code  =  c.da_var and ordh_comp_code = $compcode   and ordh_fincode = $finid  and ordh_ackno = $socno");
+        $sql = "select ordh_dest,ordh_ackdate,var_name,d.var_code,var_desc,var_gsm,var_unit,var_size1,var_size2,da_desqty,da_slipqty from trnsal_order_header  a , trnsal_order_trailer b , trnsal_desp_advice c , massal_variety d , masprd_variety e where ordh_comp_code = ordt_comp_code and ordh_fincode   = ordt_fincode   and ordh_ackno     = ordt_ackno  and ordh_comp_code =  da_comp_code and ordh_fincode = da_fincode   and ordh_ackno =  da_ackno  and ordt_var_code  =  d.var_code and d.var_grpcode  =  e.var_code and ordt_var_code  =  c.da_var and ordh_comp_code = $compcode   and ordh_fincode = $finid  and ordh_ackno = $socno");
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 
   function getreelno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $reelno = json_decode($_POST['reelno']); 
         $newreel = implode(",",$reelno);
@@ -190,43 +188,45 @@
 	//echo $jk;
         
 
-        $r=mysql_query("select stk_sr_no, stk_refno , stk_destag ,stk_var_code , stk_finyear from trnsal_finish_stock where stk_comp_code = $compcode and left(stk_refno,33) in ($reelstr)  and   stk_refno <> ''");
+        $sql = "select stk_sr_no, stk_refno , stk_destag ,stk_var_code , stk_finyear from trnsal_finish_stock where stk_comp_code = $compcode and left(stk_refno,33) in ($reelstr)  and   stk_refno <> ''");
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 function getwarehousepackslipreelno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $reelno = $_POST['reelno'];
         $rb = $_POST['rb'];
 
-        $r=mysql_query("");
+        $sql = "");
 
 
-        $r=mysql_query("select wpckt_fincode, wpckt_var, wpckt_sr_no,wpckt_wt,wpckt_srno_fincode from trnware_packslip_trailer where wpckt_fincode <= 21 and wpckt_comp_code = 1 and wpckt_sr_no in ($reelno)");
+        $sql = "select wpckt_fincode, wpckt_var, wpckt_sr_no,wpckt_wt,wpckt_srno_fincode from trnware_packslip_trailer where wpckt_fincode <= 21 and wpckt_comp_code = 1 and wpckt_sr_no in ($reelno)");
 
         
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 function getsaldata()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $sizecode = $_POST['sizecode'];
         $stno = $_POST['stno'];
@@ -238,7 +238,7 @@ function getsaldata()
 	
 	if ($stnoqry === "chk1") {
 
-        $r=mysql_query("select * from trnsal_finish_stock where stk_destag <> 'T' and stk_deltag <> 'T'
+        $sql = "select * from trnsal_finish_stock where stk_destag <> 'T' and stk_deltag <> 'T'
                   	and stk_sr_no = $stno and stk_var_code = $itemcode
                   	and stk_units = 1
                   	and stk_comp_code = $compcode ");
@@ -246,7 +246,7 @@ function getsaldata()
         }
         else if ($stnoqry === "chk2") {
         
-        $r=mysql_query("select var_name,stk_var_code,stk_units,var_desc,stk_sr_no,stk_wt,c.var_code from 
+        $sql = "select var_name,stk_var_code,stk_units,var_desc,stk_sr_no,stk_wt,c.var_code from 
                    trnsal_finish_stock a, massal_variety b ,masprd_variety c
                    where a.stk_var_code = b.var_code And c.var_code = b.var_grpcode
                    and a.stk_var_code = $itemcode 
@@ -257,7 +257,7 @@ function getsaldata()
                    and a.stk_destag <> 'T' and a.stk_deltag <> 'T' group by stk_var_code,var_desc,stk_sr_no,stk_wt,var_name,stk_units,c.var_code order by stk_sr_no");        
         }
         else if ($stnoqry === "chk3") {
-	$r=mysql_query("select stk_finyear,var_name,stk_var_code,var_desc,var_unit,stk_sr_no,stk_wt,c.var_code,stk_units from 
+	$sql = "select stk_finyear,var_name,stk_var_code,var_desc,var_unit,stk_sr_no,stk_wt,c.var_code,stk_units from 
                  trnsal_finish_stock a, massal_variety b ,masprd_variety c
                  where a.stk_var_code = b.var_code And c.var_code = b.var_grpcode
                  and a.stk_var_code = $itemcode
@@ -271,13 +271,14 @@ function getsaldata()
 
         }
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 ?>

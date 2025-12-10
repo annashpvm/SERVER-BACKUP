@@ -29,15 +29,15 @@ $originalsize= $_POST['originalsize'];
 $finishedsize= $_POST['finishedsize'];
 
 $truck=   strtoupper(trim($_POST['truck']));
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 if ($savetype === "Add") {
 
    $query1 = "select IFNULL(max(br_no),0)+1 as receiptno from trnsal_bundle_receipt where br_fincode = $finid and br_comp_code='$compcode'";
-   $result1= mysql_query($query1);
+   $result1= mysqli_query($conn, $query1);
 
-   $rec2 = mysql_fetch_array($result1);
+   $rec2 = mysqli_fetch_array($result1);
    $receiptno=$rec2['receiptno'];
 
 
@@ -51,7 +51,7 @@ else if ($savetype === "Edit")
 
 	$query5= "update  trn_delivery_challan_sizewise b ,(select br_dcno, br_originalsize , sum(br_bundwt) dcwt from  trnsal_bundle_receipt where br_comp_code = $compcode and br_fincode = $finid and  br_dcno =  $seqno and br_upd = 'N'  group by br_dcno,br_originalsize)  a set dcs_receipt = dcs_receipt - dcwt where dcs_seqno = br_dcno and br_originalsize = dcs_size and dcs_seqno = $seqno ";
 
-	$result5=mysql_query($query5);   
+	$result5=mysqli_query($conn, $query5);   
 
 
 
@@ -59,7 +59,7 @@ else if ($savetype === "Edit")
 //echo "<br>";
 
 	$query6= "delete from trnsal_bundle_receipt where br_comp_code =  $compcode and br_fincode = $finid and br_dcno  = $seqno and br_upd = 'N'";
-	$result6=mysql_query($query6);   
+	$result6=mysqli_query($conn, $query6);   
 
 //echo $query6; 
  } 
@@ -89,13 +89,13 @@ for($i=0;$i<$rowcnt;$i++)
 		$reccount = $reccount +1;
 		$query2= "insert into trnsal_bundle_receipt values ('$compcode','$finid','$receiptno','$receiptdate','$cutter','$DcNo ','$DcDate','$party','$sono','$sodt','$ReelSize',
 	'$Size','$Sheets','$Reams','$BundleNo','$Weight','N')";
-		$result2=mysql_query($query2);   
+		$result2=mysqli_query($conn, $query2);   
 
 //echo $query2;
 //echo "<br>";
 
 		$query3= "update trn_delivery_challan_sizewise set dcs_receipt =  dcs_receipt + $Weight  where dcs_seqno = $DcNo and dcs_size ='$ReelSize'";
-		$result3=mysql_query($query3);        
+		$result3=mysqli_query($conn, $query3);        
         } 
 //echo $query3;
 }
@@ -106,12 +106,14 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3 ) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dcno":"' . $receiptno . '"})';
 	}
  
@@ -123,12 +125,14 @@ else
      { 
 	if ( $result5 && $result6) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dcno":"' . $receiptno . '"})';
 	}
       }
@@ -136,12 +140,14 @@ else
        { 
 	if ($result2 && $result3  &&   $result5 && $result6) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dcno":"' . $receiptno . '"})';
 	}
       } 

@@ -8,7 +8,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadPurchaseDetails":
 		getPurchaseDetails();
@@ -191,16 +191,11 @@
         	    break;
     }
     
+
+
+	
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -209,18 +204,19 @@
 
  function getVouTypeList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$startdate = $_POST['startdate'];
 	$enddate = $_POST['enddate'];
 
-        $r=mysql_query("select accref_vou_type , vou_name,count(*) as nos  from acc_ref  a1 left join acc_voutype  b1 on  a1.accref_vou_type = b1.vou_type  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' group by  accref_vou_type  order by   vou_name");
+    $sql = "select accref_vou_type , vou_name,count(*) as nos  from acc_ref  a1 left join acc_voutype  b1 on  a1.accref_vou_type = b1.vou_type  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' group by  accref_vou_type  order by   vou_name";
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -229,9 +225,91 @@
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
 
- function getVouNoList()
+	function getTB_Maingroup()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
+
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$startdate = $_POST['startdate'];
+	$enddate = $_POST['enddate'];
+	$finfirstdate = $_POST['finfirstdate'];
+
+
+
+        $sql ="call accspreptrialbalanceclosing_View_Maingroup($finid ,$compcode, '$startdate', '$enddate','$finfirstdate')";
+
+
+		$r = mysqli_query($conn, $sql);
+		$arr = [];
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+
+	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+	function getTB_2NDgroup()
+    {
+        global $conn;
+
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$startdate = $_POST['startdate'];
+	$enddate = $_POST['enddate'];
+	$mgrpcode = $_POST['mgrpcode'];
+	$finfirstdate = $_POST['finfirstdate'];
+        $sql ="call accspreptrialbalanceclosing_View_SubMaingroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate' )";
+
+
+		$r = mysqli_query($conn, $sql);
+		$arr = [];
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+
+	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+	
+
+	function getTB_2NDgroup_alllist()
+    {
+        global $conn;
+
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$startdate = $_POST['startdate'];
+	$enddate = $_POST['enddate'];
+	$mgrpcode = $_POST['mgrpcode'];
+	$finfirstdate = $_POST['finfirstdate'];
+        $sql ="call accspreptrialbalanceclosing_View_SubMaingroup_alllist($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate')";
+
+		$r = mysqli_query($conn, $sql);
+
+
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+
+	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+	function getVouNoList()
+    {
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -241,13 +319,15 @@
 	$ledtype = $_POST['ledtype'];
 
         if ($ledtype == 'A')
-             $r=mysql_query("select  accref_vou_type,accref_vouno,accref_payref_no , DATE_FORMAT(accref_voudate,'%d-%m-%Y') as accref_voudate,cust_name,acctran_dbamt,acctran_cramt ,acctran_led_code from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where  accref_voudate between '$startdate' and '$enddate' and  accref_comp_code = $compcode and  accref_vou_type  = '$voutype' ");
+             $sql = "select  accref_vou_type,accref_vouno,accref_payref_no , DATE_FORMAT(accref_voudate,'%d-%m-%Y') as accref_voudate,cust_name,acctran_dbamt,acctran_cramt ,acctran_led_code from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where  accref_voudate between '$startdate' and '$enddate' and  accref_comp_code = $compcode and  accref_vou_type  = '$voutype' ";
         else
-             $r=mysql_query("select accref_vou_type, accref_vouno,accref_payref_no , DATE_FORMAT(accref_voudate,'%d-%m-%Y') as accref_voudate,cust_name,acctran_dbamt,acctran_cramt ,acctran_led_code from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where  accref_voudate between '$startdate' and '$enddate' and  accref_comp_code = $compcode and  accref_vou_type  = '$voutype'  != 'G'");
+             $sql = "select accref_vou_type, accref_vouno,accref_payref_no , DATE_FORMAT(accref_voudate,'%d-%m-%Y') as accref_voudate,cust_name,acctran_dbamt,acctran_cramt ,acctran_led_code from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code  where  accref_voudate between '$startdate' and '$enddate' and  accref_comp_code = $compcode and  accref_vou_type  = '$voutype'";  //  != 'G'";
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+			 $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
+	
 	{
 	$arr[]= $re ;
         }
@@ -256,9 +336,12 @@
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
 
- function getDocumentList()
+
+	
+
+	function getDocumentList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -267,7 +350,7 @@
 	$ledcode = $_POST['ledcode'];
 
 
-         $r = mysql_query("select a.*,c.cust_name partyledger  from
+        $sql ="select a.*,c.cust_name partyledger  from
 (select
     accref_seqno,
     accref_vouno,
@@ -297,12 +380,13 @@ where
 accref_voudate between '$startdate' and '$enddate' and
 
     atn.acctran_led_code = '$ledcode' 
- ) a , acc_tran b , massal_customer c where a.accref_seqno = b.acctran_accref_seqno and b.acctran_serialno = 1 and b.acctran_led_code = c.cust_code  order by accref_voudate,accref_seqno ");
+ ) a , acc_tran b , massal_customer c where a.accref_seqno = b.acctran_accref_seqno and b.acctran_serialno = 1 and b.acctran_led_code = c.cust_code  order by accref_voudate,accref_seqno ";
 
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+ $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -317,7 +401,7 @@ accref_voudate between '$startdate' and '$enddate' and
 
  function getPurchaseDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -325,24 +409,25 @@ accref_voudate between '$startdate' and '$enddate' and
 	$enddate   = $_POST['enddate'];
         $opt   = 2;
 
-//$r=mysql_query("select UPPER(monthname(accref_voudate)) as rmonth  , sum(acctran_dbamt) dramt ,  sum(acctran_cramt) cramt  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.led_code 	 where  accref_vou_type  in ('PSP','PSC','PLW','PIW','PPF','PDE') and  accref_comp_code = '$compcode ' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G'  group by upper(monthname(accref_voudate))");
+//$sql = "select UPPER(monthname(accref_voudate)) as rmonth  , sum(acctran_dbamt) dramt ,  sum(acctran_cramt) cramt  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.led_code 	 where  accref_vou_type  in ('PSP','PSC','PLW','PIW','PPF','PDE') and  accref_comp_code = '$compcode ' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G'  group by upper(monthname(accref_voudate))";
 
 
-$r=mysql_query("call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','$enddate',$opt)");
+$sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','$enddate',$opt)";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
     }
 
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
 
- function getSalesDetails()
+	function getSalesDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -350,22 +435,23 @@ $r=mysql_query("call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$star
 	$enddate   = $_POST['enddate'];
         $opt       = 1; 
 
-//$r=mysql_query("select UPPER(monthname(accref_voudate)) as rmonth  , sum(acctran_dbamt) dramt ,  sum(acctran_cramt) cramt  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.led_code 	 where  accref_vou_type  in ('GSI','OSI') and  accref_comp_code = '$compcode ' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G'  group by upper(monthname(accref_voudate))");
+//$sql = "select UPPER(monthname(accref_voudate)) as rmonth  , sum(acctran_dbamt) dramt ,  sum(acctran_cramt) cramt  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.led_code 	 where  accref_vou_type  in ('GSI','OSI') and  accref_comp_code = '$compcode ' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G'  group by upper(monthname(accref_voudate))";
 
-$r=mysql_query("call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','$enddate',$opt)");
+$sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','$enddate',$opt)";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getCashBookDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -373,22 +459,24 @@ $r=mysql_query("call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$star
 	$enddate   = $_POST['enddate'];
         $ledcode   = $_POST['ledcode']; 
 
-$r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate','$enddate',$ledcode)");
+$sql = "call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate','$enddate',$ledcode)";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
- function getSalesDocumentList()
+
+	function getSalesDocumentList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -396,15 +484,17 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate   = $_POST['enddate'];
  
 
-//         $r = mysql_query("select   DATE_FORMAT(accref_voudate, '%d-%m-%Y') as voudate, cust_name,
+//        $sql ="select   DATE_FORMAT(accref_voudate, '%d-%m-%Y') as voudate, cust_name,
 //--     case when accref_vou_type = 'GSI' then  'TN GST Sales' else 'OS IGST Sales' end as voutype ,
-//   case when accref_vou_type = 'GSI' then case when left(accref_payref_no,2) = 'TN' THEN  'TN GST Sales' else 'OS IGST //Sales' end else case when left(accref_payref_no,2) = 'TN' THEN  'Other GST Sales' else 'Other IGST Sales' end end  as voutype, accref_payref_no, acctran_dbamt ,  acctran_cramt  , accref_vou_type   , led_code ,accref_vouno ,accref_seqno  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code where  accref_vou_type  in ('GSI','OSI') and  accref_comp_code = '$compcode' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G' order by accref_voudate,accref_seqno ");
+//   case when accref_vou_type = 'GSI' then case when left(accref_payref_no,2) = 'TN' THEN  'TN GST Sales' else 'OS IGST //Sales' end else case when left(accref_payref_no,2) = 'TN' THEN  'Other GST Sales' else 'Other IGST Sales' end end  as voutype, accref_payref_no, acctran_dbamt ,  acctran_cramt  , accref_vou_type   , led_code ,accref_vouno ,accref_seqno  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code where  accref_vou_type  in ('GSI','OSI') and  accref_comp_code = '$compcode' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G' order by accref_voudate,accref_seqno ";
 
 
-         $r = mysql_query("call spsal_rep_Month_Sales_Details($compcode,$finid , '$startdate','$enddate')");
+        $sql ="call spsal_rep_Month_Sales_Details($compcode,$finid , '$startdate','$enddate')";
+		$r = mysqli_query($conn, $sql);
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -416,7 +506,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function getPurchaseDocumentList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -424,44 +514,12 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 
 
-/*
-         $r = mysql_query("select   DATE_FORMAT(accref_voudate, '%d-%m-%Y') as voudate, cust_name,
-  accref_vou_type voutype,accref_vouno , accref_payref_no, acctran_dbamt ,  acctran_cramt  , accref_vou_type   , led_code ,accref_seqno  from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code where  accref_vou_type  in  ('PSP','PSC','PLW','PIW','PPF','PDE') and  accref_comp_code = '$compcode' and accref_finid = '$finid'  and accref_voudate between '$startdate' and  '$enddate'  and cust_type <> 'G' order by accref_voudate,accref_seqno ");
-*/
+  $sql ="call spsal_rep_Month_Purchase_Details($compcode,$finid , '$startdate','$enddate')";
 
-   $r = mysql_query("call spsal_rep_Month_Purchase_Details($compcode,$finid , '$startdate','$enddate')");
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-
-	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
-    }
-
-
- function getTB_Maingroup()
-    {
-        mysql_query("SET NAMES utf8");
-
-	$finid    = $_POST['finid'];
-	$compcode = $_POST['compcode'];
-	$startdate = $_POST['startdate'];
-	$enddate = $_POST['enddate'];
-	$finfirstdate = $_POST['finfirstdate'];
-
-
-
-         $r = mysql_query("call accspreptrialbalanceclosing_View_Maingroup($finid ,$compcode, '$startdate', '$enddate','$finfirstdate')");
-
-
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+  $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -472,59 +530,10 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
 
 
- function getTB_2NDgroup()
-    {
-        mysql_query("SET NAMES utf8");
-
-	$finid    = $_POST['finid'];
-	$compcode = $_POST['compcode'];
-	$startdate = $_POST['startdate'];
-	$enddate = $_POST['enddate'];
-	$mgrpcode = $_POST['mgrpcode'];
-	$finfirstdate = $_POST['finfirstdate'];
-         $r = mysql_query("call accspreptrialbalanceclosing_View_SubMaingroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate' )");
-
-
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-
-	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
-    }
-
- function getTB_2NDgroup_alllist()
-    {
-        mysql_query("SET NAMES utf8");
-
-	$finid    = $_POST['finid'];
-	$compcode = $_POST['compcode'];
-	$startdate = $_POST['startdate'];
-	$enddate = $_POST['enddate'];
-	$mgrpcode = $_POST['mgrpcode'];
-	$finfirstdate = $_POST['finfirstdate'];
-         $r = mysql_query("call accspreptrialbalanceclosing_View_SubMaingroup_alllist($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate')");
-
-
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-
-	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
-    }
 
  function getTB_IIIgroup()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -532,13 +541,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$mgrpcode = $_POST['mgrpcode'];
 	$finfirstdate = $_POST['finfirstdate'];
-         $r = mysql_query("call accspreptrialbalanceclosing_View_Subgroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate' )");
+        $sql ="call accspreptrialbalanceclosing_View_Subgroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate' )";
 
 
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -548,10 +558,9 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
     }
 
 
-
- function getTB_Ledgers()
+	function getTB_Ledgers()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -561,14 +570,15 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$finfirstdate = $_POST['finfirstdate'];
 	$ledmaingrp = $_POST['ledmaingrp'];
 
-         $r = mysql_query("call accspreptrialbalanceclosing_View_Subgroup_levelend($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate',$ledmaingrp )");
+        $sql ="call accspreptrialbalanceclosing_View_Subgroup_levelend($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate',$ledmaingrp )";
 
 
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
+		{
 	$arr[]= $re ;
         }
 		$jsonresult = JEncode($arr);
@@ -581,7 +591,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function get_Ledger_Details()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -589,20 +599,20 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$ledcode = $_POST['ledcode'];
 	$ledtype = $_POST['ledgertype']; 
- //        $r = mysql_query("call acc_sp_rep_ledger($ledcode,$compcode,$finid ,'$startdate', '$enddate','')");
+ //       $sql ="call acc_sp_rep_ledger($ledcode,$compcode,$finid ,'$startdate', '$enddate','')";
 
         $r = "call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$enddate','','$ledtype')";
 
 //echo $r;
 
-        $r = mysql_query("call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$enddate','','$ledtype')");
+       $sql ="call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$enddate','','$ledtype')";
+
+	   $r = mysqli_query($conn, $sql);
 
 
-
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	   $arr = [];
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -611,9 +621,11 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
 
- function get_AR_Bills_Details()
+
+	
+	function get_AR_Bills_Details()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -622,16 +634,17 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$ledcode = $_POST['ledcode'];
 	$alldueopt = $_POST['alldueopt'];
         if ($alldueopt == 0) 
-        $r = mysql_query("call spacc_rep_receivables_Party_overdue_outstanding($compcode,'$startdate', '$enddate',$ledcode)");
+       $sql ="call spacc_rep_receivables_Party_overdue_outstanding($compcode,'$startdate', '$enddate',$ledcode)";
         else
-        $r = mysql_query("call accsp_rep_ar_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'$alldueopt' )");
+       $sql ="call accsp_rep_ar_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'$alldueopt' )";
    
 
 
+	   $r = mysqli_query($conn, $sql);
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -642,7 +655,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function get_RepCollection_Abstract()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -650,13 +663,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$ledcode = $_POST['ledcode'];
 
-         $r = mysql_query("call accsp_rep_Rep_collection_Summary($compcode,'$startdate', '$enddate')");
+        $sql ="call accsp_rep_Rep_collection_Summary($compcode,'$startdate', '$enddate')";
 
 
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -666,9 +680,12 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
     }
 
 
- function get_RepParty_Collection_Abstract()
+
+	
+
+	function get_RepParty_Collection_Abstract()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -676,13 +693,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$repcode = $_POST['repcode'];
 
-         $r = mysql_query("call accsp_rep_Rep_Party_collections($compcode,'$startdate', '$enddate',$repcode)");
+        $sql ="call accsp_rep_Rep_Party_collections($compcode,'$startdate', '$enddate',$repcode)";
 
 
+		$r = mysqli_query($conn, $sql);
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -694,7 +712,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function get_RepParty_Bills_Collection()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -702,13 +720,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$ledcode = $_POST['custcode'];
 
-         $r = mysql_query("call accsp_rep_Party_Bills_collections($compcode,'$startdate', '$enddate',$ledcode)");
+        $sql ="call accsp_rep_Party_Bills_collections($compcode,'$startdate', '$enddate',$ledcode)";
 
 
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -721,7 +740,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function get_Payable_Bills_Details()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -729,14 +748,15 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$ledcode = $_POST['ledcode'];
 
-//        $r = mysql_query("call accsp_rep_payable_billwisedue($compcode,'$startdate', '$enddate',$ledcode)");
-        $r = mysql_query("call accsp_rep_ap_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'1')");
+//       $sql ="call accsp_rep_payable_billwisedue($compcode,'$startdate', '$enddate',$ledcode)";
+       $sql ="call accsp_rep_ap_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'1')";
+
+	   $r = mysqli_query($conn, $sql);
 
 
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -745,11 +765,11 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
 
+	
 
-
- function get_Groupwise_Payment()
+	function get_Groupwise_Payment()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -757,13 +777,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$ledcode = $_POST['ledcode'];
 
-         $r = mysql_query("call accsp_rep_group_payment_Summary($compcode,'$startdate', '$enddate')");
+        $sql ="call accsp_rep_group_payment_Summary($compcode,'$startdate', '$enddate')";
 
 
+		$r = mysqli_query($conn, $sql);
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -776,7 +797,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function get_Group_Party_Payments()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -784,13 +805,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$grpcode = $_POST['grpcode'];
 
-         $r = mysql_query("call accsp_rep_group_payment_partywise($compcode,'$startdate', '$enddate',$grpcode)");
+        $sql ="call accsp_rep_group_payment_partywise($compcode,'$startdate', '$enddate',$grpcode)";
 
 
+		$r = mysqli_query($conn, $sql);
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -801,7 +823,7 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function get_GroupParty_Bills_Payments()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -809,13 +831,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$suppliercode = $_POST['suppliercode'];
 
-         $r = mysql_query("call accsp_rep_party_datewise_payments($compcode,'$startdate', '$enddate',$suppliercode)");
+        $sql ="call accsp_rep_party_datewise_payments($compcode,'$startdate', '$enddate',$suppliercode)";
 
 
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -824,44 +847,44 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
 
+	
 
- function getSearchPartylist()
+	function getSearchPartylist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
         $party  = $_POST['party'];
-        $qry = "select * from massal_customer where cust_type = 'C' and cust_name like '%$party%' order by cust_name";
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer where cust_type = 'C' and cust_name like '%$party%' order by cust_name";
+		
+        $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getSearchSupplierlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
         $party  = $_POST['party'];
-        $qry = "select * from massal_customer where cust_type = 'S' and cust_name like '%$party%' order by cust_name";
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer where cust_type = 'S' and cust_name like '%$party%' order by cust_name";
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getParty_Outstanding()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -869,13 +892,14 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 	$enddate = $_POST['enddate'];
 	$mgrpcode = $_POST['mgrpcode'];
 
-         $r = mysql_query("call accsp_trial_balance_creditors_debitors_partywise($finid ,$compcode, '$startdate', '$enddate','$mgrpcode' )");
+        $sql ="call accsp_trial_balance_creditors_debitors_partywise($finid ,$compcode, '$startdate', '$enddate','$mgrpcode' )";
+
+		$r = mysqli_query($conn, $sql);
 
 
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -886,16 +910,19 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
 
 
- function getRep_Overdue_Outstanding()
+	function getRep_Overdue_Outstanding()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode = $_POST['compcode'];
 	$asondate = $_POST['asondate'];
 
-        $r = mysql_query("call spacc_rep_receivables_Rep_overdue_Abstract($compcode, '$asondate')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+       $sql ="call spacc_rep_receivables_Rep_overdue_Abstract($compcode, '$asondate')";
+
+	   $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -906,15 +933,17 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function getParty_Overdue_Outstanding()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode = $_POST['compcode'];
 	$asondate = $_POST['asondate'];
 	$repcode  = $_POST['repcode'];
 
-        $r = mysql_query("call spacc_rep_receivables_Partywise_overdue_outstanding($compcode, '$asondate', $repcode )");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+       $sql ="call spacc_rep_receivables_Partywise_overdue_outstanding($compcode, '$asondate', $repcode )";
+	   
+	   $r = mysqli_query($conn, $sql);
+	   $arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -926,13 +955,13 @@ $r=mysql_query("call spacc_rep_Monthwise_CashBank($compcode,$finid , '$startdate
 
  function getDayBookDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode = $_POST['compcode'];
 	$fibcode  = $_POST['finid'];
 	$asondate = $_POST['rdate'];
         $count    =0;
-        $r = mysql_query(" select @a:=@a+1 as sno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate, cust_name,  case when accref_vou_type = 'GSI' then  'Regular Sales' else 
+       $sql =" select @a:=@a+1 as sno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate, cust_name,  case when accref_vou_type = 'GSI' then  'Regular Sales' else 
 case when accref_vou_type = 'OSI' then  'Other Sales'  else  case when accref_vou_type = 'CIP' then  'Cash Payment' 
 else  case when accref_vou_type = 'CIR' then  'Cash Receipt' 
 else  case when accref_vou_type = 'BKP' then  'Bank Payment' 
@@ -949,9 +978,11 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
  join massal_customer mas
  on trn.acctran_led_code = mas.cust_code and (cust_type in ('C','S')  or acctran_serialno =1)
  where accref_comp_code = $compcode and accref_voudate =  '$asondate' order by accref_seqno
-) a1   join (SELECT @a:= 0) a ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+) a1   join (SELECT @a:= 0) a ";
+$arr = [];
+$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -962,14 +993,17 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
 
 
 
- function getGroupDetails()
+	function getGroupDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
         $count    =0;
-        $r = mysql_query("select * from acc_group_master where grp_parent_code  in (24,51) order by grp_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+       $sql ="select * from acc_group_master where grp_parent_code  in (24,51) order by grp_name";
+
+	   $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -980,12 +1014,15 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
 
  function getSearchGrouplist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $gname = strtoupper($_POST['group']);
 
-        $r = mysql_query("select * from acc_group_master where grp_parent_code  in (24,51) and grp_name like '%$gname%'  order by grp_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+       $sql ="select * from acc_group_master where grp_parent_code  in (24,51) and grp_name like '%$gname%'  order by grp_name";
+
+	   $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -996,14 +1033,14 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
 
  function getGroupLedgerDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode = $_POST['compcode'];
 	$fincode  = $_POST['finid'];
 	$startdate = $_POST['startdate'];
 	$enddate = $_POST['enddate'];
         $groupcode = $_POST['groupcode'];
-        $r = mysql_query(" select @a:=@a+1 as sno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate, cust_name,  case when accref_vou_type = 'GSI' then  'Regular Sales' else 
+       $sql =" select @a:=@a+1 as sno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate, cust_name,  case when accref_vou_type = 'GSI' then  'Regular Sales' else 
 case when accref_vou_type = 'OSI' then  'Other Sales'  else  case when accref_vou_type = 'CIP' then  'Cash Payment' 
 else  case when accref_vou_type = 'CIR' then  'Cash Receipt' 
 else  case when accref_vou_type = 'BKP' then  'Bank Payment' 
@@ -1020,9 +1057,12 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
  join massal_customer mas
  on trn.acctran_led_code = mas.cust_code and (cust_type in ('C','S')  and cust_acc_group = $groupcode  )
  where accref_comp_code = $compcode and accref_voudate between '$startdate' and '$enddate' order by accref_seqno
-) a1   join (SELECT @a:= 0) a order by accref_voudate");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+) a1   join (SELECT @a:= 0) a order by accref_voudate";
+
+$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -1032,9 +1072,10 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
     }
 
 
- function getGroupOpeningDetails()
+
+	function getGroupOpeningDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode = $_POST['compcode'];
 	$fincode  = $_POST['finid'];
@@ -1042,14 +1083,16 @@ end end end end end end end end end end end end voutype ,  accref_payref_no,  ac
 	$enddate = $_POST['enddate'];
         $groupcode = $_POST['groupcode'];
 
-        $r = mysql_query("select sum(opdbamt) - sum(opcramt) balamt from 
+       $sql ="select sum(opdbamt) - sum(opcramt) balamt from 
 (
 select curbal_led_code  ledgercode , curbal_obdbamt  opdbamt  , curbal_obcramt  opcramt from acc_current_balance , massal_customer where  curbal_led_code = cust_code and  curbal_comp_code = $compcode and curbal_finid  = $fincode and  cust_acc_group = $groupcode
 union all
 select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctran_cramt)  opcramt  from acc_ref a ,acc_tran b , massal_customer c where acctran_led_code  = cust_code and  accref_comp_code = $compcode and accref_finid = $fincode  and accref_seqno  = acctran_accref_seqno  and  accref_voudate  > '2022-08-31' and   accref_voudate  <  '$startdate'  and  cust_acc_group = $groupcode  group by accref_comp_code,accref_finid,acctran_led_code
-) a1  ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+) a1  ";
+$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -1058,42 +1101,46 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
 
-
- function getSearchLedgerlist()
+	
+	
+	function getSearchLedgerlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
         $ledname = strtoupper($_POST['ledger']);
-        $qry = "select * from massal_customer where cust_name like '%$ledname%'";
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer where cust_name like '%$ledname%'";
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
- function getUsersList()
+	
+	function getUsersList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $dept =  $_POST['deptcode'];  
-        $r=mysql_query("select  concat(usr_name, ' - ' , department_name) usr_name , usr_code  from   userMaster , mas_department  where usr_dept = department_code  order by usr_name" );
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select  concat(usr_name, ' - ' , department_name) usr_name , usr_code  from   userMaster , mas_department  where usr_dept = department_code  order by usr_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
- function getVouNoHistory()
+	
+
+	function getVouNoHistory()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -1103,13 +1150,16 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
 
 
         if ($usrcode == 0)
-             $r=mysql_query("select accref_seqno,accref_vou_type,accref_vouno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate , accref_payref_no , DATE_FORMAT(accref_payref_date, '%d-%m-%Y') as accref_payref_date, case when accvou_slno is null then 1 else accvou_slno end  accvou_slno,case when  accvou_date is null then 0 else  DATE_FORMAT(accvou_date, '%d-%m-%Y')   end accvou_date,case when accvou_narration is null then '' else accvou_narration end  accvou_narration,case when usr_name is null then '' else usr_name end  usr_name,case when usr_login is null then '' else usr_login end  usr_login from acc_ref  left join acc_voucher_logs on accref_seqno = accvou_seqno left join userMaster on accvou_userid  = usr_code   where  accref_comp_code  = $compcode and accref_finid = $finid and accref_voudate between '$startdate' and  '$enddate'");
+             $sql = "select accref_seqno,accref_vou_type,accref_vouno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate , accref_payref_no , DATE_FORMAT(accref_payref_date, '%d-%m-%Y') as accref_payref_date, case when accvou_slno is null then 1 else accvou_slno end  accvou_slno,case when  accvou_date is null then 0 else  DATE_FORMAT(accvou_date, '%d-%m-%Y')   end accvou_date,case when accvou_narration is null then '' else accvou_narration end  accvou_narration,case when usr_name is null then '' else usr_name end  usr_name,case when usr_login is null then '' else usr_login end  usr_login from acc_ref  left join acc_voucher_logs on accref_seqno = accvou_seqno left join userMaster on accvou_userid  = usr_code   where  accref_comp_code  = $compcode and accref_finid = $finid and accref_voudate between '$startdate' and  '$enddate'";
         else
-             $r=mysql_query("select accref_seqno,accref_vou_type,accref_vouno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate , accref_payref_no , DATE_FORMAT(accref_payref_date, '%d-%m-%Y') as accref_payref_date, case when accvou_slno is null then 1 else accvou_slno end  accvou_slno,case when  accvou_date is null then 0 else  DATE_FORMAT(accvou_date, '%d-%m-%Y')   end accvou_date,case when accvou_narration is null then '' else accvou_narration end  accvou_narration,case when usr_name is null then '' else usr_name end  usr_name,case when usr_login is null then '' else usr_login end  usr_login from acc_ref  left join acc_voucher_logs on accref_seqno = accvou_seqno left join userMaster on accvou_userid  = usr_code   where  accref_comp_code  = $compcode and accref_finid = $finid and accref_voudate between '$startdate' and  '$enddate' and accvou_userid  = $usrcode");
+             $sql = "select accref_seqno,accref_vou_type,accref_vouno,  DATE_FORMAT(accref_voudate, '%d-%m-%Y') as accref_voudate , accref_payref_no , DATE_FORMAT(accref_payref_date, '%d-%m-%Y') as accref_payref_date, case when accvou_slno is null then 1 else accvou_slno end  accvou_slno,case when  accvou_date is null then 0 else  DATE_FORMAT(accvou_date, '%d-%m-%Y')   end accvou_date,case when accvou_narration is null then '' else accvou_narration end  accvou_narration,case when usr_name is null then '' else usr_name end  usr_name,case when usr_login is null then '' else usr_login end  usr_login from acc_ref  left join acc_voucher_logs on accref_seqno = accvou_seqno left join userMaster on accvou_userid  = usr_code   where  accref_comp_code  = $compcode and accref_finid = $finid and accref_voudate between '$startdate' and  '$enddate' and accvou_userid  = $usrcode";
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+			 $r = mysqli_query($conn, $sql);
+
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -1121,7 +1171,7 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
 
  function getVouNoHistoryDept()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -1130,10 +1180,12 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
 	$dept      = $_POST['deptcode'];
 
 
-        $r=mysql_query("select usr_name ,usr_code,count(*) as totrecords from acc_ref  left join acc_voucher_logs on accref_seqno = accvou_seqno left join userMaster on accvou_userid  = usr_code  where  accref_comp_code  = $compcode and usr_dept = $dept  and accref_finid = $finid and accref_voudate between '$startdate' and  '$enddate' and accvou_slno = 1 group by usr_name ,usr_code order by usr_name");
+        $sql = "select usr_name ,usr_code,count(*) as totrecords from acc_ref  left join acc_voucher_logs on accref_seqno = accvou_seqno left join userMaster on accvou_userid  = usr_code  where  accref_comp_code  = $compcode and usr_dept = $dept  and accref_finid = $finid and accref_voudate between '$startdate' and  '$enddate' and accvou_slno = 1 group by usr_name ,usr_code order by usr_name";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -1143,18 +1195,22 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
     }
 
 
- function getCashBookOpening()
+	
+
+	function getCashBookOpening()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
 	$ledcode   = $_POST['ledcode'];
 
-        $r=mysql_query(" select * from acc_current_balance where curbal_finid = $finid  and curbal_comp_code = $compcode  and curbal_led_code = $ledcode");
+        $sql = " select * from acc_current_balance where curbal_finid = $finid  and curbal_comp_code = $compcode  and curbal_led_code = $ledcode";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+		$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -1166,7 +1222,7 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
 
  function getCashBookPeriod()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -1175,21 +1231,22 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
 	$enddate   = $_POST['enddate'];
         $ledcode   = $_POST['ledcode']; 
 
-$r=mysql_query("call acc_sp_rep_cashbank_book($ledcode,$compcode,$finid ,'$finfirstdate' , '$startdate','$enddate')");
+$sql = "call acc_sp_rep_cashbank_book($ledcode,$compcode,$finid ,'$finfirstdate' , '$startdate','$enddate')";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getPandLMainGroup()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid         = $_POST['finid'];
 	$compcode     = $_POST['compcode'];
@@ -1198,7 +1255,7 @@ $r=mysql_query("call acc_sp_rep_cashbank_book($ledcode,$compcode,$finid ,'$finfi
 	$enddate   = $_POST['enddate'];
 	$reptype   = $_POST['reptype'];
 
-$r=mysql_query("select  grpcode1,grp_name ,
+$sql = "select  grpcode1,grp_name ,
 sum(Obdebit) Obdebit, sum(Obcredit) Obcredit, sum(debit) debit, sum(credit) credit, abs(sum(Obdebit) - sum(Obcredit) + sum(debit) - sum(credit)) closing
  from (
 
@@ -1241,22 +1298,23 @@ acctran_led_code = cust_code and b.grp_type = '$reptype'
 ) a1 , acc_group_master b1 where a1.grpcode3 = b1.grp_code group by grp_parent_code,grpcode3,grp_name,cust_name, cust_type
 ) a2 , acc_group_master b2 where a2.grpcode2 = b2.grp_code group by grp_parent_code,grpcode2,grpcode3,grp_name,grpname3,cust_name, cust_type
 ) a3 , acc_group_master b3 where a3.grpcode1 = b3.grp_code group by  grpcode1,grp_name
-");
+";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
- function getBSMainGroup()
+	function getBSMainGroup()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid         = $_POST['finid'];
 	$compcode     = $_POST['compcode'];
@@ -1265,7 +1323,7 @@ acctran_led_code = cust_code and b.grp_type = '$reptype'
 	$enddate   = $_POST['enddate'];
 	$reptype   = $_POST['reptype'];
 
-$r=mysql_query("select  grpcode1,grp_name ,
+$sql = "select  grpcode1,grp_name ,
 sum(Obdebit) Obdebit, sum(Obcredit) Obcredit, sum(debit) debit, sum(credit) credit, abs(sum(Obdebit) - sum(Obcredit) + sum(debit) - sum(credit)) closing
  from (
 
@@ -1308,24 +1366,25 @@ acctran_led_code = cust_code and b.grp_type = '$reptype'
 ) a1 , acc_group_master b1 where a1.grpcode3 = b1.grp_code group by grp_parent_code,grpcode3,grp_name,cust_name, cust_type
 ) a2 , acc_group_master b2 where a2.grpcode2 = b2.grp_code group by grp_parent_code,grpcode2,grpcode3,grp_name,grpname3,cust_name, cust_type
 ) a3 , acc_group_master b3 where a3.grpcode1 = b3.grp_code group by  grpcode1,grp_name
-");
+";
 
 //echo $r;
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getOpeningStock()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -1333,8 +1392,7 @@ acctran_led_code = cust_code and b.grp_type = '$reptype'
 	$startdate = $_POST['startdate'];
 	$enddate   = $_POST['enddate'];
 
-$r=mysql_query("
-select grp_parent_code grpcode1,grpcode2,grpcode3,grp_name grpname2,grpname3,cust_name, cust_type,
+$sql = "select grp_parent_code grpcode1,grpcode2,grpcode3,grp_name grpname2,grpname3,cust_name, cust_type,
 sum(Obdebit) Obdebit, sum(Obcredit) Obcredit, sum(debit) debit, sum(credit) credit, abs(sum(Obdebit) - sum(Obcredit) + sum(debit) - sum(credit)) closing
  from (
 select grp_parent_code grpcode2,grpcode3,grp_name grpname3,cust_name,
@@ -1371,35 +1429,37 @@ accref_voudate > '2022-08-31'  and
 accref_voudate>= '$startdate'  and accref_voudate<= '$enddate' and 
 acctran_led_code = cust_code and cust_code = 1717
 ) a1 , acc_group_master b1 where a1.grpcode3 = b1.grp_code group by grp_parent_code,grpcode3,grp_name,cust_name, cust_type
-) a2 , acc_group_master b2 where a2.grpcode2 = b2.grp_code group by grp_parent_code,grpcode2,grpcode3,grp_name,grpname3,cust_name, cust_type");
+) a2 , acc_group_master b2 where a2.grpcode2 = b2.grp_code group by grp_parent_code,grpcode2,grpcode3,grp_name,grpname3,cust_name, cust_type";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
- function getProfit_LossAmt()
+	function getProfit_LossAmt()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
 
 
-$r=mysql_query("select curbal_obdbamt, curbal_obcramt from acc_current_balance where curbal_led_code = 2000 and curbal_comp_code = $compcode and curbal_finid = $finid");
+$sql = "select curbal_obdbamt, curbal_obcramt from acc_current_balance where curbal_led_code = 2000 and curbal_comp_code = $compcode and curbal_finid = $finid";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -1407,7 +1467,7 @@ $r=mysql_query("select curbal_obdbamt, curbal_obcramt from acc_current_balance w
 
  function get_column_Ledger()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode  = $_POST['fcompcode'];
 	$finid     = $_POST['finid'];
@@ -1417,20 +1477,21 @@ $r=mysql_query("select curbal_obdbamt, curbal_obcramt from acc_current_balance w
 	$tablename = $_POST['tablename'];
 	$sp        = $_POST['sp'];
 
-        $qry = "call spacc_rep_ledger_column_report($compcode ,$finid,'$startdate','$enddate','$ledcode','$tablename','$sp')";     
+        $sql = "call spacc_rep_ledger_column_report($compcode ,$finid,'$startdate','$enddate','$ledcode','$tablename','$sp')";     
 
-//echo $qry;
+//echo $sql;
 //echo "<br>";
-        $r1 = mysql_query("call spacc_rep_ledger_column_report($compcode ,$finid,'$startdate','$enddate','$ledcode','$tablename','$sp')");     
+        $r1 = "call spacc_rep_ledger_column_report($compcode ,$finid,'$startdate','$enddate','$ledcode','$tablename','$sp')";     
+		$r = mysqli_query($conn, $r1);
 
 
-
-        $r = mysql_query("select *  from $tablename order by accref_voudate,accref_seqno");      
-
+       $sql ="select *  from $tablename order by accref_voudate,accref_seqno";      
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	   $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	$arr = [];
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -1441,9 +1502,9 @@ $r=mysql_query("select curbal_obdbamt, curbal_obcramt from acc_current_balance w
 
 
 
- function getClosingStock()
+	function getClosingStock()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -1451,20 +1512,20 @@ $r=mysql_query("select curbal_obdbamt, curbal_obcramt from acc_current_balance w
 	$startdate = $_POST['startdate'];
 	$enddate   = $_POST['enddate'];
 
-$r=mysql_query("
-select stock , case when  sum(cloamt) > 0 then sum(opamt) - sum(cloamt)  else 0 end as closingstkvalue from 
+$sql = "select stock , case when  sum(cloamt) > 0 then sum(opamt) - sum(cloamt)  else 0 end as closingstkvalue from 
 (
 select 'stock' stock , curbal_obdbamt opamt, 0 cloamt   from acc_current_balance where curbal_led_code=1717 and curbal_finid = $finid  and curbal_comp_code = $compcode
 union all
-select 'stock' stock , 0 opamt, clostk_value cloamt    from acc_closing_stock  where clostk_date <= '$enddate' and clostk_fincode = $finid  and clostk_compcode = $compcode) a group by stock");
+select 'stock' stock , 0 opamt, clostk_value cloamt    from acc_closing_stock  where clostk_date <= '$enddate' and clostk_fincode = $finid  and clostk_compcode = $compcode) a group by stock";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -1472,7 +1533,7 @@ select 'stock' stock , 0 opamt, clostk_value cloamt    from acc_closing_stock  w
 
  function getLedgerMonthwise()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -1481,17 +1542,19 @@ select 'stock' stock , 0 opamt, clostk_value cloamt    from acc_closing_stock  w
 	$enddate   = $_POST['enddate'];
 	$ledcode   = $_POST['ledcode'];
 
-         $r = mysql_query("call accspreptrialbalanceclosing_Ledger_Monthwise($finid ,$compcode, '$startdate', '$enddate',$ledcode, '$finfirstdate')");
+        $sql ="call accspreptrialbalanceclosing_Ledger_Monthwise($finid ,$compcode, '$startdate', '$enddate',$ledcode, '$finfirstdate')";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
     }
 
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+	
 ?>
 
 

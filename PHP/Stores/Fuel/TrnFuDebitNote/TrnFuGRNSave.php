@@ -108,13 +108,13 @@ $rech_seqnonew;
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
  $query1  = "call spfu_upd_receipt_header_second('$rech_seqno','$grndate','$crdays','$itemvalue','$cgstper','$cgstamt','$sgstper','$sgstamt','$igstper','$igstamt', '$handlingmt','$handlingcgst','$handlingsgst','$handlingcgstamt','$handlingsgstamt','$tcsper','$tcsamt','$cessmt','$cessamt','$freight','$othrchrg','$roundoff', '$totamt','$billno','$billdate','$partybillval','$roundneed')";
 echo $query1;
 echo "<br>";
-$result1=mysql_query($query1);
+$result1=mysqli_query($conn, $query1);
 
 
 for ($i=0;$i<$rowcnt;$i++)
@@ -150,29 +150,31 @@ for ($i=0;$i<$rowcnt;$i++)
 
 
 	$query2= "update trnfu_receipt_trailer set   rect_billqty = $billqty , rect_millqty = $millqty, rect_mois_fixed = $fixedMois , rect_mois_actual =$actualMois, rect_moisper=$ExMoisper, rect_moisqty = $moisqty, rect_sand_fixed = $fixedsand , rect_sand_actual = $actualsand , rect_sandper = $Exsand, rect_sandqty = $sandqty , rect_fines_fixed = $fixedfines, rect_fines_actual = $actualfines, rect_finesper =$Exfines , rect_finesqty = $finesqty, rect_othdedqty = $totothdedqty, rect_totdedqty = $totdedqty, rect_itemrate =$itemrate, rect_grnqty = $grnqty , rect_itemvalue = $itemvalue, rect_costrate = $costrate , rect_costvalue = $costval, rect_remarks = '$remarks'where rect_hdseqno = '$rech_seqno' and rect_seqno = $sno";
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 	     
 echo $query2;
 echo "<br>";
 	 $query3= "call spfu_insupd_stockdetails ('$compcode','$lotcode','$itemcode','$grnqty')";
-	$result3=mysql_query($query3);
+	$result3=mysqli_query($conn, $query3);
 echo $query3;
 echo "<br>";
 	 $query4= "call spfu_upd_itemtrailer_avgrate ('$compcode','$finid','$itemcode','$grnqty','$costrate',1)";
-	$result4=mysql_query($query4);
+	$result4=mysqli_query($conn, $query4);
 echo $query4;
 
 }    
 
 if( $result1 && $result2  && $result3 && $result4)
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","GRNNo":"'. $rech_no . '"})';
     
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 } 
 

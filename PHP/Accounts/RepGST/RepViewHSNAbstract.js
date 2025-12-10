@@ -404,7 +404,7 @@ style: {
 var month = Ext.util.Format.date(monthstartdate.getValue(), 'M').toUpperCase();  
 var year  = Ext.util.Format.date(monthstartdate.getValue(), 'Y');  
 
-var filename = "/SHVPM/Report/HSN_"+month+"_"+year+".json";
+var filename = "SHVPM/Report/HSN_"+month+"_"+year+".json";
 
 
 
@@ -1688,7 +1688,7 @@ alert("2-1");
     items       : [
     {
         xtype: 'panel',
-        title: 'HSN BREAKUP',
+        title: 'HSN BREAKUP - ABSTRACT',
         bodyStyle: {"background-color": "#ffe6f7"},
         layout: 'absolute',
         items: [
@@ -2310,7 +2310,7 @@ alert("2-1");
         width       : 1350,
 	x	    : 0,
         y           : 30,
-        title       : 'HSN WISE Sales Details',
+        title       : 'HSN WISE Sales Abstract',
         items       : tabOverall,
         layout      : 'fit',
         closable    : true,bodyStyle:{"background-color":"#eccbf2"},

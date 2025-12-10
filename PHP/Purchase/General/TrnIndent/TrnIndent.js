@@ -1339,6 +1339,7 @@ var lblSpec = new Ext.form.Label({
         width       : 370,
         name        : 'txtindentby', 
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        readOnly : true,
    });
    
    var cmbFrame = new Ext.form.ComboBox({
@@ -1378,14 +1379,14 @@ function refresh(){
         txtvalue.setValue('');
         itemcode =0;
         flxItem.hide();
-	txtStdLifeTime.setRawValue('');
-	txtActualLifeTime.setRawValue('');
-	txtReason.setRawValue('');
+	    txtStdLifeTime.setRawValue('');
+	    txtActualLifeTime.setRawValue('');
+	    txtReason.setRawValue('');
 
         dept = 0;   
         IndentFormPanel.getForm().findField('txtspec').setValue('');
         cmbIndno.hide();
-
+        txtindentby.setRawValue(UserName);
     
 }
 
@@ -1932,7 +1933,8 @@ function RefreshData(){
         cmbIndno.hide();
         Ext.getCmp('txtIndno').setReadOnly(true);
         Ext.getCmp('save').setDisabled(false);  
-        gridedit = "false";              
+        gridedit = "false";         
+        txtindentby.setRawValue(UserName);     
         loadindnodatastore.load({
         url:'ClsIndent.php',
         params:
@@ -2546,7 +2548,7 @@ printtype = "PDF";
         flxItem.hide();
 
 
-
+        txtindentby.setRawValue(UserName);
                   var dt = dtpDate.getValue();
                   dtpduedate.setValue(dt.getDate()+20);
                   txtPassword.hide();

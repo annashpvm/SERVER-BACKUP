@@ -11,12 +11,12 @@ $reason   = $_POST['reason'];
 
 $query1= "update trnsal_order_header  set ordh_can_stat = 'Y' , ordh_can_reason =  '$reason'  where ordh_party = $party  and ordh_comp_code = $compcode and ordh_fincode = $fincode and ordh_sono = $sono";
 // echo $query1;
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 
          
 $query2= "update trnsal_order_trailer  set ordt_clo_stat = 'Y'  where  ordt_comp_code = $compcode and ordt_fincode = $fincode and ordt_sono = $sono";
 //echo $query2;
-$result2=mysql_query($query2);            
+$result2=mysqli_query($conn, $query2);            
 
 
 
@@ -25,12 +25,14 @@ $result2=mysql_query($query2);
 
 if ($result1 && $result2)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $sono . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $sono . '"})';
 }
   

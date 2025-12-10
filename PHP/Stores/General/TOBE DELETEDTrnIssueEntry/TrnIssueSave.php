@@ -26,13 +26,13 @@ else
  $isstype2 = "R";
 }
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") 
 {
    $query1 = "select IFNULL(max(iss_no),0)+1 as issh_no from trnpur_item_issues where iss_fin_code = '$issfincode' and iss_comp_code= '$isscompcode' and iss_type = '$isstype2'";
-   $result1= mysql_query($query1);
-   $rec2   = mysql_fetch_array($result1);
+   $result1= mysqli_query($conn, $query1);
+   $rec2   = mysqli_fetch_array($result1);
    $isshno  =$rec2['issh_no'];
 }
 
@@ -49,28 +49,28 @@ else
         if ($isstype2 == "I")
         {
         $query2= "update maspur_item_trailer set item_stock = item_stock + $oldqty   where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_Code =$issfincode";
-	$result2=mysql_query($query2);      
+	$result2=mysqli_query($conn, $query2);      
 
         $query3= "update trnpur_indent set ind_iss_qty = ind_iss_qty  -	 $oldqty ,ind_bal_qty = ind_bal_qty +  $oldqty  where Ind_no = $issindno  AND ind_comp_code = $indcompcode and ind_fin_code = $issindfincode and ind_item_code = $issitemcode ";
-	$result3=mysql_query($query3);    
+	$result3=mysqli_query($conn, $query3);    
 
         }       
         else
         {
         $query2= "update maspur_item_trailer set item_stock = item_stock - $oldqty   where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_Code =$issfincode";
-	$result2=mysql_query($query2);      
+	$result2=mysqli_query($conn, $query2);      
 
         $query3= "update trnpur_indent set ind_iss_qty = ind_iss_qty  + $oldqty ,ind_bal_qty = ind_bal_qty -  $oldqty  where Ind_no = $issindno  AND ind_comp_code = $indcompcode and ind_fin_code = $issindfincode and ind_item_code = $issitemcode ";
-	$result3=mysql_query($query3);    
+	$result3=mysqli_query($conn, $query3);    
 
         }       
 
    }
 
    $query3 = "delete from trnpur_item_issues where iss_comp_code = '$isscompcode' and iss_no = $isshno and iss_fin_code = '$issfincode' and iss_type = '$isstype2'";
-   $result3= mysql_query($query3);
+   $result3= mysqli_query($conn, $query3);
    $query4 = "delete from trnpur_item_rec_iss where reciss_comp_code = '$isscompcode' and reciss_doc_no = $isshno and reciss_fin_code = '$issfincode' and reciss_type = '$isstype'";
-   $result4= mysql_query($query4);
+   $result4= mysqli_query($conn, $query4);
 
 
 
@@ -148,29 +148,29 @@ for ($i=0;$i<$rowcnt;$i++)
 	$query4= "insert into trnpur_item_issues values('$isscompcode' ,'$isstype2' ,'$isshno' ,'$issdate' ,'$issfincode' ,'$dept' ,'$isscostcode' ,  '$issitemcode' ,'$issqty' ,'$issrate' ,'$catcode' ,'$issunit' ,'$issentdate' ,'$rev_cap' ,'$issslno' ,'$issvariety' ,'$issindno' ,'$isscompcode','$issmachine' ,
 '$isssection' ,'$issequip' ,'$cancelflag')";
 
-	$result4=mysql_query($query4);      
+	$result4=mysqli_query($conn, $query4);      
 
 	$query5= "insert into trnpur_item_rec_iss values('$isscompcode','$isstype','$isshno','$issdate','$issfincode', '$issitemcode', '$issqty', '$issrate','1','$issentdate','$cancelflag')";
 
-	 $result5=mysql_query($query5);       
+	 $result5=mysqli_query($conn, $query5);       
 
 
         if ($isstype2 == "I")
         {
         $query2= "update maspur_item_trailer set item_stock = item_stock - $issqty  where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_Code =$issfincode";
-	$result2=mysql_query($query2);      
+	$result2=mysqli_query($conn, $query2);      
 
         $query3= "update trnpur_indent set ind_iss_qty = ind_iss_qty  +	 $issqty ,ind_bal_qty = ind_bal_qty -  $issqty  where Ind_no = $issindno  AND ind_comp_code = $isscompcode and ind_fin_code = $issindfincode and ind_item_code = $issitemcode";
-	$result3=mysql_query($query3);    
+	$result3=mysqli_query($conn, $query3);    
 
         }       
         else
         {
         $query2= "update maspur_item_trailer set item_stock = item_stock + $issqty   where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_Code =$issfincode";
-	$result2=mysql_query($query2);      
+	$result2=mysqli_query($conn, $query2);      
 
         $query3= "update trnpur_indent set ind_iss_qty = ind_iss_qty  - $issqty,ind_bal_qty = ind_bal_qty + $issqty  where Ind_no = $issindno  AND ind_comp_code = $isscompcode and ind_fin_code = $issindfincode and ind_item_code = $issitemcode ";
-	$result3=mysql_query($query3);    
+	$result3=mysqli_query($conn, $query3);    
 
         }       
 
@@ -182,13 +182,15 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if($result4 && $result5)
 {
-  	mysql_query("COMMIT");                        
+  	mysqli_begin_transaction($conn);                        
   	echo '({"success":"true","IssNo":"'. $isshno . '"})';
 }
 else
 {
 	echo '({"success":"false","IssNo":"' . $isshno . '"})';
-	mysql_query("ROLLBACK");            
+	mysqli_rollback($conn);
+
+            
             
 }   
         

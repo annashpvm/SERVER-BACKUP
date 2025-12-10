@@ -47,7 +47,7 @@ where a.detailid=b.detailid and a.enqno='2'";
 
 /*
 
-$sqlcnt2 = mysql_query($count2);
+$sqlcnt2 = mysqli_query($conn, $count2);
 
 while ($row = mysql_fetch_assoc($sqlcnt2)) {
   $pdf->Cell(0,10,$row[1],0,1);

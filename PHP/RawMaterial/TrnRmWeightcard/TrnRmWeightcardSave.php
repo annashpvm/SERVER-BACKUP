@@ -30,15 +30,17 @@ $query2="call sp_upd_weightcard ('$compcode','$finid','$ticketno','$supplier','$
 
 // echo $query2;
 
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
 
 
 if ($result2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","wtno":"' . $ticketno . '"})';
 }
   

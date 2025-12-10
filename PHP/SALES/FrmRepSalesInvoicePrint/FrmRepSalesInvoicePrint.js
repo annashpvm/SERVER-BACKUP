@@ -616,7 +616,7 @@ var optInvoiceType = new Ext.form.FieldSet({
 
     {
         xtype: 'radiogroup',
-        columns: 3,
+        columns: 4,
         rows : 1,
         id: 'optInvoieType',
         items: [
@@ -640,7 +640,16 @@ var optInvoiceType = new Ext.form.FieldSet({
                  }
                }
             },
-
+            {boxLabel: 'FSC - Invoice ' , name: 'optInvoiceType', id:'fscinvoice', inputValue: 7,
+              listeners:{
+                check:function(rb,checked){
+                    if(checked===true){
+                      invtype = "FSC";      	
+                     Ext.getCmp('optMill').hide(true);	                      
+                    }
+                }
+              }
+           },
             {boxLabel: 'Blank Invoice  Format' , name: 'optInvoiceType', id:'blankinvoice', inputValue: 8,
                listeners:{
                  check:function(rb,checked){
@@ -1176,7 +1185,6 @@ var optinvprttype = new Ext.form.FieldSet({
                         click: function () {
 
 //alert(invprttype);
-
                         
                         if ( salrep == "TNinv" || salrep == "OSinv" || salrep == "SEZinv") {
 
@@ -1199,9 +1207,10 @@ var optinvprttype = new Ext.form.FieldSet({
 		                	 },
 		                         callback: function () {
 	                                       tcs = loadCHKEinvoicegenerated.getAt(0).get('U_TCSStatus');			
-                                               einv = loadCHKEinvoicegenerated.getAt(0).get('E_inv_confirm');	
+                                         einv = loadCHKEinvoicegenerated.getAt(0).get('E_inv_confirm');	
 
-//alert(einv);
+                                       
+
 						var p1 = "&compcode=" + encodeURIComponent(GinCompcode);
 						var p2 = "&fincode=" + encodeURIComponent(GinFinid);
 						var p3 = "&invno=" + encodeURIComponent(cmbinvno.getRawValue());
@@ -1261,43 +1270,58 @@ var optinvprttype = new Ext.form.FieldSet({
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoiceBlankXOOG.rptdesign&__format=pdf'+ param); 
 
                                                        }
-                                                       else
-                                                       {        
-                                                      if (tcs !='' && einv == "Y" )  
+                                                       else if (tcs !='' && einv == "Y" && invtype == "E" )  
+                                                       { 
 						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf'+ param);
-                                                      else
-				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
+                                                       }
+                                                       else if (tcs !='' &&  invtype == "N" )  
+                                                       {
+ 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
   
                                                       }   
+                                                      else if (invtype == "FSC") {
+				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
+                                                      }
 				              }     
 					      else if (invprttype == 2) {
 				                      i1 = "DUPLICATE FOR TRANSPORT";
 				                      var p4 = "&displayword=" + encodeURIComponent(i1);
-						      var param = (p1 + p2 + p3  + p4 ); 
-                                                        if (tcs !='' && einv == "Y" )     
-						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf&__format=pdf'+ param); 
-                                                       else
-				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
+						                  var param = (p1 + p2 + p3  + p4 ); 
+                              if (tcs !='' && einv == "Y" && invtype == "E" )     
+						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf'+ param); 
+                             else if (tcs !='' && invtype == "N" )  
+				                       window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
+                             else if (invtype == "FSC") 
+                              window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
+                                                  
 
 				              } 
 					      else if (invprttype == 3) {
 				                      i1 = "TRIPLICATE FOR ASSESSEE";
 				                      var p4 = "&displayword=" + encodeURIComponent(i1);
 						      var param = (p1 + p2 + p3  + p4 );    
-                                                      if (tcs !='' && einv == "Y" )  
+                                                      if (tcs !='' && einv == "Y" && invtype == "E" )  
 						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf&__format=pdf'+ param); 
-                                                       else
+                                                      else if (tcs !='' && invtype == "N" )  
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
+                                                      else if (invtype == "FSC") 
+                                                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
+                          
 
 				               }
 					      else if (invprttype == 4) {
 				                      i1 = "EXTRA COPY";
+
+
 				                      var p4 = "&displayword=" + encodeURIComponent(i1);
 						      var param = (p1 + p2 + p3  + p4 );    
-                                                      if (tcs !='' && einv == "Y" )  
+                  if (tcs !='' && einv == "Y" && invtype == "E" )    
 						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf&__format=pdf'+ param); 
-                                                       else
+                  else if (tcs !='' && invtype == "N" )  
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
+                                  else if (invtype == "FSC") 
+                                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
+      
 
 				               }  
                                         } 
@@ -1488,9 +1512,9 @@ onEsc:function(){
                         	 params:
                        		 {
                          	 task:"loadinvoiceno",
-                                 invstate  : "TN",
-				 finid:GinFinid,
-				 compcode: GinCompcode
+                                invstate  : "TN",
+                                finid:GinFinid,
+                                compcode: GinCompcode
 
                         	 }
 				 });	

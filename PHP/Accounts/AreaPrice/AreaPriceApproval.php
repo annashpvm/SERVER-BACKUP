@@ -8,22 +8,24 @@ $compcode    = $_POST['compcode'];
 $usercode    = (int) $_POST['usercode']; 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 $query1="update massal_areawise_rate set arearate_approved = 'Y' , arearate_verified = $usercode  where arearate_comp_code= $compcode and arearate_fincode = $finid   and arearate_sno = $apprno"; 
 
 //echo $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 
   if ($result1) {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $apprno . '"})';
   }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $apprno . '"})';
 }
   

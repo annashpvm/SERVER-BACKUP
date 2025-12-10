@@ -8,11 +8,11 @@ $savetype   = $_POST['savetype'];
 $stdate    = $_POST['stdate'];
 $eddate    = $_POST['eddate'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $query1   = "select count(*) as nos from  trn_funds_plan where fp_date between '$stdate' and '$eddate'";
-$result1  = mysql_query($query1);
-$rec1     = mysql_fetch_array($result1);
+$result1  = mysqli_query($conn, $query1);
+$rec1     = mysqli_fetch_array($result1);
 $datafind = $rec1['nos'];
 
 //echo $datafind;
@@ -50,7 +50,7 @@ else
 $query1= "update trn_funds_plan set fp_ilc = '$fp_ilc', fp_dpda = '$fp_dpda', fp_gst = '$fp_gst', fp_salary = '$fp_salary', fp_eb ='$fp_eb', fp_wp = '$fp_wp', fp_biomass='$fp_biomass', fp_duty = '$fp_duty' , fp_chemicals = '$fp_chemicals', fp_coal = '$fp_coal', fp_emi = '$fp_emi', fp_spares = '$fp_spares' , fp_total = '$fp_total' where fp_date = '$fp_date'";
 }
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -61,11 +61,13 @@ $fp ='';
 
 if($result1) 
 {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $fp. '"})';
 } 
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $fp. '"})';
 }
   

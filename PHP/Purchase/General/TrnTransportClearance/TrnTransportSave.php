@@ -18,18 +18,18 @@ $clrno = $_POST['docno'];
  if ($savetype == "Add") 
  {
     $query2 = "select IFNULL(max(t_clr_no),0)+1 as clrno from trnpur_trans_clearance where t_clr_finyear = $finid and t_clr_company='$compcode'";
-    $result2= mysql_query($query2);
-    $rec2 = mysql_fetch_array($result2);
+    $result2= mysqli_query($conn, $query2);
+    $rec2 = mysqli_fetch_array($result2);
     $clrno=$rec2['clrno'];
  }
  else
  {
     $query2 = "delete from trnpur_trans_clearance where t_clr_finyear = $finid and t_clr_company='$compcode' and t_clr_no = $clrno ";
-    $result2= mysql_query($query2);
+    $result2= mysqli_query($conn, $query2);
 
  } 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
  //if ($clrno > 0  && $finid > 0 && $compcode>0)
  //{ 
@@ -53,7 +53,7 @@ $igst      = $griddet[$i]['igst'];
 $paymade   = $griddet[$i]['paymade'];
 $freight = 0;
  $query4= "insert into trnpur_trans_clearance values('$compcode','$finid','$clrno','$transdate','$grnparty','$item','$qty','$unit','$sno','$transcode','$area','$lrno','$lrdate','$lrfreight','$freight','$demurrage','$coolie','$others','0','0','N','$itcyn','$cgst','$sgst','$igst','$paymade','',0,0)";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
 }
 
@@ -61,7 +61,7 @@ $freight = 0;
         
 if($result4)
 {
-  mysql_query("COMMIT");                        
+ mysqli_query($conn, "COMMIT");                       
   echo '({"success":"true","docno":"'.$clrno.'"})';
 }
 else
@@ -70,7 +70,9 @@ echo '({"success":"false","docno":"'.$clrno.'"})';
 	   
 
 
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             
         }   
         

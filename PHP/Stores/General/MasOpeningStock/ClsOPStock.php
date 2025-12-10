@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loaditem":
 		getitem();
@@ -42,104 +42,101 @@
 
 function getlot()
 {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("call sp_sel_lot");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn; 
+	$sql = "call sp_sel_lot";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getitem()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn; 
 	$p_itemtype = $_POST['itemtype'];
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-	$r=mysql_query("call spfu_sel_itemdetails");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call spfu_sel_itemdetails";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 	
  function getparty()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("call sp_pur_supplier_actgrp (53)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn; 
+        $sql = "call sp_pur_supplier_actgrp (53)";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getchkrate()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn; 
 	$itemcode = $_POST['itemcode'];
 	$lotcode = $_POST['lotcode'];
 	$compcode = $_POST['compcode'];
 	$finid = $_POST['finid'];
 
-        $r=mysql_query("call spfu_sel_lotitem_stock('$compcode','$finid','$lotcode','$itemcode')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call spfu_sel_lotitem_stock('$compcode','$finid','$lotcode','$itemcode')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getStockList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn; 
 
 	$compcode = $_POST['compcode'];
 	$finid = $_POST['finid'];
 
 
-        $r=mysql_query("select * from maspur_item_header h, maspur_item_trailer t ,mas_uom u  where item_uom = uom_code and h.item_code = t.item_code and  item_comp_code = $compcode and item_fin_code = $finid and (item_yr_opval > 0 or item_yr_opqty > 0) order by item_name;");
+        $sql = "select * from maspur_item_header h, maspur_item_trailer t ,mas_uom u  where item_uom = uom_code and h.item_code = t.item_code and  item_comp_code = $compcode and item_fin_code = $finid and (item_yr_opval > 0 or item_yr_opqty > 0) order by item_name;";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getSearchitemlist()
     {
-        mysql_query("SET NAMES utf8");
-//        $r=mysql_query("select hsn_code,hsn_sno from mas_hsncode order by hsn_code");
+        global $conn; 
+//        $sql = "select hsn_code,hsn_sno from mas_hsncode order by hsn_code";
 
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -156,42 +153,45 @@ function getlot()
         else
            $qry = "select * from maspur_item_header where replace(replace(item_name,' ','')  ,'.','') like '%$item%' order by item_name";         
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $r=mysqli_query($conn, $qry);
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getunit()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select uom_name,uom_code  from mas_uom where uom_name not like 'ZZ%' and (uom_code <=103 or uom_code >136)order by uom_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn; 
+        $sql = "select uom_name,uom_code  from mas_uom where uom_name not like 'ZZ%' and (uom_code <=103 or uom_code >136)order by uom_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getLocation()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from maspur_location");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn; 
+        $sql = "select * from maspur_location";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 

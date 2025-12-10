@@ -32,20 +32,20 @@ $vehicleno = str_replace("-","",$vehicleno);
 if ($gstFlag === "Add") {
 
 $query = "select ifnull(max(wc_seqno),0)+1 as wcseq from trn_weightcard";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $edwtno=$rec['wcseq'];
 
 $qrywcno = "select ifnull(max(wc_no),0)+1 as wcno from trn_weightcard where wc_fincode = $finid and wc_compcode ='$compcode' ";
-$reswcno = mysql_query($qrywcno);
-$recwcno = mysql_fetch_array($reswcno);
+$reswcno = mysqli_query($conn, $qrywcno);
+$recwcno = mysqli_fetch_array($reswcno);
 $wcno=$recwcno['wcno'];
 
 $query1="call sp_ins_weightcard ('$edwtno','$compcode','$finid','$wcno','$wtdate','$unloadingtime', '$area','$supplier','$itemgrp','$supervisor',UPPER('$vehicleno'),'$transport','$wbcardno', '$grosswt','$tarewt','$netwt','N',
 '$userid','$wtdate')";
 
 //echo $query1;
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 }
 else if ($gstFlag === "Edit") {
@@ -53,26 +53,30 @@ else if ($gstFlag === "Edit") {
 $query2="call sp_upd_weightcard ('$edwtno','$wtdate' , '$unloadingtime','$area','$supplier','$itemgrp','$supervisor',UPPER('$vehicleno'),'$transport','$wbcardno','$grosswt','$tarewt','$netwt','N',
 '$userid','$wtdate')";
 
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 }
 
 if ($gstFlag === "Add") {
 
   if ($result1) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","wtno":"' . $wtno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","wtno":"' . $wtno . '"})';
 }
   
  }
 else  if ($gstFlag === "Edit"){  
   if ($result2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","wtno":"' . $wtno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","wtno":"' . $wtno . '"})';
 }
 }

@@ -1,12 +1,12 @@
 <?php
-    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php";
 
     $task='loadInvDetails';
 
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    global $conn;
 
     switch($task){
 
@@ -25,15 +25,7 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -45,35 +37,37 @@
     {
   	$fincode = $_POST['fincode'];
 	$compcode = $_POST['compcode'];      
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_no  desc");
-       $r=mysql_query("select * from acc_ref where accref_comp_code = '$compcode' and accref_finid = '$fincode' and accref_vou_type = 'GJV' order by substring(ltrim(accref_vouno),4,4) desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;
+        $sql = "select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_no  desc";
+       $sql = "select * from acc_ref where accref_comp_code = '$compcode' and accref_finid = '$fincode' and accref_vou_type = 'GJV' order by substring(ltrim(accref_vouno),4,4) desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getSearchLedgerlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
         $ledname = strtoupper($_POST['ledger']);
-        $qry = "select * from acc_ledger_master where led_name like '%$ledname%'";
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from acc_ledger_master where led_name like '%$ledname%'";
+        $r=mysqli_query($conn, $sql);
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 /*
@@ -84,18 +78,19 @@
 	$compcode = $_POST['compcode'];
        	$vouno    = $_POST['vouno'];
 
-        mysql_query("SET NAMES utf8");
-//        $r=mysql_query("select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_vouno  desc");
+        global $conn;
+//        $sql = "select dbcr_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_vouno  desc";
 
-$r=mysql_query("select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join acc_ledger_master mas on  tran.acctran_led_code = mas.led_code  where accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode");
+$sql = "select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join acc_ledger_master mas on  tran.acctran_led_code = mas.led_code  where accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 */
 

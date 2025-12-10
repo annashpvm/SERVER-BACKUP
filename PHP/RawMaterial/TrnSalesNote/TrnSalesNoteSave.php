@@ -21,22 +21,22 @@ $salh_sgst_amount= $_POST['salh_sgst_amount'];
 
 
  $query1 = "select IFNULL(max(salh_seqno),0)+1 as salseqno from trnrm_salenote_header";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $salseqno=$rec1['salseqno'];
 
  $query2 = "select IFNULL(max(salh_no),0)+1 as salh_no from trnrm_salenote_header where salh_fincode = $salh_fincode and salh_compcode='$salh_compcode'";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $salh_no=$rec2['salh_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
  if ($salseqno > 0  && $salh_fincode > 0 && $salh_compcode>0)
  { 
  $query3= "insert into trnrm_salenote_header values('$salseqno','$salh_compcode','$salh_fincode','$salh_no','$salh_date','$salh_party_code','$salh_itemvalue','0','0','0',
 '0','0','0','$salh_roundingoff','$salh_totalvalue','$salh_remarks','$salh_vouno','$salh_usr_code','$salh_entry_date','0','$salh_cgst_amount','$salh_sgst_amount')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
@@ -55,12 +55,12 @@ $sgstper = $griddet[$i]['sgstper'];
 $sgstamt = $griddet[$i]['sgstamt'];
      
  $qry = "select IFNULL(max(salt_seqno),0)+1 as salt_seqno from trnrm_salenote_trailer where salt_hdseqno=$salseqno";
- $res = mysql_query($qry);
- $rec = mysql_fetch_array($res);
+ $res = mysqli_query($conn, $qry);
+ $rec = mysqli_fetch_array($res);
  $salt_seqno=$rec['salt_seqno'];
 
  $query4= "insert into trnrm_salenote_trailer values($salseqno,$salt_seqno,$lotseq,$itemseq,$qty,$rate,$bagqty,$itemvalue,0,0,0,0,0,$cgstper,$cgstamt,$sgstper,$sgstamt)";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
 }
 
@@ -68,7 +68,7 @@ $sgstamt = $griddet[$i]['sgstamt'];
         
 if($result3)
 {
-  mysql_query("COMMIT");                        
+ mysqli_query($conn, "COMMIT");                       
   echo '({"success":"true","saleno":"'.$salh_no.'"})';
 }
 else
@@ -77,7 +77,9 @@ echo '({"success":"false","saleno":"'.$salh_no.'"})';
 	   
 
 
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             
         }   
         

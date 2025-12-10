@@ -11,23 +11,25 @@ $invhno  = $_POST['invhno'];
 $invhvehino = $_POST['invhvehino'];
 $invhdesplocation = $_POST['invhdesplocation'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 $query1 = "update  trnsal_invoice_header set invh_vehi_no = '$invhvehino' , invh_desp_location = '$invhdesplocation' where  invh_fincode= $invhfincode  and invh_comp_code= $invhcompcode and invh_no = $invhno";
 
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 
 
 
 if ($result1)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $invhno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $invhno . '"})';
 }
   

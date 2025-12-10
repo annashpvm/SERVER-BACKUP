@@ -15,8 +15,8 @@ session_start();
 
 
 $qry = "select count(*) as cnt from log_sms_email where log_date = '$todaydate' and log_rep = '$repcode' and log_type = 'sms'";
-$smschk  = mysql_query($qry);
-$smsfind = mysql_fetch_array($smschk);
+$smschk  = mysqli_query($conn, $qry);
+$smsfind = mysqli_fetch_array($smschk);
 $cnt=$smsfind['cnt']; 
 
 
@@ -55,7 +55,7 @@ if ($cnt == 0)
          }
 
   $query1="insert into log_sms_email (log_date, log_rep, log_type) values('$todaydate','$repcode','sms')";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
   $cnt = $cnt + 1;
 }
 

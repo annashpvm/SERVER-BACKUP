@@ -15,14 +15,14 @@ session_start();
 $data = '';
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
 if ($savetype == "Add") {
 	$query = "select ifnull(max(so_seqno),0)+1 as so_seqno from acc_so_allow";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$so_seqno=$rec['so_seqno'];
 
 
@@ -30,17 +30,19 @@ $query1="insert into acc_so_allow values  ('$so_seqno','$entrydate','$custcode',
 
 //echo  $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
  }     
 
       if ($result1)
       {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $entryno  . '"})';
       }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $entryno  . '"})';
 
      }

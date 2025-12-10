@@ -1,7 +1,7 @@
 <?php 
   require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
 
 $r=mysqli_real_escape_string("select  replace(newjson ,'}]}"}','}]}}') as jsonnew from  (
 select replace(concat(json1,json2,'}') ,'"cur_gt": 0}','"cur_gt": 0,') as newjson from (
@@ -148,7 +148,7 @@ and  dbcrt_cgstvalue + dbcrt_sgstvalue+ dbcrt_igstvalue > 0
 ) a12");
 
 echo $r;
-    $result = mysql_query($r);
+    $result = mysqli_query($conn, $r);
     $accarray = array();
     while($row =mysql_fetch_assoc($result))
     {

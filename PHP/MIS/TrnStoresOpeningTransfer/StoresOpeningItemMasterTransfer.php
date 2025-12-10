@@ -25,10 +25,10 @@ $date= date_format($date,"Y/m/d H:i:s");
 
 
 
-  mysql_query("BEGIN");
+  mysqli_query($conn, "BEGIN");
 
     $queryMas   = "select * from maspur_item_header ";
-    $resultMas = mysql_query($queryMas);
+    $resultMas = mysqli_query($conn, $queryMas);
 
 //echo $queryMas;
     while ($row = mysql_fetch_assoc($resultMas)) {
@@ -39,7 +39,7 @@ $date= date_format($date,"Y/m/d H:i:s");
 //echo "<br>";
 
 
-           $resultTrail = mysql_query($queryTrail);
+           $resultTrail = mysqli_query($conn, $queryTrail);
             while ($subrow = mysql_fetch_assoc($resultTrail)) {
 
 
@@ -84,7 +84,7 @@ and item_fin_code = $nextfinid  and item_code =  $itemcode");
 //echo "<br>";
 
 
-		$result1=mysql_query($query1);  
+		$result1=mysqli_query($conn, $query1);  
 
               $cnnt =  $cnnt + 1;       
 
@@ -107,7 +107,7 @@ where item_comp_code= $compcode and item_fin_code = $nextfinid  and item_code = 
 //echo $queryTrail;
 //echo "<br>";
 
-           $resultTrail = mysql_query($queryTrail);
+           $resultTrail = mysqli_query($conn, $queryTrail);
             while ($subrow = mysql_fetch_assoc($resultTrail)) {
 
 
@@ -137,7 +137,7 @@ and item_fin_code = $nextfinid  and item_code =  $itemcode");
            if ($findrow[0]  == 0)
            {
 		$query1="insert into maspur_item_trailer values(90, $nextfinid,$itemcode ,  '$cloqty' ,  '$clo_rate', 0, '$cloqty' ,  '$clo_val' , '$purdate','$issdate');";
-		$result1=mysql_query($query1);       
+		$result1=mysqli_query($conn, $query1);       
 
               $cnnt =  $cnnt + 1;       
 
@@ -161,12 +161,14 @@ and item_fin_code = $nextfinid  and item_code =  $itemcode");
 
 	if( $cnnt > 0 )
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true"})';
 	}
 	else
 	       {
-mysql_query("ROLLBACK");       
+mysqli_rollback($conn);
+
+       
 		echo '({"success":"false"})';
 		     
 		    

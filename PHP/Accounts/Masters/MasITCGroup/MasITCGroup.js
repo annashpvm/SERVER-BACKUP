@@ -28,7 +28,7 @@ var ledmergecode  = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-          'led_code', 'led_name','led_type'
+          'cust_code', 'cust_name','cust_type'
       ]),
     });
 
@@ -46,7 +46,7 @@ var ledmergecode  = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-          'led_code', 'led_name','led_type'
+          'cust_code', 'cust_name','cust_type'
       ]),
     });
 
@@ -54,9 +54,9 @@ var ledmergecode  = 0;
    var cmbGroupName = new Ext.form.ComboBox({
         fieldLabel      : 'Select Ledger',
         width           :  350,
-        displayField    : 'led_name',
-        valueField      : 'led_code',
-        hiddenName      : 'led_name',
+        displayField    : 'cust_name',
+        valueField      : 'cust_code',
+        hiddenName      : 'cust_name',
         id              : 'cmbGroupName',
         typeAhead       : true,
         mode            : 'local',
@@ -161,17 +161,17 @@ function grid_chk_flxLedger()
 	var sm = flxLedger.getSelectionModel();
 	var selrow = sm.getSelected();
 
-	var chkitem = (selrow.get('led_code'));
+	var chkitem = (selrow.get('cust_code'));
 	if ((selrow != null)){
 
 	
 
-//				cmbAccountName.setValue(selrow.get('led_code'));
-		txtLedgerName.setValue(selrow.get('led_name'));
+//				cmbAccountName.setValue(selrow.get('cust_code'));
+		txtLedgerName.setValue(selrow.get('cust_name'));
                 flxLedger.hide();  
 
-				ledgercode = selrow.get('led_code');
-				ledgername = selrow.get('led_name');
+				ledgercode = selrow.get('cust_code');
+				ledgername = selrow.get('cust_name');
                         
                   		flxLedgerSelected.getSelectionModel().selectAll();
 			        var selrows = flxLedgerSelected.getSelectionModel().getCount();
@@ -223,8 +223,8 @@ function grid_chk_flxLedger()
     	style      :"border-radius: 5px;textTransform: uppercase; ",  
         columns: [   
 //            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
-		{header: "Ledger Code", dataIndex: 'led_code',sortable:true,width:60,align:'left'},   
-		{header: "Selected Ledger List", dataIndex: 'led_name',sortable:true,width:330,align:'left'},
+		{header: "Ledger Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left'},   
+		{header: "Selected Ledger List", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
         ],
         store:[],
 
@@ -270,9 +270,9 @@ function grid_chk_flxLedger()
     	style      :"border-radius: 5px;textTransform: uppercase; ",  
         columns: [   
 //            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
-		{header: "Led Code", dataIndex: 'led_code',sortable:true,width:60,align:'left',hidden:true},   
-		{header: "", dataIndex: 'led_name',sortable:true,width:330,align:'left'},
-		{header: "", dataIndex: 'led_type',sortable:true,width:330,align:'left'},
+		{header: "Led Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
+		{header: "", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
+		{header: "", dataIndex: 'cust_type',sortable:true,width:330,align:'left'},
 
         ],
         store:loadSearchLedgerListDatastore,

@@ -1048,6 +1048,8 @@ var txtTicketWt = new Ext.form.NumberField({
 	listeners:{
 	  keyup:function()
           {
+
+           /*
              if (Number(txtTicketWt.getValue()) > Number(TickWt))
              {  
                 alert("Entered Ticket Weight is higher than Acutal Weight.. Can't Proceed...");
@@ -1056,6 +1058,7 @@ var txtTicketWt = new Ext.form.NumberField({
              }    
              else 
                find_grnqty();
+            */
           },
 
         }  
@@ -2115,7 +2118,7 @@ function find_qty_matching(){
             for(var k=0;k<Row;k++)
             {
                 findTicketNo =  selticket[k].get('wc_ticketno');
-                if (Number(selticket[k].get('diff')) != 0)
+                if (Number(selticket[k].get('diff')) > 0)
                     savechk = 1;  
             }  
 
@@ -2555,10 +2558,11 @@ var flxTicket = new Ext.grid.EditorGridPanel({
 				TickWt =  selrow.get('wc_acceptedwt');
 				itemtype = 'F';
 
-				if (Number(txtBillWT.getValue()) > Number(txtMillWT.getValue()) && weightype == 'M' )
+//				if (Number(txtBillWT.getValue()) > Number(txtMillWT.getValue()) && weightype == 'M' )
+
 				   txtShortageWT.setValue(Number(txtBillWT.getValue()) - Number(txtMillWT.getValue()));
-				else
-				    txtShortageWT.setValue(0);
+//				else
+//				    txtShortageWT.setValue(0);
 
 				if (Number(txtShortageWT.getValue()) > 0)
 				{ 
@@ -2614,10 +2618,10 @@ var flxTicket = new Ext.grid.EditorGridPanel({
 				TickWt =  selrow.get('wc_acceptedwt');
 				itemtype = 'F';
 
-				if (Number(txtBillWT.getValue()) > Number(txtMillWT.getValue()) && weightype == 'M' )
+	//			if (Number(txtBillWT.getValue()) > Number(txtMillWT.getValue()) && weightype == 'M' )
 				   txtShortageWT.setValue(Number(txtBillWT.getValue()) - Number(txtMillWT.getValue()));
-				else
-				    txtShortageWT.setValue(0);
+//				else
+//				    txtShortageWT.setValue(0);
 
 				if (Number(txtShortageWT.getValue()) > 0)
 				{ 

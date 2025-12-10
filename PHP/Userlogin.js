@@ -527,6 +527,7 @@ function EnterLogin()
 		}
 	}
 
+    alert("Test");
 
 	Ext.Ajax.request({
 	    url: 'usrloginchk.php',
@@ -590,7 +591,7 @@ function EnterLoginNew()
 
 
 
-
+//alert("test new");
         findLoginNameDataStore.removeAll();
         findLoginNameDataStore.load({
 	url: 'clsuser.php',
@@ -603,6 +604,8 @@ function EnterLoginNew()
            var cnt=findLoginNameDataStore.getCount();
            if(cnt>0)
 	   {    
+
+
 
 
                 userid = findLoginNameDataStore.getAt(0).get('usr_code');
@@ -923,7 +926,6 @@ function EnterLoginNew()
 	listeners:{
 
 		show:function(){
-
 
 			UserDataStore.load({
 			url:'clsuser.php',

@@ -34,7 +34,7 @@ else
 
    
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $inscnt = 0;
 for ($i = 0; $i < $rowcnt; $i++) {
@@ -60,6 +60,8 @@ for ($i = 0; $i < $rowcnt; $i++) {
     $adjvouno = substr(trim($adjvouno),0,29);
     $invno    = substr(trim($invno),0,29);
 
+    $adjmode = $gridadjdet[$i]['adjmode'];
+
 /*
     if ($gridadjdet[$i]['dbcramt'] > 0) {
         $dbcramt = $gridadjdet[$i]['dbcramt'];
@@ -73,8 +75,8 @@ for ($i = 0; $i < $rowcnt; $i++) {
 
 
     $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-    $result = mysql_query($query);
-    $rec = mysql_fetch_array($result);
+    $result = mysqli_query($conn, $query);
+    $rec = mysqli_fetch_array($result);
     $ginrefslno = $rec['refslno'];
 //echo $ginrefslno;
 //echo "<br>";
@@ -82,28 +84,28 @@ for ($i = 0; $i < $rowcnt; $i++) {
       $ginrefslno = $ginrefslno + 1;
 
 		$querydate = "select datediff('$accvoudate','$invdate') as daysin";
-		$resultdate = mysql_query($querydate);
-		$recdatenew = mysql_fetch_array($resultdate);
+		$resultdate = mysqli_query($conn, $querydate);
+		$recdatenew = mysqli_fetch_array($resultdate);
 		$adjdays=$recdatenew['daysin'];
 
 
 
-        $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ref_docseqno','$vouno', '$accvoudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'BA',curdate(),$payterms,'$ledcode','$voutype','$adjvoudate' );";
+        $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid','$ref_docseqno','$vouno', '$accvoudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'BA',curdate(),$payterms,'$ledcode','$voutype','$adjvoudate','$adjmode');";
 
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
 
 
         $query2 = "call acc_sp_trn_updacc_trail_seq_no_New('$ref_docseqno','$MainInvno','$adjamt','$ledcode' , '$doctype_selected')";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 
 
 //echo $query2;
 //echo "<br>";
         $query3 = "call acc_sp_trn_updacc_trail_seq_no_New('$accadjseqno','$invno','$adjamt','$ledcode' , '$doctype_adjusted')";
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 //echo $query3;
 //echo "<br>";
 
@@ -113,10 +115,12 @@ for ($i = 0; $i < $rowcnt; $i++) {
 
 
 if ( $result1 && $result2 && $result3 ) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","vouno":"' . $ginrefslno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","vouno":"' . $ginrefslno . '"})';
 }
 ?>

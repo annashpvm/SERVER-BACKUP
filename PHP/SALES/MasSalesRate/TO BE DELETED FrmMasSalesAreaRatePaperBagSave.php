@@ -47,14 +47,14 @@ $bf30bit      = 0;
 $bf32bit      = 0;
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 if ($savetype == "Add") {
 
 $query = "select ifnull(max(arearate_sno),0)+1 as itemseq from  massal_areawise_rate where arearate_comp_code = '$compcode' and arearate_fincode='$finid'";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $itemseq=$rec['itemseq'];
 
 
@@ -64,7 +64,7 @@ else
 
 $itemseq = $apprno;
 $query1= "delete from  massal_areawise_rate where arearate_comp_code = '$compcode' and arearate_fincode='$finid' and arearate_sno = $itemseq";
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 
@@ -194,20 +194,24 @@ $GSTper ,'$othershades','Y','N')";
 
 //echo  $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 
   if ($result1) {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $varsubgrp . '"})';
 } 
   else if ($cnt>0) {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $varsubgrp . '"})';
 }
   

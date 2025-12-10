@@ -25,8 +25,8 @@ if ($savetype == "Add")
 {
 
 	 $query1 = "select IFNULL(max(salitem_code),0)+1 as itemcode from mas_othersales_item_master";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $itemcode=$rec1['itemcode'];
  
 	$qry    = "select count(*) as cnt from mas_othersales_item_master where salitem_name  = '$itemname'";
@@ -34,20 +34,20 @@ if ($savetype == "Add")
 //echo "<br>";
 
 
-	$resgrp = mysql_query($qry);
-	$recgrp = mysql_fetch_array($resgrp);
+	$resgrp = mysqli_query($conn, $qry);
+	$recgrp = mysqli_fetch_array($resgrp);
 	$cnt    = $recgrp['cnt']; 
 
 
 //echo $cnt;
 
-         mysql_query("BEGIN");
+         mysqli_query($conn, "BEGIN");
 
          if ($cnt == 0  )
          { 
 	 $query3= "insert into mas_othersales_item_master values ('$itemcode',ucase('$itemname'),'$uom','$hsn','$cgst','$sgst','$igst','$salesledcodetn','$salesledcodeos','$cgstledcode','$sgstledcode','$igstledcode')";
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
          }
 }
 
@@ -57,31 +57,37 @@ else if ($savetype == "Edit")
 
 //echo $query3;
 
-  $result3=mysql_query($query3); 
+  $result3=mysqli_query($conn, $query3); 
         }
 
 
 if ($savetype === "Add") {
 	if ($result3 && $cnt==0) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","item":"' . $itemname . '"})';
 	} 
 	else if ($cnt>0) {
-	 mysql_query("ROLLBACK");
+	 mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	}
 	 else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","item":"' . $itemname . '"})';
 	}
 }
 if ($savetype === "Edit"){
 	if ($result3) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","item":"' . $itemname . '"})';
 	} 
 	 else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","item":"' . $itemname . '"})';
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 session_start();
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
 
 $task='';
   if (isset($_POST['task'])){
@@ -104,7 +104,7 @@ function getUser()
 	$IP="10.0.2.15";
         //$IP = $_SERVER['REMOTE_ADDR'];
 	//$result=mysql_query("CALL generalspselusersgroupip('".$IP."')");
-	//$nbrows = mysql_num_rows($result);
+	//$nbrows = mysqli_num_rows($result);
 	//if($nbrows>0)
 	//{
 	//	$LocalAddress="Y";
@@ -115,8 +115,8 @@ function getUser()
 	//}
         
         $res=mysql_query("CALL generalspseluseripaddress('".$IP."','".$LocalAddress."')");
-        $nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+        $nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
 	}
@@ -127,21 +127,22 @@ function getUser()
 
 function getFinyear()
 {
-	$r=mysql_query("CALL general_sp_mas_finmaster()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "CALL general_sp_mas_finmaster()");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
 }
 
 function getComp()
 {
 	$res=mysql_query("CALL general_sp_mas_selcompany1()");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -153,8 +154,8 @@ function getComp()
 function getgroup()
 {
 	$res=mysql_query("select distinct grp_code,grp_name from acc_group_master where grp_comp_code in (1)");
-        $nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+        $nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
 	}
@@ -165,8 +166,8 @@ function getgroup()
 function getvendor()
 {
 	$res=mysql_query("CALL stores_sp_mas_selvendor_master(1)");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -177,8 +178,8 @@ function getvendor()
 function getaccname()
 {
 	$res=mysql_query("select * from acc_ledger_master where led_grp_code =26 and led_comp_code=1");
-        $nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+        $nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
 	}
@@ -189,8 +190,8 @@ function getaccname()
 function getbankaccname()
 {
 	$res=mysql_query("select * from acc_ledger_master where led_grp_code in (20,21,22,23,24,25,91,92,93,94,95,96,102,182) and led_comp_code=1");
-        $nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+        $nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
 	}
@@ -201,8 +202,8 @@ function getbankaccname()
 function getgrpname()
 {
 	$res=mysql_query("CALL acc_sp_mas_selgroup_master(1)");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -213,8 +214,8 @@ function getgrpname()
 function getledname()
 {
 	$res=mysql_query("CALL acc_sp_mas_selledger_master(1)");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -225,8 +226,8 @@ function getledname()
 function getcurrency()
 {
 	$res=mysql_query("CALL general_sp_mas_selcurrencymaster");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -237,8 +238,8 @@ function getcurrency()
 function getbankname()
 {
 	$res=mysql_query("CALL acc_sp_mas_selbank_master");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -249,8 +250,8 @@ function getbankname()
 function getcountry()
 {
 	$res=mysql_query("select country_code,country_name from mas_country");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -262,8 +263,8 @@ function getbankmaster()
 {
 	$bankseq=$_POST['ginbank'];
 	$res=mysql_query("CALL acc_sp_selbank_master(".$bankseq.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -276,8 +277,8 @@ function getleddet()
 	$comp="1";
 	$ledname=$_POST['gstled'];
 	$res=mysql_query("CALL acc_sp_mas_selledgername_match(".$comp.",".$ledname.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -288,8 +289,8 @@ function getleddet()
 function getvouno()
 {
 	$res=mysql_query("CALL general_sp_mas_selcontrolmaster('AC','2013-2014','EXV','EXPENCE VOUCHER NO',1)");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -301,8 +302,8 @@ function getvoudet()
 {
 	$vouseq=$_POST['ginvou'];
 	$res=mysql_query("CALL acc_sp_trn_selacc_ref(".$vouseq.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -313,8 +314,8 @@ function getvoudet()
 function getoutgrp()
 {
 	$res=mysql_query("select grp_code,grp_name from acc_group_master where grp_comp_code in (1) and grp_code in (134,136,137,138,140)");
-        $nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+        $nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
 	}
@@ -325,8 +326,8 @@ function getoutgrp()
 function getcdgroup()
 {
 	$res=mysql_query("select grp_code,grp_name from acc_group_master where grp_comp_code=1 and grp_name like 'trade%'");
-        $nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+        $nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
 	}
@@ -338,8 +339,8 @@ function getreggroup()
 {
 	$comp=1;
 	$res=mysql_query("CALL acc_sp_selregiongroup(".$comp.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -350,8 +351,8 @@ function getreggroup()
 function getregaccname()
 {
 	$res=mysql_query("select led_code,led_name from acc_ledger_master where led_comp_code=1 and led_duplicate='N' and led_status='Y'");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -366,8 +367,8 @@ function getregrefno()
 	$grp=$_POST['gingrp'];
 //	$grp=134;
 	$res=mysql_query("CALL acc_sp_selregionalreceiptno(".$grp.",".$fin.",".$comp.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -379,8 +380,8 @@ function getregrefdet()
 {
 	$refno=$_POST['ginrefno'];
 	$res=mysql_query("CALL acc_sp_selregionalreceiptdetail(".$refno.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -391,8 +392,8 @@ function getregrefdet()
 function getledcode()
 {
 	$res=mysql_query("CALL general_sp_mas_selcontrolmaster('AC','GENERAL','LMS','ACC_LEDGER_MASTER',1)");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -407,8 +408,8 @@ function getoutled()
 	$dt=$_POST['dt'];
 	$ds=$_POST['ds'];
 	$res=mysql_query("CALL acc_sp_rep_selreceiptledgerabovegivendays(".$comp.",".$grp.",".$dt.",".$ds.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }

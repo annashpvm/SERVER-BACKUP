@@ -106,7 +106,7 @@ $pdf->SetFont('Times','',9);
 
 $count6 = "select Code,Name,Price from Products ORDER BY Code";
 
-$sqlcnt6 = mysql_query($count6);
+$sqlcnt6 = mysqli_query($conn, $count6);
 
 while($row3 = mysql_fetch_assoc($sqlcnt6))
 {

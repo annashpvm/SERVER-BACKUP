@@ -9,7 +9,7 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
     $query1= "select       
 itmh_type,itmh_name,itemcode,sum(opstk) as opstk,sum(opval) as opval,
@@ -45,7 +45,7 @@ union all
 select salh_compcode as compcode, salt_itemcode as itemcode, 0 as opstk,0 as opval,0 as recpt_qty,0 as recpt_val,0 as iss_qty,0 as iss_val,sum(salt_qty)  as sal_qty,sum(salt_value) as sal_val,0 as ret_qty,0 as ret_val from trnrm_salenote_header, trnrm_salenote_trailer  where salh_seqno = salt_hdseqno and salh_compcode in ($compcode) and salh_fincode = $finid   and salh_date >= '$startdate' and salh_date  <= '$enddate' group by salh_compcode,salt_itemcode      
 ) as aa inner join masrm_item_header b on aa.itemcode = b.itmh_code group by itmh_type,itmh_name,itemcode order by itmh_name;";
 
-    $result11=mysql_query($query1);
+    $result11=mysqli_query($conn, $query1);
 
 
 //echo $query1;
@@ -65,7 +65,7 @@ select salh_compcode as compcode, salt_itemcode as itemcode, 0 as opstk,0 as opv
 
 
            $query2   = "update masrm_item_trailer set itmt_clqty  = $cloqty, itmt_clvalue = $cloval , itmt_avgrate = $itemRate where itmt_compcode = $compcode and itmt_fincode = $finid and itmt_hdcode = $itemcode";
-           $result2=mysql_query($query2);   
+           $result2=mysqli_query($conn, $query2);   
 
 
 //echo $query2;
@@ -79,12 +79,14 @@ select salh_compcode as compcode, salt_itemcode as itemcode, 0 as opstk,0 as opv
 
      if ($result2)
      {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $compcode . '"})';
      }
 

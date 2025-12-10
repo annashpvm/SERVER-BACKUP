@@ -16,14 +16,15 @@ $issentdate  = $_POST['issentdate'];
 $vounolist   = $_POST['vounolist'];
 
 
+global $conn; 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") 
 {
    $query1 = "select IFNULL(max(iss_no),0)+1 as issh_no from trnpur_item_issues where iss_fin_code = '$issfincode' and iss_comp_code= '$isscompcode' and iss_type = '$isstype'";
-   $result1= mysql_query($query1);
-   $rec2   = mysql_fetch_array($result1);
+   $result1= mysqli_query($conn, $query1);
+   $rec2   = mysqli_fetch_array($result1);
    $isshno  =$rec2['issh_no'];
 }
 
@@ -31,33 +32,40 @@ else
 {
    if ($isstype == "IS")  
    {     
-//        $query2= "update trnpur_item_issues , maspur_item_trailer set item_stock = item_stock + iss_qty where iss_comp_code = item_comp_code and  iss_fin_code = item_fin_Code and iss_item_code = item_code and iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IS' and iss_no = $isshno ";
 
-        $query2= "update maspur_item_trailer , (select iss_comp_code, iss_fin_code , iss_item_code , sum(iss_qty) as iss_qty from  trnpur_item_issues where iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IS' and iss_no = $isshno  group by iss_comp_code, iss_fin_code , iss_item_code ) a1 set item_stock = item_stock + iss_qty  where  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_item_code = item_code";
-
-	$result2=mysql_query($query2);  
-    
-   }
-   else
-   {     
-  //      $query2= "update trnpur_item_issues , maspur_item_trailer set item_stock = item_stock - iss_qty where iss_comp_code = item_comp_code and  iss_fin_code = item_fin_Code and iss_item_code = item_code and iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IR' and iss_no = $isshno";
-
-        $query2= "update maspur_item_trailer , (select iss_comp_code, iss_fin_code , iss_item_code , sum(iss_qty) as iss_qty from  trnpur_item_issues where iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IR' and iss_no = $isshno  group by iss_comp_code, iss_fin_code , iss_item_code ) a1 set item_stock = item_stock - iss_qty  where  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_item_code = item_code";
-
-	$result2=mysql_query($query2);      
-   }
-        
+//    $query2= "update maspur_item_trailer , (select iss_comp_code, iss_fin_code , iss_item_code , sum(iss_qty) as iss_qty from  trnpur_item_issues where iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IS' and iss_no = $isshno  group by iss_comp_code, iss_fin_code , iss_item_code ) a1 set item_stock = item_stock + iss_qty  where  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_item_code = item_code";
+	$query2= "update maspur_item_trailer , (select iss_comp_code, iss_fin_code , iss_item_code , sum(iss_qty) as issueqty, sum(iss_value) as issuevalue  from  trnpur_item_issues where iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IS' and iss_no = $isshno  group by iss_comp_code, iss_fin_code , iss_item_code ) a1 set item_stock = item_stock + issueqty , item_stockvalue = item_stockvalue +  issuevalue  where  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_item_code = item_code";
+    $result2=mysqli_query($conn, $query2);  
 
 //echo $query2;   
 //echo "<br>";
 
+   }
+   else
+   {     
+
+//    $query2= "update maspur_item_trailer , (select iss_comp_code, iss_fin_code , iss_item_code , sum(iss_qty) as iss_qty from  trnpur_item_issues where iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IR' and iss_no = $isshno  group by iss_comp_code, iss_fin_code , iss_item_code ) a1 set item_stock = item_stock - iss_qty  where  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_item_code = item_code";
+    $query2= "update maspur_item_trailer , (select iss_comp_code, iss_fin_code , iss_item_code , sum(iss_qty) as issueqty, sum(iss_value) as issuevalue  from  trnpur_item_issues where iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = 'IR' and iss_no = $isshno  group by iss_comp_code, iss_fin_code , iss_item_code ) a1 set item_stock = item_stock - issueqty , item_stockvalue = item_stockvalue -  issuevalue   where  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_item_code = item_code";	
+	$result2=mysqli_query($conn, $query2);      
+
+   }
+
+   
+   $query12= "update  trnpur_item_issues , maspur_item_trailer  set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END  where iss_comp_code = item_comp_code and iss_fin_code = item_fin_code and iss_item_code = item_code and  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = $isstype and iss_no =  $isshno";	
+   $result12=mysqli_query($conn, $query12);      
+
+   
+
+//echo $query12;   
+//echo "<br>";
+
 
      
-  $query3 = "delete from trnpur_item_issues where iss_comp_code = '$isscompcode' and iss_no = $isshno and iss_fin_code = '$issfincode' and iss_type = '$isstype'";
-   $result3= mysql_query($query3);
+   $query3 = "delete from trnpur_item_issues where iss_comp_code = '$isscompcode' and iss_no = $isshno and iss_fin_code = '$issfincode' and iss_type = '$isstype'";
+   $result3= mysqli_query($conn, $query3);
 
    $query4 = "delete from trnpur_item_rec_iss where reciss_comp_code = '$isscompcode' and reciss_doc_no = $isshno and reciss_fin_code = '$issfincode' and reciss_type = '$isstype'";
-   $result4= mysql_query($query4);
+   $result4= mysqli_query($conn, $query4);
 
 }
 
@@ -102,14 +110,14 @@ for ($i=0;$i<$rowcnt;$i++)
 	$query2= "insert into trnpur_item_issues values ('$isscompcode','$issfincode','$isstype','$isshno','$issdate',  '$dept','$issmachine','$isssection','$issequip','$issslno' , '$issitemcode','$issqty' ,'$issrate','$issval',curdate() , '$rev_cap','$vounolist')";
 
 
-	$result2=mysql_query($query2);   
+	$result2=mysqli_query($conn, $query2);   
 //echo $query2;   
 //echo "<br>";
 
 
 	$query3= "insert into trnpur_item_rec_iss values('$isscompcode','$issfincode','$isstype','$isshno','$issdate', '$issslno','$issitemcode', '$issqty', '$issrate',0)";
 
-	 $result3=mysql_query($query3);       
+    $result3=mysqli_query($conn, $query3);       
 
 //echo $query3;   
 //echo "<br>";
@@ -117,21 +125,28 @@ for ($i=0;$i<$rowcnt;$i++)
 
         if ($isstype == "IS")
         {
-        $query4= "update maspur_item_trailer set item_stock = item_stock - $issqty  , item_liss_date = '$issdate' where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
-	$result4=mysql_query($query4);      
+        $query4= "update maspur_item_trailer set item_stock = item_stock - $issqty , item_stockvalue = item_stockvalue -  $issval , item_liss_date = '$issdate' where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
+	    $result4=mysqli_query($conn, $query4);      
 
-//echo $query2;   
+//echo $query4;   
 //echo "<br>";
 
         }       
         else
         {
-        $query4= "update maspur_item_trailer set item_stock = item_stock + $issqty   where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
-	$result4=mysql_query($query4);      
+        $query4= "update maspur_item_trailer set item_stock = item_stock + $issqty , item_stockvalue = item_stockvalue +  $issval , item_liss_date = '$issdate' where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
+	    $result4=mysqli_query($conn, $query4);      
 
 //echo $query4;   
 //echo "<br>";
         }       
+		
+		$query4= "update maspur_item_trailer set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
+		$result12=mysqli_query($conn, $query12);      
+
+//		echo $query4;   
+       //echo "<br>";
+
 
     } //END IF
   
@@ -142,13 +157,15 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if($result2 && $result3 && $result4)
 {
-  	mysql_query("COMMIT");                        
+  	mysqli_begin_transaction($conn);                        
   	echo '({"success":"true","IssNo":"'. $isshno . '"})';
 }
 else
 {
 	echo '({"success":"false","IssNo":"' . $isshno . '"})';
-	mysql_query("ROLLBACK");            
+	mysqli_rollback($conn);
+
+            
             
 }   
         

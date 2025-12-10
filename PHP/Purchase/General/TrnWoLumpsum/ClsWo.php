@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadsupplier":
 		getsupplier();
@@ -32,98 +32,96 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getsupplier()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("call sp_pur_sup()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "call sp_pur_sup()");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 	
  function getdept()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$vendor = $_POST['Vendorcode'];
-        $r=mysql_query("call sp_sel_dept()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call sp_sel_dept()");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getitem()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from  mas_item_master order by item_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select * from  mas_item_master order by item_name");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getworkorder()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from mas_workorder");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select * from mas_workorder");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getpayterms()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select term_code,term_name from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select term_code,term_name from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getwono()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$compcode = $_POST['compcode'];
 	$finid = $_POST['finid'];
-        $r=mysql_query("select ifnull(max(woh_no),0)+1 as wono from trnpur_workorder_header where woh_comp_code=1 and woh_fin_code=27");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select ifnull(max(woh_no),0)+1 as wono from trnpur_workorder_header where woh_comp_code=1 and woh_fin_code=27");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 ?>

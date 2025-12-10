@@ -40,16 +40,16 @@ $dchrefdate = $_POST['dchrefdate'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 if ($savetype == "Add") {
     $query2 = "select IFNULL(max(dch_no),0)+1 as dcno from trnpur_deliverychallan_header where dch_fincode = $dchfincode and dch_comp_code=$dchcompcode and dch_type = $dchtype'";
-    $result2= mysql_query($query2);
-    $rec2 = mysql_fetch_array($result2);
+    $result2= mysqli_query($conn, $query2);
+    $rec2 = mysqli_fetch_array($result2);
     $dcno=$rec2['dcno'];
 
 
     $query3= "insert into  trnpur_deliverychallan_header values('$dchcompcode', '$dchfincode', '$dchno', '$dchdate', '$dchtype','$dchparty', '$dchdept', '$dchtotqty', '$dchtotval', '$dchtruck','$dchfreighttype', '$dchfreight', '$dchdays', '$dchremarks', '$dchrefno', '$dchrefdate', '$dchdespthro')";
-     $result3=mysql_query($query3);
+     $result3=mysqli_query($conn, $query3);
 
 //echo  $query3;
 //echo "<br>";
@@ -58,10 +58,10 @@ if ($savetype == "Add") {
 else
 {
  $query2 = "update trnpur_deliverychallan_header set  dch_date = '$dchdate', dch_party = '$dchparty',dch_dept ='$dchdept',dch_totqty ='$dchtotqty',dch_freight = '$dchfreight', dch_freight_type = '$dchfreighttype',dch_return_days='$dchdays',dch_remarks ='$dchremarks',dch_refno ='$dchrefno',dch_refdate = '$dchrefdate',dch_truck = '$dchtruck' , dch_despthro = '$dchdespthro'  where dch_fincode = $dchfincode and dch_comp_code=$dchcompcode and dch_no = $dchno and dch_type = '$dchtype'";
-    $result2= mysql_query($query2);
+    $result2= mysqli_query($conn, $query2);
 
  $query3 = "delete from trnpur_deliverychallan_trailer where dct_fincode = $dchfincode and dct_comp_code=$dchcompcode and dct_no = $dchno and dct_type = '$dchtype'";
- $result3= mysql_query($query3);
+ $result3= mysqli_query($conn, $query3);
 
 }
 
@@ -86,7 +86,7 @@ $spec = str_replace("'","", $spec );
 $purpose = str_replace("'","", $purpose );
 
 $query4= "insert into  trnpur_deliverychallan_trailer values('$dchcompcode', '$dchfincode', '$dchno', '$dchdate','$dchtype', '$itemcode','$sno', '$issqty', '0', '$rate','$spec','$purpose', '$hsn')";
-$result4=mysql_query($query4);  
+$result4=mysqli_query($conn, $query4);  
 
 //echo  $query4;
 //echo "<br>";
@@ -98,12 +98,14 @@ if ($savetype == "Add")
 {
         if($result3 && $result4)
         {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","dcno":"'.$dcno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","dcno":"'.$dcno.'"})';
         }   
 }
@@ -111,12 +113,14 @@ else
 {
         if($result2 && $result3 && $result4)
         {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","dcno":"'.$dcno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","dcno":"'.$dcno.'"})';
         }   
 

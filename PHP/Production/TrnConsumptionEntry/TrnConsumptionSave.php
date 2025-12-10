@@ -12,13 +12,13 @@ $issdate     = $_POST['issdate'];
 $isshno      = $_POST['isshno'];
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") 
 {
    $query1 = "select IFNULL(max(iss_no),0)+1 as issh_no from trn_dayprod_chemicals_cons where iss_fin_code = '$issfincode' and iss_comp_code= '$isscompcode' ";
-   $result1= mysql_query($query1);
-   $rec2   = mysql_fetch_array($result1);
+   $result1= mysqli_query($conn, $query1);
+   $rec2   = mysqli_fetch_array($result1);
    $isshno  =$rec2['issh_no'];
 }
 
@@ -27,7 +27,7 @@ else
 
      
   $query1 = "delete from trn_dayprod_chemicals_cons where iss_comp_code = '$isscompcode' and iss_no = $isshno and iss_fin_code = '$issfincode' ";
-   $result1= mysql_query($query1);
+   $result1= mysqli_query($conn, $query1);
 
 }
 
@@ -52,7 +52,7 @@ for ($i=0;$i<$rowcnt;$i++)
 	$query1= "insert into trn_dayprod_chemicals_cons values ('$isscompcode','$issfincode','$isshno','$issdate',  '$issslno' , '$issitemcode','$issqty' ,'$issrate','$issval')";
 
 
-	$result1=mysql_query($query1);   
+	$result1=mysqli_query($conn, $query1);   
 //echo $query1;   
 //echo "<br>";
 
@@ -70,13 +70,15 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if($result1)
 {
-  	mysql_query("COMMIT");                        
+  	mysqli_begin_transaction($conn);                        
   	echo '({"success":"true","IssNo":"'. $isshno . '"})';
 }
 else
 {
 	echo '({"success":"false","IssNo":"' . $isshno . '"})';
-	mysql_query("ROLLBACK");            
+	mysqli_rollback($conn);
+
+            
             
 }   
         

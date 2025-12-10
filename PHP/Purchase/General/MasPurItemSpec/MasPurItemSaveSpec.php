@@ -30,15 +30,17 @@ session_start();
 
 
   $query1="Update maspur_item_header set item_spec1 = '$spec1',item_spec2 = '$spec2',item_spec3 = '$spec3',item_spec4 = '$spec4',item_spec5 = '$spec5',item_spec6 = '$spec6',item_spec7 = '$spec7',item_spec8 = '$spec8',item_spec9 = '$spec9',item_spec10 = '$spec10'  where item_code = '$item_code'"; 
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 
 
   if ($result1 ) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $item_name . '"})';
 } 
  else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $item_name . '"})';
 }
 

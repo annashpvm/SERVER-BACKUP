@@ -14,7 +14,7 @@ else
  $query1 = "select * from trn_weighbridge_entry where t_wb_compcode = 90 and  t_wb_date >= '2024-01-02' and  t_wb_net_weight > 0 and t_wb_ticketno >= 1 and t_wb_upd = 'N'";
 
 
- $result1 = mysql_query($query1);
+ $result1 = mysqli_query($conn, $query1);
 
 
  while ($row = mysql_fetch_assoc($result1)) {
@@ -52,7 +52,7 @@ else
 
 
 
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 
 
 //echo $query2;
@@ -60,7 +60,7 @@ else
 
  $query3 = "update trn_weighbridge_entry set t_wb_upd = 'Y' where t_wb_compcode = 1 and  t_wb_net_weight > 0 and t_wb_upd = 'N' and  t_wb_ticketno = $ticketno";
 
- $result3 = mysql_query($query3);
+ $result3 = mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
@@ -74,10 +74,12 @@ else
 
 
 if ($result2 && $result3 ) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
   //  echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
 //    echo '({"success":"false","wtno":"' . $ticketno . '"})';
 }
   

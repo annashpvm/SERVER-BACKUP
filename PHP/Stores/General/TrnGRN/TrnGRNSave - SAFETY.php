@@ -66,7 +66,7 @@ $minhtottcs = (float) $_POST['minhtottcs'];
     
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 
@@ -74,13 +74,13 @@ $minhtottcs = (float) $_POST['minhtottcs'];
 if ($savetype == "Add") {
 
 	$query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-	$result1 = mysql_query($query1);
-	$rec1 = mysql_fetch_array($result1);
+	$result1 = mysqli_query($conn, $query1);
+	$rec1 = mysqli_fetch_array($result1);
 	$ginaccrefseq=$rec1['con_value'];
 /*
  $query2 = "select IFNULL(max(minh_minno),0)+1 as minhminno from trnpur_min_header where minh_purtype = '$minhvoutype' and minh_fin_code = $minhfincode  and minh_comp_code=$minhcompcode";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $minhminno=$rec2['minhminno'];
 
 */
@@ -92,8 +92,8 @@ if ($savetype == "Add") {
 //echo $query1;
 //echo "<br>";
 
-     $result1 = mysql_query($query1);
-     $rec1 = mysql_fetch_array($result1);
+     $result1 = mysqli_query($conn, $query1);
+     $rec1 = mysqli_fetch_array($result1);
      $cnt =$rec1['nos'];
 
 
@@ -109,7 +109,7 @@ if ($savetype == "Add") {
 //echo $query3;
 //echo "<br>";
 
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 }
 else
@@ -117,16 +117,16 @@ else
 
 
 	$querya1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $resulta1 = mysql_query($querya1);
+        $resulta1 = mysqli_query($conn, $querya1);
 
 //echo $querya1;
 //echo "<br>";
 	$querya2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 //echo $querya2;
 //echo "<br>";	
         $querya3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $resulta3 = mysql_query($querya3);
+        $resulta3 = mysqli_query($conn, $querya3);
 
 //echo $querya3;
 //echo "<br>";
@@ -136,7 +136,7 @@ else
 
     $query2="call sppur_upd_minheader('$minhvoutype','$minhcompcode','$minhminno','$minhmindate','$minhfincode','$minhbillno','$minhbilldate' ,'$minhgrossvalue', '$minhroundoff','$roundneed','$minhvalue','$minhcarrier','$minhremarks','$minhcreditdays','$minhgeno','$minhgedate','$minhlrno','$minhlrdate','$tcsauto','$minhcgstpm','$minhsgstpm','$minhigstpm','$minhtottcs')";
 //echo $query2;
-    $result2=mysql_query($query2);
+    $result2=mysqli_query($conn, $query2);
 }
 
 
@@ -210,7 +210,7 @@ for ($i=0;$i<$rowcnt;$i++){
 //echo  $query4;
 //echo "<br>";
 
-	 $result4=mysql_query($query4); 
+	 $result4=mysqli_query($conn, $query4); 
 
 
 	}
@@ -223,14 +223,14 @@ for ($i=0;$i<$rowcnt;$i++){
 	echo  $query4;
 
 
-	 $result4=mysql_query($query4);
+	 $result4=mysqli_query($conn, $query4);
 
 	}
 
 
 
 	 $query11 = "select * from maspur_item_trailer where item_comp_code ='$minhcompcode'  and item_fin_code = '$minhfincode' and item_code = '$mintitemcode'";
-	 $result11 = mysql_query($query11);
+	 $result11 = mysqli_query($conn, $query11);
 	 while ($row = mysql_fetch_assoc($result11)) {
 
 	    $totstock = $row['item_stock']+ $mintrcvdqty - $oldgrnqty ;
@@ -240,7 +240,7 @@ for ($i=0;$i<$rowcnt;$i++){
 	    { 
 	    $avgrate  = $totvalue / $totstock;
 	    $query12 = "update maspur_item_trailer set  item_avg_rate = $avgrate , item_stock = $totstock , item_lpur_date =  '$minhmindate' where item_comp_code ='$minhcompcode'  and item_fin_code = '$minhfincode' and item_code = '$mintitemcode'";
-	    $result12 = mysql_query($query12);
+	    $result12 = mysqli_query($conn, $query12);
 //        echo $query12;
             }
           } 
@@ -248,12 +248,12 @@ for ($i=0;$i<$rowcnt;$i++){
 
 	 $query13 = "update trnpur_indent set  ind_rec_qty = ind_rec_qty + $mintrcvdqty - $oldgrnqty  where ind_comp_code ='$minhcompcode'  and ind_fin_code = '$minhfincode' 	 and ind_no = '$mintindno' and ind_item_code = '$mintitemcode'";
 //        echo $query13;
-	 $result13 = mysql_query($query13);
+	 $result13 = mysqli_query($conn, $query13);
 
 
 	 $query14 = "update  trnpur_purchase_trailer set ptr_rec_qty = ptr_rec_qty + $mintrcvdqty -  $oldgrnqty  where ptr_comp_code = '$minhcompcode'  and ptr_fin_code = '$minhfincode'   and ptr_pono = '$mintpono' and ptr_item_code = '$mintitemcode' and ptr_ind_fin_code = '$mintindfincode' and ptr_ind_no ='$mintindno'"; 
 //         echo $query14;
-	 $result14 = mysql_query($query14);
+	 $result14 = mysqli_query($conn, $query14);
 
 
 }  
@@ -264,13 +264,13 @@ if ($ginaccrefseq > 0) {
 
 
     $querya1 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$minhminno','$compcode','$finid','$minhmindate','$voutype', '','','$minhbillno', '$minhbilldate','$minhremarks');";
-    $resulta1 = mysql_query($querya1);
+    $resulta1 = mysqli_query($conn, $querya1);
 
 //echo $querya1;
 //echo "<br>";
 
 $cquerya3 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-$cresulta3 = mysql_query($cquerya3);
+$cresulta3 = mysqli_query($conn, $cquerya3);
 
 
 //echo $cquerya3;
@@ -303,7 +303,7 @@ $rowcntacc = $_REQUEST['cntacc'];
                if ($ledtype != 'G')
                {
                $querya2 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$minhbillno', '$minhbilldate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-               $resulta2 = mysql_query($querya2);
+               $resulta2 = mysqli_query($conn, $querya2);
 //echo  $querya2;
 //echo "<br>";
 
@@ -313,7 +313,7 @@ $rowcntacc = $_REQUEST['cntacc'];
             #Insert AccTran
 
             $querya3 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype');";
-            $resulta3 = mysql_query($querya3);
+            $resulta3 = mysqli_query($conn, $querya3);
 
 //echo  $querya3;	   
 //echo "<br>";
@@ -330,26 +330,30 @@ if ($savetype == "Add") {
    if ( $result3 && $result4 &&  $result13 &&  $result14  && $resulta1  && $resulta2  && $resulta3  && $cnt == 0)
 //   if ($result3)
    {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","minno":"'.$minhminno.'"})';
    }
    else
    {
             if ($cnt == 1)
                 $minhminno = 0;
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","minno":"'.$minhminno.'"})';
    }   
 }
 else {
    if ($result2 &&  $result4  && $resulta1  && $resulta2  && $resulta3)
    {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","minno":"'.$minhminno.'"})';
    }
    else
    {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","minno":"'.$minhminno.'"})';
    }   
 }

@@ -51,18 +51,18 @@ $genhaccvoudate = $_POST['genhaccvoudate'];
 $cancelflag = 0;
 
  $query2 = "select IFNULL(max(genh_no),0)+1 as genh_no from trnpur_general_header where genh_fincode = $genhfincode and genh_comp_code=$genhcompcode";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $genhno=$rec2['genh_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
  $query3= "insert into  trnpur_general_header values('$genhcompcode','$genhfincode','$genhno','$genhdate','$genhparty','$genhtag','$genhtype',
 '$genhdept','$genhretype','$genhtotqty','$genhtotval','$genhcarrier','$genhfreight','$genhdays','$genhremarks','$genhrefno','$genhrefdate',
 '$genhfrtamt','$genhvalue','$genhdiscount','$genhsertaxper','$genhsertaxamt','$genheduper','$genheduamt','$genhsheper','$genhsheamt','$genhtransunitrate',
 '$genhtransamt','$genhotheramt','$genhlabouramt','$genhcgstper','$genhcgstamt','$genhsgstper','$genhsgstamt','$genhigstper','$genhigstamt','$genhlessamt',
 '$genhbillno','$genhbilldate','$genhgateeno','$genhgateedate','$genhtruckno','$genhaccupd','$genhaccvouno','$genhaccvoudate','$cancelflag')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
@@ -77,18 +77,20 @@ $gentpurpose  = $griddet[$i]['purpose'];
  $query4= "insert into  trnpur_general_trailer values('$genhcompcode','$genhfincode','$genhno','$genhdate','$genhtag','$genhtype','$genhrefno',
 '$gentrefdate','$gentitemcode','0','$gentissqty','0','0','0','$gentpurpose','$genhdept','0',
 '0','$sno','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','$cancelflag')";
- $result4=mysql_query($query4);  
+ $result4=mysqli_query($conn, $query4);  
 
 }
 
 if($result3 && $result4)
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","dnno":"'.$genhno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","dnno":"'.$genhno.'"})';
         }   
         

@@ -13,27 +13,29 @@ $oldopvalue=(float) $_POST['oldopvalue'];
 
 $location = (int) $_POST['location'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $query1=" update maspur_item_trailer set item_yr_opqty = $opstk ,item_yr_opval= $opval,  item_stock= item_stock + $opstk - $oldopstk  , item_loc_code = $location where  item_comp_code= $compcode and item_fin_code= $finid and item_code= $itemcode; ";
 
 //echo $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 $query2=" update maspur_item_trailer set item_avg_rate =  case when item_yr_opval > 0 and item_yr_opqty >0 then  Cast( item_yr_opval / item_yr_opqty as decimal(10,5))  else 0 end  where  item_comp_code= $compcode  and item_fin_code= $finid and item_code= $itemcode;; ";
 
 //echo $query2;
 
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
 if ($result1 && $result2){
-	mysql_query("COMMIT");
+	mysqli_begin_transaction($conn);
 	echo '({"success":"true"})';
 }
 else{
-	mysql_query("ROLLBACK");
+	mysqli_rollback($conn);
+
+
 	echo '({"success":"false"})';
 }
  

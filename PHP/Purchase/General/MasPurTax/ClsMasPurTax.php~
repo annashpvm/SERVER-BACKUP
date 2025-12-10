@@ -1,0 +1,104 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task="LoadSalesLedger";
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "LoadSalesLedger":
+		getLedgerList();
+		break;
+		case "LoadInvtype":
+		getInvtype();
+		break;
+		case "LoadgstLedger":
+		getgstledger();
+		break;
+		case "LoadTaxList":
+		getgstlist();
+		break;
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+
+ function getLedgerList()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $r=mysql_query("select * from acc_ledger_master where led_type = 'G' and led_name like '%SALES%'");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function getgstledger()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $gsttype = $_POST['gsttype'];
+        $gst = $_POST['gst'];
+
+//        $gsttype = '%CGST%LIA%';
+//        $gst = '2.5';
+
+
+
+        $r=mysql_query("select * from acc_ledger_master where led_type = 'G' and led_name like '$gsttype%$gst%'");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function getgstlist()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("select * from mas_purchasetax order by tax_code");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+ function getInvtype()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $r=mysql_query("select * from massal_invtype where type_code <6");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+		
+
+
+?>

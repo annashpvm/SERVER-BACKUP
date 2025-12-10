@@ -39,10 +39,10 @@ $wt2 = 358.000;
 $d2 = '2021-08-12';  */
 
 //if ($oddeven === 1){
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 $addquery = "insert into tmp_sal_packingslip values ('$compcode' , '$finid' , '$invno' , '$invdt' , '$party' ,'$slipno', '$rsize1','$s1', '$r1' , '$wt1', '$d1' ,'$s2','$r2','$wt2','$d2')";
-$resqry = mysql_query($addquery);
-			mysql_query("COMMIT");                        
+$resqry = mysqli_query($conn, $addquery);
+			mysqli_begin_transaction($conn);                        
 			
 //}
 
@@ -50,14 +50,16 @@ $resqry = mysql_query($addquery);
 if ($oddeven === 1) {    
 	if($resqry)
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","InvNo":"' . $invno . '"})';
 
 		    
 	}
 	else
 	{
-	    //mysql_query("ROLLBACK");            
+	    //mysqli_rollback($conn);
+
+            
 	    //echo '({"success":"false","InvNo":"' . $compcode . '"})';
 	}   
 }

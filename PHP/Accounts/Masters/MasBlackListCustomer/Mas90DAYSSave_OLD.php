@@ -19,10 +19,10 @@ session_start();
 $data = '';
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 //$query1 = "delete from overdue_custlist  where c_code >0";
-//$result1 = mysql_query($query1);
+//$result1 = mysqli_query($conn, $query1);
 
 
         for($i=0;$i<$rowcnt;$i++){
@@ -34,18 +34,18 @@ mysql_query("BEGIN");
             if($ccode>0){
 
 		 $query1 = " select count(*) as norecs from overdue_custlist where c_code ='$ccode'";
-		 $result1= mysql_query($query1);
-		 $rec2 = mysql_fetch_array($result1);
+		 $result1= mysqli_query($conn, $query1);
+		 $rec2 = mysqli_fetch_array($result1);
 		 $recfound =$rec2['norecs'];
 
                  if($recfound == 0){  
                     $query2  = "insert into overdue_custlist values ('$ccode','$cname','$date1','N')";
-                    $result2 = mysql_query($query2);
+                    $result2 = mysqli_query($conn, $query2);
                  }
                  
                  if($recfound > 0 && $soallow == "Y"  ){  
                     $query2  = "delete from overdue_custlist  where c_code = '$ccode'";
-                    $result2 = mysql_query($query2);
+                    $result2 = mysqli_query($conn, $query2);
                  }
   
             }
@@ -53,12 +53,14 @@ mysql_query("BEGIN");
 
       if ($result2)
       {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $data  . '"})';
       }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $data  . '"})';
 
      }

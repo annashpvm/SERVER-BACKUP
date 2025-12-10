@@ -1,0 +1,101 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task='loadDepartment';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadDepartment":
+		getDepartment();
+		break;
+		case "loadInwardNo":
+		getInwardNo();
+		break;
+		case "loadEntryNoList":
+		getEntryNoList();
+		break;
+		case "loadEntryNoDetail":
+		getEntryNoDetail();
+		break;
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getDepartment()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select department_code, department_name from mas_department order by department_name");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+	
+ function getInwardNo()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$iotype = $_POST['iotype'];
+	
+
+        $sql = "select ifnull(max(io_entryno),0)+1 as entryno from inward_outward where io_tag = '$iotype'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }	
+
+ function getEntryNoList()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$iotype = $_POST['iotype'];
+	
+
+        $sql = "select * from inward_outward where io_tag = '$iotype' order by io_entryno desc");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }	
+ function getEntryNoDetail()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$iotype = $_POST['iotype'];
+	$entryno = $_POST['entryno'];
+
+        $sql = "select * from inward_outward , mas_department  where io_dept = department_code and   io_tag = '$iotype' and io_entryno = '$entryno' ");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }	
+
+?>

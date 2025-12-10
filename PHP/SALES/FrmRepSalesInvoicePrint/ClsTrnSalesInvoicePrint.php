@@ -3,10 +3,9 @@
 
     $task='loadFinishedGoodsEntryNo';
 
-    if ( isset($_POST['task'])){
-        $task = $_POST['task']; // Get this from Ext
-    }
-    mysql_query("SET NAMES utf8");
+	$task = $_POST['task'] ?? 'loadFinishedGoodsEntryNo';
+
+    mysqli_set_charset($conn, "utf8");
 
     switch($task){
 	
@@ -24,15 +23,7 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -40,37 +31,44 @@
 
  function getInvoiceNoDetails()
     {
-        mysql_query("SET NAMES utf8");
-	$finid = $_POST['finid'];
+		global $conn;  
+
+		$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$invno = $_POST['invno'];
 
-        $r=mysql_query("select * from trnsal_invoice_header  where invh_fincode= $finid  and invh_comp_code= $compcode and invh_seqno = $invno order by invh_seqno");
+    $sql = "select * from trnsal_invoice_header  where invh_fincode= $finid  and invh_comp_code= $compcode and invh_seqno = $invno order by invh_seqno";
+	$r = mysqli_query($conn, $sql);
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    $nrow = mysqli_num_rows($r);
+    $jsonresult = JEncode($arr);
+    echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
+
     }
 
  function getInvoiceList()
     {
-        mysql_query("SET NAMES utf8");
 
+		global $conn;  
 	$compcode = $_POST['compcode'];
 
-	$r=mysql_query("select DATE_FORMAT(invh_date, '%d-%m-%Y') as invhdate, invh_seqno, invh_invrefno , cust_ref from trnsal_invoice_header , massal_customer where invh_party = cust_code and invh_comp_code = $compcode and invh_date >= NOW() - INTERVAL 2 DAY order by invh_seqno desc");
+	$sql= "select DATE_FORMAT(invh_date, '%d-%m-%Y') as invhdate, invh_seqno, invh_invrefno , cust_ref from trnsal_invoice_header , massal_customer where invh_party = cust_code and invh_comp_code = $compcode and invh_date >= NOW() - INTERVAL 2 DAY order by invh_seqno desc";
+	$r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    $nrow = mysqli_num_rows($r);
+    $jsonresult = JEncode($arr);
+    echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
 
 
     }

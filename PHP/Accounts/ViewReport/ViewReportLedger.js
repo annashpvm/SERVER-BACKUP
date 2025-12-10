@@ -8652,8 +8652,32 @@ function LedgerChangeRefresh()
         {header: "Collection Amount" , dataIndex: 'acctran_cramt',sortable:false,width:150,align:'right', menuDisabled: true},
         {header: "Inv. No"  , dataIndex: 'refpartyinvno',sortable:false,width:130,align:'right', menuDisabled: true},
         {header: "Inv.Date"    , dataIndex: 'refpartyinvdate',sortable:false,width:130,align:'right', menuDisabled: true},
-        {header: "Adjusted"   , dataIndex: 'refamount',sortable:false,width:100,align:'right', menuDisabled: true},
-        {header: "Advance "   , dataIndex: 'advance',sortable:false,width:80,align:'right', menuDisabled: true},
+        {header: "Adjusted"   , dataIndex: 'refamount',sortable:false,width:100,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },
+        {header: "Advance "   , dataIndex: 'advance',sortable:false,width:80,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },
 
         ]  
 
@@ -8855,7 +8879,19 @@ function LedgerChangeRefresh()
 		{header: "Inv/Doc No.", dataIndex: 'ref_invno',width:120,align:'left'},   
 		{header: "Date", dataIndex: 'voudate',width:110,align:'left'},   
 		{header: "Pay.Terms", dataIndex: 'ref_paymt_terms',width:90,align:'center'},   
-		{header: "Adj. Amount", dataIndex: 'ref_adjamount',width:120,align:'right'},   
+		{header: "Adj. Amount", dataIndex: 'ref_adjamount',width:120,align:'right',
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },   
 		{header: "Adj. Days", dataIndex: 'ref_adj_days',width:90,align:'center'},   
         ],
         store:[],
@@ -8878,7 +8914,19 @@ function LedgerChangeRefresh()
 		{header: "Inv/Doc No.", dataIndex: 'ref_invno',width:120,align:'left'},   
 		{header: "Date", dataIndex: 'voudate',width:110,align:'left'},   
 		{header: "Pay.Terms", dataIndex: 'ref_paymt_terms',width:90,align:'center'},   
-		{header: "Adj. Amount", dataIndex: 'ref_adjamount',width:120,align:'right'},   
+		{header: "Adj. Amount", dataIndex: 'ref_adjamount',width:120,align:'right',
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },   
 		{header: "Adj. Days", dataIndex: 'ref_adj_days',width:90,align:'center'},   
         ],
         store:[],
@@ -11351,11 +11399,46 @@ var txtAccountName = new Ext.form.TextField({
 		    return value;
 		  }
 	    },
-            {header: "Debit", dataIndex: 'debit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
-            {header: "Credit", dataIndex: 'credit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
-            {header: "Balance", dataIndex: 'balance',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right', renderer: function(v) {
-            return '<span style="color:#f5276c; font-weight:600;">' + v + '</span>';
-          }},
+            {header: "Debit", dataIndex: 'debit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+            },
+            {header: "Credit", dataIndex: 'credit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    }  
+            },
+            {header: "Balance", dataIndex: 'balance',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                renderer: function (val, metaData, r) {
+                    if (val == null || val === '') return '';
+            
+                    // Convert and format with Indian locale & 2 decimal places
+                    var formattedVal = parseFloat(val).toLocaleString('en-IN', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+            
+                    // Add color & bold style
+                    return '<span style="color:#f5276c; font-weight:600;">' + formattedVal + '</span>';
+                }
+        },
 	    {header: "Type", dataIndex: 'type',width:80,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'}
         ],
          listeners :{
@@ -11447,8 +11530,32 @@ style:{
             {header: "Vou. No.", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
             {header: "Ref. No.", dataIndex: 'accref_payref_no',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
 
-            {header: "Debit", dataIndex: 'acctran_dbamt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
-            {header: "Credit", dataIndex: 'acctran_cramt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
+            {header: "Debit", dataIndex: 'acctran_dbamt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    }  
+            },
+            {header: "Credit", dataIndex: 'acctran_cramt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    }  
+            },
             {header: "Inv type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',hidden : 'true'},
             {header: "Seq. No.", dataIndex: 'accref_seqno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',hidden : 'true'},
             {header: "Led Code", dataIndex: 'cust_code',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',hidden : 'true'},
@@ -11495,9 +11602,32 @@ style:{
 		    return value;
 		  }
 	   },
-            {header: "Debit", dataIndex: 'debit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'
+            {header: "Debit", dataIndex: 'debit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    }  
 	    },
-            {header: "Credit", dataIndex: 'credit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right'},
+            {header: "Credit", dataIndex: 'credit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    }  
+            },
             {header: "ledtype", dataIndex: 'ledtype',width:30,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'left'}
         ]
     });
@@ -11904,9 +12034,45 @@ style: {
         {header: "Inv Date" , dataIndex: 'acctrail_inv_date',sortable:false,width:80,align:'left', menuDisabled: true},
         {header: "Inv No" , dataIndex: 'acctrail_inv_no',sortable:false,width:100,align:'left', menuDisabled: true,
 },
-        {header: "Vou Amount" , dataIndex: 'acctrail_inv_value',sortable:false,width:90,align:'right', menuDisabled: true},
-        {header: "Adjusted"  , dataIndex: 'acctrail_adj_value',sortable:false,width:90,align:'right', menuDisabled: true},
-        {header: "Balance"    , dataIndex: 'invbalamt',sortable:false,width:90,align:'right', menuDisabled: true},
+        {header: "Vou Amount" , dataIndex: 'acctrail_inv_value',sortable:false,width:90,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },
+        {header: "Adjusted"  , dataIndex: 'acctrail_adj_value',sortable:false,width:90,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },
+        {header: "Balance"    , dataIndex: 'invbalamt',sortable:false,width:90,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }  
+        },
         {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:50,align:'right', menuDisabled: true},        
         {header: "Paymnt Terms", dataIndex: 'acctrail_crdays',sortable:false,width:70,align:'right', menuDisabled: true},
         {header: "Due Date"   , dataIndex: 'duedate',sortable:false,width:80,align:'right', menuDisabled: true},
@@ -15105,7 +15271,7 @@ onEsc:function(){
 
 
                    
-	
+
 
         Ext.getCmp('lblcompany').setText(millname);
 

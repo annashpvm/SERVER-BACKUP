@@ -26,14 +26,14 @@
 
         #Get Max AccRef Seqno from acc_ref
         $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $result1 = mysql_query($query1);
-        $rec1 = mysql_fetch_array($result1);
+        $result1 = mysqli_query($conn, $query1);
+        $rec1 = mysqli_fetch_array($result1);
         $ginaccrefseq=$rec1['con_value'];
        
         #Get Voucher Number
         $query2 = "select ifnull(max(convert(substring(accref_vouno,4),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'GJV' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
-        $result2 = mysql_query($query2);
-        $rec2 = mysql_fetch_array($result2);
+        $result2 = mysqli_query($conn, $query2);
+        $rec2 = mysqli_fetch_array($result2);
         $conval=$rec2['vou_no'];
         $vouno=$paytype.$conval;
 
@@ -44,12 +44,12 @@
 	    }
         
         #Begin Transaction
-        mysql_query("BEGIN");
+        mysqli_query($conn, "BEGIN");
         #Insert AccRef
 
         $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate',
                 'GJV','$bankname','$paymode','$refno','$refdate','$narration',0,0);";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
        
 //echo  $querya2;
         $inscnt = 0;
@@ -73,7 +73,7 @@
             #Insert AccTrail
 
                $querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$vouno', '$voudate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode')";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 //echo  $querya3;
 
             #Insert AccTran
@@ -81,7 +81,7 @@
 
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$paytype');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 //echo  $querya4;	   
             if(resulta4){
@@ -95,13 +95,15 @@
         if($resulta2 && ($inscnt == $rowcnt))
 
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
             
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             
             echo '({"success":"false","vouno":"'.$vouno.'"})';
         }

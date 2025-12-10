@@ -142,29 +142,29 @@ $DNdate    = $_REQUEST['DNdate'];
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 $sno = 1;
 if ($gstFlaggrn === "Add") {
 
 	 $query1 = "select IFNULL(max(rech_seqno),0)+1 as rech_seqno from trnfu_receipt_header";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $rech_seqno=$rec1['rech_seqno'];
 
 
 	 $query2 = "select count(*) as nos from trnfu_receipt_header where rech_fincode = '$finid' and rech_compcode='$compcode' and rech_no = '$rech_no'";
-	 $result2= mysql_query($query2);
-	 $rec2 = mysql_fetch_array($result2);
+	 $result2= mysqli_query($conn, $query2);
+	 $rec2 = mysqli_fetch_array($result2);
 	 $nos=$rec2['nos'];
 
 #Get Max AccRef Seqno from acc_ref
 $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-$result1 = mysql_query($query1);
-$rec1 = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1 = mysqli_fetch_array($result1);
 $ginaccrefseq=$rec1['con_value'];
 
-//		 mysql_query("BEGIN");
+//		 mysqli_query($conn, "BEGIN");
 
 
 
@@ -174,14 +174,14 @@ $ginaccrefseq=$rec1['con_value'];
 //echo $query2;
 //echo "<br>";
 
-	 $result2=mysql_query($query2);
+	 $result2=mysqli_query($conn, $query2);
 
 	$query3= "update trn_weight_card set wt_grn_process = 'Y' where wc_compcode = '$compcode' and wc_fincode = '$finid' and  wc_date = '$ticketdate' and wc_ticketno = $ticketno";
 
 //echo $query3;
 //echo "<br>";
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 
 
 }
@@ -190,7 +190,7 @@ else if ($gstFlaggrn === "Edit") {
 
 	$query2  ="call spfu_upd_receipt_header_new ('$rech_seqno', '$compcode', '$finid', '$rech_no', '$grndate','$supcode', '$qcentno','$ordseqno','$ticketno','$ticketdate', '$lorryno', '$payterms', '$areacode','$grnvalue','$cgstper','$cgstamt','$sgstper', '$sgstamt','$igstper', '$igstamt', '$handlingmt','$handlingcgst','$handlingsgst', '$handlingcgstamt', '$handlingsgstamt', '$tcsper', '$tcsamt', '$cessmt','$cessamt','$freight', '$cgstpm' ,'$sgstpm' ,'$igstpm' ,'$othrchrg', '$roundoff', '$grnamount','$roundneed', $purcode, 'Y',$ginaccrefseq,'$grndate', '$billno','$billdate','$grnamount','$geno','$gedate', '$usrcode', '$entrydate', '$dnpurcode','$grnstatus')";
 
-	 $result2=mysql_query($query2);
+	 $result2=mysqli_query($conn, $query2);
 
 //echo $query2;
 //echo "<br>";
@@ -198,38 +198,38 @@ else if ($gstFlaggrn === "Edit") {
 	$sno = 1;
 
 	$query3 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_clqty = itmt_clqty -  rect_grnqty ,itmt_clvalue = itmt_clvalue - rect_costvalue  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result3=mysql_query($query3);
+        $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 	$query4 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_avgrate = case when itmt_clvalue > 0 and itmt_clqty > 0 then itmt_clvalue / itmt_clqty else 0 end  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result4=mysql_query($query4);
+        $result4=mysqli_query($conn, $query4);
 
 //echo $query4;
 //echo "<br>";
 
 	$queryfu  = "delete from trnfu_receipt_trailer where rect_hdseqno= $rech_seqno;";
-        $resultfu = mysql_query($queryfu);
+        $resultfu = mysqli_query($conn, $queryfu);
 //echo $queryfu;
 //echo "<br>";
 	$queryac1  = "delete from acc_trail where  acctrail_accref_seqno =$ginaccrefseq";
-	$resultac1 = mysql_query($queryac1);   
+	$resultac1 = mysqli_query($conn, $queryac1);   
 
 //echo $queryac1;
 //echo "<br>";		 
 	$queryac2  = "delete from acc_tran  where  acctran_accref_seqno  =$ginaccrefseq";
-	$resultac2 = mysql_query($queryac2);   
+	$resultac2 = mysqli_query($conn, $queryac2);   
 
 //echo $queryac2;
 //echo "<br>";
 	$queryac3  = "delete from acc_ref  where  accref_seqno  =$ginaccrefseq";
-	$resultac3 = mysql_query($queryac3);  
+	$resultac3 = mysqli_query($conn, $queryac3);  
 
 //echo $queryac3;
 //echo "<br>";
         $queryac4 = "delete from acc_adjustments  where ref_docseqno ='$ginaccrefseq' and ref_compcode='$compcode' and ref_finid ='$finid'";
-        $resultac4 = mysql_query($queryac4);
+        $resultac4 = mysqli_query($conn, $queryac4);
 //echo $queryac4;
 //echo "<br>"; 
 
@@ -237,15 +237,15 @@ else if ($gstFlaggrn === "Edit") {
         {
 
 		$queryac5  = "delete from acc_trail where  acctrail_accref_seqno =$ginaccrefseqDN";
-		$resultac5 = mysql_query($queryac5);   
+		$resultac5 = mysqli_query($conn, $queryac5);   
 //echo $queryac5;
 //echo "<br>"; 			 
 		$queryac6  = "delete from acc_tran  where  acctran_accref_seqno  =$ginaccrefseqDN";
-		$resultac6 = mysql_query($queryac6);   
+		$resultac6 = mysqli_query($conn, $queryac6);   
 //echo $queryac6;
 //echo "<br>"; 
 		$queryac7  = "delete from acc_ref  where  accref_seqno  =$ginaccrefseqDN";
-		$resultac7 = mysql_query($queryac7);   
+		$resultac7 = mysqli_query($conn, $queryac7);   
 //echo $queryac7;
 //echo "<br>"; 
 
@@ -344,11 +344,11 @@ for ($i=0;$i<$rowcnt;$i++)
 //echo $query11;
 //echo "<br>";
 
-	 $result11 =mysql_query($query11);
+	 $result11 =mysqli_query($conn, $query11);
 	     
 
 	 $query12= "call spfu_upd_itemtrailer_avgrate ('$compcode','$finid','$itemcode','$grnqty','$costvalue',1)";
-     	$result12 =mysql_query($query12);
+     	$result12 =mysqli_query($conn, $query12);
 //echo $query12;
 //echo "<br>";
 
@@ -357,13 +357,13 @@ if ($ginaccrefseq > 0) {
 
 
     $query7 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$rech_no','$compcode','$finid','$grndate','$voutype', '','','$billno', '$billdate','$narration');";
-    $result7 = mysql_query($query7);
+    $result7 = mysqli_query($conn, $query7);
 
 //echo $query7;
 //echo "<br>";
 
    $query41 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-   $result41 = mysql_query($query41);
+   $result41 = mysqli_query($conn, $query41);
 
         $inscnt = 0;
         for($i=0;$i<$rowcntacc;$i++){
@@ -387,7 +387,7 @@ if ($ginaccrefseq > 0) {
                if ($ledtype != 'G')
                {
                $query5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$payterms','0')";
-               $result5 = mysql_query($query5);
+               $result5 = mysqli_query($conn, $query5);
 
 //echo $query5;
 //echo "<br>";
@@ -398,7 +398,7 @@ if ($ginaccrefseq > 0) {
             #Insert AccTran
 
             $query6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $result6 = mysql_query($query6);
+            $result6 = mysqli_query($conn, $query6);
 //echo $query6;
 //echo "<br>";
 
@@ -414,15 +414,15 @@ if ($debitnoteamount > 0)
        if ($gstFlaggrn === "Add")
        {
 	$DNquery1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-	$DNresult1 = mysql_query($DNquery1);
-	$rec1 = mysql_fetch_array($DNresult1);
+	$DNresult1 = mysqli_query($conn, $DNquery1);
+	$rec1 = mysqli_fetch_array($DNresult1);
 	$ginaccrefseqDN=$rec1['con_value'];
 
 
 	#Get Voucher Number
 	$query2 = "select ifnull(max(dbcr_no),0) + 1 as dbcr_no from acc_dbcrnote_header where dbcr_type = '$dntype' and dbcr_finid = '$finid' and dbcr_comp_code = '$compcode';";
-	$result2 = mysql_query($query2);
-	$rec2 = mysql_fetch_array($result2);
+	$result2 = mysqli_query($conn, $query2);
+	$rec2 = mysqli_fetch_array($result2);
 	$conval = $rec2['dbcr_no'];
 
 
@@ -451,21 +451,21 @@ if ($debitnoteamount > 0)
 	#Get Max DBCR Seqno from acc_dbcrnote_header
 
 	$query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
-	$result3 = mysql_query($query3);
-	$rec3 = mysql_fetch_array($result3);
+	$result3 = mysqli_query($conn, $query3);
+	$rec3 = mysqli_fetch_array($result3);
 	$gindbcrseq = $rec3['con_value'];
         }    
 
 
 
         $DNquery1 = "call acc_sp_trn_insacc_ref('$ginaccrefseqDN','$vouno','$compcode','$finid','$DNdate','$dntype', '','','$billno', '$billdate','$dnremarks');";
-        $DNresult1 = mysql_query($DNquery1);
+        $DNresult1 = mysqli_query($conn, $DNquery1);
 
 //echo $DNquery1;
 //echo "<br>";
 
    $DNquery2  = "insert into acc_voucher_logs values ($ginaccrefseqDN,$reccount,'$today',$usercode,'$reason')";
-   $DNresult2 = mysql_query($DNquery2);
+   $DNresult2 = mysqli_query($conn, $DNquery2);
 
         $inscnt = 0;
         for($i=0;$i<$rowcntaccDN;$i++){
@@ -489,7 +489,7 @@ if ($debitnoteamount > 0)
                if ($ledtype != 'G')
                {
                $DNquery5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseqDN','$slno','$billno', '$billdate', '$debitnoteamount' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$payterms','0')";
-               $DNresult5 = mysql_query($DNquery5);
+               $DNresult5 = mysqli_query($conn, $DNquery5);
 
 //echo $DNquery5;
 //echo "<br>";
@@ -500,7 +500,7 @@ if ($debitnoteamount > 0)
             #Insert AccTran
 
             $DNquery6 = "call acc_sp_trn_insacc_tran('$ginaccrefseqDN','$slno','$ledseq','$dbamt','$cramt','$totamt','$dntype','');";
-            $DNresult6 = mysql_query($DNquery6);
+            $DNresult6 = mysqli_query($conn, $DNquery6);
 
 //echo $DNquery6;
 //echo "<br>";
@@ -518,7 +518,7 @@ if ($debitnoteamount > 0)
        {
 
     $DNquery7 = "call acc_sp_insdbcrnoteheader('$gindbcrseq','$compcode','$finid','$dntype','$conval','$vouno','$DNdate','$supcode','$supcode','$purcode', '$debitnoteamount','$dnremarks','S' , '$output', '$ginaccrefseqDN','$hsncode','$usercode','$dnqty','Fuel','0','','$today','$today');";
-    $DNresult7 = mysql_query($DNquery7);
+    $DNresult7 = mysqli_query($conn, $DNquery7);
    
 //echo $DNquery7;
 //echo "<br>";
@@ -529,7 +529,7 @@ if ($debitnoteamount > 0)
 
 $DNquery8 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$billno','$billdate','$dntaxable' ,'$debitnoteamount','$dnigst', '$dncgst','$dnsgst','$dnigstper','$dncgstper','$dnsgstper','$igstledcode','$cgstledcode','$sgstledcode',0,0,0,0,0,'0',0,0,'$dntaxable')";
 
-$DNresult8 = mysql_query($DNquery8);
+$DNresult8 = mysqli_query($conn, $DNquery8);
 
 
 
@@ -539,14 +539,14 @@ $DNresult8 = mysql_query($DNquery8);
 
 
         $DNquery7 = "update acc_dbcrnote_header set dbcr_date = '$DNdate' , dbcr_partycode = '$supcode',dbcr_partyledcode = '$supcode',dbcr_ledcode = '$purcode', dbcr_value = '$debitnoteamount', dbcr_narration =  '$dnremarks' , dbcr_item = '$itemname'  ,dbcr_modifydate = '$today'   where dbcr_vouno = '$vouno'  and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and  dbcr_seqno = '$gindbcrseq' ";
-        $DNresult7 = mysql_query($DNquery7);
+        $DNresult7 = mysqli_query($conn, $DNquery7);
 
 //echo $DNquery7;
 //echo "<br>";
 
         $DNquery8 = "update acc_dbcrnote_trailer set dbcrt_inv_no = '$billno' , dbcrt_inv_date = '$billdate'  , dbcrt_grossvalue = '$dntaxable',dbcrt_value ='$debitnoteamount',dbcrt_igstvalue = '$dnigst' ,dbcrt_cgstvalue = '$dncgst' ,dbcrt_sgstvalue = '$dnsgst', dbcrt_igstper = '$dnigstper', dbcrt_cgstper = '$dncgstper', dbcrt_sgstper = '$dnsgstper', dbcrt_igstledcode ='$igstledcode' , dbcrt_cgstledcode =  '$cgstledcode' , dbcrt_sgstledcode =  '$sgstledcode' , dbcrt_taxable = '$dntaxable'   where dbcrt_seqno = '$gindbcrseq'";
 
-       $DNresult8 = mysql_query($DNquery8);
+       $DNresult8 = mysqli_query($conn, $DNquery8);
 
 
 //echo $DNquery8;
@@ -567,21 +567,21 @@ $DNresult8 = mysql_query($DNquery8);
 
 
        $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-       $result = mysql_query($query);
-       $rec = mysql_fetch_array($result);
+       $result = mysqli_query($conn, $query);
+       $rec = mysqli_fetch_array($result);
        $ginrefslno = $rec['refslno'];
 
         $ginrefslno = $ginrefslno + 1;
 
 	$querydate = "select datediff('$grndate','$billdate') as daysin";
-	$resultdate = mysql_query($querydate);
-	$recdatenew = mysql_fetch_array($resultdate);
+	$resultdate = mysqli_query($conn, $querydate);
+	$recdatenew = mysqli_fetch_array($resultdate);
 	$adjdays=$recdatenew['daysin'];
 
 
-$DNquery9 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseqDN','$vouno','$grndate', '$ginaccrefseq', '$rech_no','$billno','$billdate','$debitnoteamount',$adjdays,'DN',curdate(),$payterms,$supcode,'$dntype' );";
+$DNquery9 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid','$ginaccrefseqDN','$vouno','$grndate', '$ginaccrefseq', '$rech_no','$billno','$billdate','$debitnoteamount',$adjdays,'DN',curdate(),$payterms,$supcode,'$dntype' ,'C');";
 
-$DNresult9 = mysql_query($DNquery9);
+$DNresult9 = mysqli_query($conn, $DNquery9);
 
 //echo $DNquery9;
 //echo "<br>";
@@ -589,10 +589,10 @@ $DNresult9 = mysql_query($DNquery9);
 
 
 $query11 = "update acc_ref  set accref_link_seqno = $ginaccrefseqDN where  accref_comp_code = $compcode and accref_finid = $finid and  accref_seqno = $ginaccrefseq";
-$result11 = mysql_query($query11);
+$result11 = mysqli_query($conn, $query11);
 
 $query12 = "update acc_ref  set accref_link_seqno = $ginaccrefseq where  accref_comp_code = $compcode and accref_finid = $finid and  accref_seqno = $ginaccrefseqDN";
-$result12 = mysql_query($query12);
+$result12 = mysqli_query($conn, $query12);
 
 
 
@@ -606,7 +606,7 @@ else
 
 //echo $DNquery10;
 //echo "<br>";
-$DNresult10=mysql_query($DNquery10);
+$DNresult10=mysqli_query($conn, $DNquery10);
 
 
 
@@ -621,7 +621,7 @@ $rounding = 0;
 //echo $QCquery1;
 //echo "<br>";
 
-$QCresult1 = mysql_query($QCquery1);
+$QCresult1 = mysqli_query($conn, $QCquery1);
 }   
 
 
@@ -642,13 +642,15 @@ if ($gstFlaggrn === "Add") {
 
 		if( $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $result11  && $result12)
 		{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
 		else
 		{
-		    mysql_query("ROLLBACK");            
+		    mysqli_rollback($conn);
+
+            
 		    echo '({"success":"false","GRNNo":"' . $vno . '"})';
 		} 
 	}
@@ -659,13 +661,15 @@ if ($gstFlaggrn === "Add") {
 
 		if( $result1 && $result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1  && $result11  && $result12) 
 		{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
 		else
 		{
-		    mysql_query("ROLLBACK");            
+		    mysqli_rollback($conn);
+
+            
 		    echo '({"success":"false","GRNNo":"' . $vno . '"})';
 		} 
 	}
@@ -686,13 +690,15 @@ if ($debitnoteamount > 0)
 
 		if( $result4 && $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12)
 		{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
 		else
 		{
-		    mysql_query("ROLLBACK");            
+		    mysqli_rollback($conn);
+
+            
 		    echo '({"success":"false","GRNNo":"' . $vno . '"})';
 		} 
 	}
@@ -704,13 +710,15 @@ if ($debitnoteamount > 0)
 
 		if($result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12)
 		{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
 		else
 		{
-		    mysql_query("ROLLBACK");            
+		    mysqli_rollback($conn);
+
+            
 		    echo '({"success":"false","GRNNo":"' . $vno . '"})';
 		} 
 	}

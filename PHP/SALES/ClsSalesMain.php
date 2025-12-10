@@ -4,12 +4,12 @@
 
 $grpcode = $_POST['grpcode'];
 
-echo $task;
+
 
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         switch($task){
 		case "loadmillname":
 		loadMillList();
@@ -72,250 +72,258 @@ echo $task;
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
   	
  function loadMillList()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select company_code,company_name from mas_company");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		global $conn;  
+        $sql = "select company_code,company_name from mas_company";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
     function getmillname()
     {
-        mysql_query("SET NAMES utf8");
+		global $conn;  
      	$mname = $_POST['millcode'];
-        $r=mysql_query("select company_pass from mas_company where company_code = $mname");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select company_pass from mas_company where company_code = $mname";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
     function loadFinYear()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from mas_finyear order by fin_code desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "select * from mas_finyear order by fin_code desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
    
  function getVarietyList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select var_groupcode,var_desc from masprd_variety order by var_desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select var_groupcode,var_desc from masprd_variety order by var_desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  function getMainVarietyList()
     {
-        mysql_query("SET NAMES utf8");
+		global $conn;  
  
-        $r=mysql_query("select vargrp_type_code, vargrp_type_name from masprd_type order by vargrp_type_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select vargrp_type_code, vargrp_type_name from masprd_type order by vargrp_type_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getProductType()
     {
-        mysql_query("SET NAMES utf8");
+		global $conn;  
       	$ptypecode = $_POST['ptypecode'];
-        $r=mysql_query("select vargrp_type_code, vargrp_type_name from masprd_type where vargrp_type_code = $ptypecode");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select vargrp_type_code, vargrp_type_name from masprd_type where vargrp_type_code = $ptypecode";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  function getSizeList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select var_code,var_name from massal_variety order by var_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select var_code,var_name from massal_variety order by var_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
  function getSizeListOfVariety()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
      	$grpcode = $_POST['grpcode'];
-        $r=mysql_query("select b.var_code as var_code,b.var_name as var_name,b.var_grpcode as var_grpcode ,var_gsm ,var_bf ,var_desc from masprd_variety a,massal_variety b where b.var_grpcode = a.var_groupcode and var_grpcode =$grpcode order by var_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select b.var_code as var_code,b.var_name as var_name,b.var_grpcode as var_grpcode ,var_gsm ,var_bf ,var_desc from masprd_variety a,massal_variety b where b.var_grpcode = a.var_groupcode and var_grpcode =$grpcode order by var_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
  function getAllCustomerList()
     {
-        mysql_query("SET NAMES utf8");
-//        $r=mysql_query("select cust_code,cust_ref from massal_customer");
-        $r=mysql_query("call spsal_sel_customer()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+//        $sql = "select cust_code,cust_ref from massal_customer");
+        $sql = "call spsal_sel_customer()";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getAgentList()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("call spsal_sel_agent()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "call spsal_sel_agent()";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
     function getAgentName()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
      	$custcode = $_POST['custcode'];
-        $r=mysql_query("select b.cust_ref as cust_ref ,b.cust_code as cust_code from massal_customer a , vew_sal_agent b where a.cust_agent = b.cust_code and a.cust_code = '$custcode'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select b.cust_ref as cust_ref ,b.cust_code as cust_code from massal_customer a , vew_sal_agent b where a.cust_agent = b.cust_code and a.cust_code = '$custcode'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
     function getRepName()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
      	$custcode = $_POST['custcode'];
-        $r=mysql_query("select * from massal_customer a, massal_repr b , massal_tax c  where   a.cust_taxtag = c.tax_code and a.cust_repr = b.repr_code and a.cust_code =  '$custcode'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer a, massal_repr b , massal_tax c  where   a.cust_taxtag = c.tax_code and a.cust_repr = b.repr_code and a.cust_code =  '$custcode'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
     function getTaxDetails()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("call spsal_sel_tax()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "call spsal_sel_tax()";
+        $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
     function getTransportDetails()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("call spsal_trans_master()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "call spsal_trans_master()";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
     function getBankDetails()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("call spsal_sel_bank()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;  
+        $sql = "call spsal_sel_bank()";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getSizecodeDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
    	$sizecode = $_POST['sizecode'];
-        $r=mysql_query("select var_size1,var_size2,var_desc,var_gsm,var_unit,var_tariffno,var_reams,var_sheets,var_inchcm from massal_variety a,masprd_variety b where a.var_grpcode = b.var_groupcode and a.var_code = $sizecode");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select var_size1,var_size2,var_desc,var_gsm,var_unit,var_tariffno,var_reams,var_sheets,var_inchcm from massal_variety a,masprd_variety b where a.var_grpcode = b.var_groupcode and a.var_code = $sizecode";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getSearchPartylist()
     {
-        mysql_query("SET NAMES utf8");
-//        $r=mysql_query("select hsn_code,hsn_sno from mas_hsncode order by hsn_code");
+        global $conn;  
+//        $sql = "select hsn_code,hsn_sno from mas_hsncode order by hsn_code");
 
 
         $party     = $_POST['party'];
@@ -324,33 +332,31 @@ echo $task;
         $party = trim(str_replace(".", "", $party)); 
   
 
-        $qry = "select * from massal_customer where cust_type != 'Z' and   replace(replace(cust_ref,' ','')  ,'.','')  like '%$party%' order by cust_ref";
+        $sql = "select * from massal_customer where cust_type != 'Z' and   replace(replace(cust_ref,' ','')  ,'.','')  like '%$party%' order by cust_ref";
 
+       $r = mysqli_query($conn, $sql);
+ 
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getAreaList()
     {
-        mysql_query("SET NAMES utf8");
-        $qry = "select * from massal_areaRate_group order by rate_areaname";
+        global $conn;  
+        $sql = "select * from massal_areaRate_group order by rate_areaname";
 
+    $r = mysqli_query($conn, $sql);
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 ?>

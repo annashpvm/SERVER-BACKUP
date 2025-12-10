@@ -122,20 +122,20 @@ $qcentryno      = (int)$_REQUEST['qcentryno'];
 
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
 
 	#Get Max AccRef Seqno from acc_ref
 	$query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-	$result1 = mysql_query($query1);
-	$rec1 = mysql_fetch_array($result1);
+	$result1 = mysqli_query($conn, $query1);
+	$rec1 = mysqli_fetch_array($result1);
 	$ginaccrefseq = $rec1['con_value'];
 
 
         $query2 = "update tmpacc_dbcrnote_header set dbcr_accseqno = '$ginaccrefseq' where dbcr_vouno = '$vouno'  and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 
 
 #Insert AccRef
@@ -146,12 +146,12 @@ if ($ginaccrefseq > 0) {
 
 
     $query3 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate','$voutype', '$bankname','$paymode','$invno', '$invdate','$narration');";
-    $result3 = mysql_query($query3);
+    $result3 = mysqli_query($conn, $query3);
 
 //echo $querya2;
 
    $query4 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'')";
-   $result4 = mysql_query($query4);
+   $result4 = mysqli_query($conn, $query4);
 
 
 
@@ -178,7 +178,7 @@ if ($ginaccrefseq > 0) {
                if ($ledtype != 'G')
                {
                $query5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$vouno', '$voudate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-               $result5 = mysql_query($query5);
+               $result5 = mysqli_query($conn, $query5);
 //echo  $querya3;
 
                }  
@@ -187,7 +187,7 @@ if ($ginaccrefseq > 0) {
             #Insert AccTran
 
             $query6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype');";
-            $result6 = mysql_query($query6);
+            $result6 = mysqli_query($conn, $query6);
 
 
 	  }
@@ -198,10 +198,12 @@ if ($ginaccrefseq > 0) {
 
 	if ( $result2 && $result3  && $result6) 
 	{
-	  mysql_query("COMMIT");
+	  mysqli_begin_transaction($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","vouno":"' . $vouno . '"})';
 	}
 

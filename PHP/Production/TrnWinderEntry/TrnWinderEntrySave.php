@@ -18,7 +18,7 @@ $rrollwt        = $_POST['rrollwt'];
 if ($savetype === "Edit")
 {
         $query1   = "delete from trn_dayprod_rewinder where r_w_date = '$rwdate' and  r_fincode = '$rfincode'  and  r_compcode = '$rcompcode' and r_entryno = '$rentryno'  and r_process = 'N'";
-	$result=mysql_query($query1);            
+	$result=mysqli_query($conn, $query1);            
 
 }
 
@@ -55,15 +55,15 @@ for ($i=0;$i< $rowcnt;$i++)
 	'$roperator','$rollno','$qlycode','$mcshift','$rrollwt','$windno','$set','$deckle','$size','$joints','$dia','0','$sono','$custcode','$reelno',
 	'$reelwt','$process','0','0','0','$qlycode','$proddate','0','$sizecode','0','0')";
            
-	    $result=mysql_query($query1);            
+	    $result=mysqli_query($conn, $query1);            
 
 		if ( $reelwt > 0)
 		{
 			$query2   = "update trn_dayprod_roll_variety_details set  prdv_finwt = prdv_finwt + ($reelwt/1000)   where  prdv_seqno = '$seqno' and prdv_fincode = '$rfincode' and prdv_rollno = '$rollno' and prdv_varty = $qlycode";
-			$result2 =mysql_query($query2);            
+			$result2 =mysqli_query($conn, $query2);            
 
 			$query3   = "update trn_dayprod_roll_details set prd_roll_status = 'P' and prd_finprod = prd_finprod + ($reelwt/1000)  where  prd_seqno = '$seqno' and prd_fincode = '$rfincode' and prd_compcode = '$rcompcode' and prd_rollno = '$rollno'";
-			$result3 =mysql_query($query3);            
+			$result3 =mysqli_query($conn, $query3);            
 		}  
        
             }  
@@ -79,13 +79,15 @@ for ($i=0;$i< $rowcnt;$i++)
 
 if ($savetype == "Add") {
 	if ($result )  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $rentryno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $rentryno . '"})';
 
 	}
@@ -93,13 +95,15 @@ if ($savetype == "Add") {
 else
  {
 	if ($result) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $rentryno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $rentryno . '"})';
 
 	}

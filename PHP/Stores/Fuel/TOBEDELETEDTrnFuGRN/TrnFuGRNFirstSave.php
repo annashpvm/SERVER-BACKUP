@@ -64,24 +64,24 @@ $roundoffNeed = $_REQUEST['roundoffNeed'];
 
 $payterms= (int)$_REQUEST['payterms'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 $sno = 1;
 if ($gstFlaggrn === "Add") {
 
 	 $query1 = "select IFNULL(max(rech_seqno),0)+1 as rech_seqno from trnfu_receipt_header";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $rech_seqno=$rec1['rech_seqno'];
 
 
 	 $query2 = "select count(*) as nos from trnfu_receipt_header where rech_fincode = '$finid' and rech_compcode='$compcode' and rech_no = '$rech_no'";
-	 $result2= mysql_query($query2);
-	 $rec2 = mysql_fetch_array($result2);
+	 $result2= mysqli_query($conn, $query2);
+	 $rec2 = mysqli_fetch_array($result2);
 	 $nos=$rec2['nos'];
 
 
-	 mysql_query("BEGIN");
+	 mysqli_query($conn, "BEGIN");
 
 	$query2  ="call spfu_ins_receipt_header ('$rech_seqno','$compcode','$finid','$rech_no','$grndate','$supcode',
 	'$ordseqno','$payterms','$areacode','$grnvalue','$billno','$billdate','$billvalue','$geno','$gedate','$ticketno',
@@ -93,14 +93,14 @@ if ($gstFlaggrn === "Add") {
 //echo $query2;
 //echo "<br>";
 
-	 $result2=mysql_query($query2);
+	 $result2=mysqli_query($conn, $query2);
 
 	$query3= "update trn_weight_card set wt_grn_process = 'Y' where wc_compcode = '$compcode' and wc_fincode = '$finid' and  wc_date = '$ticketdate' and wc_ticketno = $ticketno";
 
 //echo $query3;
 //echo "<br>";
 
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 
 
 }
@@ -110,22 +110,22 @@ else if ($gstFlaggrn === "Edit") {
 	  $query2= "call spfu_upd_receipt_header_first ('$rech_seqno','$grndate','$payterms','$areacode','$grnvalue',$purcode,'$cgstper','$cgstamt','$sgstper', '$sgstamt','$igstper','$igstamt','$handlingmt','$handlingcgst', '$handlingsgst', '$handlingcgstamt', '$handlingsgstamt', '$tcsper', '$tcsamt', '$cessmt','$cessamt','$freight','$othrchrg', '$roundoff', '$grnamount', '$billno','$billdate','$billvalue','$geno','$gedate', '$usrcode','$roundoffNeed')";
 //echo $query2;
 //echo "<br>";
-		$result2=mysql_query($query2);
+		$result2=mysqli_query($conn, $query2);
 
 	$sno = 1;
 
 	$query3 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_clqty = itmt_clqty -  rect_grnqty ,itmt_clvalue = itmt_clvalue - rect_itemvalue  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result3=mysql_query($query3);
+        $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 	$query4 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_avgrate = case when itmt_clvalue > 0 and itmt_clqty > 0 then itmt_clvalue / itmt_clqty else 0 end  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result4=mysql_query($query4);
+        $result4=mysqli_query($conn, $query4);
 
 
 	$query5 = "delete from trnfu_receipt_trailer where rect_hdseqno= $rech_seqno;";
-        $result3=mysql_query($query5);
+        $result3=mysqli_query($conn, $query5);
 
 //echo $query3;
 //echo "<br>";
@@ -152,11 +152,11 @@ for ($i=0;$i<$rowcnt;$i++)
 	'$itemrate','$grnqty','$itemvalue')";
 //echo $query3;
 //echo "<br>";
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 	     
 
 	 $query4= "call spfu_upd_itemtrailer_avgrate ('$compcode','$finid','$itemcode','$grnqty','$costrate',1)";
-     	$result4=mysql_query($query4);
+     	$result4=mysqli_query($conn, $query4);
 //echo $query4;
 //echo "<br>";
 
@@ -175,7 +175,7 @@ for ($i=0;$i<$rowcnt;$i++)
 if ($gstFlaggrn === "Add") {    
 	if($result2 && $result3 && $nos == 0 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
@@ -184,21 +184,25 @@ if ($gstFlaggrn === "Add") {
 	{
             if ($cnt == 1)
                 $rech_no = 0;
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 }
 if ($gstFlaggrn === "Edit") {   
 	if( $result2 && $result3 )
 	{
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","GRNNo":"'. $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	} 
 } 
@@ -208,20 +212,24 @@ if ($gstFlaggrn === "Confirm") {
 	
 		$cfmacc = mysql_query("Update trnfu_receipt_header Set rech_acctflag='Y' Where rech_fincode = '$finid' and rech_compcode='$compcode' and rech_seqno = '$rech_seqno' ");
 		if ($cfmacc) {
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","GRNNo":"'. $rech_no . '"})';
 		}
 		
 		else
 		{
-	    		mysql_query("ROLLBACK");            
+	    		mysqli_rollback($conn);
+
+            
 	    		echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 		} 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	} 
 } 

@@ -39,17 +39,17 @@
 
          $today = date("Y-m-d H:i:s"); 
 
-	mysql_query("BEGIN");
+	mysqli_query($conn, "BEGIN");
         if ($gstFlag === "Add") {
 		 $query1 = "select ifnull(max(qc_fuel_entryno),0)+1 as entryno from trn_qc_fuel_inspection where qc_fuel_fincode = '$finid' and qc_fuel_compcode ='$compcode'";
-		 $result1= mysql_query($query1);
-		 $rec2 = mysql_fetch_array($result1);
+		 $result1= mysqli_query($conn, $query1);
+		 $rec2 = mysqli_fetch_array($result1);
 		 $fuelentryno=$rec2['entryno'];
 
                  $query1 = "insert into trn_qc_fuel_inspection (qc_fuel_compcode,qc_fuel_fincode,qc_fuel_entryno, qc_fuel_entrydate ,qc_fuel_ticketdate,qc_fuel_supcode,qc_fuel_area,qc_fuel_truck,qc_fuel_ticketno,qc_fuel_itemcode,
 qc_fuel_ticketwt,qc_fuel_tot_ded_qty,qc_fuel_acceptqty,qc_fuel_billqty,qc_fuel_millqty,qc_fuel_vessel_name,qc_fuel_itemrate,
 qc_fuel_otherdedqty ,qc_fuel_degrade_item, qc_fuel_degrade_qty, qc_fuel_degrade_rate,qc_fuel_dataentrydate) values ('$compcode','$finid','$fuelentryno', '$entrydate' ,'$ticketdate','$supcode','$areacode', '$truckno', '$ticketno' , '$itemcode','$weight', '$totaldedqty','$acceptedqty', '$partyqty','$millqty', '$vessel', '$itemrate','$otherdedqty','$degradeitemcode','$degradeqty','$degradeitemrate','$today')";
-	 $result1= mysql_query($query1);
+	 $result1= mysqli_query($conn, $query1);
 
 //echo $query1;
 
@@ -58,7 +58,7 @@ qc_fuel_otherdedqty ,qc_fuel_degrade_item, qc_fuel_degrade_qty, qc_fuel_degrade_
 
 //echo $query3;
 	
-                $result3=mysql_query($query3);
+                $result3=mysqli_query($conn, $query3);
 
         }
         else
@@ -68,7 +68,7 @@ qc_fuel_otherdedqty ,qc_fuel_degrade_item, qc_fuel_degrade_qty, qc_fuel_degrade_
 qc_fuel_tot_ded_qty = $totaldedqty , qc_fuel_ticketwt = $weight , qc_fuel_acceptqty ='$acceptedqty' , qc_fuel_vessel_name = '$vessel', qc_fuel_itemrate = '$itemrate' , qc_fuel_supcode = '$supcode' , qc_fuel_otherdedqty = '$otherdedqty',  qc_fuel_degrade_item = '$degradeitemcode' , qc_fuel_degrade_qty = '$degradeqty', qc_fuel_degrade_rate = '$degradeitemrate', qc_fuel_modifydate = '$today' where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno";
 
 //echo $query1;
-	 $result1= mysql_query($query1);
+	 $result1= mysqli_query($conn, $query1);
 
 
         }   
@@ -93,7 +93,7 @@ qc_fuel_tot_ded_qty = $totaldedqty , qc_fuel_ticketwt = $weight , qc_fuel_accept
 qc_fuel_mois_arb_fixed = $fixed , qc_fuel_mois_arb_actual = $actual , qc_fuel_mois_arb_diff = $diff, qc_fuel_mois_arb_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
           
 //     echo $query2;
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
                 }   
 
 
@@ -102,7 +102,7 @@ qc_fuel_mois_arb_fixed = $fixed , qc_fuel_mois_arb_actual = $actual , qc_fuel_mo
                 {
                 $query2 = "update trn_qc_fuel_inspection set qc_fuel_mois_adb_debit_yn = '$qcchk',
 qc_fuel_mois_adb_fixed = $fixed , qc_fuel_mois_adb_actual = $actual , qc_fuel_mois_adb_diff = $diff, qc_fuel_mois_adb_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 
   //   echo $query2;
 
@@ -115,7 +115,7 @@ qc_fuel_mois_adb_fixed = $fixed , qc_fuel_mois_adb_actual = $actual , qc_fuel_mo
                 {
                 $query2 = "update trn_qc_fuel_inspection set qc_fuel_ash_debit_yn = '$qcchk',
 qc_fuel_ash_fixed = $fixed , qc_fuel_ash_actual = $actual , qc_fuel_ash_diff = $diff, qc_fuel_ash_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 
  //    echo $query2;
                 }
@@ -125,7 +125,7 @@ qc_fuel_ash_fixed = $fixed , qc_fuel_ash_actual = $actual , qc_fuel_ash_diff = $
                 {
                 $query2 = "update trn_qc_fuel_inspection set  qc_fuel_volatile_debit_yn = '$qcchk',
 qc_fuel_volatile_fixed = $fixed , qc_fuel_volatile_actual = $actual , qc_fuel_volatile_diff = $diff, qc_fuel_volatile_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
    //  echo $query2;
                 }   
 
@@ -135,14 +135,14 @@ qc_fuel_volatile_fixed = $fixed , qc_fuel_volatile_actual = $actual , qc_fuel_vo
                 $query2 = "update trn_qc_fuel_inspection set  qc_fuel_fixedcarbon_debit_yn = '$qcchk',
 qc_fuel_fixedcarbon_fixed = $fixed , qc_fuel_fixedcarbon_actual = $actual , qc_fuel_fixedcarbon_diff = $diff, qc_fuel_fixedcarbon_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
 //  echo $query2;
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
                 }   
 
                 if ($parameter == "FINES")
                 {
                 $query2 = "update trn_qc_fuel_inspection set  qc_fuel_fines_debit_yn = '$qcchk',
 qc_fuel_fines_fixed = $fixed , qc_fuel_fines_actual = $actual , qc_fuel_fines_diff = $diff, qc_fuel_fines_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 
   //echo $query2;
                 }   
@@ -153,7 +153,7 @@ qc_fuel_fines_fixed = $fixed , qc_fuel_fines_actual = $actual , qc_fuel_fines_di
                 $query2 = "update trn_qc_fuel_inspection set  qc_fuel_sand_debit_yn = '$qcchk',
 qc_fuel_sand_fixed = $fixed , qc_fuel_sand_actual = $actual , qc_fuel_sand_diff = $diff, qc_fuel_sand_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
     // echo $query2;
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
                 }  
 
 
@@ -161,7 +161,7 @@ qc_fuel_sand_fixed = $fixed , qc_fuel_sand_actual = $actual , qc_fuel_sand_diff 
                 {
                 $query2 = "update trn_qc_fuel_inspection set  qc_fuel_iron_debit_yn = '$qcchk',
 qc_fuel_iron_fixed = $fixed , qc_fuel_iron_actual = $actual , qc_fuel_iron_diff = $diff, qc_fuel_iron_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 //     echo $query2;
                 }  
 
@@ -173,7 +173,7 @@ qc_fuel_iron_fixed = $fixed , qc_fuel_iron_actual = $actual , qc_fuel_iron_diff 
 qc_fuel_gcv_adb_fixed = $fixed , qc_fuel_gcv_adb_actual = $actual , qc_fuel_gcv_adb_diff = $diff, qc_fuel_gcv_adb_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
 
   //   echo $query2;
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
                 }  
 
 
@@ -182,7 +182,7 @@ qc_fuel_gcv_adb_fixed = $fixed , qc_fuel_gcv_adb_actual = $actual , qc_fuel_gcv_
                 {
                 $query2 = "update trn_qc_fuel_inspection set  qc_fuel_gcv_arb_debit_yn = '$qcchk',
 qc_fuel_gcv_arb_fixed = $fixed , qc_fuel_gcv_arb_actual = $actual , qc_fuel_gcv_arb_diff = $diff, qc_fuel_gcv_arb_qty = $qty where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' and  qc_fuel_entryno = $fuelentryno ";
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 //     echo $query2;
                 }  
 
@@ -192,14 +192,16 @@ qc_fuel_gcv_arb_fixed = $fixed , qc_fuel_gcv_arb_actual = $actual , qc_fuel_gcv_
 }
 if($result1 && $result2 )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","EntryNo":"' . $fuelentryno . '"})';
 
 	    
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","EntryNo":"' . $fuelentryno . '"})';
 }
  

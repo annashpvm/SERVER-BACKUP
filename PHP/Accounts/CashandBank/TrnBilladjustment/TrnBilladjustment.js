@@ -91,18 +91,18 @@ function InsertUnAdjustedBillDetail(){
             url: '/SHVPM/Accounts/clsAccounts.php',
             params:
             {
-                task: "getunadjbilldet",
-                compcode: gstfincompcode,
+                task     : "getunadjbilldet",
+                compcode : gstfincompcode,
                 finid    : ginfinid,
-                ledcode: ledgercode,
-                voutype:gsttype
+                ledcode  : ledgercode,
+                voutype  : gsttype
             },
             callback: function(){
                 var RowCnt = UnAdjustedBillDetaildatastore.getCount();
-
-
                 for(var i=0;i<RowCnt;i++){
                     var finid=UnAdjustedBillDetaildatastore.getAt(i).get('accref_finid');
+
+         
                     gstfin =   gstfinyear;
                     flxAdjdocDetail.getStore().insert(
                         flxAdjdocDetail.getStore().getCount(),
@@ -113,13 +113,15 @@ function InsertUnAdjustedBillDetail(){
                             payterms: UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_crdays'),
                             dbcramt: Ext.util.Format.number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue'),"0.00"),
                             totamt: Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value')) -
-                                    Number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue')),
+                            Number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue')),
                             pendingamt: Ext.util.Format.number(Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value')) - Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_adj_value')),"0.00"),
                             voutype: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vou_type'),
                             Year:gstfin,
                             accrefseqno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_seqno'),
                             accrefvouno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vouno'),
-                            accrefvoudate: UnAdjustedBillDetaildatastore.getAt(i).get('accref_voudate')
+                            accrefvoudate: UnAdjustedBillDetaildatastore.getAt(i).get('accref_voudate'),
+                            adjmode : UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_amtmode')
+                            
                         })
                     );
                 }
@@ -284,7 +286,7 @@ function UpdateReceiptBillsAdjusted(){
           totalProperty: 'total',
           id: 'id'
         },['acctrail_inv_no','acctrail_inv_date','dbcr_invvalue','acctrail_inv_value','accref_finid',
-            'acctrail_adj_value','accref_vou_type','accref_seqno','accref_vouno','acctrail_crdays','accref_voudate' ])
+            'acctrail_adj_value','accref_vou_type','accref_seqno','accref_vouno','acctrail_crdays','accref_voudate','acctrail_amtmode' ])
     });
 /*    
     var cmbPartyname = new Ext.form.ComboBox({
@@ -498,14 +500,20 @@ var txtAccountName = new Ext.form.TextField({
                 VoucherDetaildatastore.removeAll();
 		txtAmount.setValue('');
 		txtNarration.setValue('');
+
 //                flxAdjdocDetail.getStore().removeAll();
+
+                var ledgertype = "D";
+                if (gsttype == "R")
+                    ledgertype = "C";
                 VoucherDetaildatastore.load({
                     url: '/SHVPM/Accounts/clsAccounts.php',
                     params:
                     {
                         task:"getacctraildet",
                         accrefseq:cmbVouno.getValue(),
-                        ledcode:ledgercode
+                        ledcode:ledgercode,
+                        ledtype : ledgertype 
                     },
                     callback: function(){
                        dtpVoudate.setValue(VoucherDetaildatastore.getAt(0).get('accref_voudate'));
@@ -517,7 +525,7 @@ var txtAccountName = new Ext.form.TextField({
                             txtAmount.setValue(Number(inval));
                         }else{
                             var valuevalidate=0;
-				valuevalidate=Ext.util.Format.number(inval-adjval,"0.00");
+				            valuevalidate=Ext.util.Format.number(inval-adjval,"0.00");
                             txtAmount.setValue(valuevalidate);
                         }
                         txtNarration.setValue(VoucherDetaildatastore.getAt(0).get('accref_narration'));
@@ -695,7 +703,7 @@ var txtAccountName = new Ext.form.TextField({
         columns: [         
             {header: "Vouno", dataIndex: 'accrefvouno',sortable:true,width:110,align:'left'},
             {header: "VouDate", dataIndex: 'accrefvoudate',sortable:true,width:110,align:'left'},
-            {header: "Inv No", dataIndex: 'invno',sortable:true,width:110,align:'left'},
+            {header: "Inv No", dataIndex: 'invno',sortable:true,width:150,align:'left'},
             {header: "Date", dataIndex: 'invdate',sortable:true,width:90,align:'left'},
             {header: "P.Terms", dataIndex: 'payterms', sortable: true, width: 80, align: 'center'},
             {header: "Inv Amt", dataIndex: 'invamt',sortable:true,width:90,align:'left' },
@@ -771,7 +779,8 @@ var txtAccountName = new Ext.form.TextField({
             {header: "Type", dataIndex: 'voutype',sortable:true,width:40,align:'left',hidden:true},
             {header: "Year", dataIndex: 'Year',sortable:true,width:40,align:'left',hidden:true},
             {header: "Accrefseqno", dataIndex: 'accrefseqno',sortable:true,width:40,align:'left',hidden:true},
-            {header: "Recpayamt", dataIndex: 'recpayamt',sortable:true,width:60,align:'left',hidden:true}
+            {header: "Recpayamt", dataIndex: 'recpayamt',sortable:true,width:60,align:'left',hidden:true},
+            {header: "adjmode", dataIndex: 'adjmode',sortable:true,width:60,align:'left',hidden:false}
         ]
     });
     
@@ -930,7 +939,7 @@ else
                                                         Ext.Msg.show({
                                                         title: 'Bill Adjustment',
                                                         icon: Ext.Msg.QUESTION,
-                                                        buttons: Ext.MessageBox.YESNO,
+                                                        buttons: Ext.MessageBox.OK,
                                                         msg: 'Bills adjusted successfully',
                                                         fn: function(btn){
                                                             if (btn == 'yes'){

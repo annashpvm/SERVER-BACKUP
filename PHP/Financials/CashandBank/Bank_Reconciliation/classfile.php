@@ -71,8 +71,8 @@ function checklogin() {
     $pass = $_POST['pass'];
     mysql_query('SET NAMES utf8');
     $r = mysql_query("select login_name,employee_roll_no,role_name from user_master where login_name='$user' and paswd='$pass'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -81,8 +81,8 @@ function checklogin() {
 
 function monthselect() {
     $r = mysql_query("select month_code,month_name from month_master");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -91,8 +91,8 @@ function monthselect() {
 
 function companyselect() {
     $r = mysql_query("SELECT comp_code,comp_name FROM kgdl.acc_company_master where comp_code in (1,4,8,11);");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -106,8 +106,8 @@ function ledgerselect() {
 where  led_grp_code in (20,22,23,24,25,90,21,91,92,93,94,95,96,102,182)
 and led_status='Y'
 and led_duplicate='N' and led_comp_code in ($company);");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -116,8 +116,8 @@ and led_duplicate='N' and led_comp_code in ($company);");
 
 function bankmasterselect() {
     $r = mysql_query("call acc_sp_bankrecon_bankmaster_select() ;");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -131,8 +131,8 @@ function ledgernameselect() {
 where  led_grp_code in (20,22,23,24,25,90,21,91,92,93,94,95,96,102,182)
 and led_status='Y'
 and led_duplicate='N' and led_code= '$legdercode');");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -143,8 +143,8 @@ function companynameselect() {
     $companycode = $_POST['companycode'];
     // $company = '1,4';
     $r = mysql_query("SELECT comp_code,comp_name FROM kgdl.acc_company_master where comp_code ='$companycode';");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -156,8 +156,8 @@ function banktraileroneselect() {
     // $company = '1,4';
     $r = mysql_query("SELECT seqno,header_seqno,company_code,comp_name FROM bank_master_trailerone tw
 left join kgdl.acc_company_master cm on cm.comp_code=tw.company_code where header_seqno='$headerseq';");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -169,8 +169,8 @@ function banktrailertwoselect() {
     // $company = '1,4';
     $r = mysql_query("SELECT seqno,header_seqno,ledger_code,led_name FROM bank_master_trailertwo tw
 left join kgdl.acc_ledger_master lm on lm.led_code=tw.ledger_code where header_seqno='$headerseq';");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -191,8 +191,8 @@ else
 {
  $r = mysql_query("call acc_sp_bankrecon_bankstatement_select_include('$bankcode','$pdate','$todate','$reconstatus','$clearedfrom','$clearedto'); ");
 }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -216,8 +216,8 @@ else
 {
  $r = mysql_query("call bankrecon_bankbook_select_include('$bankcode','$pdate','$todate','$reconstatus','$clearedfrom','$clearedto'); ");
 }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -230,8 +230,8 @@ function bankstatementsave() {
     $styear = $_POST['styear'];
 
     $r = mysql_query(" ");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -244,8 +244,8 @@ function bankbookselectsave() {
     $styear = $_POST['styear'];
 
     $r = mysql_query("");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -256,8 +256,8 @@ function partyselect() {
     $vouno = $_POST['vouno'];
 
     $r = mysql_query("call bank_recon_partyshow('$vouno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -267,8 +267,8 @@ function closingbalanceselect() {
     $bcode = $_POST['bcode'];
     $rdate = $_POST['rdate'];
     $r = mysql_query("select * from bankrecon_closingbalance where bank_code='$bcode' and recon_date='$rdate' ;");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);

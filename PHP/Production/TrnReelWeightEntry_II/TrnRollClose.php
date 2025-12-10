@@ -25,7 +25,7 @@ $cnt = 0;
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 
@@ -40,19 +40,21 @@ $cnt = 0;
 
 	$query4= "update trn_dayprod_roll_details set  prd_roll_status = '$open_rel' where prd_rollno = $rollno  and prd_date = '$pdate'  and prd_shift = '$shift' and prd_rollno = '$rollno'  and prd_variety = '$qlycode' and prd_seqno = '$seqno' ";
 
-	$result4=mysql_query($query4);            
+	$result4=mysqli_query($conn, $query4);            
 	}    
 
 
        
 
 	if ( result4)  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $rollno . '"})';
      	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $rollno . '"})';
 
 	}

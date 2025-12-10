@@ -17,19 +17,19 @@ $approvedby = $_POST['approvedby'];
 $userid     = $_POST['userid'];
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") {
 
        $query = "select ifnull(max(ind_no),0)+1 as indno from trnpur_indent where ind_fin_code='$finid' and ind_comp_code='$compcode'";
-       $result = mysql_query($query);
-       $rec = mysql_fetch_array($result);
+       $result = mysqli_query($conn, $query);
+       $rec = mysqli_fetch_array($result);
        $indno=$rec['indno'];
 }
 else
 {
        $query = "delete from trnpur_indent where ind_fin_code='$finid' and ind_comp_code='$compcode' and ind_no = $indno";
-       $result = mysql_query($query);
+       $result = mysqli_query($conn, $query);
        
 }
 
@@ -77,7 +77,7 @@ $hodauth='Y';
 
 $query1= "insert into trnpur_indent values('$compcode','$finid','$indno','$inddate','$indtype','$dept','$machine','$section','$equip',
 $slno,'$itemcode','$indqty','$rate','$value','$poqty','$recqty','$issqty','$indqty','$duedate','$remarks' , '$approval','$sts','','$preparedby','$hodauth','$purauth','$purpose','$stock' ,'$StdLifeTime' , '$ActLifeTime' , '$Reason' )";
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 //echo $query1;
 
 }
@@ -86,11 +86,13 @@ $result1 = mysql_query($query1);
 
 if($result1) 
 {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $indno . '"})';
 } 
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $indno . '"})';
 }
   

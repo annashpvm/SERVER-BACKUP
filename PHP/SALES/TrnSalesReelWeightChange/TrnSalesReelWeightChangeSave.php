@@ -41,18 +41,18 @@ if ($newRollNo == 0)
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
    $query1 = "select IFNULL(max(ent_no),0)+1 as entno from trnsal_reelweight_change where  comp_code ='$compcode' and fin_code ='$finid'";
-   $result1= mysql_query($query1);
-   $rec1 = mysql_fetch_array($result1);
+   $result1= mysqli_query($conn, $query1);
+   $rec1 = mysqli_fetch_array($result1);
    $docno=$rec1['entno'];
 
 
 
    $query2  = "insert into trnsal_reelweight_change values('$compcode','$finid','$entno','$entdate', '$reelno','$oldwt', '$newwt', '$oldsono', '$newsono' ,'$oldsize' , '$newsize','$oldRollNo', '$newRollNo', '$newreelno', '$reason' ,'$reasontype')";
-   $result2 = mysql_query($query2);   
+   $result2 = mysqli_query($conn, $query2);   
 
 //echo $query2;  
 
@@ -60,37 +60,39 @@ mysql_query("BEGIN");
 
 //echo $query3;
 
-   $result3 = mysql_query($query3);  
+   $result3 = mysqli_query($conn, $query3);  
 
 
    $query4  = "update trnsal_order_trailer set ordt_qty  = ordt_qty  - ($oldwt/1000) , ordt_fin_wt  = ordt_fin_wt  - ($oldwt/1000) where ordt_comp_code = '$compcode'  and ordt_sono =  $oldsono and ordt_var_code = $oldsize"; 
 
 //echo $query4;
-   $result4 = mysql_query($query4); 
+   $result4 = mysqli_query($conn, $query4); 
 
    $query5  = "update trnsal_order_trailer set ordt_qty  = ordt_qty  + ($newwt/1000) ,  ordt_fin_wt  = ordt_fin_wt  + ($newwt/1000)   where ordt_comp_code = '$compcode'  and ordt_sono =  $newsono and ordt_var_code = $newsize"; 
 
 //echo $query5;
-   $result5 = mysql_query($query5); 
+   $result5 = mysqli_query($conn, $query5); 
 
 
 
 if ($newreelno > 0)
 {
    $query3  = "update trnsal_finish_stock set stk_rollno = '$newRollNo' , stk_sr_no = '$newreelno'  where  stk_comp_code =  '$compcode' and  stk_sr_no ='$reelno' and stk_destag = ''"; 
-   $result3 = mysql_query($query3);  
+   $result3 = mysqli_query($conn, $query3);  
 } 
 
 
 	if($result2 && $result3)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","entno":"'.$entno.'"})';
 	}
 	else
         {
 		echo '({"success":"false","entno":"'.$entno.'"})';
-		mysql_query("ROLLBACK");            
+		mysqli_rollback($conn);
+
+            
 		    
 	} 
 

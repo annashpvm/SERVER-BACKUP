@@ -29,22 +29,22 @@ $cancelflag  = $_POST['cancelflag'];
 
 
  $query1 = "select IFNULL(max(snh_seqno),0)+1 as snhseqno from trnpur_salenote_header";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $snhseqno=$rec1['snhseqno'];
 
  $query2 = "select IFNULL(max(snh_no),0)+1 as snh_no from trnpur_salenote_header where snh_fincode = $snhfincode and snh_compcode='$snhcompcode'";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $snhno=$rec2['snh_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
  $query3= "insert into trnpur_salenote_header values('$snhseqno','$snhcompcode','$snhfincode','$snhno','$snhdate','$snhcustcode','$snhtotamt','$snhcgst',
 '$snhsgst','$snhigst','$snhins','$snhfrieght','$snhoth','$snhroff','$snhnetamt','$snhpaymode','$snhtransport','$snhvehno','$snhremarks',
 '$snhvouno','$snhusrcode','$cancelflag')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
@@ -81,7 +81,7 @@ $cancelflag  = 'Y'
  $query4= "insert into trnpur_salenote_trailer values('$snhseqno','$sno','$sntitemcode','$sntuom','$sntqty','$sntrate','$sntvalue',
 '$sntcgstper','$sntcgstamt','$sntsgstper','$$sntsgstamt','$sntigstper','$sntigstamt','$sntfrieght','$sntinsper','$sntinsamt','$sntothers',
 '$snttotamt','$sntpurledcode','$sntcgstledcode','$sntsgstledcode','$sntigstledcode','$sntfreightledcode','$sntinsledcode','$sntexpledcode','$cancelflag')";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
 }
 
@@ -89,7 +89,7 @@ $cancelflag  = 'Y'
         
 if($result3 && $result4)
 {
-  mysql_query("COMMIT");                        
+ mysqli_query($conn, "COMMIT");                       
   echo '({"success":"true","saleno":"'.$snhno.'"})';
 }
 else
@@ -98,7 +98,9 @@ echo '({"success":"false","saleno":"'.$salh_no.'"})';
 	   
 
 
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             
         }   
         

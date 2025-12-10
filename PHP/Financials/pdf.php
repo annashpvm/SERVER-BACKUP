@@ -102,8 +102,8 @@ if (!empty($_POST["register-user"])) {
                     <td><select name="cityadd" onChange="myNewFunction(this);" >
                             <?php
                             $query = "select 1 as no union select 2 as no";
-                            $result = mysql_query($query);
-                            while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+                            $result = mysqli_query($conn, $query);
+                            while ($row = mysqli_fetch_array($result, MYSQL_ASSOC)) {
                                 echo "<option value='" . $row['no'] . "'>" . $row['no'] . "</option>";
                             }
                             ?>        

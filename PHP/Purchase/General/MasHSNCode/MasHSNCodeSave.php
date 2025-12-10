@@ -16,12 +16,12 @@ $savetype=$_POST['savetype'];
 if ($savetype == "Add")
 {
 	$query = "select ifnull(max(hsn_sno),0)+1 as itemseq  from mas_hsncode";
-	$result = mysql_query($query);
-        $rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+        $rec = mysqli_fetch_array($result);
 	$hcode=$rec['itemseq'];
 
 	$query1="insert into mas_hsncode values($hcode,'$hsncode','$mattype','$igst','$cgst','$sgst')";
-	$result1 = mysql_query($query1);
+	$result1 = mysqli_query($conn, $query1);
 
 }
 else
@@ -31,17 +31,19 @@ else
 
 //echo $query1;
 
-	$result1 = mysql_query($query1);
+	$result1 = mysqli_query($conn, $query1);
 
 }
 
   if ($result1) 
 {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $hsncode . '"})';
 } 
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $hsncode . '"})';
 }
   

@@ -13,7 +13,7 @@ $query1= "update trnsal_invoice_header , massal_customer set invh_taxtag = cust_
 
 
 echo $query1;
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 
          
 
@@ -24,12 +24,14 @@ $result1=mysql_query($query1);
 
 if ($result1)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $sono . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $sono . '"})';
 }
   

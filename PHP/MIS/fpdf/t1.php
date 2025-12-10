@@ -47,7 +47,7 @@ $pdf->SetY(20);
 
 $count6 = "select * from massal_customer ORDER BY cust_code";
 
-$sqlcnt6 = mysql_query($count6);
+$sqlcnt6 = mysqli_query($conn, $count6);
 
 while($row3 = mysql_fetch_assoc($sqlcnt6))
 {

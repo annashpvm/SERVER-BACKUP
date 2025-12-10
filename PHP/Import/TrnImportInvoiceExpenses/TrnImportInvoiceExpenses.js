@@ -62,7 +62,7 @@ var loadINVNoDetailDataStore = new Ext.data.Store({
     root: 'results',
     totalProperty: 'total',
     id: 'id'
-  },['invh_seqno', 'invh_compcode', 'invh_fincode', 'invh_invoiceno', 'invh_invoicerefno', 'invh_date', 'invh_refno', 'invh_refdate', 'invh_poseqno', 'invh_sup_code', 'invh_agent', 'invh_payterms', 'invh_deliveryterms', 'invh_shiftment', 'invh_origincountry', 'invh_originport', 'invh_arrivalport', 'invh_bankacno', 'invh_bankname', 'invh_bankcode', 'invh_branchcode', 'invh_swiftcode', 'invh_bankadd1', 'invh_bankadd2', 'invh_bankadd3', 'invh_billladingno', 'invh_billladingdate', 'invh_billentryno', 'invh_billentrydate', 'invh_exchangerate', 'invh_invoicevalue', 'invh_BCD', 'invh_ACD', 'invh_SWS', 'invh_CVD', 'invh_IGST', 'invh_otherduty', 'invh_interest', 'invh_penalty', 'invh_fine', 'invh_totduty', 'invh_clearing','invh_vesselname', 'invh_shipmentdate', 'invh_doccleared', 'invh_partyaccstat', 'invh_partyvouno', 'invh_dutyaccstat', 'invh_dutyvouno', 'invh_jv_vouno', 'invt_seqno', 'invt_item_code', 'invt_qty', 'invt_portqty', 'invt_recqty', 'invt_moisper', 'invt_outthroughper', 'invt_dedper', 'invt_itemrate', 'invt_itemvalue','ordh_no' , 'ordh_date', 'invh_20feet_container','invh_40feet_container','itmh_name' , 'invt_item_code'
+  },['invh_seqno', 'invh_compcode', 'invh_fincode', 'invh_invoiceno', 'invh_invoicerefno', 'invh_date', 'invh_refno', 'invh_refdate', 'invh_poseqno', 'invh_cust_code', 'invh_agent', 'invh_payterms', 'invh_deliveryterms', 'invh_shiftment', 'invh_origincountry', 'invh_originport', 'invh_arrivalport', 'invh_bankacno', 'invh_bankname', 'invh_bankcode', 'invh_branchcode', 'invh_swiftcode', 'invh_bankadd1', 'invh_bankadd2', 'invh_bankadd3', 'invh_billladingno', 'invh_billladingdate', 'invh_billentryno', 'invh_billentrydate', 'invh_exchangerate', 'invh_invoicevalue', 'invh_BCD', 'invh_ACD', 'invh_SWS', 'invh_CVD', 'invh_IGST', 'invh_otherduty', 'invh_interest', 'invh_penalty', 'invh_fine', 'invh_totduty', 'invh_clearing','invh_vesselname', 'invh_shipmentdate', 'invh_doccleared', 'invh_partyaccstat', 'invh_partyvouno', 'invh_dutyaccstat', 'invh_dutyvouno', 'invh_jv_vouno', 'invt_seqno', 'invt_item_code', 'invt_qty', 'invt_portqty', 'invt_recqty', 'invt_moisper', 'invt_outthroughper', 'invt_dedper', 'invt_itemrate', 'invt_itemvalue','ordh_no' , 'ordh_date', 'invh_20feet_container','invh_40feet_container','itmh_name' , 'invt_item_code'
   ])
 });
 
@@ -80,7 +80,7 @@ var loadINVExpensesDetailDataStore = new Ext.data.Store({
     root: 'results',
     totalProperty: 'total',
     id: 'id'
-  },['invc_hdcode', 'invc_slno', 'invc_party', 'invc_invno', 'invc_date', 'invc_handling', 'invc_maintenance', 'invc_usage', 'invc_admin', 'invc_clearing', 'invc_additional', 'invc_custduty', 'invc_demurrage', 'invc_service', 'invc_others', 'invc_taxable', 'invc_cgstper', 'invc_cgstamt', 'invc_sgstper', 'invc_sgstamt', 'invc_igstper', 'invc_igstamt', 'invc_invamt', 'sup_code', 'sup_name', 'sup_refname','sup_led_code'
+  },['invc_hdcode', 'invc_slno', 'invc_party', 'invc_invno', 'invc_date', 'invc_handling', 'invc_maintenance', 'invc_usage', 'invc_admin', 'invc_clearing', 'invc_additional', 'invc_custduty', 'invc_demurrage', 'invc_service', 'invc_others', 'invc_taxable', 'invc_cgstper', 'invc_cgstamt', 'invc_sgstper', 'invc_sgstamt', 'invc_igstper', 'invc_igstamt', 'invc_invamt', 'cust_code', 'cust_name', 'cust_ref','cust_led_code'
   ])
 });
 
@@ -1341,8 +1341,8 @@ var cmbInvNo = new Ext.form.ComboBox({
 				        flxDetail.getStore().insert(
 				        flxDetail.getStore().getCount(),
 					new dgrecord({
-					   parycode   : loadINVExpensesDetailDataStore.getAt(j).get('sup_code'),
-					   partyname  : loadINVExpensesDetailDataStore.getAt(j).get('sup_refname'),
+					   parycode   : loadINVExpensesDetailDataStore.getAt(j).get('cust_code'),
+					   partyname  : loadINVExpensesDetailDataStore.getAt(j).get('cust_ref'),
 					   invno      : loadINVExpensesDetailDataStore.getAt(j).get('invc_invno'),
 			                   invdate    : Ext.util.Format.date(loadINVExpensesDetailDataStore.getAt(j).get('invc_date'),"Y-m-d"), 
 					   handling   : loadINVExpensesDetailDataStore.getAt(j).get('invc_handling'),
@@ -1451,8 +1451,8 @@ var  AllVendorDataStore = new Ext.data.Store({
     totalProperty: 'total',
     id: 'id'
   },[
-    {name: 'sup_code', type: 'int', mapping: 'sup_code'},
-    {name: 'sup_refname', type: 'string', mapping: 'sup_refname'}
+    {name: 'cust_code', type: 'int', mapping: 'cust_code'},
+    {name: 'cust_ref', type: 'string', mapping: 'cust_ref'}
   ])
 });
 
@@ -1472,8 +1472,8 @@ var VendorDataStore = new Ext.data.Store({
     totalProperty: 'total',
     id: 'id'
   },[
-    {name: 'sup_code', type: 'int', mapping: 'sup_code'},
-    {name: 'sup_refname', type: 'string', mapping: 'sup_refname'}
+    {name: 'cust_code', type: 'int', mapping: 'cust_code'},
+    {name: 'cust_ref', type: 'string', mapping: 'cust_ref'}
   ])
 });
 
@@ -1482,9 +1482,9 @@ var VendorDataStore = new Ext.data.Store({
 var cmbPartyName = new Ext.form.ComboBox({
     fieldLabel      : 'Supplier',
     width           : 350,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbPartyName',
     typeAhead       : true,
     mode            : 'local',
@@ -1518,9 +1518,9 @@ var cmbPartyName = new Ext.form.ComboBox({
 var cmbHandlingParty = new Ext.form.ComboBox({
     fieldLabel      : 'Handling Party',
     width           : 280,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbHandlingParty',
     typeAhead       : true,
     mode            : 'local',
@@ -1541,9 +1541,9 @@ var cmbHandlingParty = new Ext.form.ComboBox({
 var cmbPayTerms = new Ext.form.ComboBox({
     fieldLabel      : 'Payment Terms',
     width           : 200,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbPayTerms',
     typeAhead       : true,
     mode            : 'local',
@@ -1564,9 +1564,9 @@ var cmbPayTerms = new Ext.form.ComboBox({
 var cmbDeliveryTerms = new Ext.form.ComboBox({
     fieldLabel      : 'Delivery Terms',
     width           : 200,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbDeliveryTerms',
     typeAhead       : true,
     mode            : 'local',
@@ -1589,9 +1589,9 @@ var cmbDeliveryTerms = new Ext.form.ComboBox({
 var cmbItem = new Ext.form.ComboBox({
     fieldLabel      : '',
     width           : 200,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbItem',
     typeAhead       : true,
     mode            : 'local',

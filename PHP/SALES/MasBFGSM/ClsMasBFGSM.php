@@ -8,7 +8,9 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+
+    mysqli_set_charset($conn, "utf8");
+
     switch($task){
 		case "loadVarMainGroup":
 		getVarMainGroup();
@@ -31,75 +33,71 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
- function getVarMainGroup()
-    {
-        mysql_query("SET NAMES utf8");
+ function getVarMainGroup() 
+ {
+        global $conn;  
 
-        $r=mysql_query("select vargrp_type_code,vargrp_type_name from masprd_type order by vargrp_type_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
+        $sql = "select vargrp_type_code,vargrp_type_name from masprd_type order by vargrp_type_name";
+        $r = mysqli_query($conn, $sql);
+        $arr = [];
+        while ($re = mysqli_fetch_assoc($r)) {
+           $arr[] = $re;
         }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
-    }
-	
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+}
+ 
 	
 function getQuality()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$qcode = $_POST['qcode'];
 
-        $r=mysql_query("select vargrp_type_code,vargrp_type_name,vargrp_type_short_code from masprd_type  where vargrp_type_code = $qcode");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select vargrp_type_code,vargrp_type_name,vargrp_type_short_code from masprd_type  where vargrp_type_code = $qcode";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 function getVarietydetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$qcode = $_POST['qcode'];
 
-        $r=mysql_query("select var_groupcode, var_desc, var_typecode, var_bf, var_gsm, vargrp_type_code, vargrp_type_name, vargrp_type_short_code, vargrp_type_hsncode from masprd_variety a, masprd_type b where  a.var_typecode = b.vargrp_type_code order by var_desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select var_groupcode, var_desc, var_typecode, var_bf, var_gsm, vargrp_type_code, vargrp_type_name, vargrp_type_short_code, vargrp_type_hsncode from masprd_variety a, masprd_type b where  a.var_typecode = b.vargrp_type_code order by var_desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
     }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
  function gethsnlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select tariff_code,tariff_name from massal_tariff ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select tariff_code,tariff_name from massal_tariff ";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 ?>

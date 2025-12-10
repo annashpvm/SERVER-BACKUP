@@ -68,7 +68,7 @@ $cnnt=0;
 
 
         $query1 = "delete from GSTR_2B_Excess where gst_2b_month = '$rmon' and gst_2b_year = '$ryr';";
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
 
 
 if (isset($_POST["Import"])) {

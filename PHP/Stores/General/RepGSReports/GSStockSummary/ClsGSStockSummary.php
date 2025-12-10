@@ -8,7 +8,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		
 
@@ -41,15 +41,7 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -57,7 +49,7 @@
 
 function getMainGroupStockAbstract()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -66,23 +58,24 @@ function getMainGroupStockAbstract()
 
 
 
-        $r=mysql_query("call spst_rep_stock_groupsummary($compcode ,'$finid', '$startdate','$enddate')");
+        $sql = "call spst_rep_stock_groupsummary($compcode ,'$finid', '$startdate','$enddate')";
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
 function getSubGroupStockAbstract()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -92,23 +85,24 @@ function getSubGroupStockAbstract()
 	$allitems    = $_POST['allitems'];
 
 
-        $r=mysql_query("call spst_rep_stores_stock_SUBgroupsummary($compcode ,'$finid', '$grpcode', $allitems )");
+        $sql = "call spst_rep_stores_stock_SUBgroupsummary($compcode ,'$finid', '$grpcode', $allitems )";
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
 function getSubGroupStockItemList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -117,25 +111,26 @@ function getSubGroupStockItemList()
 	$grpcode    = $_POST['grpcode'];
 	$rtype       = $_POST['rtype'];
         if ($rtype  == 'GS')
-            $r=mysql_query("call spst_rep_stores_stock_subgrp_Itemwise($compcode ,'$finid', '$grpcode' )");
+            $sql = "call spst_rep_stores_stock_subgrp_Itemwise($compcode ,'$finid', '$grpcode' )";
         else
-            $r=mysql_query("call sprm_stock_abstract($compcode ,$finid,'$startdate' ,'$enddate',1) ");
+            $sql = "call sprm_stock_abstract($compcode ,$finid,'$startdate' ,'$enddate',1) ";
 
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getItemwiseStock()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -144,22 +139,23 @@ function getSubGroupStockItemList()
         $enddate  = $_POST['enddate'];
 
   
-        $r=mysql_query("call sprm_stock_abstract_New($compcode ,$finid,'$startdate' ,'$enddate',1) ");
+        $sql = "call sprm_stock_abstract_New($compcode ,$finid,'$startdate' ,'$enddate',1) ";
 	
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getItemwiseStockSummary()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
@@ -169,25 +165,26 @@ function getSubGroupStockItemList()
         $reptype  = $_POST['reptype'];
   
         if ($reptype  == 'WP')
-           $r=mysql_query("call sprm_stock_abstract($compcode ,$finid,'$startdate' ,'$enddate',1) ");
+           $sql = "call sprm_stock_abstract($compcode ,$finid,'$startdate' ,'$enddate',1) ";
         else
-        $r=mysql_query("call spfu_op_trans($compcode ,$finid,'$finstartdate','$startdate', '$startdate' ,'$enddate',1) ");
+        $sql = "call spfu_op_trans($compcode ,$finid,'$finstartdate','$startdate', '$startdate' ,'$enddate',1) ";
 	
 	
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getItem_ledger_trans()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$itemcode  = $_POST['itemcode'];
 	$compcode  = $_POST['compcode'];
@@ -196,19 +193,20 @@ function getSubGroupStockItemList()
         $reptype  = $_POST['reptype'];
   
         if ($reptype  == 'WP')
-            $r=mysql_query("call sprm_rep_item_ledger($compcode,'$startdate' ,'$enddate','$itemcode') ");
+            $sql = "call sprm_rep_item_ledger($compcode,'$startdate' ,'$enddate','$itemcode') ";
         else
-            $r=mysql_query("call spfu_rep_item_ledger($compcode,'$startdate' ,'$enddate','$itemcode') ");   
+            $sql = "call spfu_rep_item_ledger($compcode,'$startdate' ,'$enddate','$itemcode') ";   
 	
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 ?>
 

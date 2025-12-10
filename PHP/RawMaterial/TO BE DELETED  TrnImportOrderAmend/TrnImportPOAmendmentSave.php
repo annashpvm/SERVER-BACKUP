@@ -46,19 +46,19 @@ $ordhwef_date      = $_POST['ordhwef_date'];
 $varty             = $_POST['varty'];
 
 $query1 = "select IFNULL(max(amnh_seqno),0)+1 as amendno from trnirm_orderamnd_header";
-$result1 = mysql_query($query1);
-$rec1 = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1 = mysqli_fetch_array($result1);
 $amendseqno=$rec1['amendno'];
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 $query3 = "call spirm_upd_order_amend('$ordhseqno','$amendseqno','$ordhamenddate','$ordhwef_date')";
-$result3=mysql_query($query3);
+$result3=mysqli_query($conn, $query3);
 
 
  $query4= "call  spirm_upd_del_order( '$ordhseqno','$ordhcompcode','$ordhfincode', $ordhno ,'$ordhfrom', '$ordhsup_code','$ordhagent','$ordhdate','$ordhterms','$ordhcarriagetype','$ordhorigincountry','$ordhoriginport','$ordharrivalport','$ordhpaymode',  '$ordhlcdays',  '$ordhnagodays',  '$ordhcreditdays',  '$ordhinterstatus',  '$ordhpayterms',  '$ordhremarks',  '$ordhfrttype',  '$ordhfrtparty_code', '$ordhitemcurvalue',  '$ordhexrate',  '$ordhtotalcurvalue',  '$ordhitemvalue', '$ordhroundingoff',  '$ordhtotalvalue',  '$ordhstatus', '$ordhamndstatus',  '$ordhamndposeqno',  '$ordhusr_code',  '$ordhentry_date', '$ordhrefno')";
- $result4=mysql_query($query4);
+ $result4=mysqli_query($conn, $query4);
 
 
 
@@ -76,7 +76,7 @@ $prohibitive  = $griddet[$i]['prohibitive'];
 
      
  $query6= "call spirm_ins_ordertrailer('$ordhseqno','$sno','$po_item_code','0','0','$po_ordqty','0',0,'$po_ordqty',0,0,'$po_itemrate','$val','0','$moisper','$tareper','$outthrow','$prohibitive','O','$varty','0')";
- $result6=mysql_query($query6);            
+ $result6=mysqli_query($conn, $query6);            
   
 }
 
@@ -90,19 +90,21 @@ $deliremarks = $deligriddet[$j]['deliremarks'];
 
      
  $query5= "call spirm_ins_delschedule ('$ordhseqno','$slno','$deldate','$deliremarks','0')";
- $result5=mysql_query($query5);            
+ $result5=mysqli_query($conn, $query5);            
   
 }
 
      
 if( $result3 && $result4  && $result6   && $result5 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$ordhno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' .$ordhno. '"})';
         }   

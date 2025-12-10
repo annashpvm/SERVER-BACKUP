@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadledger":
 		getledger();
@@ -24,57 +24,52 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getledger()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select led_code,led_name from acc_ledger_master");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select led_code,led_name from acc_ledger_master");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
  function getreportgroup()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select rep_grp_code,rep_grp_name from maspur_report_group");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select rep_grp_code,rep_grp_name from maspur_report_group");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
   function getPurGroup()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select a.*, tn.led_name grp_tn_ledname,os.led_name grp_os_ledname,imp.led_name grp_imp_ledname  from maspur_group a , acc_ledger_master tn, acc_ledger_master os , acc_ledger_master imp where  grp_tn_ledcode = tn.led_code and  grp_os_ledcode = os.led_code and grp_imp_ledcode = imp.led_code order by grp_name
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select a.*, tn.led_name grp_tn_ledname,os.led_name grp_os_ledname,imp.led_name grp_imp_ledname  from maspur_group a , acc_ledger_master tn, acc_ledger_master os , acc_ledger_master imp where  grp_tn_ledcode = tn.led_code and  grp_os_ledcode = os.led_code and grp_imp_ledcode = imp.led_code order by grp_name
 
 ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }	
 
 ?>

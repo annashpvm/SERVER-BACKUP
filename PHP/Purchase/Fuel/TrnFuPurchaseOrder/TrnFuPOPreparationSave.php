@@ -72,18 +72,18 @@ $roundneed              = $_POST['roundneed'];
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  if ($savetype == "Add")
  {
 
  $query1 = "select IFNULL(max(ordh_seqno),0)+1 as po_seqno from trnfu_order_header";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $po_seqno=$rec1['po_seqno'];
 
  $query2 = "select IFNULL(max(ordh_no),0)+1 as po_no from trnfu_order_header where ordh_fincode = '$po_finid' and ordh_compcode = '$po_company_code'";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $po_no=$rec2['po_no'];
 
 $query3 ="call spfu_ins_orderheader('$po_seqno','$po_company_code','$po_finid','$po_no','$po_date','$po_vendor_code','$porefno', '$porefdate','$orderterms','$po_transport_mode','$po_paymode','$creditdays', '$remarks','$cgstper','$sgstper','$igstper' ,'$cessmt','$handlingmt','$handlingcgst','$handlingsgst','$tcsp',  '$roundoff','$totval', 'O','N','0','$userid','$entrydate','$wefdate',  '$moispercentage','$moistolarance','$inh_mois','$volmatr','$fixedcarbon', '$sulpher','$gcvadb','$gcvadb_tot','$gcvarb','$gcvarb_tot','$ash','$vessal','$fusize' ,'$purledger','$roundneed')";
@@ -91,13 +91,13 @@ $query3 ="call spfu_ins_orderheader('$po_seqno','$po_company_code','$po_finid','
 //echo $query3;           
 //echo "<br>";
 
- $result3 = mysql_query($query3);
+ $result3 = mysqli_query($conn, $query3);
 }
 else
 {
 $query3 ="call spfu_update_order('$po_seqno','$po_company_code','$po_finid','$po_no','$po_date','$po_vendor_code','$porefno', '$porefdate','$orderterms','$po_transport_mode','$po_paymode','$creditdays', '$remarks','$cgstper','$sgstper','$igstper' ,'$cessmt','$handlingmt','$handlingcgst','$handlingsgst','$tcsp',  '$roundoff','$totval', 'N','N','0','$userid','$entrydate','$wefdate',  '$moispercentage','$moistolarance','$inh_mois','$volmatr','$fixedcarbon', '$sulpher','$gcvadb','$gcvadb_tot','$gcvarb','$gcvarb_tot','$ash','$vessal','$fusize','$purledger','$roundneed')";
 
- $result3 = mysql_query($query3);
+ $result3 = mysqli_query($conn, $query3);
 
 // echo $query3;         
 // echo "<br>";
@@ -128,7 +128,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 
         $query4= "call spfu_ins_ordertrailer($po_seqno,$sno,$areacode ,$po_item_code,'$po_ordqty','0','0','$po_ordqty', '$po_itemrate','$val','$mois','$fines','$sand',0,'$wefdate')";
-	$result4=mysql_query($query4); 
+	$result4=mysqli_query($conn, $query4); 
 
 //echo $query4;           
 //echo "<br>";
@@ -141,12 +141,14 @@ for ($i=0;$i<$rowcnt;$i++)
  if ($savetype == "Add") {
 	if( $result3 && $result4 )
 	{
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$po_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' . $po_no . '"})';
         }  
@@ -155,12 +157,14 @@ else {
         
 	if($result3 && $result4 )
 	{
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$po_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' . $po_no . '"})';
         }   

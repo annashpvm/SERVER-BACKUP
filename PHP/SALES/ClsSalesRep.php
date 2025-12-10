@@ -2,11 +2,10 @@
     require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
     $task='loadpackinginvoice';
+    
+    $task = $_POST['task'] ?? 'loadpackinginvoice';
 
-    if ( isset($_POST['task'])){
-        $task = $_POST['task']; // Get this from Ext
-    }
-        mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "viewcreate":
 		create_view_vew_salesstock();
@@ -36,15 +35,7 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -54,67 +45,85 @@
 
  function getinvoiceno()
     {
-        mysql_query("SET NAMES utf8");
+     global $conn;  
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$invstate = $_POST['invstate'];
-        if ($invstate == 'A')
-       {        
-	$r=mysql_query("select invh_invrefno,invh_seqno from trnsal_invoice_header  where invh_fincode= '$finid' and invh_comp_code = '$compcode'  order by invh_seqno desc");
-        }
-        else
-        {  
-	$r=mysql_query("select invh_invrefno,invh_seqno from trnsal_invoice_header  where invh_fincode= '$finid' and invh_comp_code = '$compcode' and invh_saltype =  '$invstate'  order by invh_seqno desc");
-        }
+
+     if ($invstate == 'A') {
+          $sql = "SELECT invh_invrefno, invh_seqno 
+                  FROM trnsal_invoice_header  
+                  WHERE invh_fincode = '$finid' 
+                    AND invh_comp_code = '$compcode'  
+                  ORDER BY invh_seqno DESC";
+      } else {
+          $sql = "SELECT invh_invrefno, invh_seqno 
+                  FROM trnsal_invoice_header  
+                  WHERE invh_fincode = '$finid' 
+                    AND invh_comp_code = '$compcode' 
+                    AND invh_saltype = '$invstate'  
+                  ORDER BY invh_seqno DESC";
+      }
   
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+      $r = mysqli_query($conn, $sql);
+  
+      if (!$r) {
+          echo '{ "failure": true, "error": "' . mysqli_error($conn) . '" }';
+          return;
+      }
+  
+      $arr = [];
+      while ($re = mysqli_fetch_assoc($r)) {
+          $arr[] = $re;
+      }
+  
+      $nrow = mysqli_num_rows($r);
+      $jsonresult = JEncode($arr);
+  
+      echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
     }
 
 
  function getSONOlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	
-	$r=mysql_query("select ordh_sono from trnsal_order_header where ordh_comp_code = $compcode and ordh_fincode = $finid group by ordh_sono  order  by ordh_sono  desc");
+	$sql = "select ordh_sono from trnsal_order_header where ordh_comp_code = $compcode and ordh_fincode = $finid group by ordh_sono  order  by ordh_sono  desc";
   
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getgatepass()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$gpdt = $_POST['gpdt'];
-		$r=mysql_query("select gp_no as invh_no from trnsal_gate_pass  where gp_fincode= '$finid' and gp_compcode = '$compcode' And gp_date = '$gpdt' order by gp_no asc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		$sql = "select gp_no as invh_no from trnsal_gate_pass  where gp_fincode= '$finid' and gp_compcode = '$compcode' And gp_date = '$gpdt' order by gp_no asc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getpackinginvoice()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$stinvno = $_POST['stinvno'];
@@ -122,28 +131,29 @@
 	$delopt = $_POST['delopt'];
 	
 	
-	$r=mysql_query("delete from tmp_sal_packingslip");
+	$sql = "delete from tmp_sal_packingslip";
 	
-	$r=mysql_query("select * from trnsal_invoice_header a, trnsal_packslip_header  bh, trnsal_packslip_trailer bt, 
+	$sql = "select * from trnsal_invoice_header a, trnsal_packslip_header  bh, trnsal_packslip_trailer bt, 
 	trnsal_finish_stock c ,massal_customer d where  a.invh_party = d.cust_code and  a.invh_no = bh.pckh_invno 
 	and a.invh_comp_code = bh.pckh_comp_code and  a.invh_fincode = bh.pckh_fincode  and a.invh_comp_code = c.stk_comp_code  
 	and bh.pckh_no = c.stk_slipno and a.invh_comp_code = '$compcode' and  a.invh_fincode = '$finid' and a.invh_no >= '$stinvno' 
 	and a.invh_no <= '$edinvno' and bh.pckh_no = bt.pckt_no and bh.pckh_comp_code = bt.pckt_comp_code  
 	and bh.pckh_fincode  = bt.pckt_fincode  and bt.pckt_sr_no = c.stk_sr_no order by stk_slipno,stk_var_code,
-	stk_sr_no");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	stk_sr_no";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getpackslipBundle()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$stinvno = $_POST['stinvno'];
@@ -151,37 +161,39 @@
 	$delopt = $_POST['delopt'];
 	
 	
-	$r=mysql_query("delete from tmp_inv_srno");
+	$sql = "delete from tmp_inv_srno";
 	
 
-$r=mysql_query("select * from trnsal_packslip_header , trnsal_packslip_trailer where pckh_comp_code = pckt_comp_code  and pckh_fincode = pckt_fincode  and pckh_no = pckt_no  and pckh_comp_code = '$compcode' and pckh_fincode = '$finid' and pckh_invno >= '$stinvno'   and pckh_invno <= '$edinvno'  order by pckh_invno,pckt_var,pckt_sr_no");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+$sql = "select * from trnsal_packslip_header , trnsal_packslip_trailer where pckh_comp_code = pckt_comp_code  and pckh_fincode = pckt_fincode  and pckh_no = pckt_no  and pckh_comp_code = '$compcode' and pckh_fincode = '$finid' and pckh_invno >= '$stinvno'   and pckh_invno <= '$edinvno'  order by pckh_invno,pckt_var,pckt_sr_no";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  function getinvoiceproforma()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-	$r=mysql_query("select invh_no from trnsal_proforma_invoice where invh_comp_code = '$compcode' and invh_fincode = '$finid' group by invh_no order by invh_no");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select invh_no from trnsal_proforma_invoice where invh_comp_code = '$compcode' and invh_fincode = '$finid' group by invh_no order by invh_no";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
    
 
 function create_view_vew_salesstock()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
 	$compcode  = $_POST['compcode'];
@@ -189,7 +201,7 @@ function create_view_vew_salesstock()
 	$stkopt    = $_POST['stkopt'];
 
         $query1="DROP VIEW IF EXISTS vew_sal_rt12stat";
-        $result1= mysql_query($query1);
+        $result1= mysqli_query($conn, $query1);
 
         $lastdate =  date('Y-m-d', strtotime($startdate. " - 1 days"));
 
@@ -321,7 +333,7 @@ from trnsal_sample where  rs_compcode = '$compcode' and
 	) a 
 	group by a.var_code having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or sum(conv_qty) > 0 or sum(sal_qty) >0 or  sum(wt_change) >0  or  sum(pulp_stk) >0 or sum(salvage_stk) >0 or salr_qty > 0 or sum(reel_qty) > 0 or sum(salvage_recpt_qty) > 0  or sum(op_qty) > 0";
 
-	$result1= mysql_query($query1);
+	$result1= mysqli_query($conn, $query1);
 
 
 
@@ -437,7 +449,7 @@ union all
 	group by a.var_code having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or sum(conv_qty) > 0 or sum(sal_qty) >0 or  sum(wt_change) >0  or  sum(pulp_stk) >0 or sum(salvage_stk) >0 or salr_qty > 0 or sum(reel_qty) > 0 or sum(salvage_recpt_qty) > 0  or sum(op_qty) > 0";
 
 
-	$result1= mysql_query($query1);
+	$result1= mysqli_query($conn, $query1);
 
 }
 
@@ -551,7 +563,7 @@ from trnsal_sample where  rs_compcode = '$compcode' and
 
 
 
-	$result1= mysql_query($query1);
+	$result1= mysqli_query($conn, $query1);
 
 
 } 
@@ -559,7 +571,7 @@ from trnsal_sample where  rs_compcode = '$compcode' and
 /*    
 function create_view_vew_salesstock()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
 	$compcode  = $_POST['compcode'];
@@ -567,7 +579,7 @@ function create_view_vew_salesstock()
 	$stkopt    = $_POST['stkopt'];
 
         $query1="DROP VIEW IF EXISTS vew_sal_rt12stat";
-        $result1= mysql_query($query1);
+        $result1= mysqli_query($conn, $query1);
 
 
 
@@ -661,7 +673,7 @@ union all
 	) a 
 	group by a.var_code having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or sum(conv_qty) > 0 or sum(sal_qty) >0 or  sum(wt_change) >0  or  sum(pulp_stk) >0 or sum(salvage_stk) >0 or salr_qty > 0 ";
 
-	$result1= mysql_query($query1);
+	$result1= mysqli_query($conn, $query1);
 
 
 
@@ -750,7 +762,7 @@ union all
 	) a 
 	group by a.var_code having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or sum(conv_qty) > 0 or sum(sal_qty) >0 or  sum(wt_change) >0  or  sum(pulp_stk) >0 or sum(salvage_stk) >0 or salr_qty > 0 ";
 
-	$result1= mysql_query($query1);
+	$result1= mysqli_query($conn, $query1);
 
 
 }
@@ -821,7 +833,7 @@ select stk_var_code as varcode,sum(stk_wt/1000)*-1  as stk_qty,0 as prod_qty ,0 
 	) a 
 	group by a.var_code having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or sum(conv_qty) > 0 or sum(sal_qty) >0 or  sum(wt_change) >0  or  sum(pulp_stk) >0 or sum(salvage_stk) >0 or salr_qty > 0 ";
 
-	$result1= mysql_query($query1);
+	$result1= mysqli_query($conn, $query1);
 
 }
 */

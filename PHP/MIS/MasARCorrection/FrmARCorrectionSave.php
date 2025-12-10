@@ -12,24 +12,26 @@ $crdays          =  $_POST['acctrail_crdays'];
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 
      $query1= "update acc_trail set  acctrail_adj_value = $adjamt, acctrail_crdays = $crdays where acctrail_inv_no ='$acctrail_inv_no' and acctrail_led_code = $cust_code";
 
-     $result1=mysql_query($query1);
+     $result1=mysqli_query($conn, $query1);
 
         
 if($result1)
 
        {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","acctrail_inv_no":"'.$acctrail_inv_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","acctrail_inv_no":"' . $acctrail_inv_no . '"})';
         }   

@@ -28,7 +28,7 @@ var PODetailDataStore = new Ext.data.Store({
     root: 'results',
     totalProperty: 'total',
     id: 'id'
-  },['ordh_seqno', 'ordh_compcode', 'ordh_fincode', 'ordh_no', 'ordh_from', 'ordh_sup_code', 'ordh_date', 'ordh_terms', 'ordh_carriagetype', 'ordh_paymode', 'ordh_creditdays', 'ordh_overdueintper', 'ordh_payterms', 'ordh_terms', 'ordh_frttype', 'ordh_frtparty_code', 'ordh_stper', 'ordh_scper', 'ordh_tcsper', 'ordh_cgstper', 'ordh_sgstper', 'ordh_igstper', 'ordh_servicecharge', 'ordh_itemvalue', 'ordh_roundingoff', 'ordh_totalvalue', 'ordh_status', 'ordh_amndstatus', 'ordh_amndposeqno', 'ordh_usr_code', 'ordh_entry_date', 'ordh_wef_date', 'ordt_hdseqno', 'ordt_seqno', 'ordt_item_code', 'ordt_indh_seqno', 'ordt_enqh_seqno', 'ordt_qty', 'ordt_rec_qty', 'ordt_can_qty', 'ordt_pen_qty', 'ordt_unit_rate', 'ordt_item_value', 'ordt_edpercentage', 'ordt_moisper', 'ordt_tareper', 'ordt_status', 'ordt_educessper', 'sup_code', 'sup_name', 'sup_refname', 'sup_addr1', 'sup_addr2', 'sup_addr3', 'sup_city', 'sup_state', 'sup_cntry_code', 'sup_zip', 'sup_phone', 'sup_fax', 'sup_email', 'sup_web', 'sup_led_code', 'sup_grp_code', 'sup_type', 'tngst_code', 'tngst_date', 'cst_code', 'cst_date', 'sup_acc_group', 'sup_taxcode', 'sup_agentcode', 'sup_e1saleno', 'sup_area', 'sup_panno', 'sup_tinno', 'sup_sertax_rcno', 'sup_excise_rcno', 'sup_tds_type', 'sup_gstin', 'itmh_code', 'itmh_name', 'itmh_moisture_per', 'itmh_tare_per', 'itmh_convlossper', 'itmh_specification', 'itmh_type', 'itmh_ledcode', 'itmh_group','itmh_outthrough','itmh_prohiper','itmh_hsncode','ordt_outper' ,'ordh_refno','ordh_refdate','ordh_preparedby','ordh_payterms','ordh_deliveryterms','ordh_origincountry','ordh_originport','cmbDischargePort','ordh_arrivalport','ordh_shiftment','ordh_remarks', 'ordh_bankacno', 'ordh_bankname', 'ordh_bankcode', 'ordh_branchcode', 'ordh_swiftcode', 'ordh_bankadd1', 'ordh_bankadd2', 'ordh_bankadd3','ordh_agent_code' ,'ordt_inv_qty', 'ordt_usdrate','ordt_usdvalue'
+  },['ordh_seqno', 'ordh_compcode', 'ordh_fincode', 'ordh_no', 'ordh_from', 'ordh_cust_code', 'ordh_date', 'ordh_terms', 'ordh_carriagetype', 'ordh_paymode', 'ordh_creditdays', 'ordh_overdueintper', 'ordh_payterms', 'ordh_terms', 'ordh_frttype', 'ordh_frtparty_code', 'ordh_stper', 'ordh_scper', 'ordh_tcsper', 'ordh_cgstper', 'ordh_sgstper', 'ordh_igstper', 'ordh_servicecharge', 'ordh_itemvalue', 'ordh_roundingoff', 'ordh_totalvalue', 'ordh_status', 'ordh_amndstatus', 'ordh_amndposeqno', 'ordh_usr_code', 'ordh_entry_date', 'ordh_wef_date', 'ordt_hdseqno', 'ordt_seqno', 'ordt_item_code', 'ordt_indh_seqno', 'ordt_enqh_seqno', 'ordt_qty', 'ordt_rec_qty', 'ordt_can_qty', 'ordt_pen_qty', 'ordt_unit_rate', 'ordt_item_value', 'ordt_edpercentage', 'ordt_moisper', 'ordt_tareper', 'ordt_status', 'ordt_educessper', 'cust_code', 'cust_name', 'cust_ref', 'cust_addr1', 'cust_addr2', 'cust_addr3', 'cust_city', 'cust_state', 'cust_cntry_code', 'cust_zip', 'cust_phone', 'cust_fax', 'cust_email', 'cust_web', 'cust_led_code', 'cust_grp_code', 'cust_type', 'tngst_code', 'tngst_date', 'cst_code', 'cst_date', 'cust_acc_group', 'cust_taxcode', 'cust_agentcode', 'cust_e1saleno', 'cust_area', 'cust_panno', 'cust_tinno', 'cust_sertax_rcno', 'cust_excise_rcno', 'cust_tds_type', 'cust_gstin', 'itmh_code', 'itmh_name', 'itmh_moisture_per', 'itmh_tare_per', 'itmh_convlossper', 'itmh_specification', 'itmh_type', 'itmh_ledcode', 'itmh_group','itmh_outthrough','itmh_prohiper','itmh_hsncode','ordt_outper' ,'ordh_refno','ordh_refdate','ordh_preparedby','ordh_payterms','ordh_deliveryterms','ordh_origincountry','ordh_originport','cmbDischargePort','ordh_arrivalport','ordh_shiftment','ordh_remarks', 'ordh_bankacno', 'ordh_bankname', 'ordh_bankcode', 'ordh_branchcode', 'ordh_swiftcode', 'ordh_bankadd1', 'ordh_bankadd2', 'ordh_bankadd3','ordh_agent_code' ,'ordt_inv_qty', 'ordt_usdrate','ordt_usdvalue'
   ])
 });
 
@@ -64,8 +64,8 @@ var VendorDataStore = new Ext.data.Store({
     totalProperty: 'total',
     id: 'id'
   },[
-    {name: 'sup_code', type: 'int', mapping: 'sup_code'},
-    {name: 'sup_refname', type: 'string', mapping: 'sup_refname'}
+    {name: 'cust_code', type: 'int', mapping: 'cust_code'},
+    {name: 'cust_ref', type: 'string', mapping: 'cust_ref'}
   ])
 });
 
@@ -813,9 +813,9 @@ var cmbDischargePort= new Ext.form.ComboBox({
 var cmbAgent = new Ext.form.ComboBox({
     fieldLabel      : 'Agent ',
     width           : 350,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbAgent',
     typeAhead       : true,
     mode            : 'local',
@@ -837,9 +837,9 @@ var cmbAgent = new Ext.form.ComboBox({
 var cmbPartyName = new Ext.form.ComboBox({
     fieldLabel      : 'Supplier',
     width           : 350,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbPartyName',
     typeAhead       : true,
     mode            : 'local',
@@ -864,9 +864,9 @@ var cmbPartyName = new Ext.form.ComboBox({
 var cmbPayTerms = new Ext.form.ComboBox({
     fieldLabel      : 'Payment Terms',
     width           : 200,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbPayTerms',
     typeAhead       : true,
     mode            : 'local',
@@ -887,9 +887,9 @@ var cmbPayTerms = new Ext.form.ComboBox({
 var cmbDeliveryTerms = new Ext.form.ComboBox({
     fieldLabel      : 'Delivery Terms',
     width           : 200,
-    displayField    : 'sup_refname',
-    valueField      : 'sup_code',
-    hiddenName      : 'sup_code',
+    displayField    : 'cust_ref',
+    valueField      : 'cust_code',
+    hiddenName      : 'cust_code',
     id              : 'cmbDeliveryTerms',
     typeAhead       : true,
     mode            : 'local',
@@ -994,7 +994,7 @@ var cmbPONo = new Ext.form.ComboBox({
             
 				ordseqno = PODetailDataStore.getAt(0).get('ordh_seqno');
 
-                                cmbPartyName.setValue(PODetailDataStore.getAt(0).get('ordh_sup_code'));
+                                cmbPartyName.setValue(PODetailDataStore.getAt(0).get('ordh_cust_code'));
 
                                 cmbAgent.setValue(PODetailDataStore.getAt(0).get('ordh_agent_code'));
 

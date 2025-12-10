@@ -29,13 +29,13 @@ if ($saveflag   == "Add")
 {
 
 	$qry = "select count(*) as cnt from maspur_gsttax where tax_pur_ledname = '$taxname'";
-	$res  = mysql_query($qry);
-	$recvar = mysql_fetch_array($res);
+	$res  = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($res);
 	$cnt=$recvar['cnt'];
 
 	$qry2 = "select count(*) as cnt2 from massal_customer where cust_name = '$taxname'";
-	$res  = mysql_query($qry2);
-	$recvar = mysql_fetch_array($res);
+	$res  = mysqli_query($conn, $qry2);
+	$recvar = mysqli_fetch_array($res);
 	$cnt2=$recvar['cnt2'];
 
 //echo $qry;
@@ -47,19 +47,23 @@ if ($saveflag   == "Add")
 
 //echo $query1;
 
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	}
 
 	  if ($result1 && $cnt==0) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $taxname . '"})';
 	} 
 	  else if ($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $taxname . '"})';
 	}
 }
@@ -73,14 +77,16 @@ else
 	  $query1="update maspur_gsttax set tax_cgst_per = '$taxcgst' , tax_sgst_per = '$taxsgst' , tax_igst_per = '$taxigst', tax_cgst_ledcode = '$taxcgst_ledcode', tax_sgst_ledcode = '$taxsgst_ledcode', tax_igst_ledcode = '$taxigst_ledcode' , tax_cgst_ledname = '$taxcgst_ledger' , tax_sgst_ledname = '$taxsgst_ledger', tax_igst_ledname = '$taxigst_ledger' ,tax_state = '$state' where  tax_pur_ledcode = $taxledcode"; 
 
 //echo  $query1;
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
 	  if ($result1 ) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $taxname . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $taxname . '"})';
 	}
 } 

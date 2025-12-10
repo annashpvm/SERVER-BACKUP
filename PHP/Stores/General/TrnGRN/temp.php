@@ -6,7 +6,7 @@
 session_start();
 
 $query  = "select * from trnpur_indent";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 while ($row = mysql_fetch_assoc($result)) {
 
      echo $row['ind_item_code'];

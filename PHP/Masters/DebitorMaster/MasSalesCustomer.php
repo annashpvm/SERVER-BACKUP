@@ -11,7 +11,7 @@
 <!--  <script type="text/javascript" src="/SHVPM/SALES/SalesMainMenu.js"></script>
 -->
 <?php
-//    require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/SALES/SalesMainPage.php");
+//    require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/SALES/SalesMainPage.php";
 ?>
 </head>
 <body>

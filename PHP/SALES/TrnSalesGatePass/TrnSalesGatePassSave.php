@@ -17,12 +17,12 @@ if ($savetype === "Add")
 {
 
 	 $query1  = "select ifnull(max(gp_no),0)+1 as gp_no from  trnsal_gate_pass where gp_fincode  = $finid  and gp_compcode = $compcode";
-	 $result1 = mysql_query($query1);
-	 $rec1    = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1    = mysqli_fetch_array($result1);
 	 $gpno    = $rec1['gp_no'];
 }
    
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
  if ($gpno > 0 )
  { 
@@ -37,7 +37,7 @@ if ($savetype === "Add")
 		$nos      = $griddet[$i]['nos'];
 		$truckno  = $griddet[$i]['truckno'];
 		$query2= "insert into trnsal_gate_pass values('$compcode','$finid','$gpno','$gpdate','$truckno','$transport', '$custcode','$destination','$invno','$invno','$invwt','$nos',0,0,0)";
-		 $result2=mysql_query($query2);           
+		 $result2=mysqli_query($conn, $query2);           
   
 	}
 
@@ -47,13 +47,15 @@ if ($savetype === "Add")
 {
 	if($result1 && $result2)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","gpno":"'.$gpno.'"})';
 	}
 	else
         {
           echo '({"success":"false","gpno":"'.$gpno.'"})';
-	  mysql_query("ROLLBACK");            
+	  mysqli_rollback($conn);
+
+            
 	} 
 }
   

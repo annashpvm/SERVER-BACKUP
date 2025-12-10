@@ -96,8 +96,8 @@ if (isset($_POST["Import"])) {
         {
                 $sno = 0;
 		$query1       = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-		$result1      = mysql_query($query1);
-		$rec1         = mysql_fetch_array($result1);
+		$result1      = mysqli_query($conn, $query1);
+		$rec1         = mysqli_fetch_array($result1);
 		$ginaccrefseq = $rec1['con_value'];
 
 // For voucher Number

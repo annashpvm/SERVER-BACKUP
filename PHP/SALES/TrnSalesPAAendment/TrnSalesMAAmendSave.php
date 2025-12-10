@@ -29,8 +29,8 @@ $tol         = $_POST['tol'];
 
 /*
 	$query1 = "select ifnull(max(ma_advno),0)+1 as advno from trn_ma_header where ma_comp_code = '$macompcode' and ma_fincode = '$mafincode'   and ma_machine = '$mamachine'";
-	$result1= mysql_query($query1);
-	$rec2 = mysql_fetch_array($result1);
+	$result1= mysqli_query($conn, $query1);
+	$rec2 = mysqli_fetch_array($result1);
 	$maadvno=$rec2['advno'];
 	if ($maadvno==1) {
 	   $maadvno = $mafincode.$mamachine."001";
@@ -38,30 +38,30 @@ $tol         = $_POST['tol'];
 */
 
     $query1 =  "insert into trn_ma_header_amend   select * from  trn_ma_header where ma_Comp_code = '$macompcode' and ma_fincode='$mafincode' and ma_advno = $maadvno and ma_amendno = $maamendno-1 ";
-        $result1=mysql_query($query1);   
+        $result1=mysqli_query($conn, $query1);   
     
     $query2 =  "insert into trn_ma_trailer_amend  select * from trn_ma_trailer where mat_comp_code = '$macompcode' and mat_fincode= '$mafincode'  and mat_advno = $maadvno  and mat_amendno = $maamendno-1 ";
-   $result2=mysql_query($query2);   
+   $result2=mysqli_query($conn, $query2);   
 
     $query3 =  "insert into trn_ma_trailer_sizewise_amend  select * from trn_ma_trailer_sizewise where mat_comp_code = '$macompcode' and mat_fincode= '$mafincode'  and mat_advno = $maadvno  and mat_amendno = $maamendno-1 ";
-       $result3=mysql_query($query3);  
+       $result3=mysqli_query($conn, $query3);  
 
     $query4 = "insert into trn_ma_trailer_varietywise_amend  select * from trn_ma_trailer_varietywise where pih_comp_code = '$macompcode' and pih_fincode= '$mafincode'  and pih_mano = $maadvno  and pih_amendno = $maamendno-1 ";
-  $result4=mysql_query($query4);  
+  $result4=mysqli_query($conn, $query4);  
 
 
 
         $query1 =  "delete from trn_ma_header where ma_comp_code = '$macompcode' and ma_fincode = '$mafincode'   and ma_machine = $mamachine and ma_advno = $maadvno";
-        $result1=mysql_query($query1);   
+        $result1=mysqli_query($conn, $query1);   
 
         $query2 =  "delete from trn_ma_trailer where mat_comp_code = '$macompcode' and mat_fincode = '$mafincode'  and mat_advno = $maadvno";
-        $result2=mysql_query($query2);   
+        $result2=mysqli_query($conn, $query2);   
 
         $query3 =  "delete from trn_ma_trailer_sizewise where mat_comp_code = '$macompcode' and mat_fincode = '$mafincode'   and mat_advno = $maadvno";
-        $result3=mysql_query($query3);   
+        $result3=mysqli_query($conn, $query3);   
 
         $query4 =  "delete from trn_ma_trailer_varietywise where pih_comp_code = '$macompcode' and pih_fincode = '$mafincode'   and pih_mano = $maadvno";
-        $result4=mysql_query($query4);   
+        $result4=mysqli_query($conn, $query4);   
 
 
 
@@ -90,7 +90,7 @@ $query1= "insert into trn_ma_header values('$macompcode','$mafincode','$maamendn
 ,'$masizecode','$maordtype','$maqty','$masheets','$mareamwt','$mareams','$mapriority','$mamachine','N','','$maorder_ref','0','0','0','0','0','0','0','0',
 '0','0','0','0','0','0','$madespdate','0')";
 
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 }
 
 
@@ -118,7 +118,7 @@ $matqty    = $deckgriddet[$i]['qty'];
 
 
 $query2= "insert into trn_ma_trailer values('$macompcode','$mafincode','$maamendno','$maamenddate','$maadvno','$maadvdate','$matslno','$matvarcode','$matsize1', '$matsize2','$matsize3','$matsize4','$matsize5','$matsize6','$matsize7','$matsize8','$matsize9','$matsize10','$matsize11','$matsize12','$matsize13','$matsize14',0,0,0,'$matqty','$matdeckle','$matdecklesize',0)";  
-$result2=mysql_query($query2);            
+$result2=mysqli_query($conn, $query2);            
 }
 
 
@@ -130,7 +130,7 @@ $matsize    =  $sizegriddet[$i]['size'];
 $matqty = $sizegriddet[$i]['qty'];
 
 $query3= "insert into trn_ma_trailer_sizewise  values('$macompcode','$mafincode','$maamendno','$maamenddate','$maadvno','$maadvdate','$matvarcode','$matsize', '$matqty','N','$mamachine','0','0','0','0','0','0','0','0','0','0',0,0,0,'0',0)";  
-$result3=mysql_query($query3);            
+$result3=mysqli_query($conn, $query3);            
 }
  
 
@@ -141,18 +141,20 @@ $matvarcode = $vartygriddet[$i]['varcode'];
 $matqty     = $vartygriddet[$i]['qty'];
 
 $query4= "insert into trn_ma_trailer_varietywise values('$macompcode','$mafincode','$mamachine','$maamendno','$maamenddate','$maadvno','$maadvdate','$matvarcode', '$matqty','0','0','0','0','0','0','0','0','0','0',0,0,0,'0','N','N','$tol',0)";  
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
 }
  
 
 
 if ($result1 && $result2 && $result3 && $result4) {
 
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $maadvno . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $maadvno . '"})';
 }
   

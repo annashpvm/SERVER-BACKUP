@@ -31,20 +31,20 @@
    $amtmode = "D";
 
    #Begin Transaction
-   mysql_query("BEGIN");
+   mysqli_query($conn, "BEGIN");
 
    if ($flagtype == "Add")
    {
         #Get Max AccRef Seqno from acc_ref
         $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $result1 = mysql_query($query1);
-        $rec1 = mysql_fetch_array($result1);
+        $result1 = mysqli_query($conn, $query1);
+        $rec1 = mysqli_fetch_array($result1);
         $ginaccrefseq=$rec1['con_value'];
        
         #Get Voucher Number
         $query2 = "select ifnull(max(convert(substring(accref_vouno,4),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'GJV' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
-        $result2 = mysql_query($query2);
-        $rec2 = mysql_fetch_array($result2);
+        $result2 = mysqli_query($conn, $query2);
+        $rec2 = mysqli_fetch_array($result2);
         $conval=$rec2['vou_no'];
         $vouno=$paytype.$conval;
 
@@ -58,21 +58,21 @@
      {
 
 	$cquery1 = "select ifnull(max(accvou_slno),0) + 1 as reccount  from acc_voucher_logs where accvou_seqno = '$ginaccrefseq';";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
 
 
 	$query1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
 
 
 	$query2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $result2 = mysql_query($query2);
+        $result2 = mysqli_query($conn, $query2);
 	
         $query3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 
 
      } 
@@ -80,11 +80,11 @@
 
         $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate',
                 'GJV','$bankname','$paymode','$refno','$refdate','$narration');";
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 
 
         $cquerya3 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-        $cresulta3 = mysql_query($cquerya3);
+        $cresulta3 = mysqli_query($conn, $cquerya3);
 
 
 
@@ -112,7 +112,7 @@
                if ($ledtype != 'G')
                {
 		  $querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$vouno', '$voudate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-		  $resulta3 = mysql_query($querya3);
+		  $resulta3 = mysqli_query($conn, $querya3);
                }
 //echo  $querya3;
 
@@ -121,7 +121,7 @@
 
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$paytype','');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 //echo  $querya4;	   
             if(resulta4){
@@ -136,13 +136,15 @@
         if($resulta2 && ($inscnt == $rowcnt))
 
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
             
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             
             echo '({"success":"false","vouno":"'.$vouno.'"})';
         }
@@ -152,13 +154,15 @@
         if($result1 &&  $result2 &&  $result3 &&  $resulta2 && ($inscnt == $rowcnt))
 
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
             
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             
             echo '({"success":"false","vouno":"'.$vouno.'"})';
         }

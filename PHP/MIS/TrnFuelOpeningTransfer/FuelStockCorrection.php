@@ -9,7 +9,7 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
     $query1= "
 
@@ -103,7 +103,7 @@ d.itmt_fincode = $finid
 ) a1 where itmt_opqty + op_rect_qty + op_is_qty+rect_qty +is_qty > 0 order by itmh_name; 
 ";
 
-    $result11=mysql_query($query1);
+    $result11=mysqli_query($conn, $query1);
 
 
 
@@ -158,7 +158,7 @@ d.itmt_fincode = $finid
 
 
            $query2   = "update masfu_item_trailer set itmt_clqty  = $closing_qty, itmt_clvalue = $closing_value , itmt_avgrate = $closing_rate where itmt_compcode = $compcode and itmt_fincode = $finid and itmt_hdcode = $itemcode";
-           $result2=mysql_query($query2);   
+           $result2=mysqli_query($conn, $query2);   
 
 
        
@@ -170,12 +170,14 @@ d.itmt_fincode = $finid
 
      if ($result2)
      {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $compcode . '"})';
      }
 

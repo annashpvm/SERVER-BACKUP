@@ -93,14 +93,14 @@ if (isset($_POST["Import"])) {
         {
 
 	$query2 = "select ifnull(max(dbcr_no),0) + 1 as dbcr_no from acc_dbcrnote_header where dbcr_type = '$voutype' and dbcr_finid = '$finid' and dbcr_comp_code = '$compcode'";
-	$result2 = mysql_query($query2);
-	$rec2 = mysql_fetch_array($result2);
+	$result2 = mysqli_query($conn, $query2);
+	$rec2 = mysqli_fetch_array($result2);
 	$conval = $rec2['dbcr_no'];
 	$vouno = $voutype . $conval;
 
 	$query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
-	$result3 = mysql_query($query3);
-	$rec3 = mysql_fetch_array($result3);
+	$result3 = mysqli_query($conn, $query3);
+	$rec3 = mysqli_fetch_array($result3);
 	$gindbcrseq = $rec3['con_value'];
 
 //echo $vouno;
@@ -112,7 +112,7 @@ if (isset($_POST["Import"])) {
 
 		#Insert AccDbcrNoteHeader
 		    $querya6 = "call acc_sp_insdbcrnoteheader('$gindbcrseq','$compcode','$finid','$voutype','$conval','$ginvouno','$colA',0,'0','0','0','','','N',0,'0');";
-		    $resulta6 = mysql_query($querya6);
+		    $resulta6 = mysqli_query($conn, $querya6);
 
 //		echo $querya6;
 
@@ -122,7 +122,7 @@ if (isset($_POST["Import"])) {
 
 		$querya7 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$ginvouno','$colA','0' ,'0','0', '0','0','0','0','0','0','0','0',0,0,0,0,0,'0',0,0,0)";
 
-		    $resulta7 = mysql_query($querya7);
+		    $resulta7 = mysqli_query($conn, $querya7);
 
 //		echo $querya7;
 

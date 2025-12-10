@@ -718,11 +718,11 @@ var cmbsalcuststate = new Ext.form.ComboBox({
       blur:function(){
               if (cmbsalcuststate.getRawValue() == "TAMIL NADU")
                { 
-                cmbGST.setValue('2');         
+                cmbGST.setValue('7');         
                }
                else
                {
-                cmbGST.setValue('1');         
+                cmbGST.setValue('6');         
                }     
       }  
 

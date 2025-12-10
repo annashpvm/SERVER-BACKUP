@@ -111,8 +111,8 @@ var optprinttype = new Ext.form.FieldSet({
     items: [
     {
         xtype: 'radiogroup',
-        columns: 2,
-        rows : 1,
+        columns: 1,
+        rows : 3,
         id: 'optprinttype',
         items: [
 		{boxLabel: 'PDF', name: 'optprinttype', id:'prtPDF', inputValue: 1,checked:true,
@@ -125,7 +125,17 @@ var optprinttype = new Ext.form.FieldSet({
 				}
 			}
 		},
-		{boxLabel: 'Others', name: 'optprinttype', id:'optOTH', inputValue: 2,
+		{boxLabel: 'Excel', name: 'optprinttype', id:'prtXLS', inputValue: 2,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+					    printtype="XLS";
+
+					}
+				}
+			}
+		},        
+		{boxLabel: 'Others', name: 'optprinttype', id:'optOTH', inputValue: 3,
 			listeners:{
 				check:function(rb,checked){
 					if(checked==true){
@@ -869,7 +879,7 @@ var cmbcrtype = new Ext.form.ComboBox({
 
 var cmbAccGrp = new Ext.form.ComboBox({
         fieldLabel      : 'A/C GROUP',
-        width           :  280,
+        width           :  300,
         displayField    : 'grp_name', 
         valueField      : 'grp_code',
         hiddenName      : '',
@@ -1451,12 +1461,15 @@ var MasCreditorFormpanel = new Ext.FormPanel({
 		    listeners:{
 		        click: function () {
 
-    		var p1 = "&scode=" + encodeURIComponent(supcode);
-		var param = (p1) ;
-                if (printtype  == "PDF")
-	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddress.rptdesign&__format=PDF&' + param, '_blank');
-                else
-	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddress.rptdesign&' + param, '_blank');
+    		var p1 = "&custtype=" + encodeURIComponent('S');
+            var p2 = "&scode=" + encodeURIComponent(supcode);
+		var param = (p1+p2) ;
+            if (printtype  == "PDF")
+	    	    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddress.rptdesign&__format=PDF&' + param, '_blank');
+            else if (printtype  == "XLS")
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddress.rptdesign&__format=XLSX&' + param, '_blank');
+            else
+	    	    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddress.rptdesign&' + param, '_blank');
      
 
 
@@ -1475,13 +1488,16 @@ var MasCreditorFormpanel = new Ext.FormPanel({
 		    icon: '/Pictures/edit.png',
 		    listeners:{
 		        click: function () {
-
-    		var p1 = "&scode=" + encodeURIComponent(0);
-		var param = (p1) ;
-                if (printtype  == "PDF")
-	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddressDetailed.rptdesign&__format=PDF&' + param, '_blank');
-                else
-	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddressDetailed.rptdesign&' + param, '_blank');
+                    var p1 = "&custtype=" + encodeURIComponent('S');
+                    var p2 = "&scode=" + encodeURIComponent(supcode);
+                var param = (p1+p2) ;
+       
+            if (printtype  == "PDF")
+	           	window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddressDetailed.rptdesign&__format=PDF&' + param, '_blank');
+            else if (printtype  == "XLS")
+                 window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddressDetailed.rptdesign&__format=XLSX&__pagebreak=false' + param, '_blank');
+            else
+                 window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepSupplierAddressDetailed.rptdesign&' + param, '_blank');
 
 
 		        }

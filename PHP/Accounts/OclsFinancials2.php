@@ -1,7 +1,7 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
-     mysql_query("SET NAMES utf8");
+     mysqli_set_charset($conn, "utf8");
 
     $task='';
     
@@ -322,8 +322,8 @@ function getApprovecheck() {
 	WHERE
 	    approveseq = '$seqaccref'
 		AND DATE_FORMAT(appdate, '%Y-%m-%d') = CURDATE()");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -336,8 +336,8 @@ function getTerryPurchaseDdbcrNote() {
     $finid=$_POST['finid'];
     $compcode=$_POST['compcode'];
     $r = mysql_query("call acc_sp_trn_selpurinv_fabdbcrnote('$invno','$ledcode','$finid','$compcode','T')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -346,8 +346,8 @@ function getTerryPurchaseDdbcrNote() {
 function getTerryPurchaseVouDateDetails() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("select DATE_FORMAT(max(mindate),'%Y-%m-%d') As max_mindate From dfd.hometexminheader where FIND_IN_SET(minseqno,'$minseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -362,8 +362,8 @@ function getTerryPurchaseMinHeader() {
               dfd.hometexsuppliermaster v
              where   FIND_IN_SET(minseqno,'$minseqno') and
               minvendorcode =  fabsupcode ");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -377,8 +377,8 @@ function getTerryPurchaseMinTrailerDetails() {
                 sum(mineducess) as educess,sum(mininsurance) as insurance,sum(minothercharges1) as other1,
                 sum(minothercharges2) as other2,sum(mindiscountval) As discount,sum(mincess) as cess,mindiscountreason  From dfd.hometexminheader
                 where FIND_IN_SET(minseqno,'$minseqno')  group by minfreightacctflag,mindiscountreason");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -394,8 +394,8 @@ function getTerryPurchaseMinTrailer() {
   dfd.hometexsortmaster i
  where FIND_IN_SET(t.minseqno,'$minseqno')   and
   minitemcode  = itemseqno  ");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -408,8 +408,8 @@ function getTerryPurchaseMinseqno() {
          from  dfd.hometexpurinvtrailer
          where  purinvseqno = '$invno'
          order by purinvminseqno");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -421,8 +421,8 @@ function getFibrePurchaseDdbcrNote() {
     $finid=$_POST['finid'];
     $compcode=$_POST['compcode'];
     $r = mysql_query("call acc_sp_trn_selpurinv_fabdbcrnote('$invno','$ledcode','$finid','$compcode','F')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -431,8 +431,8 @@ function getFibrePurchaseDdbcrNote() {
 function getFibrePurchaseVouDateDetails() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("select DATE_FORMAT(max(Date),'%Y-%m-%d') As max_mindate From dfd.fibreminheader where FIND_IN_SET(Seqno,'$minseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -441,8 +441,8 @@ function getFibrePurchaseVouDateDetails() {
 function getFibrePurchaseMinHeader() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("call fibre_sp_trn_selminheaderdetails ('$minseqno','MIN')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -457,8 +457,8 @@ function getFibrePurchaseMinTrailerDetails() {
                 sum(Othercharges2) as other2,sum(Discountval) As discount,sum(Cess) as cess,Discountreason ,
                 sum(VAT) as VAT,sum(CST) as CST From dfd.fibreminheader
                 where  FIND_IN_SET(Seqno,'$minseqno') group by Freightacctflag,Discountreason");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -467,8 +467,8 @@ function getFibrePurchaseMinTrailerDetails() {
 function getFibrePurchaseMinTrailer() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("call fibre_sp_trn_selmintrailerdetails('$minseqno','MIN')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -477,8 +477,8 @@ function getFibrePurchaseMinTrailer() {
 function getFibrePurchaseMinseqno() {
    $invno=$_POST['invno'];
     $r = mysql_query("call acc_sp_trn_selpurinvminseqno_fibre('$invno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -491,8 +491,8 @@ function getLedAgs() {
     
      $r = mysql_query("select led_name,led_code from acc_ledger_master where  led_name = '$ledname' and led_status<>'N'");
    // $r = mysql_query("select led_name,led_code from acc_ledger_master ");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -536,8 +536,8 @@ where
         and Blinvseqno = cinvinvseqno
 		and invno='$accinv'");
     }	
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -549,8 +549,8 @@ function getLedgerNewEdit() {
   /*  $r = mysql_query("select led_name,led_code from acc_ledger_master where led_comp_code='$compcode' and led_name like '$ledname' and led_status<>'N'");*/
     
     $r = mysql_query("select led_name,led_code from acc_ledger_master where led_name like '$ledname' and led_status<>'N'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -559,8 +559,8 @@ function getLedgerNewEdit() {
 function getMaxdateMadeups() {
    $minseqno=$_POST['minno'];
     $r = mysql_query("select max(min_date) As max_mindate From htstoresminheader where  FIND_IN_SET(min_seqno,'$minseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -572,8 +572,8 @@ function getDbcrnoteMadeups() {
    $finid=$_POST['finid'];
    $compcode=$_POST['compcode'];
     $r = mysql_query("call acc_sp_trn_selpurinv_dbcrnote('$Invno','$ledcode','$finid','$compcode','S')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -596,8 +596,8 @@ From
 where
     FIND_IN_SET(min_seqno, '$minseqno')
 group by min_freight_acctflag");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -606,8 +606,8 @@ group by min_freight_acctflag");
 function getStoreDetailsMinTrailDataStoreMadeups123() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("call stores_sp_trn_selmadeupsmintrailerdetailsnew3('$minseqno','MIN')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -616,8 +616,8 @@ function getStoreDetailsMinTrailDataStoreMadeups123() {
 function getStoreDetailsMinTrailMadeups() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("call stores_sp_trn_selmadeupsmintrailerdetailsnew2('$minseqno','MIN')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -626,8 +626,8 @@ function getStoreDetailsMinTrailMadeups() {
 function getStorePurchaseDetailsMinMadups() {
    $minseqno=$_POST['minseqno'];
     $r = mysql_query("call stores_sp_trn_selmadeupsminheaderdetails('$minseqno','MIN')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -636,8 +636,8 @@ function getStorePurchaseDetailsMinMadups() {
 function getStorePurchaseMinMadeups() {
    $invseqno=$_POST['invseqno'];
     $r = mysql_query("call acc_sp_trn_selmadeupspurinvminseqno('$invseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -653,8 +653,8 @@ function getGroupAgs() {
     where
         led_comp_code = '$compcode'
         and led_name='$name' and led_status='Y'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -664,8 +664,8 @@ function getGroupAgs() {
 function getStorePurchaseMadups() {
    $invno=$_POST['invno'];
     $r = mysql_query("call acc_sp_trn_selmadeupspurinvheader('$invno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -674,8 +674,8 @@ function getStorePurchaseMadups() {
 function getWorkOrderMaxDate() {
    $minno=$_POST['minno'];
     $r = mysql_query("select DATE_FORMAT(max(Womin_date),'%Y-%m-%d') As Womin_date From stores_womin_header where FIND_IN_SET(Womin_seqno,'$minno') ");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -683,7 +683,7 @@ function getWorkOrderMaxDate() {
 }
 
 function getTemp() {
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
     $flag=$_POST['flag'];
     if($flag=="S"){
     $r = mysql_query("select itemname,ValueDef,sum(Value) as Value,
@@ -726,8 +726,8 @@ function getTemp() {
     sum(DebitAmtt) as DebitAmtt from kgdl.tempaccterry
     group by ValueDef;");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -739,8 +739,8 @@ function getDbcrnoteWorkOrder() {
    $finid=$_POST['finid'];
    $compcode=$_POST['compcode'];
     $r = mysql_query("call acc_sp_trn_selpurinv_dbcrnote_new('$Invno','$ledcode','$finid','$compcode','S')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -752,8 +752,8 @@ function getWorkorderDetailsRec() {
             sum(Womin_excisedutyval) as exciseduty,sum(Womin_freightval) as freight,sum(Womin_othercharges1) as other1,
             sum(Womin_othercharges2) as other2,sum(Womin_discountval) As discount,sum(Womin_addexciseduty_val) As AddExduty_val  From stores_womin_header
             where FIND_IN_SET(Womin_seqno,'$seqno') group by Womin_freight_acctflag");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -762,8 +762,8 @@ function getWorkorderDetailsRec() {
 function getWorkorderDetailstrail() {
     $wominseqno=$_POST['wominseqno'];
     $r = mysql_query("call stores_sp_trn_womintrailerdetails('$wominseqno','WOM')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -772,8 +772,8 @@ function getWorkorderDetailstrail() {
 function getWorkorderSeqno() {
     $seqno=$_POST['seqno'];
     $r = mysql_query("CALL acc_sp_trn_selminseqno('$seqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -783,8 +783,8 @@ function getWorkorderMinHeader() {
     $seqno=$_POST['seqno'];
     $r = mysql_query("select h.*,DATE_FORMAT(Womin_billdate,'%Y-%m-%d') as date1 from kgdl.stores_womin_header h
 	where 	h.Womin_seqno	='$seqno'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -793,10 +793,10 @@ function getWorkorderMinHeader() {
 function getpartyledgeravailbal() {
     $ledcode=$_POST['ledcode'];
     $compcode=$_POST['compcode'];
-     mysql_query("SET NAMES utf8");
+     mysqli_set_charset($conn, "utf8");
     $r = mysql_query("call acc_sp_mas_selledger('$compcode','$ledcode')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -808,8 +808,8 @@ function getcottondbcr() {
     $finid=$_POST['finid'];
     $compcode=$_POST['compcode'];
     $r = mysql_query("call acc_sp_trn_selpurinv_dbcrnote('$Invno','$ledcode','$finid','$compcode','C')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -820,8 +820,8 @@ function getCottonTrailere() {
     $finid=$_POST['finid'];
     $millname=$_POST['millname'];
     $r = mysql_query("call acc_sp_trn_selcottonpurinvtrailer('$invseqno','$millname','$finid')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -834,8 +834,8 @@ function getDbcrnote1() {
    $finid=$_POST['finid'];
    $compcode=$_POST['compcode'];
     $r = mysql_query("call acc_sp_trn_selpurinv_dbcrnote('$Invno','$ledcode','$finid','$compcode','Y')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -846,8 +846,8 @@ function getYarnPurchaseTrail() {
     $ledcode=$_POST['ledcode'];
     $finid=$_POST['finid'];
     $r = mysql_query("call acc_sp_trn_selyarnpurinvtrailer_new('$invno','$ledcode','$finid')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -857,8 +857,8 @@ function getTerryPurchase() {
     $invno=$_POST['invno'];
     $r = mysql_query("select * from dfd.hometexpurinvheader
         where  purinvseqno = '$invno'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -867,8 +867,8 @@ function getTerryPurchase() {
 function getFibrePurchase() {
     $invno=$_POST['invno'];
     $r = mysql_query("call acc_sp_trn_selfibrepurinvheader('$invno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -879,8 +879,8 @@ function getYarnPurchase() {
     $ledcode=$_POST['ledcode'];
     $finid=$_POST['finid'];
     $r = mysql_query("call acc_sp_trn_selyarnpurinvheader_new('$invno','$ledcode','$finid')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -898,8 +898,8 @@ function getDbcrnote() {
    } else{
     $r = mysql_query("call acc_sp_trn_selpurinv_dbcrnote('$Invno','$ledcode','$finid','$compcode','$flag')");
    }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -908,8 +908,8 @@ function getDbcrnote() {
 function getMaxdate2() {
     $minno=$_POST['minno'];
     $r = mysql_query("select max(repmin_date) As max_mindate From stores_repairmin_header where repmin_seqno in('$minno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -918,8 +918,8 @@ function getMaxdate2() {
 function getMaxdate() {
     $minno=$_POST['minno'];
     $r = mysql_query("select max(min_date) As max_mindate From stores_min_header where  min_seqno in ('$minno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -931,8 +931,8 @@ function getMinlen2() {
                   sum(repmin_cstval) as cst,sum(repmin_excisedutyval) as exciseduty,sum(repmin_freightval) as freight,
                   sum(repmin_othercharges1) as other1,sum(repmin_othercharges2) as other2,sum(repmin_discountval) As discount,0 As AddExduty_val
                   From stores_repairmin_header where repmin_seqno in (  Trim('$minno')  ) group by repmin_freight_acctflag");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -960,8 +960,8 @@ function getMinlen() {
            sum(min_othercharges2) as other2,sum(min_discountval) As discount,sum(min_addexciseduty_val) As AddExduty_val  From stores_min_header
            where  FIND_IN_SET(min_seqno,'$minno') group by min_freight_acctflag");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -998,8 +998,8 @@ function getPurchaseparty() {
       if($prefix=='D'){
      $r = mysql_query("call acc_sp_trn_selpurchasepartyvendorcode('D','$acctrailledcode','$compcode')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1008,19 +1008,19 @@ function getPurchaseparty() {
 function getVocherDetailsTrail() {
     $accrefseqno=$_POST['accrefseqno'];
     $r = mysql_query("call acc_sp_trn_selacc_trail('$accrefseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
     echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
 }
 function getSeqnoRef() {
-     mysql_query("SET NAMES utf8");
+     mysqli_set_charset($conn, "utf8");
     $cinvseqno=$_POST['cinvseqno'];
     $r = mysql_query("call acc_sp_trn_selacc_tran_seq_no('$cinvseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1031,8 +1031,8 @@ function getPurchseSeqno() {
     $fin_id=$_POST['ginfinid'];
     $r = mysql_query("select ifnull(max(accref_seqno),0)+1 as accref_seqno from acc_ref
         where  accref_comp_code ='$gincompany' and accref_finid = '$fin_id'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1041,8 +1041,8 @@ function getPurchseSeqno() {
 function getVocherDetails() {
     $accrefseqno=$_POST['accrefseqno'];
     $r = mysql_query("call acc_sp_trn_selacc_ref('$accrefseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1050,7 +1050,7 @@ function getVocherDetails() {
 }
 
 function getBankDetails2() {
-     mysql_query("SET NAMES utf8");
+     mysqli_set_charset($conn, "utf8");
     $cinvseqno=$_POST['cinvseqno'];
     $type=$_POST['type'];
     if($type=="K"){
@@ -1060,15 +1060,15 @@ function getBankDetails2() {
     }else if($type=="M"){
     $r = mysql_query("call expo_sp_trn_selHomeTexbank_details('$cinvseqno','4')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
     echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
 }
 function getBankDetails() {
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
     $cinvseqno=$_POST['cinvseqno'];
     $gincompany=$_POST['gincompany'];
     $type=$_POST['type'];
@@ -1079,21 +1079,21 @@ function getBankDetails() {
     }else if($type=="M"){
     $r = mysql_query("call expo_sp_trn_SelHomeTexBankDetails('$cinvseqno','4')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
     echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
 }
 function getInvDate() {
-     mysql_query("SET NAMES utf8");
+     mysqli_set_charset($conn, "utf8");
     $cinvseqno=$_POST['cinvseqno'];
     $date=$_POST['date'];
     $type=$_POST['type'];
     $r = mysql_query("call acc_sp_trn_selacc_trail_invno_date('$cinvseqno','$date')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1134,8 +1134,8 @@ function getInvoicechk() {
 		BankCinvSeqno = '$bankcinv_seqno'");
     }
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1148,8 +1148,8 @@ function getCurrentBal() {
     $r = mysql_query("select 	* from 	acc_current_balance
 	where 	curbal_led_code = '$led_code' and
 		curbal_finid 		= '$fin_id'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1162,8 +1162,8 @@ function getLedgerDetail() {
     $r = mysql_query("select * from kgdl.acc_ledger_master
 	where 	led_code 	= '$ledgercode' and
 		led_comp_code 	= '$compcode' and led_status='Y'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1183,8 +1183,8 @@ else if($type=="F"){
 else if($type=="M"){
     $r = mysql_query("call expo_sp_trn_selHomeTexcinv_header_invno_date('$inv','$date','4')");
 }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1281,8 +1281,8 @@ where
     a_ref.accref_vou_type in ('SB') and a_ref.accref_seqno = a_tran.acctran_accref_seqno and a_ref.accref_seqno = a_trail.acctrail_accref_seqno and a_tran.acctran_accref_seqno = a_trail.acctrail_accref_seqno and a_ref.accref_seqno = cinv.CinvAccrefSeqno and a_tran.acctran_led_code = a_trail.acctrail_led_code and a_tran.acctran_led_code = a_led.led_code and a_ref.accref_comp_code = a_led.led_comp_code and a_tran.acctran_dbamt > 0 and (a_ref.accref_vou_type <> ('BD') or a_ref.accref_vou_type is null) and a_trail.acctrail_adj_value <= 0 and a_tran.acctran_led_code = '$ledcode' and a_ref.accref_comp_code = '4' and a_trail.acctrail_accref_seqno in ('$seqno')");
   }
 }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1338,8 +1338,8 @@ if($accrefcomp_code==1){
 			a_ref.accref_comp_code		=	'$accrefcomp_code' and
        			a_trail.acctrail_led_code	=	'$acctranled_code';");
 }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1351,8 +1351,8 @@ function getAccbankDetails() {
     $bank_discnt_vouno=$_POST['bank_discnt_vouno'];
     $comp_code=$_POST['gincompany'];
     $r = mysql_query("call expo_sp_trn_bankdetails_dis_vouno('$bank_discnt_vouno','$comp_code')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1366,8 +1366,8 @@ function getAccDetails() {
     $accrefcomp_code=$_POST['gincompany'];
     $accreffinid=$_POST['ginfinid'];
     $r = mysql_query("call acc_sp_trn_selacc_tran_vou_no('$accledcode','$accrefcomp_code','$accreffinid','N','BP','$accrefseqno')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1383,8 +1383,8 @@ from
 where
     led_comp_code = '$comp_code'
         and led_grp_code in (20,21,22,23,24,25,90,91,92,93,94,95,96,102,182) and led_status='Y'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1396,8 +1396,8 @@ function getFindsubgroup() {
     $r = mysql_query("select grp_code,grp_name from acc_group_master where
                                 grp_parent_code in (20,90)
                                       and grp_comp_code = '$compcode'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1410,8 +1410,8 @@ function getVocNo() {
     $compcode=$_POST['gincompany'];
     $finid=$_POST['ginfinid'];
     $r = mysql_query("call acc_sp_trn_selacc_tran_vou_no('$acctranled_code','$compcode','$finid','Y','A','0')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1419,7 +1419,7 @@ function getVocNo() {
 }
 
 function getAccountPartyName() {
-mysql_query("SET NAMES utf8"); 
+mysqli_set_charset($conn, "utf8"); 
     $compcode=$_POST['gincompany'];
     $r = mysql_query("select
                             led_code, led_name
@@ -1430,8 +1430,8 @@ mysql_query("SET NAMES utf8");
                                 and led_grp_code not in (43,168,169,170,171,172,204)
                                 and led_status = 'Y'
                                 and led_duplicate = 'N'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1456,8 +1456,8 @@ where
         and a.dbcr_finid = '$finid'
         and a.dbcr_comp_code = '$compcode'");
     
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1474,8 +1474,8 @@ function getStoreDetailsMinTrail() {
     }else if($flag=="B"){
     $r = mysql_query("call stores_sp_trn_selmintrailerdetails('$minseqno','MIN')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1491,8 +1491,8 @@ function getStoreDetailsMinTrail123() {
     }else if($flag=="B"){
     $r = mysql_query("call stores_sp_trn_selmintrailerdetails('$minseqno','MIN')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1506,8 +1506,8 @@ function getStoreDetailsMinTrailr() {
 		from
 			kgdl.stores_womin_trailer t
 		where t.Womin_seqno	=	'$minseqno'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1530,8 +1530,8 @@ function getStorePurchaseDetails() {
     }else if($flag=="B"){
     $r = mysql_query("call stores_sp_trn_selminheaderdetails('$minseqno','MIN')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1547,8 +1547,8 @@ function getStorePurchaseDetailsr() {
 		where 	repmin_seqno	=	'$minseqno' and
 			repmin_vendor_code 	= 	vendor_code;");
 
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1565,8 +1565,8 @@ function getStorePurchaseMin() {
     }else if($flag=="B"){
        $r = mysql_query("CALL acc_sp_trn_selpurinvminseqno('$invseqno')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1588,8 +1588,8 @@ function getStorePurchase() {
     }else if($flag=="B"){
         $r = mysql_query("call acc_sp_trn_selfabricpurinvheader('$invseqno')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1602,8 +1602,8 @@ function getSuppname() {
     $r = mysql_query("select * from kgdl.acc_ledger_master
 	where 	led_code 	= '$ledgercode' and 
 		led_comp_code 	= '$compcode' and led_status='Y'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1613,15 +1613,15 @@ function getSuppname() {
 
 function getGroup() {
     $comp_code=$_POST['compcode'];
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
      $r = mysql_query("select
     led_code, led_name
 from
     acc_ledger_master where led_comp_code='$comp_code' and led_grp_code in (
 8,84,85,86,87,88,89,104,105,106,107,108,109,110,111,112,113,114,115,117,118,119,120,121,122,144,145,146,
 154,157,160,163,164,165,166,173,174,175,188,192,195,196,197,198,200,202,203,205,206,207,218,237,30) and led_status='Y'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1629,7 +1629,7 @@ from
 }
 
 function getpartyledger() {
-    mysql_query("SET NAMES utf8");  
+    mysqli_set_charset($conn, "utf8");  
     $compcode=$_POST['gincompany'];
     $prefix=$_POST['prefix'];
     $vendorcode=$_POST['vendorcode'];
@@ -1674,8 +1674,8 @@ function getpartyledger() {
       if($prefix=='D'){
      $r = mysql_query("CALL acc_sp_trn_selpurchasepartyledcode('D','$vendorcode','$compcode')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1736,8 +1736,8 @@ function getInvoiceNo() {
       if($prefix=='D'){
     $r = mysql_query("call acc_sp_trn_selpartypurchaseinvoice('D','$vendorcode','$finid','$companycode')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1746,8 +1746,8 @@ function getInvoiceNo() {
 
 function getVendorNameMill() {
     $r = mysql_query("select g_parid as vendor_code,par_name as vendor_name from party_master");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1755,8 +1755,8 @@ function getVendorNameMill() {
 }
 function getMonth() {
     $r = mysql_query("call general_sp_mas_selmonth()");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1818,8 +1818,8 @@ function getPurchaseNo() {
    $r = mysql_query("select concat('PK',ifnull(max(CAST(substring(accref_vouno,3,8) as decimal)),0) + 1) as accref_vouno  from acc_ref
         where  accref_comp_code ='$compcode' and accref_finid = '$Finyear' and accref_vouno like 'PK%'");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1829,7 +1829,7 @@ function getPurchaseNo() {
 function getVendorName() {
     $comp_code=$_POST['gincompany'];
     $prefix=$_POST['prefix'];
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
     if($prefix=='S'){
     $r = mysql_query("call acc_sp_trn_selpurchasepartymaster('S','$comp_code')");
     }else if($prefix=='Y'){
@@ -1861,8 +1861,8 @@ function getVendorName() {
     }else if($prefix=='PP'){
     $r = mysql_query("call acc_sp_trn_selpurchasepartymaster('S','$comp_code')");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1871,8 +1871,8 @@ function getVendorName() {
 
 function getMillName() {
     $r = mysql_query("CALL acc_sp_mas_selcotonmillmaster()");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1881,8 +1881,8 @@ function getMillName() {
 
 function getReason() {
     $r = mysql_query("call acc_sp_mas_selreason()");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1890,7 +1890,7 @@ function getReason() {
 }
 
 function getPartyname() {
-    mysql_query("SET NAMES utf8"); 
+    mysqli_set_charset($conn, "utf8"); 
     $compcode=$_POST['gincompany'];
     $finyear=$_POST['ginfinid'];
     $bill=$_POST['bill'];
@@ -1921,8 +1921,8 @@ function getPartyname() {
 
 
 
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1941,8 +1941,8 @@ function getAddress() {
 		acc_ledger_master
 	where
 		led_code	=	'$ledcode'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1954,8 +1954,8 @@ function getInvNo() {
     $compcode=$_POST['gincompany'];
     $ledgername=$_POST['ledgername'];
     $r = mysql_query("CALL acc_sp_trn_selinvoiceno('$ledgername','$compcode','$finyear');");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1964,8 +1964,8 @@ function getInvNo() {
 
 function getCurrency() {
     $r = mysql_query("call general_sp_mas_selcurrencymaster()");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -1996,8 +1996,8 @@ function getInvDetails2() {
   acc_ref.accref_vou_type in ('GSI','PU','EXP','ES','EC') and  
   acc_tran.acctran_led_code  = '$ledgercode'  and  
   acc_trail.acctrail_accref_seqno =   '$invoiceno'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -2031,8 +2031,8 @@ function getInvDetails() {
 	dfd.expofabcustomermaster on CommdetAgentCode = CustSeqno
 	where CinvFinid in ('$Finid') and CinvSeqno ='$CinvSeqno'");
     }
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -2050,8 +2050,8 @@ function getControlCreditNo() {
 
 $r = mysql_query("select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
 
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -2060,22 +2060,23 @@ $r = mysql_query("select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_voun
 
     function getLedgerName()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $compcode = $_POST['compcode'];
         $ledname = $_POST['ledname'];
         
-	//$r=mysql_query("call acc_sp_mas_selledger_master('$compcode');");
-        $r=mysql_query("select led_code, led_name from acc_ledger_master 
+	//$sql = "call acc_sp_mas_selledger_master('$compcode');");
+        $sql = "select led_code, led_name from acc_ledger_master 
         where led_comp_code	= '$compcode' and led_name like '$ledname' and led_status = 'Y' and led_duplicate = 'N'
         and led_grp_code not in (43,168,169,170,171,172,204)");
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getControlDebitNo() {
@@ -2085,8 +2086,8 @@ $r = mysql_query("select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_voun
 //            where  accref_comp_code ='$gincompcode' and accref_finid = '$ginfinid' and accref_vouno like 'DN%'");
 $r = mysql_query("select concat('DNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
 
-        $nrow = mysql_num_rows($r);
-        while ($re = mysql_fetch_array($r)) {
+        $nrow = mysqli_num_rows($r);
+        while ($re = mysqli_fetch_array($r)) {
             $arr[] = $re;
         }
         $jsonresult = JEncode($arr);
@@ -2098,8 +2099,8 @@ $r = mysql_query("select concat('DNG',ifnull(max(dbcr_no),0) + 1) as accref_voun
         $compcode=$_POST['gincompany'];
         $ledgercode=$_POST['ledgercode'];
         $r = mysql_query("CALL acc_sp_trn_selacc_debit_billdetails('$compcode','$finyear','$ledgercode');");
-        $nrow = mysql_num_rows($r);
-        while ($re = mysql_fetch_array($r)) {
+        $nrow = mysqli_num_rows($r);
+        while ($re = mysqli_fetch_array($r)) {
             $arr[] = $re;
         }
         $jsonresult = JEncode($arr);
@@ -2107,10 +2108,10 @@ $r = mysql_query("select concat('DNG',ifnull(max(dbcr_no),0) + 1) as accref_voun
     }
 
     function getLedgerlist() {
-        $r=mysql_query("select led_code, led_name from acc_ledger_master where led_type	= 'G' order by led_name");
+        $sql = "select led_code, led_name from acc_ledger_master where led_type	= 'G' order by led_name");
 
-        $nrow = mysql_num_rows($r);
-        while ($re = mysql_fetch_array($r)) {
+        $nrow = mysqli_num_rows($r);
+        while ($re = mysqli_fetch_array($r)) {
             $arr[] = $re;
         }
         $jsonresult = JEncode($arr);

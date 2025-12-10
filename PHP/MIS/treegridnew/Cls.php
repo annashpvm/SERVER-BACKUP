@@ -1,12 +1,12 @@
 <?php
     require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
     $thisref=array();
-    mysql_query("SET NAMES utf8");  
+    global $conn;  
 
 
     $sql = "select grp_code, grp_name, grp_parent_code from acc_group_master where grp_comp_code = 1";
-    $result = mysql_query($sql);
-    $nbrows1 = mysql_num_rows($result);
+    $result = mysqli_query($conn, $sql);
+    $nbrows1 = mysqli_num_rows($result);
     
     while($data = mysql_fetch_assoc($result)) {
         $thisref['account_id'] = $data['grp_code'];

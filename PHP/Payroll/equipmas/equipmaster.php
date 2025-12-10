@@ -10,7 +10,7 @@
 <script type="text/javascript" src="equipmaster.js"></script>
 <script type="text/javascript" src="/vinothini/payroll/payrollmainmenu.js"></script>
 <?php
-    require($_SERVER["DOCUMENT_ROOT"]."/vinothini/payroll/payrollmainpage.php");
+    require($_SERVER["DOCUMENT_ROOT"]."/vinothini/payroll/payrollmainpage.php";
 ?>
 </head>
 <body>

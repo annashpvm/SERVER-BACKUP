@@ -5,7 +5,7 @@ require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
 $griddet = json_decode($_REQUEST['griddet'], true);
 $rowcnt = $_REQUEST['cnt'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 for ($i = 0; $i < $rowcnt; $i++) {
     $checkno = $griddet[$i]['checkno'];
@@ -18,15 +18,17 @@ for ($i = 0; $i < $rowcnt; $i++) {
 
     if($Flag=='Selected'){	
     $querya3 = "insert into bankrecon values('$checkno','$checkamt','$ledger','$voudate','$vouno','$seqno')";
-    $resulta3 = mysql_query($querya3);
+    $resulta3 = mysqli_query($conn, $querya3);
     }	
 }
 
 if ($resulta3) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false"})';
 }
 ?>

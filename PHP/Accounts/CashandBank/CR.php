@@ -78,11 +78,11 @@ where
     ref.accref_seqno=tn.acctran_accref_seqno and ref.accref_seqno=tr.acctrail_accref_seqno and led.led_code= tn.acctran_led_code and accref_vou_type = 'CR' and accref_finid IN (23) and accref_comp_code IN (1) and tn.acctran_led_code not in(69) and tr.acctrail_led_code not in(69)
 ORDER BY ref.accref_voudate");
 
-for ($i = 0; $i < mysql_num_rows($result); $i++) {
-    $accrefvouno = mysql_result($result, $i, 'accref_vouno');
-    $accrefvoudate = mysql_result($result, $i, 'accref_voudate'); 
-    $led = mysql_result($result, $i, 'led_name'); 
-    $acctrancramt = mysql_result($result, $i, 'acctran_cramt'); 	
+for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+    $accrefvouno = mysqli_result($result, $i, 'accref_vouno');
+    $accrefvoudate = mysqli_result($result, $i, 'accref_voudate'); 
+    $led = mysqli_result($result, $i, 'led_name'); 
+    $acctrancramt = mysqli_result($result, $i, 'acctran_cramt'); 	
 
 $col = array();
 
@@ -101,7 +101,7 @@ $col[] = array('text' => $led, 'width' => '50', 'height' => '5', 'align' => 'L',
 $col[] = array('text' => $acctrancramt, 'width' => '50', 'height' => '5', 'align' => 'L', 'font_name' => 'Arial', 'font_size' => '9', 'font_style' => '',
 $columns[] = $col;   
 
- $accrefvouno1 = mysql_result($result, $i, 'accref_vouno');
+ $accrefvouno1 = mysqli_result($result, $i, 'accref_vouno');
 }
 $col = array();
 $pdf->WriteTable($columns);

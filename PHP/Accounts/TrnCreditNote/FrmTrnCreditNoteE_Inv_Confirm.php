@@ -10,7 +10,7 @@ $compcode = $_REQUEST['compcode'];
 $vouno    = $_REQUEST['vouno'];
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($vouno != '')
 {
@@ -18,14 +18,16 @@ if ($vouno != '')
         $query1 = "update acc_dbcrnote_header set  E_inv_confirm = 'Y'  where dbcr_vouno = '$vouno' and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid'";
 
 //echo $query1;
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
 }
 if ($result1) 
 {
-  mysql_query("COMMIT");
+  mysqli_begin_transaction($conn);
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","vouno":"' . $vouno . '"})';
 }
 

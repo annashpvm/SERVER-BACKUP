@@ -25,16 +25,16 @@ $truck= $_POST['truck'];
 $freight= (float) $_POST['freight'];
 $tax= (float) $_POST['tax'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
 if ($savetype === "Add") {
 
    $query1 = "select IFNULL(max(dn_no),0)+1 as dnno from trn_delivery_note where dn_fincode = $finid and dn_comp_code='$compcode'";
-   $result1= mysql_query($query1);
+   $result1= mysqli_query($conn, $query1);
 
-   $rec2 = mysql_fetch_array($result1);
+   $rec2 = mysqli_fetch_array($result1);
    $dnno=$rec2['dnno'];
 
 
@@ -46,11 +46,11 @@ else if ($savetype === "Edit")
 
   $query5 = "update trnsal_finish_stock,  trn_delivery_note  set stk_slipno = 0, stk_destag = '' where  stk_var_code = dn_size and stk_sr_no =    dn_sr_no and dn_no = stk_slipno and dn_srno_fincode = stk_finyear  and dn_comp_code = stk_comp_code and dn_sono = stk_sono and dn_no = '$dnno' and dn_fincode = '$finid'    and dn_comp_code = '$compcode'" ;
 
-   $result5= mysql_query($query5);
+   $result5= mysqli_query($conn, $query5);
 
 
    $query6 = "delete from trn_delivery_note where dn_no = '$dnno' and dn_fincode = '$finid'   and dn_comp_code = '$compcode'";
-   $result6= mysql_query($query6);
+   $result6= mysqli_query($conn, $query6);
  } 
 
 
@@ -71,15 +71,15 @@ for($i=0;$i<$rowcnt;$i++)
         $reccount = $reccount +1;
 
 	$query2= "insert into trn_delivery_note values ('$compcode','$finid','$dnno','$dndate','$party','$truck','$soentno','$soentdate','$itemcode','$startno','$weight','$fincode','$rate','$freight','$vehicle','$tax','$ordno','$orddate')";
-	$result2=mysql_query($query2);   
+	$result2=mysqli_query($conn, $query2);   
 
 
 	$query3=  "update trnsal_finish_stock set stk_destag = 'D', stk_slipno = '$dnno' , stk_desdt = '$dndate' where stk_sr_no ='$startno' and stk_finyear = '$fincode' and stk_comp_code = '$compcode' and stk_sono =  '$soentno'";
-	$result3=mysql_query($query3);           
+	$result3=mysqli_query($conn, $query3);           
 
 
 	$query4= "update trnsal_order_trailer set ordt_inv_wt =  ordt_inv_wt + ($weight/1000)  where ordt_comp_code = $compcode and ordt_fincode <= $finid   and ordt_sono = $sono  and ordt_var_code = $itemcode";
-	$result4=mysql_query($query4);        
+	$result4=mysqli_query($conn, $query4);        
 
 }
 
@@ -90,12 +90,14 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3  && $result4  ) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dnno":"' . $dnno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dnno":"' . $dnno . '"})';
 	}
  
@@ -107,12 +109,14 @@ else
      { 
 	if ( $result5 && $result6) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dnno":"' . $dnno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dnno":"' . $dnno . '"})';
 	}
       }
@@ -120,12 +124,14 @@ else
        { 
 	if ($result2 && $result3  && $result4  &&  $result5 && $result6) 
 	{ 
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","dnno":"' . $dnno . '"})';
 	} 
 		
 	else {
-	   mysql_query("ROLLBACK");
+	   mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","dnno":"' . $dnno . '"})';
 	}
       } 

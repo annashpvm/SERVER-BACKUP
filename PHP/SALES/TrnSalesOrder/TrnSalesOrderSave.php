@@ -71,15 +71,15 @@ $cd90_60days = (float) $_POST['cd90_60days'];
 $cd90_75days = (float) $_POST['cd90_75days'];
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 if ($savetype == "Add") {
 
 
 $query1 = "select ifnull(max(ordh_sono),0)+1 as ordh_sono from trnsal_order_header where  ordh_type =  '$ordhtype' and ordh_comp_code =  $ordhcompcode and ordh_fincode = $ordhfincode";
-$result1 = mysql_query($query1);
-$rec1 = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1 = mysqli_fetch_array($result1);
 
 //$ordhackno = $rec1['ordh_sono'];
 
@@ -98,10 +98,10 @@ $rec1 = mysql_fetch_array($result1);
 else
 {
    $query2 = "delete from trnsal_order_header where ordh_sono = $ordhackno  and ordh_fincode = $ordhfincode and ordh_comp_code = $ordhcompcode";
-   $result2=mysql_query($query2); 
+   $result2=mysqli_query($conn, $query2); 
 
    $query3= "delete from trnsal_order_trailer where ordt_sono = $ordhackno  and ordt_fincode = $ordhfincode and ordt_comp_code = $ordhcompcode";
-   $result3=mysql_query($query3); 
+   $result3=mysqli_query($conn, $query3); 
 
 }
 
@@ -114,7 +114,7 @@ $query3 = "insert into trnsal_order_header values('$ordhcompcode','$ordhfincode'
 
 
 
-$result3=mysql_query($query3); 
+$result3=mysqli_query($conn, $query3); 
 
 
 //echo $query3;
@@ -150,7 +150,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 	 $query6 = "select * from  trnsal_finish_stock where stk_comp_code = $ordhcompcode and stk_finyear <= $ordhfincode and  stk_sr_no  in ($reellist)";
 
-	 $result6 = mysql_query($query6);
+	 $result6 = mysqli_query($conn, $query6);
 	 while ($row = mysql_fetch_assoc($result6)) {
                $itemcode = $row['stk_var_code'];
                $reelno   = $row['stk_sr_no'];
@@ -158,7 +158,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
               $query7 = "insert into trnsal_godown_to_despatchpending (t_compcode, t_date, t_sono, t_sodate, t_customer, t_itemcode, t_reelno, t_weight) values ($ordhcompcode,curdate(),'$ordhackno','$ordhackdate','$ordhparty',$itemcode,$reelno  ,$wt)";
 
-              $result7 = mysql_query($query7);
+              $result7 = mysqli_query($conn, $query7);
 
          }         
 
@@ -166,7 +166,7 @@ for ($i=0;$i<$rowcnt;$i++)
 	       $query8 = "update trnsal_finish_stock set stk_sono = $ordhackno where stk_comp_code = $ordhcompcode and stk_finyear <= $ordhfincode and  stk_sr_no  in ($reellist)";
 
 //echo $query6;
-		   $result8=mysql_query($query8); 
+		   $result8=mysqli_query($conn, $query8); 
 
         }     
 
@@ -191,7 +191,7 @@ for ($i=0;$i<$rowcnt;$i++)
 	$query4= "insert into trnsal_order_trailer values('$ordhcompcode','$ordhfincode','$ordhackno','$sno','$ordt_var_code','$ordhapprno','$reels','$ordt_qty',
 '$ordt_rate','$ordt_despdt','$soclose','$ordt_clo_reason','$ordt_approved','$ordt_ma_tag','$finwt','$invwt','$gdstkwt','$gdstkreels','$entdate')";
 
-	$result4=mysql_query($query4);  
+	$result4=mysqli_query($conn, $query4);  
 //echo $query4;          
   
 }
@@ -200,13 +200,15 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($savetype == "Add") {
 	if ($result1 && $result3 && $result4  )  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $ordhackno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $ordhackno . '"})';
 
 	}
@@ -214,13 +216,15 @@ if ($savetype == "Add") {
 else
  {
 	if ($result2 && $result3) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $ordhackno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $ordhackno . '"})';
 
 	}

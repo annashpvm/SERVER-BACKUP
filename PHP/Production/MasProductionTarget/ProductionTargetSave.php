@@ -15,24 +15,24 @@ $targetmins = (float)$_POST['targetmins'];
 if ($savetype == "Add")
 {
 	$query   = "select ifnull(max(tseqno),0)+1 as tseqno from masprd_target";
-	$result  = mysql_query($query);
-	$rec     = mysql_fetch_array($result);
+	$result  = mysqli_query($conn, $query);
+	$rec     = mysqli_fetch_array($result);
 	$seqno   = $rec['tseqno'];
 
 	$query   = "select ifnull(max(tseqno),0) as seqno from masprd_target where tgsm = $gsm";
-	$result  = mysql_query($query);
-	$rec     = mysql_fetch_array($result);
+	$result  = mysqli_query($conn, $query);
+	$rec     = mysqli_fetch_array($result);
 	$foundseqno   = $rec['seqno'];
         if ($foundseqno == 0 )
         {
         $query1="insert into masprd_target values ($seqno,$gsm , $deckle, $speed, $prdn_hr,  $power_ton, $steam_ton,$targetmins)";
-         $result1 = mysql_query($query1);
+         $result1 = mysqli_query($conn, $query1);
         } 
 }
 else
 {
         $query1="update masprd_target set tgsm = $gsm , tdeckle =  $deckle , tspeed = $speed, tprdn_hr = $prdn_hr, tpower_ton =  $power_ton, tsteam_ton = $steam_ton , tprdn_min = $targetmins where tseqno = $seqno ";
-         $result1 = mysql_query($query1);
+         $result1 = mysqli_query($conn, $query1);
 }
 	  
 	  if ($result1) {

@@ -33,8 +33,8 @@ function getFinyearprocess() {
     $fmdate = $_POST['d1'];
     $todate = $_POST['d2'];
     $r = mysql_query("call PrcAccFinyearProcess('$finid','$compcode','$fmdate','$todate')");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);

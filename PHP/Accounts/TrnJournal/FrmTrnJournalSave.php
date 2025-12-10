@@ -45,20 +45,20 @@
  $narration=str_replace("'","",$narration);
 
    #Begin Transaction
-   mysql_query("BEGIN");
+   mysqli_begin_transaction($conn);
 
    if ($flagtype == "Add")
    {
         #Get Max AccRef Seqno from acc_ref
         $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $result1 = mysql_query($query1);
-        $rec1 = mysql_fetch_array($result1);
+        $result1 = mysqli_query($conn, $query1);
+        $rec1 = mysqli_fetch_array($result1);
         $ginaccrefseq=$rec1['con_value'];
        
         #Get Voucher Number
         $query2 = "select ifnull(max(convert(substring(accref_vouno,5),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'GJV' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
-        $result2 = mysql_query($query2);
-        $rec2 = mysql_fetch_array($result2);
+        $result2 = mysqli_query($conn, $query2);
+        $rec2 = mysqli_fetch_array($result2);
         $conval=$rec2['vou_no'];
    //     $vouno=$paytype.'-'.$conval;
 
@@ -94,32 +94,41 @@
      {
 
 	$cquery1 = "select ifnull(max(accvou_slno),0) + 1 as reccount  from acc_voucher_logs where accvou_seqno = '$ginaccrefseq';";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
 
 
 	$dquery1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $dresult1 = mysql_query($dquery1);
+        $dresult1 = mysqli_query($conn, $dquery1);
 
+//echo $dquery1;
+//echo "<br>";	
 
 	$dquery2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $dresult2 = mysql_query($dquery2);
+        $dresult2 = mysqli_query($conn, $dquery2);
 	
-        $dquery3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $dresult3 = mysql_query($dquery3);
 
+//echo $dquery2;
+//echo "<br>";	
+        
+        
+        $dquery3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
+        $dresult3 = mysqli_query($conn, $dquery3);
+
+//echo $dquery3;
+//echo "<br>";
 
         $dquery4 = "update acc_trail , acc_adjustments  set acctrail_adj_value = acctrail_adj_value - ref_adjamount  where acctrail_accref_seqno = ref_docseqno and ref_docseqno  = '$ginaccrefseq'";
-        $dresult4 = mysql_query($dquery4);
+        $dresult4 = mysqli_query($conn, $dquery4);
 
 
 //echo $dquery4;
 //echo "<br>";	
 
         $dquery5 = "update acc_trail , acc_adjustments  set acctrail_adj_value = acctrail_adj_value - ref_adjamount  where acctrail_accref_seqno = ref_adjseqno and ref_docseqno  = '$ginaccrefseq'";
-        $dresult5 = mysql_query($dquery5);
+        $dresult5 = mysqli_query($conn, $dquery5);
 
 
 //echo $dquery5;
@@ -127,7 +136,7 @@
 
 
         $dquery6 = "delete from acc_adjustments  where ref_docseqno ='$ginaccrefseq' and ref_compcode='$compcode' and ref_finid ='$finid'";
-        $dresult6 = mysql_query($dquery6);
+        $dresult6 = mysqli_query($conn, $dquery6);
 
 //echo $dquery6;
 //echo "<br>";
@@ -141,14 +150,14 @@
         $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate',
                 'GJV','$bankname','$paymode','$refno','$refdate','$narration');";
 
-        $resulta2 = mysql_query($querya2);
+        $resulta2 = mysqli_query($conn, $querya2);
 
 
 //echo  $querya2;
 //echo "<br>";
 
         $cquerya3 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-        $cresulta3 = mysql_query($cquerya3);
+        $cresulta3 = mysqli_query($conn, $cquerya3);
 
 
 
@@ -166,7 +175,7 @@
             $description = strtoupper($griddet[$i]['narration']);
             $ledrefno = $griddet[$i]['refno'];
             $ledrefdate = $griddet[$i]['refdate'];
-
+            $newvouno   = '';
             if ($dbamt>0)
             {
               $amtmode = "D";
@@ -180,149 +189,41 @@
             #Insert AccTrail
                if ($ledtype != 'G')
                {
-
-
-
-    if ($ledrefno == '')
-    { 
-         $newvouno   = strtoupper(substr(trim($vouno),0,29));
-//         $newvouno = $vouno;
-         $newvouDT = $voudate;
-    }       
-    else
-    { 
-  //       $newvouno = $refno;
-         $newvouno   = strtoupper(substr(trim($ledrefno),0,29));
-         $newvouDT = $ledrefdate;
-    }    
-
-
-
-
+                if ($ledrefno == '')
+                { 
+                        $newvouno   = strtoupper(substr(trim($vouno),0,29));
+                //         $newvouno = $vouno;
+                        $newvouDT = $voudate;
+                }       
+                else
+                { 
+                //       $newvouno = $refno;
+                        $newvouno   = strtoupper(substr(trim($ledrefno),0,29));
+                        $newvouDT = $ledrefdate;
+                }    
 		  $querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$newvouno', '$newvouDT', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-		  $resulta3 = mysql_query($querya3);
+		  $resulta3 = mysqli_query($conn, $querya3);
 
-               }
 //echo  $querya3;
 //echo "<br>";
+
+
+               }
             #Insert AccTran
 
 
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$paytype','$description');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 //echo  $querya4;	   
-            if(resulta4){
+//echo "<br>";
+            if($resulta4){
                 $inscnt = $inscnt + 1;
             }
 
 	  }
         }
-
-/*
-
-// for Credit Adjustments
-        for($i=0;$i<$creditcnt;$i++){
-
-	    $adjvouno    = $credigriddet[$i]['accrefvouno'];
-	    $invno       = $credigriddet[$i]['invno'];
-	    $invdate     = $credigriddet[$i]['invdate'];
-	    $adjamt      = (float)$credigriddet[$i]['adjamt'];
-	    $accadjseqno = $credigriddet[$i]['accrefseqno'];
-	    $payterms    = $credigriddet[$i]['payterms'];
-            $voutype     = $credigriddet[$i]['voutype'];
-            $ledgercode  = $credigriddet[$i]['ledcode'];
-
-            if ($adjamt > 0) 
-            {   
-	    $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-	    $result = mysql_query($query);
-	    $rec = mysql_fetch_array($result);
-	    $ginrefslno = $rec['refslno'];
-            $ginrefslno = $ginrefslno + 1;
-
-	    $querydate = "select datediff('$voudate','$invdate') as daysin";
-            $resultdate = mysql_query($querydate);
-	    $recdatenew = mysql_fetch_array($resultdate);
-	    $adjdays=$recdatenew['daysin'];
-
-	    $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'GJV',curdate(),$payterms,'$ledgercode','$voutype' );";
-
-
-
-//echo  $query1;
-//echo "<br>";
-
-            $result1 = mysql_query($query1);
-
-	    $query2 = "call acc_sp_trn_updacc_trail_seq_no('$accadjseqno','$invno','$adjamt','$ledgercode')";
-	    $result2 = mysql_query($query2);
-
-
-
-            $query3 = "update acc_trail set acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$vouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = 'D' ";
-            $result3 = mysql_query($query3);
-
-
-//echo  $query3;
-//echo "<br>";
-
-            }
-        }
-
-
-// for Debit Adjustments
-        for($i=0;$i<$debitcnt;$i++){
-
-	    $adjvouno    = $debitgriddet[$i]['accrefvouno'];
-	    $invno       = $debitgriddet[$i]['invno'];
-	    $invdate     = $debitgriddet[$i]['invdate'];
-	    $adjamt      = (float)$debitgriddet[$i]['adjamt'];
-	    $accadjseqno = $debitgriddet[$i]['accrefseqno'];
-	    $payterms    = $debitgriddet[$i]['payterms'];
-            $voutype     = $debitgriddet[$i]['voutype'];
-            $ledgercode  = $debitgriddet[$i]['ledcode'];
-
-            if ($adjamt > 0) 
-            {   
-	    $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-	    $result = mysql_query($query);
-	    $rec = mysql_fetch_array($result);
-	    $ginrefslno = $rec['refslno'];
-            $ginrefslno = $ginrefslno + 1;
-
-	    $querydate = "select datediff('$voudate','$invdate') as daysin";
-            $resultdate = mysql_query($querydate);
-	    $recdatenew = mysql_fetch_array($resultdate);
-	    $adjdays=$recdatenew['daysin'];
-
-	    $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'GJV',curdate(),$payterms,'$ledgercode','$voutype' );";
-
-
-
-//echo  $query1;
-//echo "<br>";
-
-            $result1 = mysql_query($query1);
-
-	    $query2 = "call acc_sp_trn_updacc_trail_seq_no('$accadjseqno','$invno','$adjamt','$ledgercode')";
-	    $result2 = mysql_query($query2);
-
-
-
-        $query3 = "update acc_trail set	acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$vouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = 'C' ";
-        $result3 = mysql_query($query3);
-
-//echo  $query3;
-//echo "<br>";
-
-            }
-        }
-*/
-
-//echo  $adjcnt;
-//echo "<br>";
 
 
  $dc = 'D';
@@ -349,74 +250,111 @@
             if ($adjamt > 0) 
             {   
 	    $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-	    $result = mysql_query($query);
-	    $rec = mysql_fetch_array($result);
+	    $result = mysqli_query($conn, $query);
+	    $rec = mysqli_fetch_array($result);
 	    $ginrefslno = $rec['refslno'];
             $ginrefslno = $ginrefslno + 1;
 
 	    $querydate = "select datediff('$voudate','$invdate') as daysin";
-            $resultdate = mysql_query($querydate);
-	    $recdatenew = mysql_fetch_array($resultdate);
+            $resultdate = mysqli_query($conn, $querydate);
+	    $recdatenew = mysqli_fetch_array($resultdate);
 	    $adjdays=$recdatenew['daysin'];
 
-	    $query1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'GJV',curdate(),$payterms,'$ledgercode','$voutype' ,'$adjvoudate' );";
+	    $adjquery1 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid','$ginaccrefseq','$vouno', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$adjamt',$adjdays,'GJV',curdate(),$payterms,'$ledgercode','$voutype' ,'$adjvoudate','$drcr');";
 
 
 
-//echo  $query1;
+//echo  $adjquery1;
 //echo "<br>";
 
-            $result1 = mysql_query($query1);
+            $adjresult1 = mysqli_query($conn, $adjquery1);
 
-	    $query2 = "call acc_sp_trn_updacc_trail_seq_no('$accadjseqno','$invno','$adjamt','$ledgercode')";
-	    $result2 = mysql_query($query2);
+	    $adjquery2 = "call acc_sp_trn_updacc_trail_seq_no('$accadjseqno','$invno','$adjamt','$ledgercode')";
+	    $adjresult2 = mysqli_query($conn, $adjquery2);
 
-//echo  $query2;
+//echo  $adjquery2;
 //echo "<br>";
 
 
-        $query3 = "update acc_trail set	acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$newvouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
-        $result3 = mysql_query($query3);
+        $adjquery3 = "update acc_trail set	acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$newvouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
+        $adjresult3 = mysqli_query($conn, $adjquery3);
 
-//echo  $query3;
+//echo  $adjquery3;
 //echo "<br>";
 
             }
     }
 
+   
 
 
    if ($flagtype == "Add")
    {
-        if($resulta2 && resulta3 && ($inscnt == $rowcnt))
+        if ($adjcnt > 0)
+        {
+                if( $adjresult1 && $adjresult2 && $adjresult3 && $resulta2  && $resulta4  && ($inscnt == $rowcnt))
 
-        {
-            mysql_query("COMMIT");
-            echo '({"success":"true","vouno":"'.$vouno.'"})';
-            
+                {
+                 mysqli_commit($conn);
+                echo '({"success":"true","vouno":"'.$vouno.'"})';
+                
+                }
+                else
+                {
+                mysqli_rollback($conn);          
+                echo '({"success":"false","vouno":"'.$vouno.'"})';
+                }
         }
-        else
+        else        
         {
-            mysql_query("ROLLBACK");
-            
-            echo '({"success":"false","vouno":"'.$vouno.'"})';
+                if($resulta2  && $resulta4 && ($inscnt == $rowcnt))
+
+                {
+                mysqli_commit($conn);
+                echo '({"success":"true","vouno":"'.$vouno.'"})';
+                
+                }
+                else
+                {
+                mysqli_rollback($conn);          
+                echo '({"success":"false","vouno":"'.$vouno.'"})';
+                }
         }
+
     }
-    else
+    else  // Edit option
     {
-        if( $resulta2 && resulta3 && $dresult1 && $dresult2 && $dresult3)
-
+        if ($adjcnt > 0)
         {
-            mysql_query("COMMIT");
-            echo '({"success":"true","vouno":"'.$vouno.'"})';
-            
+
+                if( $adjresult1 && $adjresult2 && $adjresult3 &&  $resulta2  && $resulta4 && $dresult1 && $dresult2 && $dresult3)
+                {
+                mysqli_commit($conn);
+                echo '({"success":"true","vouno":"'.$vouno.'"})';
+                
+                }
+                else
+                {
+                mysqli_rollback($conn);            
+                echo '({"success":"false","vouno":"'.$vouno.'"})';
+                }
         }
         else
         {
-            mysql_query("ROLLBACK");
-            
-            echo '({"success":"false","vouno":"'.$vouno.'"})';
-        }
+
+                                
+                if( $resulta2  && $resulta4 && $dresult1 && $dresult2  && $dresult3)
+                {
+                mysqli_commit($conn);
+                echo '({"success":"true","vouno":"'.$vouno.'"})';
+                
+                }
+                else
+                {
+                mysqli_rollback($conn);            
+                echo '({"success":"false","vouno":"'.$vouno.'"})';
+                }
+        }        
     }
   
 ?>

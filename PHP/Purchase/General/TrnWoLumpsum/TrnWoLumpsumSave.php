@@ -54,22 +54,22 @@ $cancelflag = $_POST['cancelflag'];
  
 
  $query1 = "select IFNULL(max(woh_no),0)+1 as woh_no from trnpur_workorder_header where woh_fin_code = 27 and woh_comp_code=1";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $wohno=$rec1['woh_no'];
 
  $query = "select IFNULL(max(woh_seqno),0)+1 as woh_seqno from trnpur_workorder_header";
- $result = mysql_query($query);
- $rec = mysql_fetch_array($result);
+ $result = mysqli_query($conn, $query);
+ $rec = mysqli_fetch_array($result);
  $wohseqno=$rec['woh_seqno'];
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  
  $query3= "insert into trnpur_workorder_header values('$wohcompcode','$wohfincode','$wohno','$wohseqno','$wohdate','$wohdept','$wohtype','$wohsupcode','$wohref','$wohrefdate,'$wohwocode',
 '$wohvalue','$wohlabourtype','$wohlabouramt','$wohdiscount','$wohdiscsttype','$wohsertax','$wohsertaxamt','$woheduper','$woheduamt','$wohsheper',
 '$wohsheamt','$wohtransrate','$wohtransamt','$wohotheramt','$wohlessamt','$wohamount','$wohcgstper','$wohcgstamt','$wohsgstper','$wohsgstamt',
 '$wohigstper','$wohigstamt','$wohlabcgstper','$wohlabcgstamt','$wohlabsgstper','$wohlabsgstamt','$wohlabigstper','$wohlabigstamt','$wohpriceterms',
 '$wohpayterms','$wohcreditdays','$wohremarks','$wohdcneeded','$wohstartdate','$wohenddate','$cancelflag')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 //$inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
@@ -111,7 +111,7 @@ $cancelflag= $griddet[$i]['cancelflag'];
 '$wotrecd','$wotvalue','$wotdisper','$wotdisamt','$wotedper','$wotedamt','$wotecessper','$wotecessamt','$wotshecessper','$wotshecessamt',
 '$wotvatper','$wotcstper','$wottaxamt','$wototheramt','$wotcenvat','$wotvat','$wotcgstper','$wotcgstamt','$wotsgstper','$wotsgstamt','$wotigstper',
 '$wotigstamt','$wotamount','$cancelflag'"; 
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
   
 }
 
@@ -120,12 +120,14 @@ $result4=mysql_query($query4);
 if($result4 && $result3)
 //if($result3)
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","wono":"'.$wohno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","wono":"' . $wohno . '"})';
         }   

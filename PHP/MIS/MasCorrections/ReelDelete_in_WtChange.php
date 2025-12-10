@@ -9,19 +9,21 @@ $proddate = $_POST['proddate'];
 
 $query1= "delete from trnsal_reelweight_change  where comp_code = $compcode and ent_date= '$proddate' and srno = $reelno";
 //echo $query1;
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 
 
 
 
 if ($result1)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $reelno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $reelno . '"})';
 }
   

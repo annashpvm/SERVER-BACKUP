@@ -17,7 +17,7 @@ $vdate = date("m");
 
 
     //           $query0 =  "delete from tmp_dncn  where g_seqno > 0 ";     
-//               $result0 = mysql_query($query0);
+//               $result0 = mysqli_query($conn, $query0);
 
 
 
@@ -27,7 +27,7 @@ $vdate = date("m");
 // echo $query1;
 
 
-	 $result1 = mysql_query($query1);
+	 $result1 = mysqli_query($conn, $query1);
 	 while ($row = mysql_fetch_assoc($result1)) {
                $seqno   = $row['accref_seqno'];
                $vouno   = $row['accref_vouno'];
@@ -101,19 +101,19 @@ $vdate = date("m");
                { 
 
 	$query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
-	$result3 = mysql_query($query3);
-	$rec3 = mysql_fetch_array($result3);
+	$result3 = mysqli_query($conn, $query3);
+	$rec3 = mysqli_fetch_array($result3);
 	$gindbcrseq = $rec3['con_value'];
 
 
                $query3 =  "insert into acc_dbcrnote_header (dbcr_seqno, dbcr_comp_code, dbcr_finid, dbcr_type, dbcr_no, dbcr_vouno, dbcr_date, dbcr_partycode, dbcr_partyledcode, dbcr_ledcode, dbcr_value, dbcr_narration, dbcr_party_type, dbcr_output, dbcr_accseqno)  values($gindbcrseq,$compcode , $finid, '$voutype','$entno','$vouno','$voudate',$partycode,$ledcode,0,'$billamt','','$ledtype','N','$seqno')";     
 // echo $query3;
-               $result3 = mysql_query($query3);
+               $result3 = mysqli_query($conn, $query3);
 
 
                $query4 =  "insert into acc_dbcrnote_trailer (dbcrt_seqno, dbcrt_inv_no, dbcrt_inv_date, dbcrt_value,dbcrt_tcsvalue)  values($gindbcrseq,'$billno' , '$billdate','$billamt',0)";     
 // echo $query3;
-               $result4 = mysql_query($query4);
+               $result4 = mysqli_query($conn, $query4);
 
 
                } 
@@ -124,11 +124,11 @@ $vdate = date("m");
 		       { 
 		       $query4 =  "update acc_dbcrnote_header set dbcr_ledcode = '$ledcode' where dbcr_accseqno = $seqno";
 //	 echo $query4;
-		       $result4 = mysql_query($query4);
+		       $result4 = mysqli_query($conn, $query4);
 
 		       $query4 =  "update acc_dbcrnote_trailer set dbcrt_grossvalue = '$billamt' , dbcrt_taxable = '$billamt' where dbcrt_seqno  = $gindbcrseq";
 //	 echo $query4;
-		       $result4 = mysql_query($query4);
+		       $result4 = mysqli_query($conn, $query4);
 
 
 
@@ -144,64 +144,64 @@ $vdate = date("m");
 			   switch($ledcode){
 			   case  ($ledcode == "1644" || $ledcode == "1668"    ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_cgstvalue = '$billamt' ,  dbcrt_cgstper = '6' , dbcrt_cgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 			   case  ($ledcode == "1667"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_cgstvalue = '$billamt' ,  dbcrt_cgstper = '2.5' , dbcrt_cgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 
 			   case  ($ledcode == "1674"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_sgstvalue = '$billamt' ,  dbcrt_sgstper = '2.5' , dbcrt_sgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 
 			   case  ($ledcode == "1672"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_isgstvalue = '$billamt' ,  dbcrt_igstper = '5' , dbcrt_igstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 
 			   case  ($ledcode == "1669"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_cgstvalue = '$billamt' ,  dbcrt_cgstper = '9' , dbcrt_cgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 			   case  ($ledcode == "1676"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_sgstvalue = '$billamt' ,  dbcrt_sgstper = '9' , dbcrt_sgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 
 			   case  ($ledcode == "1671"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_igstvalue = '$billamt' ,  dbcrt_igstper = '18' , dbcrt_igstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 			   case  ($ledcode == "1666"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_cgstvalue = '$billamt' ,  dbcrt_cgstper = '14' , dbcrt_cgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 			   case  ($ledcode == "1673"  ) :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_sgstvalue = '$billamt' ,  dbcrt_sgstper = '14' , dbcrt_sgstledcode = $ledcode where dbcrt_seqno = $gindbcrseq";
-		               $result5 = mysql_query($query5);
+		               $result5 = mysqli_query($conn, $query5);
 			       break;
 
 
 			     case  ($ledcode == "1645" ||  $ledcode == "1675") :
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_sgstvalue = '$billamt' ,  dbcrt_sgstper = '6'  , dbcrt_sgstledcode = $ledcode  where dbcrt_seqno = $gindbcrseq";
 //echo $query5;
-		                $result5 = mysql_query($query5);
+		                $result5 = mysqli_query($conn, $query5);
 				break;
 
 			     case  ($ledcode == "1646"  ||  $ledcode == "1670" ) :
 //echo  "loop";  
 		      	       $query5 =  "update acc_dbcrnote_trailer set dbcrt_igstvalue = '$billamt' ,  dbcrt_igstper = '12' , dbcrt_igstledcode = $ledcode  where dbcrt_seqno = $gindbcrseq";
-              		       $result5 = mysql_query($query5);
+              		       $result5 = mysqli_query($conn, $query5);
 				break;
 
 
@@ -212,7 +212,7 @@ echo  "loop";
 
 
 
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 
 

@@ -51,16 +51,16 @@ if ($savetype === "Add")
 {
 
 	 $query1 = "select IFNULL(max(ordh_seqno),0)+1 as po_seqno from trnirm_order_header";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $po_seqno=$rec1['po_seqno'];
 
 	 $query2 = "select IFNULL(max(ordh_no),0)+1 as po_no from trnirm_order_header where ordh_fincode = '$ordhfincode' and ordh_compcode='$ordhcompcode'";
-	 $result2= mysql_query($query2);
-	 $rec2   = mysql_fetch_array($result2);
+	 $result2= mysqli_query($conn, $query2);
+	 $rec2   = mysqli_fetch_array($result2);
 	 $ordhno = $rec2['po_no'];
 
-          mysql_query("BEGIN");
+          mysqli_query($conn, "BEGIN");
 
 
 
@@ -68,7 +68,7 @@ if ($savetype === "Add")
 '$ordh_wt_per_container','$ordh_qty_diff','$ordh_shipping_line','$ordh_free_days','$ordh_moisture','$ordh_material' ,'$ordh_local_charges')
 
 )";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 //echo  $query3;
 }
@@ -78,12 +78,12 @@ else
 
  $query3= "call  spirm_upd_orderheader( '$po_seqno','$ordhcompcode','$ordhfincode','$ordhno','$ordhdate','$ordhrefno','$ordhrefdate', '$ordhsup_code','$ordhagent','$payterms','$delyterms','$shipdetails','$country','$loadingport','$discharport','$ordhlcdays' , '$ordhnagodays','$ordhcreditdays','$delremarks','$bankacno','$bankname','$bankcode' ,'$branchcode','$swiftcode','$bankadd1','$bankadd2','$bankadd3',
 '$ordh_wt_per_container','$ordh_qty_diff','$ordh_shipping_line','$ordh_free_days','$ordh_moisture','$ordh_material' ,'$ordh_local_charges')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 //  echo  $query3;
 
   $query4= "delete from trnirm_order_trailer where ordt_hdseqno = '$po_seqno'";
-  $result4=mysql_query($query4);
+  $result4=mysqli_query($conn, $query4);
 }
 
 
@@ -104,7 +104,7 @@ $outthrow     = 0;
 $prohibitive  = 0;
 
  $query4= "call spirm_ins_ordertrailer('$po_seqno','$sno','$po_item_code','$po_ordqty','0',0,'$po_ordqty',0,'$po_itemrate','$val','$moisper','$tareper','$outthrow','$prohibitive')";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
 //echo  $query4;
 }
@@ -113,12 +113,14 @@ $prohibitive  = 0;
 
 if( $result3 && $result4 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$ordhno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' .$ordhno. '"})';
         }   

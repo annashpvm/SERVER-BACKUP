@@ -1086,7 +1086,10 @@ function add_btn_click()
                 var gstInsert = "true";
 
 
-
+                if (!dtpLedgerRefdate.getValue()) {
+                    dtpLedgerRefdate.setValue(dtpVouDate.getValue());
+                }
+            
  
                 if (txtAccountName.getValue()==0||txtAccountName.getRawValue()=="" || ledgercode == 0 ){
                     gstInsert = "false";
@@ -1150,6 +1153,9 @@ function add_btn_click()
             txtRefno.setRawValue(txtLedgerRefno.getRawValue());
             dtpRefdate.setValue(dtpLedgerRefdate.getValue());
 
+            
+            txtAccountName.setRawValue('');
+
 
 			flxDetail.getSelectionModel().clearSelections();
 
@@ -1174,9 +1180,9 @@ function add_btn_click()
 				    }
                              }
                         }
-                    } 
-                    if (Number(txtCredit.getValue())  > 0)
-                    {
+            } 
+            if (Number(txtCredit.getValue())  > 0)
+            {
 			flxDebitAdjustments.getSelectionModel().selectAll();
 			var selrows = flxDebitAdjustments.getSelectionModel().getCount();
 			var sel = flxDebitAdjustments.getSelectionModel().getSelections();
@@ -1195,10 +1201,10 @@ function add_btn_click()
 				    }
                             }
                         }
-                    } 
+            } 
 
-                    if (Number(txtDebit.getValue())  > 0)
-                    {
+            if (Number(txtDebit.getValue())  > 0)
+            {
 
 			flxCreditAdjustments.getSelectionModel().selectAll();
 			var selrows = flxCreditAdjustments.getSelectionModel().getCount();
@@ -1233,9 +1239,9 @@ function add_btn_click()
 		                );
                             }  
                         }
-                    }     
-                      if (Number(txtCredit.getValue())  > 0)
-                    {
+            }     
+            if (Number(txtCredit.getValue())  > 0)
+            {
 			flxDebitAdjustments.getSelectionModel().selectAll();
 			var selrows = flxDebitAdjustments.getSelectionModel().getCount();
 			var sel = flxDebitAdjustments.getSelectionModel().getSelections();
@@ -1377,6 +1383,7 @@ function add_btn_click()
                     txtAccountName.focus();
                     txtRefno.setRawValue(txtLedgerRefno.getRawValue());
                     dtpRefdate.setValue(dtpLedgerRefdate.getValue());
+
 		            txtAccountName.setRawValue('');
                     txtLedgerRefno.setRawValue('');
                     CalcTotalDebitCredit();
@@ -1497,7 +1504,7 @@ function add_btn_click()
         },['accref_seqno', 'accref_vouno', 'accref_voudate', 'accref_vou_type', 'accref_bank_name', 'accref_paymode', 'accref_payref_no',
 'accref_payref_date', 'accref_narration', 'accref_chq_status', 'accref_reverse_status', 'acctran_accref_seqno', 
 'acctran_serialno', 'acctran_led_code', 'acctran_dbamt', 'acctran_cramt', 'acctran_totamt', 'acctran_paytype',
-'cust_name', 'led_addr1', 'led_addr2','cust_type', 'led_custcode' ,'acctran_narration' ,'acctrail_inv_no','acctrail_inv_date'  ])
+'cust_name', 'led_addr1', 'led_addr2','cust_type', 'led_custcode' ,'acctran_narration' ,'acctrail_inv_no','acctrail_inv_date','acctrail_adj_value'  ])
     });
 
 
@@ -1538,20 +1545,26 @@ function add_btn_click()
                        flxAdjustments.getStore().removeAll();  
                        flxDetail.getStore().removeAll();
      	               LoadVouNoDetailsdatastore.load({
-                           url: '/SHVPM/Accounts/clsAccounts.php',
-	                   params: {
-			        task: 'LoadVoucherDetails',
-			        fincode : ginfinid,
-			        compcode: gstfincompcode,
-                                vouno   : cmbVouNo.getRawValue(),
-	                  },
-		          callback: function () {
+                          url: '/SHVPM/Accounts/clsAccounts.php',
+	                      params: {
+			              task: 'LoadVoucherDetails',
+			              fincode : ginfinid,
+			              compcode: gstfincompcode,
+                          vouno   : cmbVouNo.getRawValue(),
+	                    },
+		                callback: function () {
                               txtVouno.setRawValue(cmbVouNo.getRawValue());
                               var cnt=LoadVouNoDetailsdatastore.getCount();
                               ledgercount = 0;
                               if (cnt>0)
                               {
+                                  var totadjamt = 0;
                                   for(var j=0; j<cnt; j++) 
+                                  {   
+                                       totadjamt += Number(LoadVouNoDetailsdatastore.getAt(j).get('acctrail_adj_value'));
+                                  }  
+
+                                  for(j=0; j<cnt; j++) 
                                   {
 
 
@@ -1580,12 +1593,12 @@ function add_btn_click()
                                          txtAmountDr.setValue(LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt'));	
                                       }
                                       flxDetail.getStore().insert(
-	                                 flxDetail.getStore().getCount(),
+	                                  flxDetail.getStore().getCount(),
                                          new dgrecord({
-					     ledname : LoadVouNoDetailsdatastore.getAt(j).get('cust_name'),           
-			                     type    : drcr,
-	                                     dbamt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'),
-					     cramt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt'),  
+					                        ledname : LoadVouNoDetailsdatastore.getAt(j).get('cust_name'),           
+			                                type    : drcr,
+	                                        dbamt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'),
+					                        cramt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt'),  
                                              totamt  : Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'))+ Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt')),
                                              ledseq  : LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'), 
                                              ledtype : LoadVouNoDetailsdatastore.getAt(j).get('cust_type'),
@@ -1599,6 +1612,8 @@ function add_btn_click()
 
 
                                   }
+
+                
 
                                   for(var j=0; j<cnt; j++) 
                                   {
@@ -1624,9 +1639,9 @@ function add_btn_click()
 
                                          if (custtype != "G" && ledgercount == 0)    
                                          {
-   				            flxCreditAdjustments.getStore().removeAll(); 
-				            InsertUnAdjustedBillDetail2();
-				            getAdjustmentDetails();
+                                            flxCreditAdjustments.getStore().removeAll(); 
+                                            InsertUnAdjustedBillDetail2();
+                                            getAdjustmentDetails();
                                          }    
                                       } 
  
@@ -1637,9 +1652,9 @@ function add_btn_click()
                                          dbcr = "R";
                                          if (custtype != "G" && ledgercount == 0)    
                                          {
-   				            flxDebitAdjustments.getStore().removeAll(); 
-				            InsertUnAdjustedBillDetail3();
-				            getAdjustmentDetails3();
+                                            flxDebitAdjustments.getStore().removeAll(); 
+                                            InsertUnAdjustedBillDetail3();
+                                            getAdjustmentDetails3();
                                          }    
 
 	
@@ -1652,6 +1667,16 @@ function add_btn_click()
 
                 CalcTotalDebitCredit();
                 EditDateCheck();
+
+                if (totadjamt >0)
+                {
+                    alert("Already Adjustment entries are done in the Journal. You can't Edit. If you want to EDIT, GO Bill Adjustment Change and Remove Adjustments and Edit JV.. ");
+                    Ext.getCmp('save').setDisabled(true);  
+                }    
+                else
+                {
+                    Ext.getCmp('save').setDisabled(false); 
+                }
 
                               }  
 
@@ -1894,7 +1919,7 @@ var txtAccountName = new Ext.form.TextField({
                 Ext.getCmp('DebitFlx').setDisabled(false);
 
 
-    if (cmbType.getRawValue()=="Dr")
+    if (cmbType.getRawValue()=="Db")
     {
   //       Ext.getCmp('flxdebit').setDisabled(true);
     //     Ext.getCmp('flxcredit').setDisabled(false);

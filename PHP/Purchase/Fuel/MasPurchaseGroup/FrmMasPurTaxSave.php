@@ -26,8 +26,8 @@ if ($saveflag   == "Add")
 
 
 	$qry = "select count(*) as cnt from mas_RMFU_purchasetax where tax_purname = '$purledname'";
-	$res  = mysql_query($qry);
-	$recvar = mysql_fetch_array($res);
+	$res  = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($res);
 	$cnt=$recvar['cnt'];
 
 //echo $cnt;
@@ -38,19 +38,23 @@ if ($saveflag   == "Add")
 
 //echo $query1;
 
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	}
 
 	  if ($result1 && $cnt==0) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $purledname . '"})';
 	} 
 	  else if ($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $purledname . '"})';
 	}
 }
@@ -61,14 +65,16 @@ else
 	  $query1="update mas_RMFU_purchasetax set tax_purname = upper('$purledname') ,tax_cgstper = '$taxcgst' , tax_sgstper = '$taxsgst' , tax_igstper = '$taxigst', tax_cgstledcode = '$taxcgst_ledcode', tax_sgstledcode = '$taxsgst_ledcode', tax_igstledcode = '$taxigst_ledcode' , tax_cgstledger = '$taxcgst_ledger' , tax_sgstledger = '$taxsgst_ledger', tax_igstledger = '$taxigst_ledger' , tax_gst = $totgst where  tax_purcode = $purledcode"; 
 
 //echo $query1;
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
 	  if ($result1 ) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $purledname . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $purledname . '"})';
 	}
 } 

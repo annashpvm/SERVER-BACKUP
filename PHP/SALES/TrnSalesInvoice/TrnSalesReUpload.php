@@ -15,7 +15,7 @@ $invhnetamt = $_POST['invhnetamt'];
 
 $query1= "update trnsal_invoice_header set U_ReUpload = 'Y' where ((U_TCSStatus = 'E'  or U_EWBStatus = 'E') or (U_TCSStatus = 'S' and E_inv_confirm = 'Y' and  U_EWBStatus = ''))  and invh_invrefno = '$invhrefno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
 
-$result1=mysql_query($query1); 
+$result1=mysqli_query($conn, $query1); 
 
    
 ?>

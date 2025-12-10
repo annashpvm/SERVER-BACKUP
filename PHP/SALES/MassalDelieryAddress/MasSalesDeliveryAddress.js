@@ -316,7 +316,7 @@ function save_click()
             params :
              {
 		ordhparty: cmbCustomer.getValue(),
-
+        ordhpartyName: cmbCustomer.getRawValue(),
 		ordhdeliveryadd1:txtDeliveryName.getRawValue() ,
 		ordhdeliveryadd2: txtAddr1.getRawValue(),
 		ordhdeliveryadd3: txtAddr2.getRawValue(),

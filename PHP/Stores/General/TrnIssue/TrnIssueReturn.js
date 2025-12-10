@@ -149,7 +149,7 @@ var loadissuenoDatastore = new Ext.data.Store({
         id: 'id'
       },[
 'iss_date', 'iss_dept_code', 'iss_cost_code', 'iss_item_code', 'uom_short_name', 'item_stock', 'item_avg_rate', 'iss_qty',
-'iss_rate', 'iss_cat_code', 'iss_unit', 'iss_cr_status', 'iss_for', 'iss_indno', 'iss_ind_compcode','iss_section', 'iss_equip','item_name','section_name', 'equip_name', 'iss_machine', 'ind_bal_Qty', 'iss_slno', 'ind_fin_code'
+'iss_rate', 'iss_value', 'iss_cat_code', 'iss_unit', 'iss_cr_status', 'iss_for', 'iss_indno', 'iss_ind_compcode','iss_section', 'iss_equip','item_name','section_name', 'equip_name', 'iss_machine', 'ind_bal_Qty', 'iss_slno', 'ind_fin_code'
  
       ]),
     });
@@ -311,20 +311,20 @@ var CategoryDatastore = new Ext.data.Store({
 				         flxDetail.getStore().insert(
 				            flxDetail.getStore().getCount(),
 				            new dgrecord({
-					    sno         : loadissuenoDatastore.getAt(j).get('iss_slno'),
+					        sno         : loadissuenoDatastore.getAt(j).get('iss_slno'),
 				            machine     : loadissuenoDatastore.getAt(j).get('iss_machine'),
-					    section     : loadissuenoDatastore.getAt(j).get('section_name'),
-					    sectioncode : loadissuenoDatastore.getAt(j).get('iss_section'),
-					    equipment   : loadissuenoDatastore.getAt(j).get('equip_name'),
-					    equipcode   : loadissuenoDatastore.getAt(j).get('iss_equip'), 	
-					    item        : loadissuenoDatastore.getAt(j).get('item_name'),
+					        section     : loadissuenoDatastore.getAt(j).get('section_name'),
+					        sectioncode : loadissuenoDatastore.getAt(j).get('iss_section'),
+					        equipment   : loadissuenoDatastore.getAt(j).get('equip_name'),
+					        equipcode   : loadissuenoDatastore.getAt(j).get('iss_equip'), 	
+					        item        : loadissuenoDatastore.getAt(j).get('item_name'),
 				            itemcode    : loadissuenoDatastore.getAt(j).get('iss_item_code'),
 				            uom         : loadissuenoDatastore.getAt(j).get('uom_short_name'),
 				            rate        : loadissuenoDatastore.getAt(j).get('item_avg_rate'),
 
-					    issqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
-                                 	    oldqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
-					    issval      : Number(loadissuenoDatastore.getAt(j).get('iss_rate')) * Number(loadissuenoDatastore.getAt(j).get('iss_qty')) ,
+					        issqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
+                            oldqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
+					        issval      : loadissuenoDatastore.getAt(j).get('iss_value'),   
 				            })
 				         );
 				     }
@@ -493,8 +493,10 @@ var txtItemName = new Ext.form.TextField({
                            callback: function () {
                                var cnt = loadItemStockDatastore.getCount(); 
                                if (cnt > 0) {
+
+                     
                                        txtUOM.setRawValue(loadItemStockDatastore.getAt(0).get('uom_short_name'));                        
-                                       txtAvgCost.setValue(loadItemStockDatastore.getAt(0).get('item_avg_rate'));
+                                       txtAvgCost.setRawValue(loadItemStockDatastore.getAt(0).get('item_avg_rate'));
                                        txtStock.setValue(loadItemStockDatastore.getAt(0).get('item_stock'));
 
                                        txtIssRetQty.focus();
@@ -612,22 +614,21 @@ function add_btn_click()
 
            {
 
-		gridedit = "false";
+		    gridedit = "false";
         	var idx = flxDetail.getStore().indexOf(editrow);
-                sel[idx].set('machine'   , cmbMachine.getRawValue()); 
-		sel[idx].set('sectioncode', cmbSection.getValue());
-		sel[idx].set('section'  , cmbSection.getRawValue());
-		sel[idx].set('equipcode', cmbEquipment.getValue());
-		sel[idx].set('equipment', cmbEquipment.getRawValue());
-                sel[idx].set('uom'      ,  txtUOM.getRawValue()); 
+            sel[idx].set('machine'   , cmbMachine.getRawValue()); 
+		    sel[idx].set('sectioncode', cmbSection.getValue());
+		    sel[idx].set('section'  , cmbSection.getRawValue());
+		    sel[idx].set('equipcode', cmbEquipment.getValue());
+		    sel[idx].set('equipment', cmbEquipment.getRawValue());
+            sel[idx].set('uom'      ,  txtUOM.getRawValue()); 
         	sel[idx].set('item'     , txtItemName.getRawValue());
         	sel[idx].set('itemcode' , strItemCode);
-		sel[idx].set('issqty'   , txtIssRetQty.getValue());
- 		sel[idx].set('issval'   , txtIssRetVal.getValue());
-		sel[idx].set('stock'    , txtStock.getValue());
-		sel[idx].set('rate'     , txtAvgCost.getValue());
-
-		flxDetail.getSelectionModel().clearSelections();
+		    sel[idx].set('issqty'   , txtIssRetQty.getRawValue());
+ 		    sel[idx].set('issval'   , txtIssRetVal.getRawValue());
+		    sel[idx].set('stock'    , txtStock.getRawValue());
+		    sel[idx].set('rate'     , txtAvgCost.getRawValue());
+		    flxDetail.getSelectionModel().clearSelections();
               
 
             }//if(gridedit === "true")
@@ -641,17 +642,17 @@ function add_btn_click()
                  new dgrecord({
                    sno:RowCnt,
                    machine:cmbMachine.getRawValue(),
-		   sectioncode:cmbSection.getValue(),
-		   section:cmbSection.getRawValue(),
-		   equipcode:cmbEquipment.getValue(),
-		   equipment:cmbEquipment.getRawValue(),
+		           sectioncode:cmbSection.getValue(),
+		           section:cmbSection.getRawValue(),
+		           equipcode:cmbEquipment.getValue(),
+		           equipment:cmbEquipment.getRawValue(),
                    item: txtItemName.getRawValue(),
-   		   itemcode:strItemCode,
+   		           itemcode:strItemCode,
             	   uom:txtUOM.getRawValue(),
-	    	   issqty:txtIssRetQty.getValue(),
-	           issval:txtIssRetVal.getValue(),
-                   stock : txtStock.getValue(),
-                   rate : txtAvgCost.getValue(),
+	    	       issqty:txtIssRetQty.getRawValue(),
+	               issval:txtIssRetVal.getRawValue(),
+                   stock : txtStock.getRawValue(),
+                   rate : txtAvgCost.getRawValue(),
                  }) 
                );
 
@@ -728,7 +729,7 @@ var txtAvgCost = new Ext.form.NumberField({
         name        : 'txtAvgCost',
         width       :  80,
         allowBlank  :  false,
-	tabindex : 1,
+	   tabindex : 1,
         readOnly   : true,
     });
 
@@ -762,7 +763,10 @@ function checkqty()
 //	     txtIssRetQty.setValue(txtStock.getValue()); 
 //	 }  
 
-         txtIssRetVal.setValue(txtIssRetQty.getValue()*txtAvgCost.getValue());
+
+
+         var issuevalue = Number(txtIssRetQty.getRawValue())*Number(txtAvgCost.getRawValue());
+         txtIssRetVal.setRawValue( parseFloat(issuevalue).toFixed(2) );
 
          
 }
@@ -952,11 +956,11 @@ var flxDetail = new Ext.grid.EditorGridPanel({
                       	txtItemName.setRawValue(selrow.get('item'));
                        	strItemCode = selrow.get('itemcode');
 	
-		    	txtAvgCost.setValue(selrow.get('rate'));
-		    	txtIssRetQty.setValue(selrow.get('issqty'));
+		    	txtAvgCost.setRawValue(selrow.get('rate'));
+		    	txtIssRetQty.setRawValue(selrow.get('issqty'));
 
-		    	txtIssRetQty.setValue(selrow.get('issqty'));
-		    	txtIssRetVal.setValue(selrow.get('issval'));
+		    	txtIssRetQty.setRawValue(selrow.get('issqty'));
+		    	txtIssRetVal.setRawValue(selrow.get('issval'));
                         txtUOM.setRawValue(selrow.get('uom')); 
             		cmbMachine.setRawValue(selrow.get('machine'));
 

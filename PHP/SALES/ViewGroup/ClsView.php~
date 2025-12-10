@@ -1,0 +1,57 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task="loadCustGroup";
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadCustGroup":
+		getCustGroup();
+		break;
+		case "loadCustomer":
+		getCustomer();
+		break;
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+  function getCustGroup()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("select * from vewsal_custgroup order by cust_group_name");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }  
+
+  function getCustomer()
+    {
+        mysqli_set_charset($conn, "utf8");
+     	$partygrp = $_POST['partygrp'];
+        $r=mysql_query("select * from massal_customer where cust_partygroup = $partygrp");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }  
+
+
+?>

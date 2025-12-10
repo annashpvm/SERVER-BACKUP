@@ -21,22 +21,22 @@ if ($AEDFlag === "Add")
 {
 
 	 $query1 = "select IFNULL(max(issh_seqno),0)+1 as issseqno from trnrm_issue_header";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $issseqno=$rec1['issseqno'];
 
 	 $query2 = "select IFNULL(max(issh_no),0)+1 as issh_no from trnrm_issue_header where issh_fincode = '$issfincode' and issh_compcode='$isscompcode'";
-	 $result2= mysql_query($query2);
-	 $rec2 = mysql_fetch_array($result2);
+	 $result2= mysqli_query($conn, $query2);
+	 $rec2 = mysqli_fetch_array($result2);
 	 $issh_no=$rec2['issh_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
  if ($issseqno > 0  && $issfincode > 0 && $isscompcode > 0)
  { 
 
 	 $query3= "call sprm_ins_issh ('$issseqno','$isscompcode','$issfincode','$issh_no','$isstype','$issdate','$issval','$usrcode',CURDATE())";
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 //echo $query3;
 	$inscnt = 0;
 	for ($i=0;$i<$rowcnt;$i++)
@@ -55,7 +55,7 @@ if ($AEDFlag === "Add")
 
 
 	 $query4= "call sprm_ins_issue_trailer ('$isscompcode','$issfincode','$issseqno','$sno','$itemseq','$vartype','$issqty','$issrate','$issvalue')";
-	 $result4=mysql_query($query4);      
+	 $result4=mysqli_query($conn, $query4);      
 //echo $query4;
   
 	}
@@ -64,16 +64,16 @@ if ($AEDFlag === "Add")
 }
 else if ($AEDFlag === "Edit")
 {
- mysql_query("BEGIN");  
+ mysqli_query($conn, "BEGIN");  
  $query5= "call sprm_upd_iss_stock ('$seqnoed')";
- $result5=mysql_query($query5); 
+ $result5=mysqli_query($conn, $query5); 
 //echo $query5;
  $query6= "call sprm_del_issue_trailer ('$seqnoed')";
- $result6=mysql_query($query6);
+ $result6=mysqli_query($conn, $query6);
 //echo $query6;
 
  $query7= "call sprm_upd_issh ('$seqnoed','$isscompcode','$issfincode','$seqnoed','$isstype','$issdate', '$issval','$usrcode')";
- $result7=mysql_query($query7); 
+ $result7=mysqli_query($conn, $query7); 
 //echo $query7;
 
 
@@ -92,7 +92,7 @@ $issvalue = $griddet[$i]['issval'];
 $issbillqty = $griddet[$i]['actiss'];
 
 	 $query8= "call sprm_ins_issue_trailer ('$isscompcode','$issfincode','$seqnoed','$sno','$itemseq','$vartype','$issqty','$issrate','$issvalue')";
-        $result8=mysql_query($query8);   
+        $result8=mysqli_query($conn, $query8);   
 
 //echo $query8;
   
@@ -103,13 +103,15 @@ if ($AEDFlag === "Add")
 {
 	if($result3 && $result4)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","IssNo":"'.$issh_no.'"})';
 	}
 	else
 	       {
 		echo '({"success":"false","IssNo":"'.$issh_no.'"})';
-		mysql_query("ROLLBACK");            
+		mysqli_rollback($conn);
+
+            
 		    
 		} 
 }
@@ -117,12 +119,14 @@ else
 {
 	if(  $result7 && $result8)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","IssNo":"'.$isspno.'"})';
 	}
 	else
 	       {
-mysql_query("ROLLBACK");       
+mysqli_rollback($conn);
+
+       
 		echo '({"success":"false","IssNo":"'.$isspno.'"})';
 		     
 		    

@@ -1,102 +1,68 @@
 <?php
-    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
+$finid     = $_POST['fincode'];
+$compcode  = $_POST['compcode'];
+$startdate = $_POST['fromdate'];
+$enddate   = $_POST['todate'];
+$filename  = $_POST['fname'];   
 
-	$finid     = $_POST['fincode'];
-	$compcode  = $_POST['compcode'];
-	$startdate = $_POST['fromdate'];
-	$enddate   = $_POST['todate'];
-	$filename  = $_POST['fname'];
-	
-        $result=mysql_query("call spacc_rep_json_HSN($compcode,'$finid','$startdate','$enddate')");
-/*
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-       $res = array($arr);
-*/
+$sql = "CALL spacc_rep_json_HSN($compcode,'$finid','$startdate','$enddate')";
+echo $sql . "<br>";
 
+$result = mysqli_query($conn, $sql);
 
-$temp = array();
-while($row = mysql_fetch_assoc($result)) {
-    $temp[] = array($row['jsonnew']);
+if (!$result) {
+    die("Query Failed: " . mysqli_error($conn));
 }
 
-$jsondata = stripslashes(json_encode($temp));
+/* ---------------------------
+   FETCH THE JSON RESULT
+---------------------------- */
+$row = mysqli_fetch_assoc($result);
 
-//echo $jsondata;
-
-$jsondata1 = str_replace('[["','',$jsondata);
-$jsondata2 = str_replace('}"]]','}',$jsondata1);
-
-
-
-
-//$file = $_SERVER["DOCUMENT_ROOT"].'/SHVPM/Report/'."hsn.json";
-$file = $_SERVER["DOCUMENT_ROOT"].$filename;
-
-if (file_put_contents($file,$jsondata2))
-{
-    $str = file_get_contents($file);
-    echo '<pre>' . print_r($str, true) . '</pre>';
-}
-else
-    echo("Failed");
-
-
-
-
-/*
-
-$myfile = fopen("gstjson.json", "w") or die("Unable to open file!");
-
-fwrite($myfile, $jsondata2);
-
-fclose($myfile);
-
-$file = 'gstjson.json';
-
-if (file_exists($file)) {
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="'.basename($file).'"');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($file));
-    flush();
-    readfile($file);
-    exit;
+if (!$row) {
+    die("No data returned from procedure");
 }
 
-echo file_get_contents("gstjson.json");
+$jsondata = $row['jsonnew'];   // <-- Correct
+echo "RAW: $jsondata<br>";
 
-*/
+/* -------------------------------------------------------
+   Clean JSON (usually not needed if procedure returns JSON)
+-------------------------------------------------------- */
+$jsondata = trim($jsondata);
+$jsondata = trim($jsondata, "'");
+$jsondata = stripslashes($jsondata);
 
-//$response = file_get_contents("10.0.0.151/SHVPM/Accounts/RepGST/ClsJSON.php");
+echo "CLEANED: $jsondata<br>";
 
-//echo $response;
+/* ---------------------------
+   DECODE JSON
+---------------------------- */
+$decoded = json_decode($jsondata, true);
 
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die("Invalid JSON: " . json_last_error_msg() . "<br>JSON: $jsondata");
+}
 
+/* ---------------------------
+   PRETTY PRINT JSON
+---------------------------- */
+$cleanJson = json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-//$myfile = fopen("gstjson.json"", "r") or die("Unable to open file!");
-//echo fread($myfile,filesize("gstjson.json"));
-//fclose($myfile);
+/* ---------------------------
+   SAVE TO FILE
+---------------------------- */
 
+$file = $_SERVER["DOCUMENT_ROOT"] . '/' . ltrim($filename, '/');
 
-//$row = mysql_fetch_assoc($result);
-//echo stripslashes(json_encode($row));
+if (file_put_contents($file, $cleanJson)) {
+    echo "File saved successfully: " . htmlspecialchars($filename);
+} else {
+    echo "Failed to write file.";
+}
 
-//$chachi = json_decode(json_encode($row),JSON_UNESCAPED_SLASHES);
-//return str(json_encode($row));
-
-
-//echo '({"success":"true","json":"'.$jsondata2.'"})';
-//echo '({"success":"true","vouno":"'.$vouno.'"})';
-    
+// clear connection for next call
+mysqli_next_result($conn);
 ?>
-
-
-
-

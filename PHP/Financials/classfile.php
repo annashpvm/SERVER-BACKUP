@@ -35,9 +35,9 @@ function getledgerdetail() {
     $compcode=$_POST['compcode'];
     $r = "select  l.led_code as led_code,l.led_name as led_name from acc_ledger_master l,tdsledgermaster t
 where l.led_code=t.tds_led_code and  t.tds_led_compcode='$compcode'";
-    $m = mysql_query($r);
-    $nrow = mysql_num_rows($m);
-    while ($re = mysql_fetch_array($m)) {
+    $m = mysqli_query($conn, $r);
+    $nrow = mysqli_num_rows($m);
+    while ($re = mysqli_fetch_array($m)) {
         $arr[] = $re;
     }
     $jsonresult = json_encode($arr);
@@ -52,9 +52,9 @@ function getalldetails()
     $finid=$_POST['finid'];
     $compcode=$_POST['compcode'];
     $r = "call acc_sp_tdsselectcustomer('$fromdate','$todate','$ledger','$finid','$compcode')";
-    $m = mysql_query($r);
-    $nrow = mysql_num_rows($m);
-    while ($re = mysql_fetch_array($m)) {
+    $m = mysqli_query($conn, $r);
+    $nrow = mysqli_num_rows($m);
+    while ($re = mysqli_fetch_array($m)) {
         $arr[] = $re;
     }
     $jsonresult = json_encode($arr);

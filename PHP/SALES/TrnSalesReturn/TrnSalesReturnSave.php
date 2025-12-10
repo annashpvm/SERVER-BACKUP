@@ -41,12 +41,12 @@ $cgstLedCode  = 0;
 $sgtLedCode   = 0;
 $igstLedCode  = 0;
 
-mysql_query("SET NAMES utf8");
+mysqli_set_charset($conn, "utf8");
 
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
@@ -54,15 +54,15 @@ mysql_query("BEGIN");
 
 $query103      = "select led_code from acc_ledger_master where led_custcode = $rethcust and led_type = 'C'";
 
-$result103     = mysql_query($query103);
-$rec103        = mysql_fetch_array($result103);
+$result103     = mysqli_query($conn, $query103);
+$rec103        = mysqli_fetch_array($result103);
 $cust_ledger   = $rec103['led_code'];
 
 
 #Find Insurance Ledger code
 $query102    	= "select lnk_ledcode from acc_link_ledger where lnk_system = 'sales' and lnk_name = 'insurance'";
-$result102   	= mysql_query($query102);
-$rec102      	= mysql_fetch_array($result102);
+$result102   	= mysqli_query($conn, $query102);
+$rec102      	= mysqli_fetch_array($result102);
 $ins_ledger	= $rec102['lnk_ledcode'];
 
 #Find Freight Ledger code
@@ -71,27 +71,27 @@ if  (substr($rethinvno,0,2) == "TN")
 else
     $query102  	= "select lnk_ledcode from acc_link_ledger where lnk_system = 'sales' and lnk_name = 'OSfreight'";
 
-$result102   	= mysql_query($query102);
-$rec102      	= mysql_fetch_array($result102);
+$result102   	= mysqli_query($conn, $query102);
+$rec102      	= mysqli_fetch_array($result102);
 $frt_ledger	= $rec102['lnk_ledcode'];
 
 #Find Rounindoff  Ledger code
 $query102    	= "select lnk_ledcode from acc_link_ledger where lnk_system = 'sales' and lnk_name = 'roundoff'";
-$result102   	= mysql_query($query102);
-$rec102      	= mysql_fetch_array($result102);
+$result102   	= mysqli_query($conn, $query102);
+$rec102      	= mysqli_fetch_array($result102);
 $round_ledger	= $rec102['lnk_ledcode'];
 
 #Find TCS  Ledger code
 $query102    	= "select lnk_ledcode from acc_link_ledger where lnk_system = 'sales' and lnk_name = 'TCS'";
-$result102   	= mysql_query($query102);
-$rec102      	= mysql_fetch_array($result102);
+$result102   	= mysqli_query($conn, $query102);
+$rec102      	= mysqli_fetch_array($result102);
 $TCSledger	= $rec102['lnk_ledcode'];
 
 
 #Find Sales / GST ledgers
 $query102    	= "select * from massal_tax where tax_code ='$rethtaxtag'";
-$result102   	= mysql_query($query102);
-$rec102      	= mysql_fetch_array($result102);
+$result102   	= mysqli_query($conn, $query102);
+$rec102      	= mysqli_fetch_array($result102);
 $salesLedCode   = $rec102['tax_sal_led_code'];
 $cgstLedCode    = $rec102['tax_cgst_ledcode'];
 $sgstLedCode    = $rec102['tax_sgst_ledcode'];
@@ -102,13 +102,13 @@ $voutype ='GSR';
 
 if ($savetype == "Add") {
 	$query2 = "select ifnull(max(reth_no),0)+1 as reth_no from trnsal_salret_header where reth_fincode = '$rethfincode' and reth_comp_code= '$rethcompcode';";
-	$result2= mysql_query($query2);
-	$rec2 = mysql_fetch_array($result2);
+	$result2= mysqli_query($conn, $query2);
+	$rec2 = mysqli_fetch_array($result2);
 	$rethno=$rec2['reth_no'];
 	$rethvouno = 'GSR'.trim((String)$rethno);
 
 	 $query1= "insert into trnsal_salret_header values('$rethcompcode', '$rethfincode', '$rethno', '$rethdate', '$rethcust', '$rethnoofreels','$rethtotwt', '$rethtaxtag', '$rethinsper', '$rethinsamt','$rethfrieght', '$rethroff', '$rethamt', '$rethinvno', '$rethinvdate', '$rethtaxable','$rethcgstper',  '$rethcgstamt','$rethsgstper', '$rethsgstamt', '$rethigstper', '$rethigstamt','$rethslipno','', '$rethvouyear','0','$rethdate','N','$rethretwt','$rethtcs' )";
-	 $result1=mysql_query($query1); 
+	 $result1=mysqli_query($conn, $query1); 
 
 //echo $query1;
 //echo "<br>";
@@ -118,16 +118,16 @@ else
 {
 
 	 $query1= "update trnsal_salret_header set reth_noofreels =  '$rethnoofreels' ,reth_totwt = '$rethtotwt',reth_insper =  '$rethinsper', reth_insamt = '$rethinsamt' , reth_frieght ='$rethfrieght',reth_roff =  '$rethroff', reth_amt =  '$rethamt', reth_taxable = '$rethtaxable',  reth_cgst_amt = '$rethcgstamt', reth_sgst_amt = '$rethsgstamt', reth_igst_amt = '$rethigstamt',reth_date = '$rethdate' ,reth_return_wt = '$rethretwt' , reth_tcs =  '$rethtcs' where reth_comp_code = '$rethcompcode'  and reth_fincode =  '$rethfincode' and reth_no = '$rethno'";
-	 $result1=mysql_query($query1); 
+	 $result1=mysqli_query($conn, $query1); 
 
 	$query2 = "update trnsal_finish_stock, trnsal_salret_trailer set  stk_retno = 0, stk_rettag = '' , stk_retdt = NULL where rett_var = stk_var_code and rett_sr_no = stk_sr_no and  rett_comp_code = stk_comp_code  and rett_fincode = stk_finyear and rett_comp_code = '$rethcompcode' and rett_fincode = '$rethfincode' and rett_no ='$rethno'";
-	 $result2=mysql_query($query2);  
+	 $result2=mysqli_query($conn, $query2);  
 
 	$query3 = "update trnsal_packslip_trailer, trnsal_salret_trailer set pckt_rettag = 'N' where rett_var = pckt_size and rett_sr_no = pckt_sr_no and  rett_comp_code = pckt_comp_code  and rett_fincode = pckt_fincode and rett_comp_code = '$rethcompcode' and rett_fincode = '$rethfincode' and rett_no ='$rethno'";
-	 $result3=mysql_query($query3);
+	 $result3=mysqli_query($conn, $query3);
 
 	$query4 = "delete from trnsal_salret_trailer where rett_comp_code = '$rethcompcode' and rett_fincode = '$rethfincode' and rett_no ='$rethno'";
-	 $result4=mysql_query($query4);  
+	 $result4=mysqli_query($conn, $query4);  
 
 }
 
@@ -151,7 +151,7 @@ $query3= "insert into trnsal_salret_trailer values('$rethcompcode','$rethfincode
 //echo $query3; 
 //echo "<br>";
 
-$result3=mysql_query($query3);       
+$result3=mysqli_query($conn, $query3);       
 
 
 
@@ -159,7 +159,7 @@ $query4 = "update trnsal_finish_stock set stk_wt =  $retretwt , stk_destag = '',
 
 //echo $query4; 
 //echo "<br>";
-$result4=mysql_query($query4);  
+$result4=mysqli_query($conn, $query4);  
 
   
 
@@ -171,14 +171,14 @@ $query5 = "update trnsal_packslip_trailer set pckt_rettag = 'T' where pckt_sr_no
 //echo $query5; 
 //echo "<br>";
 
-$result5=mysql_query($query5);
+$result5=mysqli_query($conn, $query5);
 
 
 
 if ($retnewno > 0)
 { 
 	$query = "select * from trnsal_finish_stock where stk_comp_code = '$rethcompcode' and stk_sr_no = '$retsrno'  ;";
-	$result= mysql_query($query);
+	$result= mysqli_query($conn, $query);
         while ($row = mysql_fetch_assoc($result)) {
             $proddate = $row['stk_ent_date'];
             $sono     = $row['stk_sono'];
@@ -193,10 +193,10 @@ if ($retnewno > 0)
 
 	//echo $query6; 
 	//echo "<br>";
-	$result6=mysql_query($query6);  
+	$result6=mysqli_query($conn, $query6);  
 
 	$query = "select * from trnsal_packslip_trailer where pckt_fincode = '$rethvouyear'  and  pckt_comp_code = '$rethcompcode' and pckt_no = '$rethslipno';";
-	$result= mysql_query($query);
+	$result= mysqli_query($conn, $query);
 //echo $query; 
 //echo "<br>";
 
@@ -215,7 +215,7 @@ if ($retnewno > 0)
 
 //	echo $query7; 
 //	echo "<br>";
-	$result7=mysql_query($query7); 
+	$result7=mysqli_query($conn, $query7); 
 }
 }
 
@@ -225,14 +225,16 @@ if ($retnewno > 0)
 if ($savetype == "Add") {
 	if( $result1  &&  $result3  && $result4  && $result5)
 	{
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","retno":"'. $rethno . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","retno":"' . $rethno . '"})';
 	} 
 }
@@ -240,14 +242,16 @@ else
 {
 	if( $result1  && $result2 && $result3 && $result4)
 	{
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","retno":"'. $rethno . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","retno":"' . $rethno . '"})';
 	} 
 }

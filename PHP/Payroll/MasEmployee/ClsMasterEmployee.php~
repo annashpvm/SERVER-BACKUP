@@ -1,0 +1,133 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task='loadQualification';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadQualification":
+		getQualification();
+		break;
+		case "loadDepartment":
+		getDepartment();
+		break;
+		case "loadDesignation":
+		getDesignation();
+		break;
+		case "loadReligion":
+		getReligion();
+		break;
+		case "loadCommunity":
+		getCommunity();
+		break;
+		case "loadCaste":
+		getCaste();
+		break;
+
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getQualification()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select qualification_code,qualification_name from mas_qualification order by qualification_code");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+	
+ function getDepartment()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select department_code,department_name from mas_department order by department_code");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+   function getDesignation()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select design_code,design_name from mas_designation order by design_code");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+		
+
+ function getReligion()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select religion_code,religion_name from mas_religion order by religion_code");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }	
+ function getCommunity()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select comm_code,comm_name from mas_community order by comm_code");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+ function getCaste()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select caste_code,caste_name from mas_caste order by caste_code");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+	
+?>

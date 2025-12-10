@@ -1,0 +1,54 @@
+CREATE DATABASE  IF NOT EXISTS `shvpm` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `shvpm`;
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+--
+-- Host: 10.0.0.251    Database: shvpm
+-- ------------------------------------------------------
+-- Server version	8.0.42-0ubuntu0.20.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `maspur_supplier_group`
+--
+
+DROP TABLE IF EXISTS `maspur_supplier_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `maspur_supplier_group` (
+  `sup_grp_code` int NOT NULL,
+  `sup_grp_name` varchar(50) NOT NULL,
+  `cancelflag` tinyint DEFAULT '0',
+  PRIMARY KEY (`sup_grp_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `maspur_supplier_group`
+--
+
+LOCK TABLES `maspur_supplier_group` WRITE;
+/*!40000 ALTER TABLE `maspur_supplier_group` DISABLE KEYS */;
+INSERT INTO `maspur_supplier_group` VALUES (1,'08 CHEMICAL ',0),(2,'12 RAW MATERIALS (LOCAL)',0),(3,'09 PACKING MATERIALS',0),(4,'105 GENERAL STORES',0),(5,'04 FELT ',0),(6,'13 RAW MATERIALS (IMPORT)',0),(7,'07 LABORATORY ITEMS',0),(8,'01 MECHANICAL',0),(9,'02 ELECTRICAL',0),(10,'03 CIVIL',0),(11,'14 FREIGHT PARTIES',0),(12,'10 PRODUCTION',0),(13,'20  GENERAL - OTHERS',0),(14,'11 INSTRUMENTATION',0),(15,'15 HUSK & COAL',0),(16,'16 PRINTING & STATIONARY',0),(17,'17 RAWMATERIAL - RICE BRAN',0),(18,'18 VEHICLE & SPARES',0),(19,'19  IT DEPT',0),(20,'08A DYES',0),(21,'04A WIRE',0),(22,'GENERAL  OTHERS',0);
+/*!40000 ALTER TABLE `maspur_supplier_group` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-12-10 11:48:40

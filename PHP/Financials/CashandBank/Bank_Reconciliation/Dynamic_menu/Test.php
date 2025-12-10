@@ -8,21 +8,23 @@ $sname = $_POST['sname'];
 $cadretype=$_POST['cadretype'];
 $status = $_POST['status'];
 $userid = $_POST['userid'];
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($action == "Add") {
     $query1 = ("call hr_sp_cadreMaster_insert('$name','$sname','$cadretype','Y','$userid', curdate() )" );
-    $result1 = mysql_query($query1);
+    $result1 = mysqli_query($conn, $query1);
 }
 
 if ($action == "Edit") {
     $r = ( " call hr_sp_cadreMaster_update('$idd','$name','$sname','$cadretype','$status','$userid',curdate() ) ");
-    $result = mysql_query($r);
+    $result = mysqli_query($conn, $r);
 }
 
 if ($result1 || $result) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
 }
 ?>

@@ -12,20 +12,20 @@ session_start();
 
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 if ($savetype == "Add")
 {
 	$query="select ifnull(max(party_code),0)+1 as party_code from mas_wb_party";
-	$result=mysql_query($query);
-	$rec=mysql_fetch_array($result);
+	$result=mysqli_query($conn, $query);
+	$rec=mysqli_fetch_array($result);
 	$partycode= $rec['party_code'];
 
 
         $query= "insert into mas_wb_party (party_code, party_name, party_type) values('$partycode','$partyname','$partytype')";
 
-	 $result = mysql_query($query);
+	 $result = mysqli_query($conn, $query);
 
 	//echo $query;
 
@@ -37,7 +37,7 @@ else
 
 
 	$query  = "update mas_wb_party set party_name = '$partyname' , party_type = '$partytype' where  party_code = '$partycode'";
-     $result = mysql_query($query);   
+     $result = mysqli_query($conn, $query);   
 
  
 //	echo $query;
@@ -51,12 +51,14 @@ else
 
      if (($result ))
      {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $query . '"})';
      }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $query . '"})';
 
      }

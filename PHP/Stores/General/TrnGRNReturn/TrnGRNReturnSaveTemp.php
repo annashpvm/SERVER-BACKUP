@@ -69,7 +69,7 @@ $addnl_ledcode = (int) $_POST['addnl_ledcode'];
 
 $voutype = 'DNG';
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 
@@ -78,8 +78,8 @@ if ($savetype == "Add") {
 
 
  $query2 = "select ifnull(max(debh_no),0)+1 as retno from trnpur_grn_ret_header where debh_fin_code = $fincode  and debh_comp_code =$compcode";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $rrno=$rec2['retno'];
 
 
@@ -93,7 +93,7 @@ $compcode, $fincode, $rrno, '$rrdate' , $supcode, '$grnno', '$grndate', '$billno
 
 //echo $query1;
 //echo "<br>";
- $result1=mysql_query($query1);
+ $result1=mysqli_query($conn, $query1);
 
 
 }
@@ -104,21 +104,21 @@ else
 
 //echo $query1;
 //echo "<br>";
- $result1=mysql_query($query1);
+ $result1=mysqli_query($conn, $query1);
 
 
  $query2  = "update trnpur_grn_ret_trailer , maspur_item_trailer set item_avg_rate = ((item_stock * item_avg_rate)+ debt_item_value)/ (item_stock + debt_qty), item_stock = item_stock + debt_qty where debt_comp_code = item_comp_code and debt_fin_code = item_fin_code and debt_item_code = item_code and debt_comp_code =  $compcode  and debt_fin_code = $fincode and debt_no= $rrno";  
 
 //echo $query2;
 //echo "<br>";
- $result2=mysql_query($query2);
+ $result2=mysqli_query($conn, $query2);
 
  $query3  = "update trnpur_grn_ret_trailer , trnpur_indent set ind_rec_qty = ind_rec_qty + debt_qty where debt_comp_code = ind_comp_code and debt_fin_code = ind_fin_code and debt_item_code = ind_item_code and
 debt_ind_no = ind_no and debt_comp_code =  $compcode  and debt_fin_code = $fincode and debt_no= $rrno";  
 
 //echo $query3;
 //echo "<br>";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 
 
@@ -126,19 +126,19 @@ debt_ind_no = ind_no and debt_comp_code =  $compcode  and debt_fin_code = $finco
 
 //echo $query4;
 //echo "<br>";
- $result4=mysql_query($query4);
+ $result4=mysqli_query($conn, $query4);
 
  $query5 = "update trnpur_grn_ret_trailer , trnpur_min_trailer set  mint_rej_qty = mint_rej_qty - debt_qty
 where debt_comp_code = mint_comp_code and debt_fin_code = mint_fin_code  and debt_item_code = mint_item_code and
 debt_pono = mint_pono and  debt_podate=  mint_podate and debt_fin_code = mint_ind_fin_code and debt_ind_no = mint_ind_no and debt_comp_code = $compcode  and debt_fin_code = $fincode and debt_no= $rrno"; 
 //echo $query5;
 //echo "<br>";
-$result5 = mysql_query($query5);
+$result5 = mysqli_query($conn, $query5);
 
  $query6 = "delete from  trnpur_grn_ret_trailer  where debt_comp_code = $compcode  and debt_fin_code = $fincode and debt_no= $rrno"; 
 //echo $query6;
 //echo "<br>";
-$result6 = mysql_query($query6);
+$result6 = mysqli_query($conn, $query6);
 
 
 
@@ -201,12 +201,12 @@ for ($i=0;$i<$rowcnt;$i++){
 //echo  $query6;
 //echo "<br>";
 
-	 $result6=mysql_query($query6); 
+	 $result6=mysqli_query($conn, $query6); 
 
 
 
 	 $query11 = "select * from maspur_item_trailer where item_comp_code ='$compcode'  and item_fin_code = '$fincode' and item_code = '$mintitemcode'";
-	 $result11 = mysql_query($query11);
+	 $result11 = mysqli_query($conn, $query11);
 
 
 //echo $query11;
@@ -229,25 +229,25 @@ for ($i=0;$i<$rowcnt;$i++){
 
 
 	    $query12 = "update maspur_item_trailer set  item_avg_rate = $avgrate , item_stock = $totstock  where item_comp_code ='$compcode'  and item_fin_code = '$fincode' and item_code = '$mintitemcode'";
-	    $result12 = mysql_query($query12);
+	    $result12 = mysqli_query($conn, $query12);
           } 
           mysql_free_result($result);
 
 	 $query13 = "update trnpur_indent set  ind_rec_qty = ind_rec_qty - $mintrejqty where ind_comp_code ='$compcode'  and ind_fin_code = '$mintindfincode' and ind_no = '$mintindentno' and ind_item_code = '$mintitemcode'";
 //echo $query13;
 //echo "<br>";
-	 $result13 = mysql_query($query13);
+	 $result13 = mysqli_query($conn, $query13);
 
 
 	 $query14 = "update  trnpur_purchase_trailer set ptr_rec_qty = ptr_rec_qty - $mintrejqty where ptr_comp_code = '$compcode'  and ptr_fin_code = '$fincode'   and ptr_pono = '$mintpono' and ptr_item_code = '$mintitemcode' and ptr_ind_fin_code = '$mintindfincode' and ptr_ind_no ='$mintindentno'"; 
 //echo $query14;
 //echo "<br>";
-	 $result14 = mysql_query($query14);
+	 $result14 = mysqli_query($conn, $query14);
 
 	 $query15 = "update  trnpur_min_trailer set mint_rej_qty = mint_rej_qty + $mintrejqty where mint_comp_code = '$compcode'  and mint_fin_code = '$fincode'   and mint_pono = '$mintpono' and mint_item_code = '$mintitemcode' and mint_ind_fin_code = '$mintindfincode' and mint_ind_no ='$mintindentno'"; 
 //echo $query15;
 //echo "<br>";
-	 $result15 = mysql_query($query15);
+	 $result15 = mysqli_query($conn, $query15);
 }  
 }
 
@@ -256,25 +256,29 @@ if ($savetype == "Add") {
    if ( $result1 && $result6 &&  $result12 &&  $result13 &&  $result15 ) 
    {
 
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","returnno":"'.$rrno.'"})';
    }
    else
    {  
 
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","returnno":"'.$rrno.'"})';
    }   
 }
 else {
    if ($result1 && $result2 &&  $result3 &&  $result4 &&  $result5 && $result6 &&  $result12 &&  $result13 &&  $result15)
    {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","returnno":"'.$rrno.'"})';
    }
    else
    {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","returnno":"'.$rrno.'"})';
    }   
 }

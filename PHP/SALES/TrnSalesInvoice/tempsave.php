@@ -70,7 +70,7 @@ $sonolist          = $_POST['sonolist'];
 //$invhvouyear  = date('Y',$invhdate)
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
@@ -78,15 +78,15 @@ mysql_query("BEGIN");
 
 $query103      = "select led_code from acc_ledger_master where led_custcode = $invhparty and led_type = 'C'";
 
-$result103     = mysql_query($query103);
-$rec103        = mysql_fetch_array($result103);
+$result103     = mysqli_query($conn, $query103);
+$rec103        = mysqli_fetch_array($result103);
 $cust_ledger = $rec103['led_code'];
 
 
 #Find Insurance Ledger code
 $query102    	= "select lnk_ledcode from acc_link_ledger where lnk_system = 'sales' and lnk_name = 'insurance'";
-$result102   	= mysql_query($query102);
-$rec102      	= mysql_fetch_array($result102);
+$result102   	= mysqli_query($conn, $query102);
+$rec102      	= mysqli_fetch_array($result102);
 $ins_ledger	= $rec102['lnk_ledcode'];
 
 
@@ -102,8 +102,8 @@ if ($savetype == "Add") {
 
 #Get Max AccRef Seqno from acc_ref
 $query1  = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref";
-$result1 = mysql_query($query1);
-$rec1    = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1    = mysqli_fetch_array($result1);
 $ginaccrefseq = $rec1['con_value'];
 
 
@@ -111,8 +111,8 @@ $ginaccrefseq = $rec1['con_value'];
 
 
     $query1 = "select ifnull(max(invh_seqno),0)+1 as invh_seqno from trnsal_invoice_header where invh_fincode = $invhfincode and invh_comp_code= $invhcompcode";
-    $result1= mysql_query($query1);
-    $rec2 = mysql_fetch_array($result1);
+    $result1= mysqli_query($conn, $query1);
+    $rec2 = mysqli_fetch_array($result1);
     $invhseqno=$rec2['invh_seqno'];
 
     $invhvouno = 'GS'+trim($invhseqno);
@@ -125,7 +125,7 @@ $ginaccrefseq = $rec1['con_value'];
 '$invhigstamt','$invhtcsper','$invhtcsamt','$invhdelivery_add1','$invhdelivery_add2','$invhdelivery_add3','$invhdelivery_city','$invhdelivery_pin',
 '$invhdelivery_gst','$invhstatecode','$invhewaybillno','$invhinstruction','$ginaccrefseq')";
 
-$result2=mysql_query($query2);   
+$result2=mysqli_query($conn, $query2);   
 
 
 }
@@ -156,12 +156,12 @@ for ($i=0;$i<$rowcnt;$i++)
 	     
 	$query3= "insert into trnsal_invoice_trailer values('$invhcompcode','$invhfincode','$invhseqno','$invtitem','$invtvar','$invthsncode','$invtwt','$invtnos','$invturate','$invtamt', 
 '$invtvalue','$invttaxable','$invtlosspmt','$invtqcdevyn')";
-	$result3=mysql_query($query3);          
+	$result3=mysqli_query($conn, $query3);          
 
 
 
         $query4 = "call spsal_inv_order_update($invhcompcode,$invhfincode ,'$sonolist' ,$invtvar);"; 
-	$result4=mysql_query($query4);         
+	$result4=mysqli_query($conn, $query4);         
 
 }
 
@@ -169,12 +169,14 @@ for ($i=0;$i<$rowcnt;$i++)
 if ($result2 && $result4  )
 
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $invhrefno . '"})';
 }
   

@@ -20,7 +20,7 @@ $newgrnno   = strtoupper($_REQUEST['newgrnno']);
 
 
         $query1 = "update trnfu_receipt_header set rech_no = '$newgrnno'  where rech_compcode = $compcode and rech_fincode = $finid  and rech_seqno = '$rech_seqno' and rech_no = '$rech_no'";
-        $result1=mysql_query($query1);
+        $result1=mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -31,14 +31,16 @@ $newgrnno   = strtoupper($_REQUEST['newgrnno']);
 
 	if($result1 )
 	{
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
 	}
 	else
 	{
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","GRNNo":"' . $rech_no . '"})';
 	}   
 

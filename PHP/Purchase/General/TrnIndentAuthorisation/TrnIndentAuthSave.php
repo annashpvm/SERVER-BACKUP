@@ -17,17 +17,19 @@ for ($i=0;$i<$rowcnt;$i++)
      if($flagtype == 'Y')
      {
 	$query1="call sppur_indent_authorization('$ind_comp_code','$ind_fin_code','$Indent','$ind_item_code')";
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
      }
 }
  
   if ($result1) 
 {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $Indent . '"})';
 } 
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $Indent . '"})';
 }
   

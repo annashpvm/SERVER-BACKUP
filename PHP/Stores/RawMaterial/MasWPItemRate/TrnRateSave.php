@@ -16,20 +16,20 @@ $AEDFlag  = $_POST['AEDFlag'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 if ($AEDFlag === "Add")
 {
 
 	 $query1 = "select ifnull(max(rm_rate_seqno),0) + 1 as seqno from masrm_supplier_rate where rm_rate_compcode='$compcode' and rm_rate_fincode ='$fincode'";
-	 $result1 = mysql_query($query1);
-	 $rec1 = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1 = mysqli_fetch_array($result1);
 	 $seqno=$rec1['seqno'];
 }
 else
 {
 
 	 $query1 = "delete from masrm_supplier_rate where rm_rate_compcode='$compcode' and rm_rate_fincode ='$fincode' and rm_rate_seqno = $seqno";
-	 $result1 = mysql_query($query1);
+	 $result1 = mysqli_query($conn, $query1);
 }
 
  	$inscnt = 0;
@@ -44,7 +44,7 @@ else
 	 $query2= "insert into masrm_supplier_rate
 (rm_rate_compcode, rm_rate_fincode, rm_rate_seqno, rm_rate_date, rm_rate_supcode, rm_rate_itemcode, rm_rate_areacode, rm_rate_rate, rm_rate_mois, rm_rate_entered_by, rm_rate_verified_by)
  values($compcode, $fincode, $seqno, '$entdate', $supcode, $itemcode,$areacode, $rate, $moisture, $usrcode, $usrcode)";
-	 $result2=mysql_query($query2);
+	 $result2=mysqli_query($conn, $query2);
 //echo $query1;  
 	}
 
@@ -52,25 +52,29 @@ if ($AEDFlag === "Add")
 {
 	if($result2)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","EntryNo":"'.$seqno.'"})';
 	}
 	else
 	{
 	   echo '({"success":"false","EntryNo":"'.$seqno.'"})';
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	} 
 }
 else
 {
 	if(  $result1 && $result2)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","EntryNo":"'.$seqno.'"})';
 	}
 	else
 	{
-           mysql_query("ROLLBACK");       
+           mysqli_rollback($conn);
+
+       
 	   echo '({"success":"false","EntryNo":"'.$seqno.'"})';
 	} 
 }

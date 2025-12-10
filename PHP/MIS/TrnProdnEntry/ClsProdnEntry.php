@@ -6,7 +6,7 @@
 	    if ( isset($_POST['task'])){
 		$task = $_POST['task']; // Get this from Ext
 	    }
-		mysql_query("SET NAMES utf8");
+		global $conn;
 	    switch($task){
 			case "loadSupervisor":
 			getSupervisor();
@@ -47,7 +47,7 @@
 	    function JEncode($arr){
 		if (version_compare(PHP_VERSION,"5.2","<"))
 		{    
-		    require_once("./JSON.php");   //if php<5.2 need JSON class
+		    require_once("./JSON.php";   //if php<5.2 need JSON class
 		    $json = new Services_JSON();  //instantiate new json object
 		    $data=$json->encode($arr);    //encode the data in json format
 		} else
@@ -59,10 +59,10 @@
 	   
 	 function getSupervisor()
 	    {
-		mysql_query("SET NAMES utf8");
-		$r=mysql_query("select * from mas_supervisor order by spvr_name");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		global $conn;
+		$sql = "select * from mas_supervisor order by spvr_name";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -72,13 +72,13 @@
 	   
 	 function getPPNo()
 	    {
-		mysql_query("SET NAMES utf8");
+		global $conn;
 		$compcode = $_POST['compcode'];
 		$finid = $_POST['finid'];
-		$r=mysql_query("select pp_advno from trn_prodplan_header where pp_comp_code = '$compcode' and pp_fincode = '$finid' and pp_qty > pp_rwprodn group by pp_advno
-	");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		$sql = "select pp_advno from trn_prodplan_header where pp_comp_code = '$compcode' and pp_fincode = '$finid' and pp_qty > pp_rwprodn group by pp_advno
+	";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -88,13 +88,13 @@
 
 	 function getPPVariety()
 	    {
-		mysql_query("SET NAMES utf8");
+		global $conn;
 		$compcode = $_POST['compcode'];
 		$finid = $_POST['finid'];
 		$ppno  = $_POST['ppno'];
-	$r=mysql_query("select var_desc,var_groupcode from trn_prodplan_trailer_varietywise a, masprd_variety b where pih_variety = var_groupcode and pih_comp_code = '$compcode ' and pih_fincode <=  '$finid' and pih_mcprodn < (pih_qty + (pih_qty*(pih_tolarance/100)))  and  pih_ppno = '$ppno'  group by var_desc,var_groupcode order by var_desc");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+	$sql = "select var_desc,var_groupcode from trn_prodplan_trailer_varietywise a, masprd_variety b where pih_variety = var_groupcode and pih_comp_code = '$compcode ' and pih_fincode <=  '$finid' and pih_mcprodn < (pih_qty + (pih_qty*(pih_tolarance/100)))  and  pih_ppno = '$ppno'  group by var_desc,var_groupcode order by var_desc";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -104,14 +104,14 @@
 
 	 function getPPVarietyQty()
 	    {
-		mysql_query("SET NAMES utf8");
+		global $conn;
 		$compcode = $_POST['compcode'];
 		$finid    = $_POST['finid'];
 		$ppno     = $_POST['ppno'];
 		$variety  = $_POST['variety'];
-	$r=mysql_query("select pih_qty,pih_qty-pih_mcprodn as balqty  from trn_prodplan_trailer_varietywise where  pih_comp_code = '$compcode' and pih_fincode <=  '$finid'  and  pih_ppno = '$ppno' and pih_variety = '$variety'");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+	$sql = "select pih_qty,pih_qty-pih_mcprodn as balqty  from trn_prodplan_trailer_varietywise where  pih_comp_code = '$compcode' and pih_fincode <=  '$finid'  and  pih_ppno = '$ppno' and pih_variety = '$variety'";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -122,11 +122,11 @@
 	   
 	 function getDepartment()
 	    {
-		mysql_query("SET NAMES utf8");
+		global $conn;
 
-		$r=mysql_query("select department_code,department_name from mas_department  where department_code in (1,2,3,4,17,7,16,10) order by department_name");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		$sql = "select department_code,department_name from mas_department  where department_code in (1,2,3,4,17,7,16,10) order by department_name";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -136,11 +136,11 @@
 	
 	 function getSection()
 	    {
-		mysql_query("SET NAMES utf8");
+		global $conn;
 
-		$r=mysql_query("select * from mas_section order by section_name");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		$sql = "select * from mas_section order by section_name";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -149,11 +149,11 @@
 	    }
 	 function getEquipment()
 	    {
-		mysql_query("SET NAMES utf8");
+		global $conn;
 
-		$r=mysql_query("select *  from mas_equipment  order by equip_name");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		$sql = "select *  from mas_equipment  order by equip_name";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -163,10 +163,10 @@
 
 	 function getVariety()
 	    {
-		mysql_query("SET NAMES utf8");
-    	$r=mysql_query("select var_desc,var_groupcode from  masprd_variety  group by var_desc,var_groupcode order by var_desc");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		global $conn;
+    	$sql = "select var_desc,var_groupcode from  masprd_variety  group by var_desc,var_groupcode order by var_desc";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}
@@ -177,10 +177,10 @@
 	    {
 		$variety  = $_POST['varcodes'];
 
-		mysql_query("SET NAMES utf8");
-    	$r=mysql_query("select var_desc,var_groupcode from  masprd_variety  where var_groupcode in $variety group by var_desc,var_groupcode order by var_desc");
-		$nrow = mysql_num_rows($r);
-		while($re = mysql_fetch_array($r))
+		global $conn;
+    	$sql = "select var_desc,var_groupcode from  masprd_variety  where var_groupcode in $variety group by var_desc,var_groupcode order by var_desc";
+		$nrow = mysqli_num_rows($r);
+		while($re = mysqli_fetch_array($r))
 		{
 		$arr[]= $re ;
 		}

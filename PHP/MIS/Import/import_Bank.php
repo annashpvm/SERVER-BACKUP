@@ -176,8 +176,8 @@ if (isset($_POST["Import"])) {
 //echo $query1;
 //echo "<br>"; 
 
-		$result1  = mysql_query($query1);
-		$rec1     = mysql_fetch_array($result1);
+		$result1  = mysqli_query($conn, $query1);
+		$rec1     = mysqli_fetch_array($result1);
 		$recfound = $rec1['nos'];
         
 //echo $recfound;
@@ -211,14 +211,14 @@ if (isset($_POST["Import"])) {
 
                 $sno = 0;
 		$query1       = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-		$result1      = mysql_query($query1);
-		$rec1         = mysql_fetch_array($result1);
+		$result1      = mysqli_query($conn, $query1);
+		$rec1         = mysqli_fetch_array($result1);
 		$ginaccrefseq = $rec1['con_value'];
 
 
                 $query2   = "select ifnull(max(convert(substring(accref_vouno,4),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = '$voutype' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
-                $result2  = mysql_query($query2);
-                $rec2     = mysql_fetch_array($result2);
+                $result2  = mysqli_query($conn, $query2);
+                $rec2     = mysqli_fetch_array($result2);
                 $ginvouno = $voutype.$rec2['vou_no'];
 
 
@@ -465,8 +465,8 @@ if (isset($_POST["Import"])) {
 //echo "<br>"; 
 
 
-		$result1  = mysql_query($query1);
-		$rec1     = mysql_fetch_array($result1);
+		$result1  = mysqli_query($conn, $query1);
+		$rec1     = mysqli_fetch_array($result1);
 		$recfound = $rec1['nos'];
                 if ($recfound == 0)     
                 { 
@@ -479,7 +479,7 @@ if (isset($_POST["Import"])) {
 //echo $query123;
 //echo "<br>"; 
 
-	$result123 = mysql_query($query123);
+	$result123 = mysqli_query($conn, $query123);
                 } 
              }
 

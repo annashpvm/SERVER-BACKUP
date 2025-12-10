@@ -1,0 +1,87 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+    $task='loadSONo';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+    mysqli_set_charset($conn, "utf8");
+
+    switch($task){
+
+		case "loadSONo":
+		getSONo();
+		break;
+		case "loadReelNo":
+		getReelNo();
+		break;
+		case "loadWeight":
+		getWeight();
+		break;
+		default:
+        	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	break;
+    }
+
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+
+function getSONo()
+{
+ mysqli_set_charset($conn, "utf8");
+	$finid = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+        $r=mysql_query("select stk_sono from trnsal_finish_stock where stk_comp_code =  1 and stk_destag = '' group by stk_sono order by stk_sono asc");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+}
+
+function getReelNo()
+{
+ mysqli_set_charset($conn, "utf8");
+	$sono = $_POST['sono'];
+	$compcode = $_POST['compcode'];
+        $r=mysql_query("select stk_sr_no from trnsal_finish_stock where stk_comp_code =  1  and stk_destag = '' and stk_sono = '$sono' order by stk_sr_no asc");
+
+        $r=mysql_query("select stk_sr_no from trnsal_finish_stock where stk_comp_code =  1  and stk_destag = ''  order by stk_sr_no asc");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+}
+
+
+function getWeight()
+{
+ mysqli_set_charset($conn, "utf8");
+	$sono = $_POST['sono'];
+	$reelno = $_POST['reelno'];
+        $r=mysql_query("select stk_wt from trnsal_finish_stock where stk_comp_code =  1  and stk_destag = '' and stk_sono = '$sono'  and stk_sr_no = '$reelno' ");
+
+        $r=mysql_query("select  stk_sono, stk_wt from trnsal_finish_stock where stk_comp_code =  1  and stk_destag = '' and stk_sr_no = '$reelno' ");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+}
+
+
+
+?>

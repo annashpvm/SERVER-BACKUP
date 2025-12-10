@@ -13,14 +13,14 @@ $ledgername = $_POST['ledgername'];
 $section = $_POST['section'];
 
 $query10 = "select ifnull(max(tds_seqno),0) + 1 as tds_seqno from acc_tds_header";
-$result10 = mysql_query($query10);
-$recseq = mysql_fetch_array($result10);
+$result10 = mysqli_query($conn, $query10);
+$recseq = mysqli_fetch_array($result10);
 $seqno = $recseq['tds_seqno'];
 
 mysql_query('BEGIN');
 
 $query1 = "call acc_sp_tdsheader_insert ('$seqno','$fromdate','$todate','$finid','$compcode','$ledgerid','$ledgername','$section',now());";
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 $inscnt = 0;
 
@@ -36,7 +36,7 @@ for ($i = 0; $i < $rowcnt; $i++) {
     $narration = $griddet[$i]['accref_narration'];
 
     $query2 = "call acc_sp_tdstrailer_insert('$seqno','$ledgerid','$vouno','$voutype','$voudate','$ledcode','$ledname','$tdspercent','$gross','$amount','$narration');";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 
             if ($result2) {
                 $inscnt = $inscnt + 1;
@@ -44,10 +44,12 @@ for ($i = 0; $i < $rowcnt; $i++) {
 }
 
 if ($result1 && ($rowcnt == $inscnt)) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $seqno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $seqno . '"})';
 }
 ?>

@@ -13,10 +13,10 @@ $docdate  = $_POST['docdate'];
 if ($savetype === "Add")
 {
    $query1 = "select IFNULL(max(ent_no),0)+1 as no from trn_sal_variety_change where  comp_code ='$compcode' and fin_code ='$finid'";
-   $result1= mysql_query($query1);
-   $rec1 = mysql_fetch_array($result1);
+   $result1= mysqli_query($conn, $query1);
+   $rec1 = mysqli_fetch_array($result1);
    $docno=$rec1['no'];
-   mysql_query("BEGIN");
+   mysqli_query($conn, "BEGIN");
 
    $inscnt = 0;
    for ($i=0;$i<$rowcnt;$i++)
@@ -29,22 +29,24 @@ if ($savetype === "Add")
 	$newcode = $griddet[$i]['newcode'];
 	$weight  = $griddet[$i]['weight'];
         $query2  = "insert into trn_sal_variety_change values('$compcode','$finid','$docno','$docdate','$oldcode', '$newcode','$number','$weight')";
-        $result2 = mysql_query($query2);           
+        $result2 = mysqli_query($conn, $query2);           
 
         $query3  = "update trnsal_finish_stock set stk_var_code = '$newcode' where  stk_comp_code =  '$compcode' and stk_finyear = '$finid' and stk_var_code ='$oldcode'  and  stk_sr_no ='$number'"; 
-        $result3 = mysql_query($query3);           
+        $result3 = mysqli_query($conn, $query3);           
   
   }
 }
 	if($result1 && $result2 && $result3)
 	{
-	  mysql_query("COMMIT");                        
+	 mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","docno":"'.$docno.'"})';
 	}
 	else
         {
             echo '({"success":"false","docno":"'.$docno.'"})';
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
         }      
 
        

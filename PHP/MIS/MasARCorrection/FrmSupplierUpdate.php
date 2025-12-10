@@ -3,18 +3,18 @@
 
 session_start();
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 /*
 
  $query10 = "insert into ledger (
 cust_code, cust_led_code, cust_ref, cust_name, cust_add1, cust_add2, cust_add3, cust_city, cust_state, cust_country, cust_zip, cust_phone, cust_email, cust_web, cust_contact, cust_taxtag, cust_cr_days, cust_grace_days, cust_repr, cust_panno, cust_gstin, cust_dealer, cust_smsno, cust_partygroup, cust_noof_visits1, cust_desp_target1, cust_payperf1, cust_tcs_applied, cust_distance, cust_addnlwt, createdby, createddate, seqno, cust_lock, cust_overdue_msg, cust_area, cust_addnl_cd_days)
  select * from massal_customer;";
- $result10 = mysql_query($query10);
+ $result10 = mysqli_query($conn, $query10);
 
 
  $query1 = "select * from acc_ledger_master where led_code>0 and led_type = 'G'";
- $result1 = mysql_query($query1);
+ $result1 = mysqli_query($conn, $query1);
 
  while ($row = mysql_fetch_assoc($result1)) {
 
@@ -41,7 +41,7 @@ $ledcode,$ledcode,'$ledname',' $ledname','','','','',0,
   '','G')";
 
 
-    $result11 = mysql_query($query11);
+    $result11 = mysqli_query($conn, $query11);
 
 
 //     echo $query11;
@@ -55,7 +55,7 @@ $ledcode,$ledcode,'$ledname',' $ledname','','','','',0,
 
  $query2 = "select * from maspur_supplier_master , acc_ledger_master where led_type = 'S' and sup_code = led_custcode";
  $query2 = "select * from maspur_supplier_master where sup_code >0 and  sup_update = 'N'";
- $result2 = mysql_query($query2);
+ $result2 = mysqli_query($conn, $query2);
  while ($row = mysql_fetch_assoc($result2)) {
 
 
@@ -118,7 +118,7 @@ $sup_cntry_code,'$sup_zip','$sup_phone','$sup_email','$sup_web','$sup_contact','
 
 
 
-    $result21 = mysql_query($query21);
+    $result21 = mysqli_query($conn, $query21);
 
 
 
@@ -128,18 +128,20 @@ $sup_cntry_code,'$sup_zip','$sup_phone','$sup_email','$sup_web','$sup_contact','
  mysql_free_result($result21); 	
 
  $query2 = "UPDATE maspur_supplier_master set sup_update = 'Y' where  sup_code > 0 and sup_led_code >0 and sup_update = 'N'";
- $result2 = mysql_query($query2);
+ $result2 = mysqli_query($conn, $query2);
 
 
 
 if( $result2 && $result21 )
        {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false"})';
         }   

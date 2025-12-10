@@ -35,8 +35,8 @@ $remarks5    = $_POST['remarks5'];
 if ($savetype == "Add") {
 
 	$query1 = "select ifnull(max(pp_advno),0)+1 as advno from trn_prodplan_header where pp_comp_code = '$macompcode' and pp_fincode = '$mafincode' ";
-	$result1= mysql_query($query1);
-	$rec2 = mysql_fetch_array($result1);
+	$result1= mysqli_query($conn, $query1);
+	$rec2 = mysqli_fetch_array($result1);
 	$maadvno=$rec2['advno'];
 	if ($maadvno==1) {
 	   $maadvno = $mafincode.$mamachine."001";
@@ -45,19 +45,19 @@ if ($savetype == "Add") {
 else
 {
         $query1 =  "delete from trn_prodplan_header where pp_comp_code = '$macompcode' and pp_fincode = '$mafincode'   and  pp_advno = $maadvno";
-        $result1=mysql_query($query1);   
+        $result1=mysqli_query($conn, $query1);   
 
         $query2 =  "delete from trn_prodplan_trailer where ppt_comp_code = '$macompcode' and ppt_fincode = '$mafincode'  and ppt_advno = $maadvno";
-        $result2=mysql_query($query2);   
+        $result2=mysqli_query($conn, $query2);   
 
         $query3 =  "delete from trn_prodplan_trailer_sizewise where ppt_comp_code = '$macompcode' and ppt_fincode = '$mafincode'   and ppt_advno = $maadvno";
-        $result3=mysql_query($query3);   
+        $result3=mysqli_query($conn, $query3);   
 
         $query4 =  "delete from trn_prodplan_trailer_varietywise where pih_comp_code = '$macompcode' and pih_fincode = '$mafincode'   and pih_ppno = $maadvno";
-        $result4=mysql_query($query4);   
+        $result4=mysqli_query($conn, $query4);   
 
         $query5 =  "delete from trn_prodplan_trailer_remarks where ppr_comp_code = '$macompcode' and ppr_fincode = '$mafincode'   and ppr_advno = $maadvno";
-        $result4=mysql_query($query4);   
+        $result4=mysqli_query($conn, $query4);   
 }
 
 
@@ -82,7 +82,7 @@ $maclose     = $griddet[$i]['close'];
 $query1= "insert into trn_prodplan_header values('$macompcode','$mafincode','$maamendno','$maamenddate','$maadvno','$maadvdate','$masno','$maparty','$mavarcode'
 ,'$masizecode','$maordtype','$maqty','$mapriority','N','','$maorder_ref','0','0','0','0','0','$madespdate')";
 
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 }
 
 
@@ -110,7 +110,7 @@ for ($i=0;$i<$deckrowcnt;$i++)
 
 	$query2= "insert into trn_prodplan_trailer values('$macompcode','$mafincode','$maamendno','$maamenddate','$maadvno','$maadvdate','$matslno', '$matvarcode','$matsize1', '$matsize2','$matsize3','$matsize4','$matsize5','$matsize6','$matsize7','$matsize8','$matsize9','$matsize10', '$matqty','$matdeckle','$matdecklesize')";  
 
-	$result2=mysql_query($query2);            
+	$result2=mysqli_query($conn, $query2);            
 }
 
 
@@ -122,7 +122,7 @@ $matsize    =  $sizegriddet[$i]['size'];
 $matqty = $sizegriddet[$i]['qty'];
 
 $query3= "insert into trn_prodplan_trailer_sizewise  values('$macompcode','$mafincode','$maamendno','$maamenddate','$maadvno','$maadvdate','$matvarcode','$matsize', '$matqty','N','0','0','0','0','0')";  
-$result3=mysql_query($query3);            
+$result3=mysqli_query($conn, $query3);            
 }
  
 
@@ -133,21 +133,23 @@ $matvarcode = $vartygriddet[$i]['varcode'];
 $matqty     = $vartygriddet[$i]['qty'];
 
 $query4= "insert into trn_prodplan_trailer_varietywise values('$macompcode','$mafincode','$maamendno','$maamenddate','$maadvno','$maadvdate','$matvarcode', '$matqty','0','0','0','0','0','0','N','N','$tol')";  
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
 }
  
 
 $query5= "insert into trn_prodplan_trailer_remarks values('$macompcode','$mafincode','$maadvno','$remarks1','$remarks2', '$remarks3','$remarks4','$remarks5')";  
-$result5=mysql_query($query5);  
+$result5=mysqli_query($conn, $query5);  
 
 
 if ($result1  && $result2  && $result3  && $result4 ) {
 
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $maadvno . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $maadvno . '"})';
 }
   

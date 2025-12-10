@@ -30,15 +30,15 @@ if ($savetype === "Add" && $downtype === "SHUT")
 {
 	 $query1 = "select IFNULL(max(prdh_id),0)+1 as prodseqno from trn_dayprod_header where prdh_compcode = $prdhcompcode and  prdh_fincode  = $prdhfincode";
 //echo $query1;
-	 $result1 = mysql_query($query1);
-	 $rec1    = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1    = mysqli_fetch_array($result1);
 	 $prdhseqno=$rec1['prodseqno'];
 
 	 $query2 = "call spprod_ins_header ('$prdhseqno','$prdhcompcode','$prdhfincode', '$prdhdate', '$prdhshift','$prdhspvrcode', '$prdhoperator', '$prdhppno', '$prdhavlmins', '$prdhrunmins','$prhdtotdownmins','0','0', '0', '0', '0', '0','0')";
 
 //echo $query2;
  
-	  $result2=mysql_query($query2);
+	  $result2=mysqli_query($conn, $query2);
 
 }
 
@@ -47,7 +47,7 @@ if ($savetype === "Edit")
 {
   
        $query1 = "delete from trn_dayprod_downtime where prds_id = $prdhseqno and  prds_fincode = $prdhfincode and prds_compcode = $prdhcompcode";
-       $result1=mysql_query($query1);  
+       $result1=mysqli_query($conn, $query1);  
 // echo $query1;
 }
 
@@ -87,7 +87,7 @@ for ($i=0;$i<$rowcnt_downtime;$i++)
 
 
         $query1 = "call spprod_ins_downtime ('$prdhseqno','$prdhcompcode', '$prdhfincode', '$qlycode' , '$deptcode', '$seccode', $inscnt, '$fromtime', '$totime', '$downmins','$reason','$rootcause', '$actiontaken', '$correctiveaction')";
-	$result1=mysql_query($query1);
+	$result1=mysqli_query($conn, $query1);
 
 
 
@@ -100,19 +100,21 @@ for ($i=0;$i<$rowcnt_downtime;$i++)
 if ($downtype === "SHIFT")
 {
        $query2 = "update trn_dayprod_header set prdh_downmins = $prhdtotdownmins where prdh_id = $prdhseqno and  prdh_fincode = $prdhfincode and prdh_compcode = $prdhcompcode and  prdh_date = '$prdhdate' and prdh_shift = '$prdhshift'";
-       $result2=mysql_query($query2);  
+       $result2=mysqli_query($conn, $query2);  
 }
 
 // echo $query2;   
 
 if ($result1 && $result2)  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $prdhseqno . '"})';
 
 	}

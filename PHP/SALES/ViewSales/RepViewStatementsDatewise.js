@@ -455,6 +455,37 @@ var btnDatewiseAbstract = new Ext.Button({
 });
 
 
+var btnDatewise = new Ext.Button({
+
+	border: 1,
+	style: {
+	borderColor: 'blue',
+	borderStyle: 'solid',
+
+	},
+	text    : "DATE/INV WISE",
+	width   : 90,
+	height  : 35,
+        icon    : 'BACK.JPG',   
+	listeners:{
+          click: function(){       
+		var p1 = "&compcode=" + encodeURIComponent(Gincompcode);
+		var p2 = "&fincode=" + encodeURIComponent(GinFinid);
+		var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));
+		var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                var param = (p1+p2+p3+p4) ;
+                if (printtype == "PDF")
+          	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rptDatewiseInvoicewiseSales.rptdesign&__format=pdf&' + param, '_blank');
+                else if (printtype == "XLS") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rptDatewiseInvoicewiseSales.rptdesign&__format=XLS' + param, '_blank');
+                else
+        	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rptDatewiseInvoicewiseSales.rptdesign' + param, '_blank');
+     
+       	 }
+        }   
+});
+
+
 var btnPartywise = new Ext.Button({
 
 	border: 1,
@@ -463,7 +494,7 @@ var btnPartywise = new Ext.Button({
 	borderStyle: 'solid',
 
 	},
-	text    : "PARTY WISE PRINT",
+	text    : "PARTY WISE",
 	width   : 90,
 	height  : 35,
         icon    : 'BACK.JPG',   
@@ -485,7 +516,7 @@ var btnPartywise = new Ext.Button({
         }   
 });
 
-var btnDatewise = new Ext.Button({
+var btnDatewiseDetailed = new Ext.Button({
 
 	border: 1,
 	style: {
@@ -1049,21 +1080,31 @@ var flxItemList = new Ext.grid.EditorGridPanel({
                        xtype       : 'fieldset',
                        title       : '',
                        labelWidth  : 70,
-                       width       : 400,
+                       width       : 300,
                        x           : 200,
                        y           : 450,
                        border      : false,
                        items: [btnPartywise]
                       },
+                      { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 70,
+                        width       : 300,
+                        x           : 320,
+                        y           : 450,
+                        border      : false,
+                        items: [btnDatewise]
+                       },                      
 	                     { 
                        xtype       : 'fieldset',
                        title       : '',
                        labelWidth  : 70,
-                       width       : 400,
-                       x           : 500,
+                       width       : 300,
+                       x           : 700,
                        y           : 450,
                        border      : false,
-                       items: [btnDatewise]
+                       items: [btnDatewiseDetailed]
                       },
 	
                 ]

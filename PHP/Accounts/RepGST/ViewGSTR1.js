@@ -88,7 +88,7 @@ Ext.onReady(function(){
 var month = Ext.util.Format.date(monthstartdate.getValue(), 'M').toUpperCase();  
 var year  = Ext.util.Format.date(monthstartdate.getValue(), 'Y');  
 
-var filename = "/SHVPM/Report/B2CS_"+month+"_"+year+".json";
+var filename = "SHVPM/Report/B2CS_"+month+"_"+year+".json";
 
 
 

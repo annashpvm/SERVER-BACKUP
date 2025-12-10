@@ -6,36 +6,40 @@ session_start();
  $woname=strtoupper($_POST['woname']);
 
 $query = "select ifnull(max(wo_no),0)+1 as wo_no from mas_workorder";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $wo_no=$rec['wo_no'];
 
 $qry = "select count(*) as cnt from mas_workorder where wo_name = '$woname'";
-$res = mysql_query($qry);
-$recwo = mysql_fetch_array($res);
+$res = mysqli_query($conn, $qry);
+$recwo = mysqli_fetch_array($res);
 $cnt=$recwo['cnt'];
 
 
 $qry = "select count(*) as cnt from maspur_item_header where item_name = '$itemname'";
-$resgrp = mysql_query($qry);
-$recgrp = mysql_fetch_array($resgrp);
+$resgrp = mysqli_query($conn, $qry);
+$recgrp = mysqli_fetch_array($resgrp);
 $cnt=$rec['cnt'];
 if($cnt==0)
 {
   $query1="insert into mas_workorder values('$wo_no','$woname','$purpose',0)";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 }
 
   if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $wo_no . '"})';
 } 
   else if ($cnt>0) {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $wo_no . '"})';
 }
   

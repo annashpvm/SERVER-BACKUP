@@ -64,7 +64,7 @@ Ext.onReady(function () {
     var ratediffmt = 0;
     var totinvwt = 0;
 
-
+    var editdatechk = 0;
     function check_password()
     {
        if (txtPassword.getRawValue() == "admin@123")
@@ -1699,6 +1699,7 @@ alert("1");
 
     function BillAdjustingDetail() {
 
+
         var pendamt = 0;
         var balamt = 0;
         txtAddnlCDDays.setValue(0);
@@ -2093,6 +2094,8 @@ alert("1");
 
         }    
 
+        if (editdatechk == 1)
+            Ext.getCmp('save').setDisabled(true);               
 
 
        flxaccupdation(); 
@@ -2243,6 +2246,7 @@ alert("1");
 
 function getAdjustmentDetails()
 {
+ 
 
    var invoiceno = '';
    var adjusted = 0;
@@ -2275,7 +2279,9 @@ function getAdjustmentDetails()
               {
             	    Ext.getCmp("optAdv").setValue(true);
                     gstPaytype === "AD";              
-              }   
+              } 
+              
+
           }
       });  
 }   
@@ -2592,151 +2598,137 @@ adjusted = 0;
            select: function(){
 
                //        Ext.getCmp('editchk').show();
+               editdatechk = 0;
 
-
-                       Ext.getCmp('btnConfirm').setDisabled(false); 
-                       ECreditNote = "N";
-                       flxAdjustDetails.getStore().removeAll();
-                       flxAccounts.getStore().removeAll();
-                       flxDetail.getStore().removeAll();
-                       LoadVouNoDetailsdatastore.removeAll();
-     	               LoadVouNoDetailsdatastore.load({
-                           url: 'clsBankReceipt.php',
-	                   params: {
+                Ext.getCmp('btnConfirm').setDisabled(false); 
+                ECreditNote = "N";
+                flxAdjustDetails.getStore().removeAll();
+                flxAccounts.getStore().removeAll();
+                flxDetail.getStore().removeAll();
+                LoadVouNoDetailsdatastore.removeAll();
+     	        LoadVouNoDetailsdatastore.load({
+                    url: 'clsBankReceipt.php',
+	                params: {
 			        task: 'LoadBRVoucherDetails',
 			        fincode : GinFinid,
 			        compcode: GinCompcode,
                                 vouno   : cmbVouNo.getRawValue(),
-	                  },
-		          callback: function () {
-                              var cnt=LoadVouNoDetailsdatastore.getCount();
-                              if (cnt>0)
-                              {
+	                },
+		            callback: function () {
+                        var cnt=LoadVouNoDetailsdatastore.getCount();
+                        if (cnt>0)
+                        {
 
-                                  editfind = 0;
+                            editfind = 0;
 
-                                  crnoteseqno  = LoadVouNoDetailsdatastore.getAt(0).get('accref_link_seqno');
-
-
-txtAccountName.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('cust_name'));
-txtReceiptAmt.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
-      
-      
-                                      ledtype = LoadVouNoDetailsdatastore.getAt(0).get('cust_type');
-                                      ledgercode = LoadVouNoDetailsdatastore.getAt(0).get('acctran_led_code');
-                                      partycode = LoadVouNoDetailsdatastore.getAt(0).get('acctran_led_code');
-
-
-                                  for(var j=0; j<cnt; j++) 
-                                  {
+                            crnoteseqno  = LoadVouNoDetailsdatastore.getAt(0).get('accref_link_seqno');
+                            txtAccountName.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('cust_name'));
+                            txtReceiptAmt.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
+                            ledtype = LoadVouNoDetailsdatastore.getAt(0).get('cust_type');
+                            ledgercode = LoadVouNoDetailsdatastore.getAt(0).get('acctran_led_code');
+                            partycode = LoadVouNoDetailsdatastore.getAt(0).get('acctran_led_code');
+                            for(var j=0; j<cnt; j++) 
+                            {
            
 //alert(LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'));
 
-                                      if (Number(LoadVouNoDetailsdatastore.getAt(j).get('cust_acc_group')) == 42)
-                                        cmbHeadAccount.setValue(LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'));
+                                if (Number(LoadVouNoDetailsdatastore.getAt(j).get('cust_acc_group')) == 42)
+                                    cmbHeadAccount.setValue(LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'));
 //                                      else                                             
 
-                                      seqno =  LoadVouNoDetailsdatastore.getAt(j).get('accref_seqno');
-                                      txtVouNo.setRawValue(cmbVouNo.getRawValue());
-
-      
-                                      cmbPaymode.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_paymode'));
-                                      dtpVouDate.setRawValue(Ext.util.Format.date(LoadVouNoDetailsdatastore.getAt(j).get('accref_voudate'),"d-m-Y"));  
-                                      txtRefNo.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_payref_no'));
-                                      dtpRefDate.setRawValue(Ext.util.Format.date(LoadVouNoDetailsdatastore.getAt(j).get('accref_payref_date'),"d-m-Y")); 
-                                      txtNarration.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_narration'));
-                                      txtBankName.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_bank_name'));
-                                      var drcr = ''; 
-                                      if (LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt') > 0)
-                                         drcr = 'Dr';
-                                      else
-                                         drcr = 'Cr';
+                                seqno =  LoadVouNoDetailsdatastore.getAt(j).get('accref_seqno');
+                                txtVouNo.setRawValue(cmbVouNo.getRawValue());
+                                cmbPaymode.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_paymode'));
+                                dtpVouDate.setRawValue(Ext.util.Format.date(LoadVouNoDetailsdatastore.getAt(j).get('accref_voudate'),"d-m-Y"));  
+                                txtRefNo.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_payref_no'));
+                                dtpRefDate.setRawValue(Ext.util.Format.date(LoadVouNoDetailsdatastore.getAt(j).get('accref_payref_date'),"d-m-Y")); 
+                                txtNarration.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_narration'));
+                                txtBankName.setRawValue(LoadVouNoDetailsdatastore.getAt(j).get('accref_bank_name'));
+                                var drcr = ''; 
+                                if (LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt') > 0)
+                                    drcr = 'Dr';
+                                else
+                                    drcr = 'Cr';
 
 
 
-                                      if (Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt')) >0)
-
-                                      {
-                                      ledtype = LoadVouNoDetailsdatastore.getAt(j).get('cust_type');
-		                          flxDetail.getStore().insert(
-			                  flxDetail.getStore().getCount(),
-		                          new dgrecord({
-					     ledname : LoadVouNoDetailsdatastore.getAt(j).get('cust_name'),           
-                                             type    : drcr,
-			                     dbamt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'),
-					     cramt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt'),  
-		                             totamt  : Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'))+ Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt')),
-		                             ledseq  : LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'), 
-		                             ledtype : LoadVouNoDetailsdatastore.getAt(j).get('cust_type'),
-			                   })
-		                           );
-                                      }
-                                  }
-
-
-if (crnoteseqno > 0)
-    Ext.getCmp('optPayType').setDisabled(true);  
-else
-    Ext.getCmp('optPayType').setDisabled(false);  
+                                if (Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt')) >0)
+                                {
+                                    ledtype = LoadVouNoDetailsdatastore.getAt(j).get('cust_type');
+                                    flxDetail.getStore().insert(
+			                        flxDetail.getStore().getCount(),
+		                            new dgrecord({
+					                    ledname : LoadVouNoDetailsdatastore.getAt(j).get('cust_name'),           
+                                        type    : drcr,
+			                            dbamt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'),
+					                    cramt   : LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt'),  
+		                                totamt  : Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_dbamt'))+ Number(LoadVouNoDetailsdatastore.getAt(j).get('acctran_cramt')),
+		                                ledseq  : LoadVouNoDetailsdatastore.getAt(j).get('acctran_led_code'), 
+		                                ledtype : LoadVouNoDetailsdatastore.getAt(j).get('cust_type'),
+			                        })
+		                            );
+                                }
+                            }
 
 
+                            if (crnoteseqno > 0)
+                                Ext.getCmp('optPayType').setDisabled(true);  
+                            else
+                                Ext.getCmp('optPayType').setDisabled(false);  
 
-               CalcTotalDebitCredit();
-               getAdjustmentDetails();
-               EditDateCheck();
-
+                            CalcTotalDebitCredit();
+                            getAdjustmentDetails();
+       
 
                             if (crnoteseqno  > 0)
                             {
-
-
-
-
-		               loadECNStatus.removeAll();
-	     	               loadECNStatus.load({
-		                   url: 'clsBankReceipt.php',
-			           params: {
-					task: 'check_e_credit_note_status',
-					fincode  : GinFinid,
-					compcode : GinCompcode,
-		                        cnseqno  : crnoteseqno,
-			          },
-				  callback: function () {
-		                      var cnt=loadECNStatus.getCount();
-		                      if (cnt>0)
-		                      {
-
-Ext.getCmp('btnConfirm').setDisabled(true);  
-		                              if (loadECNStatus.getAt(0).get('E_inv_confirm') == "Y")
-		                              {  
-		                       alert("E-Credit Note Already generated. You can't Modify this Bank Receipt...");
-		                       Ext.getCmp('save').setDisabled(true);  
-                       ECreditNote = "Y";
-
-		                              }
-		                              else
-		                              {     
-		                               Ext.getCmp('save').setDisabled(false);    
-		                              }   
-                                       }           
-                                  }   
+        		               loadECNStatus.removeAll();
+	                           loadECNStatus.load({
+		                        url: 'clsBankReceipt.php',
+			                    params: {
+					               task: 'check_e_credit_note_status',
+					               fincode  : GinFinid,
+					               compcode : GinCompcode,
+		                           cnseqno  : crnoteseqno,
+			                    },
+				                callback: function () 
+                                {
+		                           var cnt=loadECNStatus.getCount();
+		                           if (cnt>0)
+		                           {
+                                    Ext.getCmp('btnConfirm').setDisabled(true);  
+                                    if (loadECNStatus.getAt(0).get('E_inv_confirm') == "Y")
+                                    {  
+                                        alert("E-Credit Note Already generated. You can't Modify this Bank Receipt...");
+                                        Ext.getCmp('save').setDisabled(true);  
+                                        ECreditNote = "Y";
+                                    }
+                                    else
+                                    {     
+                                        Ext.getCmp('save').setDisabled(false);    
+                                    }   
+                                   } 
+                                   EditDateCheck();   
+                                   
+                          
+                                }   
                                });   
-
-
-
                             }
                             else
                             {    
 
                                Ext.getCmp('save').setDisabled(false);    
+                               EditDateCheck();
+                
                             }   
 
 
 
-        
 
+         
 
-                 }
+                          }
+
                           }
                       });  
             }    
@@ -2914,6 +2906,8 @@ Ext.getCmp('btnConfirm').setDisabled(true);
                             gstPaytype = "BB";
                             flxAdjustDetails.getStore().removeAll();
                             flxAccounts.getStore().removeAll();
+                            flxCD.getStore().removeAll();
+                            flxDetail.getStore().removeAll(); 
                             BillAdjustingDetail();
 
                         }
@@ -2936,6 +2930,8 @@ Ext.getCmp('btnConfirm').setDisabled(true);
 
                             gstPaytype = "AD";
                             flxAdjustDetails.getStore().removeAll();
+                            flxCD.getStore().removeAll();
+                            flxDetail.getStore().removeAll(); 
                             flxAccounts.getStore().removeAll();
                         }
                     }
@@ -3050,16 +3046,22 @@ Ext.getCmp('btnConfirm').setDisabled(true);
 
   function EditDateCheck()
   {
+
+
         var dt_today = new Date();
         var dt_voucher = dtpVouDate.getValue();
 
         var diffdays = dt_today.getTime()-dt_voucher.getTime();
         diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24)); 
 
+
+        editdatechk = 0;
+
         if (diffdays > (GinEditDays+1))
         {     
              alert("You are Not Allowed to Modify this document. Contact HOD for Corrections.." );
              Ext.getCmp('save').setDisabled(true);  
+             editdatechk = 1;
         }
         else
         {
@@ -7018,8 +7020,8 @@ var tabAccounts = new Ext.TabPanel({
         listeners: {
             show: function () {
    
-
-                Ext.getCmp('optPayType').hide(true);
+                //alert(GinNewDays);
+         //       Ext.getCmp('optPayType').hide(true);
                  Ext.getCmp('saveOld').setDisabled(true);
                 //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');
                   dtpVouDate.setRawValue(new Date().format('d-m-Y'));

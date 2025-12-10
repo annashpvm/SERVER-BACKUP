@@ -45,8 +45,8 @@ var UserId   = localStorage.getItem('ginuserid');
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'led_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 

@@ -99,7 +99,7 @@ var dtProdDate = new Ext.form.DateField({
 			   } 
 		  });
         }
-        if (diffdays >2)
+        if (diffdays >15)
         {     
              alert("You are Not Allowed to Modify in the date of " +  Ext.util.Format.date(dt_invoice,"d-m-Y"));
 

@@ -218,6 +218,11 @@
                         <property name="name">iss_vou_refno</property>
                         <property name="dataType">string</property>
                     </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">iss_slno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">srihari</property>
@@ -323,6 +328,12 @@
                     <property name="name">iss_vou_refno</property>
                     <property name="nativeName">iss_vou_refno</property>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">iss_slno</property>
+                    <property name="nativeName">iss_slno</property>
+                    <property name="dataType">integer</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{call spst_rep_datewise_issues(?,?,?,?)} ]]></xml-property>
@@ -533,6 +544,42 @@
                     <text-property name="displayName">iss_vou_refno</text-property>
                     <expression name="expression" type="javascript">dataSetRow["iss_vou_refno"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_issno_value</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>issno</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["issuevalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">iss_slno</property>
+                    <text-property name="displayName">iss_slno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["iss_slno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_issqty</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>issno</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["iss_qty"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="47">
@@ -754,14 +801,161 @@
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">1px</property>
                             <data id="126">
+                                <property name="fontWeight">bold</property>
                                 <structure name="numberFormat">
-                                    <property name="category">Custom</property>
-                                    <property name="pattern">#.00</property>
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
                                 <property name="resultSetColumn">sumvalue</property>
                             </data>
                         </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="308">
+                <property name="groupName">issno</property>
+                <expression name="keyExpr" type="javascript">row["iss_no"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["iss_no"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="309">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="310">
+                            <data id="331">
+                                <property name="resultSetColumn">iss_no</property>
+                            </data>
+                        </cell>
+                        <cell id="311"/>
+                        <cell id="312"/>
+                        <cell id="313"/>
+                        <cell id="314"/>
+                        <cell id="315"/>
+                        <cell id="316"/>
+                        <cell id="317"/>
+                        <cell id="318"/>
+                        <cell id="319"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="320">
+                        <cell id="321"/>
+                        <cell id="322"/>
+                        <cell id="323"/>
+                        <cell id="324"/>
+                        <cell id="325"/>
+                        <cell id="326">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="textAlign">right</property>
+                            <label id="334">
+                                <text-property name="text">SUB TOTAL</text-property>
+                            </label>
+                        </cell>
+                        <cell id="327">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="328">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="textAlign">right</property>
+                        </cell>
+                        <cell id="329">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="textAlign">right</property>
+                            <data id="383">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">sum_issqty</property>
+                            </data>
+                        </cell>
+                        <cell id="330">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                            <property name="textAlign">right</property>
+                            <data id="333">
+                                <property name="fontWeight">bold</property>
+                                <property name="resultSetColumn">sum_issno_value</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="358">
+                <property name="groupName">issslno_grp</property>
+                <expression name="keyExpr" type="javascript">row["iss_slno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["iss_slno"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="359">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="360">
+                            <data id="382">
+                                <property name="resultSetColumn">iss_slno</property>
+                            </data>
+                        </cell>
+                        <cell id="361"/>
+                        <cell id="362"/>
+                        <cell id="363"/>
+                        <cell id="364">
+                            <data id="381">
+                                <property name="resultSetColumn">iss_slno</property>
+                            </data>
+                        </cell>
+                        <cell id="365"/>
+                        <cell id="366"/>
+                        <cell id="367"/>
+                        <cell id="368"/>
+                        <cell id="369"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="370">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="371"/>
+                        <cell id="372"/>
+                        <cell id="373"/>
+                        <cell id="374"/>
+                        <cell id="375"/>
+                        <cell id="376"/>
+                        <cell id="377"/>
+                        <cell id="378"/>
+                        <cell id="379"/>
+                        <cell id="380"/>
                     </row>
                 </footer>
             </group>

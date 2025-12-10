@@ -55,11 +55,11 @@ $genhaccvouno = $_POST['genhaccvouno'];
 $genhaccvoudate = $_POST['genhaccvoudate'];
 $cancelflag = 0;
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 if ($savetype == "Add") {
     $query2 = "select IFNULL(max(genh_no),0)+1 as genh_no from trnpur_general_header where genh_fincode = $genhfincode and genh_comp_code=$genhcompcode and genh_type = 'R'";
-    $result2= mysql_query($query2);
-    $rec2 = mysql_fetch_array($result2);
+    $result2= mysqli_query($conn, $query2);
+    $rec2 = mysqli_fetch_array($result2);
     $genhno=$rec2['genh_no'];
 
 
@@ -68,17 +68,17 @@ if ($savetype == "Add") {
     '$genhfrtamt','$genhvalue','$genhdiscount','$genhsertaxper','$genhsertaxamt','$genheduper','$genheduamt','$genhsheper','$genhsheamt','$genhtransunitrate',
     '$genhtransamt','$genhotheramt','$genhlabouramt','$genhcgstper','$genhcgstamt','$genhsgstper','$genhsgstamt','$genhigstper','$genhigstamt','$genhlessamt',
     '$genhbillno','$genhbilldate','$genhgateeno','$genhgateedate','$genhtruckno','$genhaccupd','$genhaccvouno','$genhaccvoudate','$cancelflag')";
-     $result3=mysql_query($query3);
+     $result3=mysqli_query($conn, $query3);
 }
 
 else
 {
   
  $query2 = "update trnpur_general_header set genh_party = '$genhparty',genh_tag ='$genhtag',genh_type ='$genhtype',genh_dept ='$genhdept',genh_retype ='$genhretype',genh_totqty ='$genhtotqty',genh_carrier= '$genhcarrier',genh_freight = '$genhfreight',genh_days='$genhdays',genh_remarks ='$genhremarks',genh_refno ='$genhrefno',genh_refdate = '$genhrefdate',genh_gate_eno = '$genhgateeno',genh_truckno = '$genhtruckno',genh_gate_edate ='$genhgateedate' where genh_fincode = $genhfincode and genh_comp_code=$genhcompcode and genh_no = $genhno and genh_type = 'R'";
-    $result2= mysql_query($query2);
+    $result2= mysqli_query($conn, $query2);
 
  $query3 = "delete from trnpur_general_trailer where gent_fincode = $genhfincode and gent_comp_code=$genhcompcode and gent_no = $genhno and gent_type = 'R'";
- $result3= mysql_query($query3);
+ $result3= mysqli_query($conn, $query3);
 
 }
 
@@ -100,12 +100,12 @@ if ( $gentrecdqty > 0 ) {
     $query4= "insert into  trnpur_general_trailer values('$genhcompcode','$genhfincode','$genhno','$genhdate','$genhtag','$genhtype','$genhrefno',
     '$genhrefdate','$gentitemcode','$gentnewitemcode','0','$gentrecdqty','0','0','$purpose','$genhdept','0','$genhdate','$sno','0','0','0','0','0','0','0',
    '0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','$cancelflag')";
-    $result4=mysql_query($query4);  
+    $result4=mysqli_query($conn, $query4);  
 
 //   $query5 =  "update trnpur_general_trailer set gent_recqty = gent_recqty + '$gentrecdqty' - '$oldqty' ,gent_new_item = '$gentnewitemcode' where gent_fincode = '$genhrefyear' and gent_comp_code= '$genhcompcode' and gent_type = 'D' and gent_no ='$genhrefno' and gent_item_code = $gentitemcode";
    $query5 =  "update trnpur_general_trailer set gent_recqty = gent_recqty + '$gentrecdqty' - '$oldqty'  where gent_fincode = '$genhrefyear' and gent_comp_code= '$genhcompcode' and gent_type = 'D' and gent_no ='$genhrefno' and gent_item_code = '$gentitemcode' ";
 
-  $result5=mysql_query($query5);  
+  $result5=mysqli_query($conn, $query5);  
 
 
  } 
@@ -114,12 +114,14 @@ if ( $gentrecdqty > 0 ) {
 
 if( $result5 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","recptno":"'.$genhno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","recptno":"'.$genhno.'"})';
         }   
         

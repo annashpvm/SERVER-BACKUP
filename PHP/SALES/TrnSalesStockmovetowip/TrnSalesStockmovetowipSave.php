@@ -20,13 +20,13 @@ $saveflag =$_REQUEST['saveflag'];
 //if ($saveflag == "Add") {
 
 	 $query1  = "select IFNULL(max(tr_entno),0)+1 as tr_entno from trnsal_whouse_stock_remove where  tr_compcode ='$compcode' and tr_finyear ='$fincode'";
-	 $result1 = mysql_query($query1);
-	 $rec1    = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1    = mysqli_fetch_array($result1);
 	 $docno   = $rec1['tr_entno'];
 //}
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
  if ($docno > 0 )
  { 
@@ -47,7 +47,7 @@ $saveflag =$_REQUEST['saveflag'];
 		$rg1date   = $reelgriddet[$i]['rg1date'];
 		if ( $tag  == "T") {
                       $query2 = "call spsal_move_wip('$compcode','$fincode','$docno','$docdate','$sizecode','1','$rbno', '$weight', '$mill' ,'$stockfrom','$finyear','$rg1date');";
-                      $result2 = mysql_query($query2);
+                      $result2 = mysqli_query($conn, $query2);
 //echo $query2;                      
 		} 
 	}
@@ -68,7 +68,7 @@ $saveflag =$_REQUEST['saveflag'];
 
 		if ( $tag  == "T") {
                       $query2 = "call spsal_move_wip('$compcode','$fincode','$docno','$docdate','$sizecode','2','$rbno', '$weight', '$mill' ,'$stockfrom','$finyear','$rg1date');";
-                      $result2 = mysql_query($query2);
+                      $result2 = mysqli_query($conn, $query2);
 //echo $query2;
 
 		} 
@@ -80,13 +80,15 @@ $saveflag =$_REQUEST['saveflag'];
   
 if($result2)
 {
-mysql_query("COMMIT");                        
+mysqli_begin_transaction($conn);                        
 echo '({"success":"true","msg":"'.$docno.'"})';
 }
 else
 {
 echo '({"success":"false","msg":"'.$docno.'"})';
-mysql_query("ROLLBACK");            
+mysqli_rollback($conn);
+
+            
     
 } 
         

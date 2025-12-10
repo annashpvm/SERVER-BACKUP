@@ -19,14 +19,14 @@ $userid  = (int) $_POST['userid'];
 $priceterm = (int) $_POST['priceterm']; 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 if ($savetype == "Add") {
 
 $query = "select ifnull(max(arearate_sno),0)+1 as apprno from  massal_areawise_rate where arearate_comp_code = '$compcode' and arearate_fincode='$finid'";
-$result = mysql_query($query);
-$rec = mysql_fetch_array($result);
+$result = mysqli_query($conn, $query);
+$rec = mysqli_fetch_array($result);
 $apprno=$rec['apprno'];
 }
 else
@@ -34,7 +34,7 @@ else
 
 
 $query1= "delete from  massal_areawise_rate where arearate_comp_code = '$compcode' and arearate_fincode='$finid' and arearate_sno = $apprno";
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 
 
 
@@ -190,16 +190,18 @@ arearate_gsmfrom2, arearate_gsmto2, arearate_extraamt2, arearate_gsmfrom3, arear
 //echo  $query1;
 //echo "<br>";
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
 }
 
 
   if ($result1) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $apprno . '"})';
    } 
    else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $apprno . '"})';
    } 
   

@@ -18,14 +18,14 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
                 where
                     Process_SeqNo		=	'$Process_SeqNo'  and
                     Process_Finish_Barcode  <> ''";
-            $result = mysql_query($query);
+            $result = mysqli_query($conn, $query);
             }else  if($status=="Y"){
             $query = "   update process_trailer
 	set Process_Insp_Mtrs   =   Process_Insp_Mtrs+'$Meters'
 	where
 		Process_SeqNo		=	'$Process_SeqNo'  and
 		Process_Finish_Barcode  <> ''";
-            $result = mysql_query($query);
+            $result = mysqli_query($conn, $query);
             }else  if($status=="N"){
               $query = "update process_trailer
 	set Process_Prod_Status   =   ''
@@ -33,7 +33,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 		Process_Insp_Mtrs  >=  (Process_Processed_Mtrs - (Process_Processed_Mtrs*.05)) and
 		Process_SeqNo		=	'$Process_SeqNo'  and
 		Process_Finish_Barcode  <> ''";
-            $result = mysql_query($query);
+            $result = mysqli_query($conn, $query);
             }
             if ($result){
                 $inscnt = $inscnt + 1;
@@ -42,12 +42,14 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
       if ($result&($rowcnt==$inscnt))
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             Echo '{success:true}';
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             Echo '{failure:true}';
         }
 ?>

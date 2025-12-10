@@ -1,0 +1,121 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+    $task='loaditemgrp';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadsupplier":
+		getsupplier();
+		break;
+		case "loaddept":
+		getdept();
+		break;
+		case "loadwo":
+		getworkorder();
+		break;
+		case "loaditem":
+		getitem();
+		break;
+		case "loadpayterm":
+		getpayterms();
+		break;
+		case "loadwono":
+		getwono();
+		break;
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getsupplier()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$r=mysql_query("call sp_pur_sup()");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+	
+ function getdept()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$vendor = $_POST['Vendorcode'];
+        $r=mysql_query("call sp_sel_dept()");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function getitem()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("select * from  mas_item_master order by item_name");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+function getworkorder()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("select * from mas_workorder");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+function getpayterms()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("select term_code,term_name from mas_terms");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+function getwono()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$compcode = $_POST['compcode'];
+	$finid = $_POST['finid'];
+        $r=mysql_query("select ifnull(max(woh_no),0)+1 as wono from trnpur_workorder_header where woh_comp_code=1 and woh_fin_code=27");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+?>

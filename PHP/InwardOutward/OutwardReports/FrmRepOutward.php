@@ -7,7 +7,7 @@
 <script type="text/javascript" src="FrmRepOutward.js"></script>
 <script type="text/javascript" src="/SHVPM/InwardOutward/IOMainMenu.js"></script>
 <?php
-    require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/InwardOutward/InwardOutward.php");
+    require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/InwardOutward/InwardOutward.php";
 ?>
 </head>
 <body>

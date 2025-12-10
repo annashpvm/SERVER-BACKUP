@@ -10,7 +10,7 @@ $databasesub = "shvpmb";
 $username = "root";
 $password = "P@ssw0rD";
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $dbMain  =  mysql_connect($servernameMain,$username,$password) or die("connect : failure" . mysql_error());
 $dbSub   =  mysql_connect($servernameSub,$username,$password); // or die("connect : failure" . mysql_error());
@@ -49,7 +49,7 @@ session_start();
 
 
  $queryMain1 = "select * from trn_delivery_note  where dn_comp_code = $compcode and dn_fincode = $finid  and dn_date < CURDATE() and dn_update = 'N'";
- $resultMain1 = mysql_query($queryMain1,$dbMain);
+ $resultMain1 = mysqli_query($conn, $queryMain1,$dbMain);
 
 
 
@@ -78,14 +78,14 @@ session_start();
     $dn_podate    = $row['dn_podate'];
 
     $querySub1 = "select count(*) as noofrec  from trn_delivery_note  where dn_comp_code = $compcode and dn_fincode = $finid  and dn_no = $dn_no  and dn_custcode = $dn_custcode and dn_size = $dn_size and dn_sr_no =  $dn_sr_no";
-    $resultSub1 = mysql_query($querySub1,$dbSub);
-    $rec1    = mysql_fetch_array($resultSub1);
+    $resultSub1 = mysqli_query($conn, $querySub1,$dbSub);
+    $rec1    = mysqli_fetch_array($resultSub1);
     $noofrec = $rec1['noofrec'];
 
     if ($noofrec == 0 ) {
 	    $querySub2 = "insert into trn_delivery_note (dn_comp_code, dn_fincode, dn_no, dn_date, dn_custcode, dn_truck, dn_sono, dn_sodate, dn_size, dn_sr_no, dn_wt,dn_srno_fincode, dn_rate, dn_freight, dn_vehicle_by, dn_tax, dn_pono, dn_podate,dn_update) VALUES ( '$dn_comp_code','$dn_fincode','$dn_no','$dn_date','$dn_custcode','$dn_truck','$dn_sono', '$dn_sodate','$dn_size', '$dn_sr_no', '$dn_wt','$dn_srno_fincode','$dn_rate','$dn_freight', '$dn_vehicle_by','$dn_tax', '$dn_pono','$dn_podate','Y')";
 
-	    $resultSub2 = mysql_query($querySub2,$dbSub);
+	    $resultSub2 = mysqli_query($conn, $querySub2,$dbSub);
 
 
 //echo $querySub2;
@@ -99,7 +99,7 @@ $queryMain2 = "call spsal_upd_dn ($compcode,$finid,$dn_no,$dn_custcode , $dn_siz
 //echo $queryMain2;
 //echo "<br>";
 
-    $resultMain2 = mysql_query($queryMain2,$dbMain2);
+    $resultMain2 = mysqli_query($conn, $queryMain2,$dbMain2);
 
 
 
@@ -124,10 +124,12 @@ if ($resultSub2 && $resultMain2 && $insertcount > 0 ) {
 
 
 
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
 
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
 
 }
   

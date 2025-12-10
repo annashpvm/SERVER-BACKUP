@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loaditem":
 		getitem();
@@ -28,97 +28,98 @@
         	    break;
     }
 
-function getlot()
-{
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("call sp_sel_lot");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
-    }
-    
+
+
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
+
+    function getlot()
+{
+        global $conn;
+	$sql = "call sp_sel_lot";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+    
+
    
  function getitem()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 	$p_itemtype = $_POST['itemtype'];
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-        //$r=mysql_query("call spfu_sel_itemdetails ('$p_itemtype')");
-	$r=mysql_query("call sprm_sel_itemdetails(-1)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        //$sql = "call spfu_sel_itemdetails ('$p_itemtype')";
+	$sql = "call sprm_sel_itemdetails(-1)";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 	
  function getparty()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("call sp_pur_supplier_actgrp (53)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        global $conn;
+        $sql = "call sp_pur_supplier_actgrp (53)";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getchkrate()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 	$itemcode = $_POST['itemcode'];
 	$lotcode = $_POST['lotcode'];
 	$compcode = $_POST['compcode'];
 	$finid = $_POST['finid'];
 
-        $r=mysql_query("call spfu_sel_lotitem_stock('$compcode','$finid','$lotcode','$itemcode')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call spfu_sel_lotitem_stock('$compcode','$finid','$lotcode','$itemcode')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getStockList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode = $_POST['compcode'];
 	$finid = $_POST['finid'];
 
-        $r=mysql_query("select itmh_name,itmh_code,itmt_opqty,itmt_opvalue, case when itmt_opvalue > 0 then itmt_opvalue/itmt_opqty else 0 end as avgrate from masrm_item_header , masrm_item_trailer where itmh_code = itmt_hdcode and itmt_compcode= $compcode and itmt_fincode = $finid and (itmt_opqty >0 or  itmt_opvalue > 0) order by itmh_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select itmh_name,itmh_code,itmt_opqty,itmt_opvalue, case when itmt_opvalue > 0 then itmt_opvalue/itmt_opqty else 0 end as avgrate from masrm_item_header , masrm_item_trailer where itmh_code = itmt_hdcode and itmt_compcode= $compcode and itmt_fincode = $finid and (itmt_opqty >0 or  itmt_opvalue > 0) order by itmh_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 ?>

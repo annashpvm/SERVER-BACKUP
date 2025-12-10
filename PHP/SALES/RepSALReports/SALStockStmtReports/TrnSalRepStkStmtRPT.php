@@ -8,7 +8,7 @@ $finid = $_POST['finid'];
 $fromdate = $_POST['fromdate'];
 $todate = $_POST['todate'];
 $RPT = $_POST['RPT'];
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  
  if ($RPT == "GSstkstmt") {
  
@@ -18,7 +18,7 @@ $RPT = $_POST['RPT'];
 
 	$vewdropquery3 = mysql_query("DROP VIEW IF EXISTS vew_sal_rt12stat");
 
-	mysql_query("COMMIT"); 
+	mysqli_begin_transaction($conn); 
 	
         
     $compcode = 1;
@@ -86,7 +86,7 @@ $RPT = $_POST['RPT'];
     $compcode = 1;	
     
 
-			mysql_query("COMMIT");                        
+			mysqli_begin_transaction($conn);                        
 			
 }
 else if ($RPT == "stkVarty" || $RPT == "stkVartyGrp") {
@@ -123,7 +123,7 @@ else if ($RPT == "stkVarty" || $RPT == "stkVartyGrp") {
                 Union All 
                 select itemcode as var_code,var_unit as unit,0 as stk_qty, 0 as prod_qty,0 as sal_qty,0  as stk_transfer_in,0 as stk_transfer_out,0 as move_to_wip,0 as salr_qty,0 as pulp_stk,0  as wt_change,       0 as stk_nos,max(var_tariffno) as tariffno, 0 as sal_val ,0 as cgst,  0 as sgst, 0 as igst ,sum(newweight-oldweight)/1000 as wt_change2 from trn_sal_reelweight_change a,massal_variety b, trnsal_finish_stock c where stk_sr_no = srno and a.itemcode=b.var_code and comp_code in $m And fin_code >= '$finid' and ent_date >= '$fromdate' and ent_date <= '$todate'  and stk_ent_date < '$fromdate'  group by itemcode,var_unit  )a group by a.var_code,unit having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or sum(sal_qty) >0 or sum(stk_transfer_in) > 0  or sum(stk_transfer_out) > 0 or sum(pulp_stk) > 0 or sum(move_to_wip) > 0");
 
-mysql_query("COMMIT");           
+mysqli_begin_transaction($conn);           
 
 }
        

@@ -128,13 +128,13 @@ $voutype = 'PFU';
     $today = date("Y-m-d H:i:s"); 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 #Get Max AccRef Seqno from acc_ref
 $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-$result1 = mysql_query($query1);
-$rec1 = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1 = mysqli_fetch_array($result1);
 $ginaccrefseq=$rec1['con_value'];
 
 
@@ -145,17 +145,17 @@ $ginaccrefseq=$rec1['con_value'];
 //echo $query1;
 //echo "<br>";
 
-$result1=mysql_query($query1);
+$result1=mysqli_query($conn, $query1);
 
 
 	$query3 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_clqty = itmt_clqty -  rect_grnqty ,itmt_clvalue = itmt_clvalue - rect_itemvalue  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result3=mysql_query($query3);
+        $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 //echo "<br>";
 
 	$query4 = "update trnfu_receipt_trailer, masfu_item_trailer set itmt_avgrate = case when itmt_clvalue > 0 and itmt_clqty > 0 then itmt_clvalue / itmt_clqty else 0 end  where itmt_compcode= '$compcode' and itmt_fincode = '$finid' and  rect_item_code = itmt_hdcode and rect_hdseqno = $rech_seqno;";
-        $result4=mysql_query($query4);
+        $result4=mysqli_query($conn, $query4);
 
 
 
@@ -195,7 +195,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 
 	$query2= "update trnfu_receipt_trailer set   rect_billqty = $billqty , rect_millqty = $millqty, rect_mois_fixed = $fixedMois , rect_mois_actual =$actualMois, rect_moisper=$ExMoisper, rect_moisqty = $moisqty, rect_sand_fixed = $fixedsand , rect_sand_actual = $actualsand , rect_sandper = $Exsand, rect_sandqty = $sandqty , rect_fines_fixed = $fixedfines, rect_fines_actual = $actualfines, rect_finesper =$Exfines , rect_finesqty = $finesqty, rect_othdedqty = $totothdedqty, rect_totdedqty = $totdedqty, rect_itemrate =$itemrate, rect_grnqty = $partygrnqty, rect_itemvalue = $itemvalue, rect_costrate = $costrate , rect_costvalue = $costval, rect_remarks = '$remarks'  , rect_debitnote_value = $dnvalue where rect_hdseqno = '$rech_seqno' and rect_seqno = $sno";
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 	     
 //echo $query2;
 //echo "<br>";
@@ -204,7 +204,7 @@ $final_cost_value = $costval- $dnvalue;
 
 
         $query3= "call spfu_upd_itemtrailer_avgrate ('$compcode','$finid','$itemcode','$millgrnqty', '$final_cost_value',1)";
-	$result3=mysql_query($query3);
+	$result3=mysqli_query($conn, $query3);
 //echo $query3;
 //echo "<br>";
 }    
@@ -214,13 +214,13 @@ if ($ginaccrefseq > 0) {
 
 
     $query7 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$grnno','$compcode','$finid','$grndate','$voutype', '','','$billno', '$billdate','$narration');";
-    $result7 = mysql_query($query7);
+    $result7 = mysqli_query($conn, $query7);
 
 //echo $query7;
 //echo "<br>";
 
    $query4 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-   $result4 = mysql_query($query4);
+   $result4 = mysqli_query($conn, $query4);
 
         $inscnt = 0;
         for($i=0;$i<$rowcntacc;$i++){
@@ -244,7 +244,7 @@ if ($ginaccrefseq > 0) {
                if ($ledtype != 'G')
                {
                $query5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','$crdays','0')";
-               $result5 = mysql_query($query5);
+               $result5 = mysqli_query($conn, $query5);
 
 //echo $query5;
 //echo "<br>";
@@ -255,7 +255,7 @@ if ($ginaccrefseq > 0) {
             #Insert AccTran
 
             $query6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $result6 = mysql_query($query6);
+            $result6 = mysqli_query($conn, $query6);
 
 //echo $query6;
 //echo "<br>";
@@ -270,13 +270,15 @@ if ($ginaccrefseq > 0) {
 
 if( $result1 && $result2  && $result3   && $result5   && $result6   && $result7 )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","GRNNo":"'. $vno . '"})';
     
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","GRNNo":"' . $vno . '"})';
 } 
 

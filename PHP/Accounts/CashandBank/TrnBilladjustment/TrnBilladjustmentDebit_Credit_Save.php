@@ -21,7 +21,7 @@ $ledcode = $_REQUEST['ledcode'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 for ($i = 0; $i < $rowDebit; $i++) {
@@ -30,7 +30,7 @@ for ($i = 0; $i < $rowDebit; $i++) {
     $invno     = $gridDebit[$i]['acctrail_inv_no'];
 
     $query1 = "call acc_sp_trn_updacc_trail_seq_no('$seqno','$invno','$adjusted','$ledcode')";
-    $result1 = mysql_query($query1);
+    $result1 = mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "<br>";
@@ -42,7 +42,7 @@ for ($i = 0; $i < $rowCredit; $i++) {
     $invno     = $gridCredit[$i]['acctrail_inv_no'];
 
     $query2 = "call acc_sp_trn_updacc_trail_seq_no('$seqno','$invno','$adjusted','$ledcode')";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 
 
 //echo $query2;
@@ -71,15 +71,15 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
     if ($adjamt > 0) {
 	$query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$ginrefslno = $rec['refslno'];
 
 	$ginrefslno = $ginrefslno + 1;
 
 	$querydate = "select datediff('$maindocdate','$adjdocdate') as daysin";
-	$resultdate = mysql_query($querydate);
-	$recdatenew = mysql_fetch_array($resultdate);
+	$resultdate = mysqli_query($conn, $querydate);
+	$recdatenew = mysqli_fetch_array($resultdate);
 	$adjdays=$recdatenew['daysin'];
 
 
@@ -88,7 +88,7 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 '$adjseqno','$adjdocno','$adjdocdate','$mainseqno','$maindocno', '$maindocno','$maindocdate', 
 '$adjamt',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' );";
 
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 
 
 //echo $query3;
@@ -103,10 +103,12 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 if ( $result1 && $result2 && $result3 ) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","vouno":"' . $ginrefslno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","vouno":"' . $ginrefslno . '"})';
 }
 ?>

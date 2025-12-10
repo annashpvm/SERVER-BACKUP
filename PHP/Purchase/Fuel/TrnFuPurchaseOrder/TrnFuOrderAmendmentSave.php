@@ -36,7 +36,7 @@ $po_no             = $_POST['pono'];
 $amendno           = $_POST['amendno'];
 $porows            = $_POST['porows'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 //Insert the PO tailer Tables
@@ -60,7 +60,7 @@ if ($oldnew  == 'N')
 	  $porows = $porows + 1;
         $query4= "call spfu_ins_ordertrailer($po_seqno,$sno,$areacode ,$po_item_code,'$po_ordqty','0','0','$po_ordqty', '$po_itemrate','$val','$mois','$fines','$sand','$wefdate')";
 
- 	 $result3 = mysql_query($query3);
+ 	 $result3 = mysqli_query($conn, $query3);
 
 //	echo $query3;
 //	echo "<br>";
@@ -69,7 +69,7 @@ if ($oldnew  == 'N')
 if ($amend  == 'Y')
 {
 	 $query3 = "update trnfu_order_trailer set ordt_status = 'A' where ordt_hdseqno = '$po_seqno' and ordt_seqno = $slno and ordt_item_code = $po_item_code";
- 	 $result3 = mysql_query($query3);
+ 	 $result3 = mysqli_query($conn, $query3);
 
 //	echo $query3;
 //	echo "<br>";
@@ -104,19 +104,21 @@ $wefdate      =  $amendgriddet[$i]['wef'];
 //	echo $query3;
 //	echo "<br>";
 
- $result3 = mysql_query($query3);
+ $result3 = mysqli_query($conn, $query3);
 }
 
 
 
 if( $result3 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$po_no.'"})';
 }
 else
 {
-            mysql_query("ROLLBACK");                     
+            mysqli_rollback($conn);
+
+                     
 	    echo '({"success":"false","pono":"' .$po_no. '"})';
   }    
         

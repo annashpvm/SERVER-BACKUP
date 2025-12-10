@@ -10,7 +10,7 @@
         $ItemName  = $_POST['ItemName'];
 
 	$query1    = "delete from masqc_chemical_parameters where c_itemcode = $ItemCode";
-	$result1   = mysql_query($query1);
+	$result1   = mysqli_query($conn, $query1);
 
 
 	for ($i=0;$i<$rowcnt;$i++)
@@ -21,18 +21,20 @@
                 if ($specification != '')
                 {
          	$query2    = "insert into masqc_chemical_parameters values('$ItemCode','$paracode','$specification')";
-         	$result2   = mysql_query($query2);
+         	$result2   = mysqli_query($conn, $query2);
 
                 } 
         } 
 
        if ( $result2) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $ItemName . '"})';
 	} 
 
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $ItemName . '"})';
 	}
 

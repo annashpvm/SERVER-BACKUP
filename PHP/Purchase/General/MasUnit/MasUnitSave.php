@@ -14,42 +14,48 @@ session_start();
 if ($savetype === "Add")
 {
 	$query = "select ifnull(max(uom_code),0)+1 as uom_code from mas_uom";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$uom_code = $rec['uom_code'];
 
 	$qry = "select count(*) as cnt from mas_uom where uom_name = '$unitname'";
-	$resgrp = mysql_query($qry);
-	$recgrp = mysql_fetch_array($resgrp);
+	$resgrp = mysqli_query($conn, $qry);
+	$recgrp = mysqli_fetch_array($resgrp);
 	$cnt=$recgrp['cnt'];
 
 	if($cnt==0)
 	{
 	  $query1="insert into mas_uom values('$uom_code',upper('$unitname'),upper('$unitshortname'))";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	}
 	if ($result1 && $cnt==0) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $unitname . '"})';
 	} 
 	else if($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	} else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $unitname . '"})';
 	}
 }
 else
 {
 	  $query1="update mas_uom  set uom_name = upper('$unitname') , uom_short_name = upper('$unitshortname')  where  uom_code = '$uom_code'";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	if ($result1) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $unitname . '"})';
 	} 
         else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $unitname . '"})';
 	}
 

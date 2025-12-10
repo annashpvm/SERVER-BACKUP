@@ -1,13 +1,12 @@
 <?php
     require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
-    $task='modurl';
-    if ( isset($_POST['task'])){
-        $task = $_POST['task']; // Get this from Ext
-    }
+    $task='loaduser';
+	$task = $_POST['task'] ?? 'loaduser';
 
-    mysql_query("SET NAMES utf8");
-    	switch($task){
+	mysqli_set_charset($conn, "utf8");
+
+    switch($task){
 	case "loaduser":
 	getuser();
 	break;
@@ -30,7 +29,6 @@
 	case "findLoginName":
 	getLoginName();
 	break;
-
 	case "findSubjectPassword":
 	getSubjectPassword();
 	break;
@@ -49,133 +47,150 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getuser()
     {
-//        $r=mysql_query("select userid,username,userrole from usersmaster where useractive='Y'");
+		global $conn;  
+//        $r=mysqli_query("select userid,username,userrole from usersmaster where useractive='Y'");
 
-        $r=mysql_query("select usr_code as userid,usr_name as username,usr_type as userrole from mas_users where usr_code  in (3,6,7,13,15,17)");
-        $r=mysql_query("select usr_code as userid,usr_name as username,usr_type as userrole from mas_users where usr_code  in (6)");
+        //$r=mysqli_query("select usr_code as userid,usr_name as username,usr_type as userrole from mas_users where usr_code  in (3,6,7,13,15,17)");
+        //$r=mysqli_query("select usr_code as userid,usr_name as username,usr_type as userrole from mas_users where usr_code  in (6)");
+		$sql = "SELECT usr_code AS userid, usr_name AS username, usr_type AS userrole           FROM mas_users 
+            WHERE usr_code IN (6)";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 	
  function getcompany()
     {
-//    $r=mysql_query("select company_code as companycode,company_name as companyname from company_master");
-  
-      $r=mysql_query("select company_code as companycode,company_name as companyname from mas_company where company_code in (1,90)");
+		global $conn;  
+		$sql = "SELECT company_code AS companycode, company_name AS companyname 
+            FROM mas_company 
+            WHERE company_code IN (1,90)";
+    $r = mysqli_query($conn, $sql);
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getfinyear()
     {
-//        $r=mysql_query("select fin_id,fin_year from fin_master where fin_flag='Y'");
-        $r=mysql_query("select fin_code,fin_year from mas_finyear where fin_code >= 22");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		global $conn;  
+
+		$sql = "SELECT fin_code, fin_year FROM mas_finyear WHERE fin_code >= 22";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getmodules()
     {
-        $r=mysql_query("select * from modulelist where modactive='Y'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		global $conn;
+
+		$sql = "SELECT * FROM modulelist WHERE modactive='Y'";
+		$r = mysqli_query($conn, $sql);
+		$nrow = mysqli_num_rows($r);
+	
+		$arr = [];
+		while ($re = mysqli_fetch_assoc($r)) {
+			$arr[] = $re;
+		}
+	
+		echo json_encode(["total" => $nrow, "results" => $arr]);
     }
 
  function getmodulesNew()
     {
-	$modulelst = $_POST['modulelist'];
-
-        $r=mysql_query("select * from modulelist where modactive='Y' and modseqno in $modulelst");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		global $conn;
+		$modulelst = $_POST['modulelist'];
+	
+		$sql = "SELECT * FROM modulelist WHERE modactive='Y' AND modseqno IN $modulelst";
+		$r = mysqli_query($conn, $sql);
+		$nrow = mysqli_num_rows($r);
+	
+		$arr = [];
+		while ($re = mysqli_fetch_assoc($r)) {
+			$arr[] = $re;
+		}
+	
+		echo json_encode(["total" => $nrow, "results" => $arr]);
     }
 
  function getmodurl()
     {
-	$modulename = $_POST['modulename'];
-	$user = $_POST['moduser'];
-        $r=mysql_query("select modurl,modflag from modulelist where modname='$modulename'");
-        $r=mysql_query("select modurl from modulelist where modname='$modulename'");
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		global $conn;
+		$modulename = $_POST['modulename'];
+		$user = $_POST['moduser'];
+	
+		$sql = "SELECT modurl FROM modulelist WHERE modname='$modulename'";
+		$r = mysqli_query($conn, $sql);
+	
+		$nrow = mysqli_num_rows($r);
+		$arr = [];
+		while ($re = mysqli_fetch_assoc($r)) {
+			$arr[] = $re;
+		}
+	
+		echo json_encode(["total" => $nrow, "results" => $arr]);
     }
 
 
  function getLoginName()
     {
-
-	$loginname = $_POST['loginname'];
-        $r=mysql_query("select * from userMaster where usr_login = '$loginname'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+		global $conn;
+		$loginname = $_POST['loginname'];
+	
+		$sql = "SELECT * FROM userMaster WHERE usr_login = '$loginname'";
+		$r = mysqli_query($conn, $sql);   // ✅ missing bracket fixed
+	
+		$nrow = mysqli_num_rows($r);
+		$arr = [];
+		while ($re = mysqli_fetch_assoc($r)) {
+			$arr[] = $re;
+		}
+	
+		echo json_encode(["total" => $nrow, "results" => $arr]);
     }
+
+
 
  function getSubjectPassword()
     {
-        mysql_query("SET NAMES utf8");
+		global $conn;  
+        
 	$dept     = $_POST['dept'];
 	$subject  = $_POST['subject'];
 
-        $r=mysql_query(" select count(*) as nos , pw_password  from mas_password where pw_dept = '$dept' and pw_subject = '$subject'");
+    $sql = "SELECT COUNT(*) AS nos, pw_password
+            FROM mas_password
+            WHERE pw_dept = '$dept' AND pw_subject = '$subject'";
+    $r = mysqli_query($conn, $sql);
 
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -185,19 +200,26 @@
 
  function check_Invoice_Number()
     {
-        mysql_query("SET NAMES utf8");
+		global $conn;  
+        
 	$compcode = $_POST['compcode'];
 	$fincode  = $_POST['fincode'];
 	$ledcode  = $_POST['ledcode'];
 	$billno   = $_POST['billno'];
 
 
-        $r=mysql_query(" select count(*) as no_of_rec  from acc_ref, acc_trail where acctrail_led_code = $ledcode and acctrail_inv_no = '$billno' and accref_comp_code = $compcode and accref_finid  = $fincode and accref_seqno  = acctrail_accref_seqno  ");
+    $sql = "SELECT COUNT(*) AS no_of_rec  
+            FROM acc_ref, acc_trail 
+            WHERE acctrail_led_code = $ledcode 
+              AND acctrail_inv_no = '$billno' 
+              AND accref_comp_code = $compcode 
+              AND accref_finid  = $fincode 
+              AND accref_seqno  = acctrail_accref_seqno";
 
+    $r = mysqli_query($conn, $sql);
 
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -207,19 +229,25 @@
 
  function check_Invoice_Number_Detail()
     {
-        mysql_query("SET NAMES utf8");
+		global $conn;  
+        
 	$compcode = $_POST['compcode'];
 	$fincode  = $_POST['fincode'];
 	$ledcode  = $_POST['ledcode'];
 	$billno   = $_POST['billno'];
 
 
-        $r=mysql_query(" select * from acc_ref, acc_trail where acctrail_led_code = $ledcode and acctrail_inv_no = '$billno' and accref_comp_code = $compcode and accref_finid  = $fincode and accref_seqno  = acctrail_accref_seqno  ");
+    $sql = "SELECT * 
+            FROM acc_ref, acc_trail 
+            WHERE acctrail_led_code = $ledcode 
+              AND acctrail_inv_no = '$billno' 
+              AND accref_comp_code = $compcode 
+              AND accref_finid  = $fincode 
+              AND accref_seqno  = acctrail_accref_seqno";
 
-
-
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+    $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }

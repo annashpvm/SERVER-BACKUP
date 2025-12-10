@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadsupplier":
 		getsupplier();
@@ -62,15 +62,7 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -80,10 +72,10 @@
 
 function getsupplier(){
     $query = "select sup_refname,sup_code from trnpur_general_header , maspur_supplier_master where genh_party = sup_code and genh_type = 'D'  group by sup_refname,sup_code";
-    $result = mysql_query($query);
-    $nbrows = mysql_num_rows($result);
+    $result = mysqli_query($conn, $query);
+    $nbrows = mysqli_num_rows($result);
     if ($nbrows > 0) {
-        while ($rec = mysql_fetch_array($result)) {
+        while ($rec = mysqli_fetch_array($result)) {
             $arr[] = $rec;
         }
         $jsonresult = JEncode($arr);
@@ -95,54 +87,57 @@ function getsupplier(){
 	
  function getdnrecptno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-        $r=mysql_query("select ifnull(max(genh_no),0)+1 as dnrecptno from trnpur_general_header where genh_type  = 'R' and genh_comp_code = $compcode and genh_fincode = $finid");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select ifnull(max(genh_no),0)+1 as dnrecptno from trnpur_general_header where genh_type  = 'R' and genh_comp_code = $compcode and genh_fincode = $finid");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 function getdnnolist()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$supcode = $_POST['supcode'];
-	$r=mysql_query("select genh_no,genh_fincode from trnpur_general_header,trnpur_general_trailer 
+	$sql = "select genh_no,genh_fincode from trnpur_general_header,trnpur_general_trailer 
 where genh_comp_code = gent_comp_code and genh_fincode=gent_fincode and genh_no=gent_no and 
 genh_comp_code='$compcode'  and genh_fincode= $finid and genh_party='$supcode' and gent_issqty>gent_recqty and 
 genh_type='D' group by genh_no,genh_fincode order by genh_no desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
  function getdnrecptnolist()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-        $r=mysql_query("select genh_no,genh_fincode from trnpur_general_header where genh_type  = 'R' and genh_comp_code = $compcode and genh_fincode = $finid order by genh_no desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select genh_no,genh_fincode from trnpur_general_header where genh_type  = 'R' and genh_comp_code = $compcode and genh_fincode = $finid order by genh_no desc");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -150,167 +145,177 @@ genh_type='D' group by genh_no,genh_fincode order by genh_no desc");
 
 function getcarrier()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select * from mas_transport");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select * from mas_transport");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 
 function getdept()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("call sp_sel_dept()");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "call sp_sel_dept()");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getpayterms()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getdcno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$supcode = $_POST['supcode'];
-	$r=mysql_query("select * from trnpur_general_header,trnpur_general_trailer 
+	$sql = "select * from trnpur_general_header,trnpur_general_trailer 
 where genh_comp_code = gent_comp_code and genh_fincode=gent_fincode and genh_no=gent_no and 
 genh_comp_code='$compcode' and genh_fincode='$finid' and genh_party='$supcode' and gent_issqty>gent_recqty and 
 genh_type='D'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 function getdnnodetail()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$dnno = $_POST['dnno'];
 	
-	$r=mysql_query("select * from trnpur_general_header a,trnpur_general_trailer b,maspur_supplier_master c ,mas_item_master d , mas_uom e where item_uom = uom_code and genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no   and genh_type = gent_type and gent_item_code = item_code and  genh_party = sup_code and gent_issqty > gent_recqty  and genh_comp_code = '$compcode' and genh_fincode = '$finid' and genh_type = 'D' and genh_no = '$dnno'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select * from trnpur_general_header a,trnpur_general_trailer b,maspur_supplier_master c ,mas_item_master d , mas_uom e where item_uom = uom_code and genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no   and genh_type = gent_type and gent_item_code = item_code and  genh_party = sup_code and gent_issqty > gent_recqty  and genh_comp_code = '$compcode' and genh_fincode = '$finid' and genh_type = 'D' and genh_no = '$dnno'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
    }
 
 
 function getdnnodetail2()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$dnno     = $_POST['dnno'];
 	//$icode    = $_POST['itemcode'];
            
 	
-	$r=mysql_query("select gent_issqty - gent_recqty as balqty from trnpur_general_header a,trnpur_general_trailer b,maspur_supplier_master c ,mas_item_master d , mas_uom e where item_uom = uom_code and genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no   and genh_type = gent_type and gent_item_code = item_code and  genh_party = sup_code  and genh_comp_code = '$compcode' and genh_fincode = '$finid' and genh_type = 'D' and genh_no = '$dnno' ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select gent_issqty - gent_recqty as balqty from trnpur_general_header a,trnpur_general_trailer b,maspur_supplier_master c ,mas_item_master d , mas_uom e where item_uom = uom_code and genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no   and genh_type = gent_type and gent_item_code = item_code and  genh_party = sup_code  and genh_comp_code = '$compcode' and genh_fincode = '$finid' and genh_type = 'D' and genh_no = '$dnno' ");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
    }
 
 
 
 function getdnrecptnodetail()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$recptno = $_POST['recptno'];
 	
-	$r=mysql_query("select * from trnpur_general_header a,trnpur_general_trailer b,maspur_supplier_master c ,mas_item_master d , mas_uom e where item_uom = uom_code and genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no   and genh_type = gent_type and gent_item_code = item_code and  genh_party = sup_code and  genh_comp_code = '$compcode' and genh_fincode = '$finid' and genh_type = 'R' and genh_no = '$recptno'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select * from trnpur_general_header a,trnpur_general_trailer b,maspur_supplier_master c ,mas_item_master d , mas_uom e where item_uom = uom_code and genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no   and genh_type = gent_type and gent_item_code = item_code and  genh_party = sup_code and  genh_comp_code = '$compcode' and genh_fincode = '$finid' and genh_type = 'R' and genh_no = '$recptno'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
    }
 
 function getitem()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$dcno = $_POST['dcno'];
 	$wono = $_POST['wono'];
 	
-	$r=mysql_query("select item_name,gent_item_code,gent_podate from trnpur_general_header a,trnpur_general_trailer b  ,maspur_supplier_master c ,mas_item_master d where genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no  and gent_item_code = item_code and  genh_party = sup_code  and genh_comp_code = $compcode and genh_fincode = $finid and genh_type = 'D'  and gent_issqty > gent_recqty   and genh_no = $dcno and gent_pono = $wono");
-	//$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select item_name,gent_item_code,gent_podate from trnpur_general_header a,trnpur_general_trailer b  ,maspur_supplier_master c ,mas_item_master d where genh_comp_code = gent_comp_code and genh_fincode = gent_fincode and genh_no = gent_no  and gent_item_code = item_code and  genh_party = sup_code  and genh_comp_code = $compcode and genh_fincode = $finid and genh_type = 'D'  and gent_issqty > gent_recqty   and genh_no = $dcno and gent_pono = $wono");
+	//$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 function getitemlist()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	
-	$r=mysql_query("select item_code, item_name from mas_item_master order by item_name");
-	//$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select item_code, item_name from mas_item_master order by item_name");
+	//$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getitemdet()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
         $itemcode = $_POST['item'];
-	$r=mysql_query("select * from mas_item_master a , mas_uom b where item_uom = uom_code and item_code = $itemcode");
-	//$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select * from mas_item_master a , mas_uom b where item_uom = uom_code and item_code = $itemcode");
+	//$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 

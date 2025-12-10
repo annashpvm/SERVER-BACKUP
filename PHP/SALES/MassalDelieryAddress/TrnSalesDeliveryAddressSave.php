@@ -4,6 +4,7 @@ session_start();
 
 
 $ordhparty= $_POST['ordhparty'];
+$ordhpartyName= $_POST['ordhpartyName'];
 
 $ordhdeliveryadd1= strtoupper($_POST['ordhdeliveryadd1']);
 $ordhdeliveryadd2= strtoupper($_POST['ordhdeliveryadd2']);
@@ -12,37 +13,39 @@ $ordhdeliverycity= strtoupper($_POST['ordhdeliverycity']);
 $ordhdeliverypin=  $_POST['ordhdeliverypin'];
 $ordhdeliverygst=  strtoupper($_POST['ordhdeliverygst']);
 $statecode=  $_POST['statecode'];
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
 $query1 = "select count(*) as nos from trnsal_delivery_address where d_custcode = $ordhparty";
-$result1 = mysql_query($query1);
-$rec1 = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1 = mysqli_fetch_array($result1);
 $custfound = $rec1['nos'];
 //echo $query1;
 
 if ($custfound ==0) {
    $query2 = "insert into trnsal_delivery_address values('$ordhparty','$ordhdeliveryadd1','$ordhdeliveryadd2', '$ordhdeliveryadd3', '$ordhdeliverycity','$ordhdeliverypin','$ordhdeliverygst',$statecode)";
-   $result2 = mysql_query($query2); 
+   $result2 = mysqli_query($conn, $query2); 
 echo $query2;
 }
 else
 {
    $query2 = "update trnsal_delivery_address set
 delivery_add1 = '$ordhdeliveryadd1' , delivery_add2 = '$ordhdeliveryadd2', delivery_add3 = '$ordhdeliveryadd3', delivery_city = '$ordhdeliverycity' , delivery_pin = '$ordhdeliverypin', delivery_gst = '$ordhdeliverygst' , delivery_state = '$statecode'  where d_custcode =  $ordhparty";
-   $result2=mysql_query($query2); 
+   $result2=mysqli_query($conn, $query2); 
 }
 
 	if ($result2 )  {
-	   mysql_query("COMMIT");
-	    echo '({"success":"true","msg":"' . $ordhparty . '"})';
+	   mysqli_begin_transaction($conn);
+	    echo '({"success":"true","msg":"' . $ordhpartyName . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
-	   echo '({"success":"false","msg":"' . $ordhparty . '"})';
+	    mysqli_rollback($conn);
+
+
+	   echo '({"success":"false","msg":"' . $ordhpartyName . '"})';
 
 	}
    

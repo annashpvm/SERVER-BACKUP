@@ -64,7 +64,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
         totalProperty: 'total',
         id: 'id'
       },[
-          'accref_seqno', 'voudate', 'accref_voudate', 'accref_vouno', 'acctrail_inv_value', 'ref_invno', 'ref_invdate', 'ref_adjamount','acctrail_amtmode'
+          'accref_seqno', 'voudate', 'accref_voudate', 'accref_vouno','acctrail_inv_no', 'acctrail_inv_value','balamt', 'ref_invno', 'ref_invdate', 'ref_adjamount','acctrail_amtmode'
       ]),
     });
 
@@ -76,7 +76,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
                 url: 'ClsBillAdjustments.php',      // File to connect to
                 method: 'POST'
             }),
-            baseParams:{task:"loadVouNoDetail"}, // this parameter asks for listing
+            baseParams:{task:"var "}, // this parameter asks for listing
       reader: new Ext.data.JsonReader({
                   // we tell the datastore where to get his data from
         root: 'results',
@@ -122,6 +122,27 @@ function LedgerSearch()
 }
 
 
+function  callvounolist()
+{
+    loadVoucherDetailDatastore.removeAll();
+    loadVoucherListDatastore.removeAll();
+    loadVoucherListDatastore.load({
+        url: 'ClsBillAdjustments.php',
+        params:
+                {
+                    task: "loadVouNoList",
+                        fincode : GinFinid,
+                        compcode: GinCompcode,
+                        ledcode : ledgercode , 
+                        voutype : cmbVoucherList.getValue(), 
+                },
+        callback: function () {
+     var cnt = loadVoucherListDatastore.getCount();
+
+        }
+    });
+}
+
 
 
     var cmbVoucherList = new Ext.form.ComboBox({
@@ -141,25 +162,9 @@ function LedgerSearch()
         editable: true,
         allowblank: false,
         listeners: {
-                select: function(){
-            loadVoucherDetailDatastore.removeAll();
-            loadVoucherListDatastore.removeAll();
-            loadVoucherListDatastore.load({
-                url: 'ClsBillAdjustments.php',
-                params:
-                        {
-                            task: "loadVouNoList",
-                                fincode : GinFinid,
-                                compcode: GinCompcode,
-                                ledcode : ledgercode , 
-                                voutype : cmbVoucherList.getValue(), 
-                        },
-                callback: function () {
-             var cnt = loadVoucherListDatastore.getCount();
-    
-                }
-            });
-        } 
+            select: function(){
+                callvounolist();
+            } 
         }
     });
 function grid_chk_flxLedger()
@@ -206,13 +211,12 @@ function grid_chk_flxLedger()
 function grid_tot(){
 
 
-
     var selrows = flxAdjdocDetail.getStore().getCount();
     var ginadjtotal = 0;
     txtTotAdjAmount.setValue("");
     for (var i=0;i<selrows;i++){
         var rec = flxAdjdocDetail.getStore().getAt(i);
-        ginadjtotal = ginadjtotal + Number(rec.get('ref_adjamount'));
+        ginadjtotal = ginadjtotal + Number(rec.get('newadjusted'));
 
     }
     txtTotAdjAmount.setRawValue(Ext.util.Format.number(ginadjtotal,"0.00"));
@@ -235,7 +239,7 @@ function grid_tot(){
 		{header: "Vou. Date  ", dataIndex: 'voudate',sortable:true,width:110,align:'center'},
 		{header: "Vou. Date  ", dataIndex: 'accref_voudate',sortable:true,width:110,align:'center',hidden : true},
 		{header: "Voucher NO.", dataIndex: 'accref_vouno',sortable:true,width:140,align:'center'},   
-		{header: "Amount", dataIndex: 'acctrail_inv_value',sortable:true,width:120,align:'right',
+        {header: "Amount", dataIndex: 'acctrail_inv_value',sortable:true,width:120,align:'right',
                 renderer: function (val, metaData, r){
         if (val > 0) 
         { 
@@ -248,9 +252,34 @@ function grid_tot(){
         }
         } 
        },
-		{header: "Inv NO.", dataIndex: 'ref_invno',sortable:true,width:180,align:'center',hidden : false},   
+       {header: "BalAmount", dataIndex: 'balamt',sortable:true,width:0,align:'right',
+            renderer: function (val, metaData, r){
+            if (val > 0) 
+            { 
+            return  parseFloat(val).toLocaleString('en-In', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2,
+            //         style: 'currency',
+                currency: 'INR',
+                });
+            }
+            } 
+        },       
+		{header: "Inv NO.", dataIndex: 'acctrail_inv_no',sortable:true,width:180,align:'center',hidden : false},   
 		{header: "Inv. Date  ", dataIndex: 'ref_invdate',sortable:true,width:110,align:'center'},
-		{header: "Adj. Amount AS  ", dataIndex: 'ref_adjamount',sortable:true,width:140,align:'right',},
+		{header: "Adj. Amount AS  ", dataIndex: 'ref_adjamount',sortable:true,width:140,align:'right',
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }             
+        },
         {header: "Adj Type", dataIndex: 'acctrail_amtmode',sortable:true,width:110,align:'left',hidden : false},
 
 
@@ -264,11 +293,12 @@ function grid_tot(){
 	            var selrow = sm.getSelected();
 	            vouseqno =  Number(selrow.get('accref_seqno')); 
 
-                    txtVouAmount.setRawValue(selrow.get('acctrail_inv_value'));
-                    txtVouNo.setRawValue(selrow.get('accref_vouno'));
-                    txtVouDate.setRawValue(selrow.get('accref_voudate'));
-                    txtInvNo.setRawValue(selrow.get('ref_invno'));
-                    voudrcr = selrow.get('acctrail_amtmode');
+                txtVouAmount.setRawValue(selrow.get('acctrail_inv_value'));
+                txtVouBalAmount.setRawValue(selrow.get('balamt'));
+                txtVouNo.setRawValue(selrow.get('accref_vouno'));
+                txtVouDate.setRawValue(selrow.get('accref_voudate'));
+                txtInvNo.setRawValue(selrow.get('acctrail_inv_no'));
+                voudrcr = selrow.get('acctrail_amtmode');
              
 	    loadVoucherDetailDatastore.removeAll();
 	    loadVoucherDetailDatastore.load({
@@ -280,6 +310,7 @@ function grid_tot(){
                             compcode: GinCompcode,
                             seqno   : vouseqno , 
                             voudrcr : voudrcr,
+                            ledcode : ledgercode,
 	                },
 	        callback: function () {
 
@@ -328,9 +359,9 @@ function UpdateReceiptBillsAdjusted(){
         id: 'my-grid',  
 
         columns: [         
-            {header: "Adj SlNO", dataIndex: 'ref_slno',sortable:true,width:110,align:'left',hidden : true},
-            {header: "BR SeqNO", dataIndex: 'ref_docseqno',sortable:true,width:110,align:'left',hidden : true},
-            {header: "Adj SeqNO", dataIndex: 'ref_adjseqno',sortable:true,width:110,align:'left',hidden : true},
+            {header: "Adj SlNO", dataIndex: 'ref_slno',sortable:true,width:110,align:'left',hidden : false},
+            {header: "BR SeqNO", dataIndex: 'ref_docseqno',sortable:true,width:110,align:'left',hidden : false},
+            {header: "Adj SeqNO", dataIndex: 'ref_adjseqno',sortable:true,width:110,align:'left',hidden : false},
             {header: "Vou. No.", dataIndex: 'ref_docno',sortable:true,width:100,align:'center',hidden : true},
             {header: "VouDate", dataIndex: 'ref_docdate',sortable:true,width:100,align:'center',hidden : true},            
             {header: "Inv. No.", dataIndex: 'acctrail_inv_no',sortable:true,width:180,align:'center'},
@@ -338,9 +369,45 @@ function UpdateReceiptBillsAdjusted(){
             {header: "Date", dataIndex: 'invdate',sortable:true,width:110,align:'center'},
             {header: "PayTerms", dataIndex: 'ref_paymt_terms',sortable:true,width:110,align:'center'},
 
-            {header: "Inv Amt", dataIndex: 'acctrail_inv_value',sortable:true,width:120,align:'right' },
-            {header: "Pending Amt", dataIndex: 'pendingamt',sortable:true,width:120,align:'right' },
-            {header: "Adjusted Amt", dataIndex: 'ref_adjamount',sortable:true,width:120,align:'right'},
+            {header: "Inv Amt", dataIndex: 'acctrail_inv_value',sortable:true,width:120,align:'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    } 
+             },
+            {header: "Pending Amt", dataIndex: 'pendingamt',sortable:true,width:120,align:'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    } 
+             },
+            {header: "Adjusted Amt", dataIndex: 'ref_adjamount',sortable:true,width:120,align:'right',
+                renderer: function (val, metaData, r){
+                    if (val > 0) 
+                    { 
+                    return  parseFloat(val).toLocaleString('en-In', {
+                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 2,
+                //         style: 'currency',
+                        currency: 'INR',
+                        });
+                    }
+                    } 
+            },
             {header: "Change Adj Amt", dataIndex: 'newadjusted',sortable:true,width:130,align:'right',
                 editor: {
                     xtype:'numberfield',
@@ -376,15 +443,14 @@ function UpdateReceiptBillsAdjusted(){
                 },
                 listeners: {
                     click: function(){
-                        UpdateReceiptBillsAdjusted();
-                        grid_tot();
+                          grid_tot();
                     }
                 }
             },
             {header: "Adj NO", dataIndex: 'accref_vouno',sortable:true,width:110,align:'left',hidden : true},
             {header: "Adj Voutype", dataIndex: 'accref_vou_type',sortable:true,width:110,align:'left',hidden : true},
-            {header: "MDrCr", dataIndex: 'mdrcr',sortable:true,width:110,align:'left',hidden : false},
-            {header: "ADrCr", dataIndex: 'adrcr',sortable:true,width:110,align:'left',hidden : false},
+            {header: "MDrCr", dataIndex: 'mdrcr',sortable:true,width:110,align:'left',hidden : true},
+            {header: "ADrCr", dataIndex: 'adrcr',sortable:true,width:110,align:'left',hidden : true},
 
         ],
         store:loadVoucherDetailDatastore,
@@ -468,7 +534,7 @@ function UpdateReceiptBillsAdjusted(){
 
 
     var txtVouAmount = new Ext.form.NumberField ({
-        fieldLabel  : 'Vou. Amount',
+        fieldLabel  : 'Vou.Amount',
         id          : 'txtVouAmount',
         width       : 110,
         name        : 'txtVouAmount',
@@ -476,6 +542,16 @@ function UpdateReceiptBillsAdjusted(){
         labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
     });
     
+
+    var txtVouBalAmount = new Ext.form.NumberField ({
+        fieldLabel  : 'Vou.Bal.Amt',
+        id          : 'txtVouBalAmount',
+        width       : 110,
+        name        : 'txtVouBalAmount',
+        readOnly    : true,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    });
+        
     var txtTotAdjAmount = new Ext.form.NumberField ({
         fieldLabel  : 'Adj. Amount',
         id          : 'txtTotAdjAmount',
@@ -504,7 +580,7 @@ var txtAccountName = new Ext.form.TextField({
              }
              if (e.getKey() == e.ENTER)
              {
-
+                cmbVoucherList.focus;
              }
              if (e.getKey() == e.DOWN)
              {
@@ -575,7 +651,11 @@ var txtAccountName = new Ext.form.TextField({
                             Ext.MessageBox.alert("Bill Adjustment","No bills adjusted..");
                         }else if (ledgercode  == 0){
                             Ext.MessageBox.alert("Bill Adjustment","Select the Partyname");
-                        }else{
+                        }else if (Number(txtTotAdjAmount.getValue())  >  Number(txtVouAmount.getValue())){
+                            Ext.MessageBox.alert("Bill Adjustment","Total Adjusted Amount is higher than Voucher Amount...");
+                        }else
+                        
+                        {
                             Ext.Msg.show({
                                 title: 'Bill Adjustment',
                                 icon: Ext.Msg.QUESTION,
@@ -599,6 +679,10 @@ var txtAccountName = new Ext.form.TextField({
                                                 vouno    :txtVouNo.getRawValue(),
 		                                        voudate  : Ext.util.Format.date(txtVouDate.getRawValue(),"Y-m-d"),
                                                 ledgercode :ledgercode,
+                                                vouinvno : txtInvNo.getRawValue(),
+                                                vouamount : Number(txtVouAmount.getValue())-Number(txtVouBalAmount.getValue()) ,
+                                                vouadjamount : txtTotAdjAmount.getValue(),
+                                                voudrcr    : voudrcr,
 
                 
                                             },
@@ -610,14 +694,16 @@ var txtAccountName = new Ext.form.TextField({
                                                         Ext.Msg.show({
                                                         title: 'Bill Adjustment',
                                                         icon: Ext.Msg.QUESTION,
-                                                        buttons: Ext.MessageBox.YESNO,
+                                                        buttons: Ext.MessageBox.OK,
                                                         msg: 'Bills adjusted successfully',
                                                         fn: function(btn){
                                                             if (btn == 'yes'){
-                                                  		 flxAdjdocDetail.getStore().removeAll();
-                                                                  txtNarration.setRawValue('');
+                                                  		          flxAdjdocDetail.getStore().removeAll();
+                                                                  flxVoucherList.getStore().removeAll();
+                                                                 //txtNarration.setRawValue('');
                                                                   txtTotadjamt.setValue('');
                                                                   txtAmount.setValue('');
+                                                                  callvounolist();
 //                                                                window.location.reload();
 
                                                             }else{
@@ -740,8 +826,18 @@ var txtAccountName = new Ext.form.TextField({
                                 x: 1050,
                                 y: 390,
                                 border: false,
+                                items: [txtVouBalAmount]
+                            } ,   
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                labelWidth: 110,
+                                width: 550,
+                                x: 1050,
+                                y: 430,
+                                border: false,
                                 items: [txtTotAdjAmount]
-                            }                            
+                            }                                                        
 
             ]
 

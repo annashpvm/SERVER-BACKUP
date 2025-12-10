@@ -42,7 +42,7 @@
     //$grpcode='100';
     //$pst_grpcode1 = 100;
 
-mysql_query("SET NAMES utf8");
+global $conn;
     switch($task){
 	case "VoucherNoDetailDate";
 	getVoucherNoDetailDate();
@@ -170,76 +170,72 @@ mysql_query("SET NAMES utf8");
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
   function getVoucherNoDetailDate()
     {
 	$accseqno=$_POST['accrefseq'];
-	$r=mysql_query("call acc_sp_trn_selacc_ref('$accseqno')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call acc_sp_trn_selacc_ref('$accseqno')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     function getCurrency()
     {
-	$r=mysql_query("call general_sp_mas_selcurrencymaster();");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call general_sp_mas_selcurrencymaster();";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getAccountName()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $compcode = $_POST['compcode'];
-//       $r=mysql_query("select led_code, led_name from acc_ledger_master   where led_comp_code	= '$compcode' and led_status = 'Y' and led_duplicate = 'N'");
+//       $sql = "select led_code, led_name from acc_ledger_master   where led_comp_code	= '$compcode' and led_status = 'Y' and led_duplicate = 'N'";
 
-        $r=mysql_query("select led_code, led_name from acc_ledger_master");
+        $sql = "select led_code, led_name from acc_ledger_master";
  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getPartyName()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $compcode = $_POST['compcode'];
         $ledname = $_POST['ledname'];
-	//$r=mysql_query("call acc_sp_mas_selledger_master('$compcode');");
-        $r=mysql_query("select led_code, led_name from acc_ledger_master 
+	//$sql = "call acc_sp_mas_selledger_master('$compcode');";
+        $sql = "select led_code, led_name from acc_ledger_master 
         where led_comp_code	= '$compcode' and led_name like '$ledname' and led_status = 'Y' and led_duplicate = 'N'
-        and led_grp_code not in (43,168,169,170,171,172,204)");
+        and led_grp_code not in (43,168,169,170,171,172,204)";
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getVoucherNumber()
@@ -247,47 +243,50 @@ mysql_query("SET NAMES utf8");
         $compcode = $_SESSION['gincompcode'];
         $finid=$_POST['finid'];
         $voutype=$_POST['voutype'];
-	$r=mysql_query("call acc_sp_trn_selvoucher_no('$finid','$compcode','$voutype');");
-        //$r=mysql_query("select led_code, led_name from acc_ledger_master 
+	$sql = "call acc_sp_trn_selvoucher_no('$finid','$compcode','$voutype');";
+        //$sql = "select led_code, led_name from acc_ledger_master 
         //    where led_comp_code	= 1 and led_status = 'Y' and led_duplicate = 'N'
-        //    and led_code <= 30600 order by led_code");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        //    and led_code <= 30600 order by led_code";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getVouNo()
     {
 	$finyear=$_POST['finyear'];
         $compcode=$_POST['compcode'];
-	//$r=mysql_query("CALL general_sp_mas_selcontrolmaster('ST','$finyear','IRN','STORES ISSUE RETURN NO','$compcode')");
-        $r=mysql_query("select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as con_value from acc_ref where accref_vou_type = 'EX' and accref_finid = '$finyear' and accref_comp_code = '$compcode';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "CALL general_sp_mas_selcontrolmaster('ST','$finyear','IRN','STORES ISSUE RETURN NO','$compcode')";
+        $sql = "select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as con_value from acc_ref where accref_vou_type = 'EX' and accref_finid = '$finyear' and accref_comp_code = '$compcode';";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getContraVouNo()
     {
 	$finyear=$_POST['finyear'];
         $compcode=$_POST['compcode'];
-	//$r=mysql_query("CALL general_sp_mas_selcontrolmaster('ST','$finyear','IRN','STORES ISSUE RETURN NO','$compcode')");
-        $r=mysql_query("select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as con_value from acc_ref where accref_vou_type = 'CT' and accref_finid = '$finyear' and accref_comp_code = '$compcode';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "CALL general_sp_mas_selcontrolmaster('ST','$finyear','IRN','STORES ISSUE RETURN NO','$compcode')";
+        $sql = "select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as con_value from acc_ref where accref_vou_type = 'CT' and accref_finid = '$finyear' and accref_comp_code = '$compcode';";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function FindSubgroup($gcode){
@@ -298,11 +297,11 @@ mysql_query("SET NAMES utf8");
         $cnt=1;
         do
         {
-            $r=mysql_query("select grp_code,grp_name from acc_group_master where grp_parent_code in (".$pst_grpcode1.") and grp_comp_code = '$compcode';");
-            $nrow = mysql_num_rows($r);
+            $sql = "select grp_code,grp_name from acc_group_master where grp_parent_code in (".$pst_grpcode1.") and grp_comp_code = '$compcode';";
+            $nrow = mysqli_num_rows($r);
             $cnt=$nrow;
             $pst_grpcode1 = "";
-            while($re = mysql_fetch_array($r))
+            while($re = mysqli_fetch_array($r))
             {
                 $pst_grpcode1 = $pst_grpcode1.",".$re['grp_code'];
             }
@@ -319,31 +318,33 @@ mysql_query("SET NAMES utf8");
     function getLedger(){
         $compcode=$_SESSION['gincompcode'];
         //$grpcode=$_POST['grpcode'];
-        $pstgrpcode = FindSubgroup("10");
-        $r=mysql_query("select led_code,led_name from acc_ledger_master where led_grp_code in (".$pstgrpcode.") and "
-                . "led_comp_code='$compcode' and led_status='Y' and led_duplicate='N';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $pstgrpcode = FindSubgroup("10";
+        $sql = "select led_code,led_name from acc_ledger_master where led_grp_code in (".$pstgrpcode.") and "
+                . "led_comp_code='$compcode' and led_status='Y' and led_duplicate='N';";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
          
         
     }
     
     function getJournalLedger(){
         $compcode=$_SESSION['gincompcode'];
-        $r=mysql_query("select led_code,led_name from acc_ledger_master where led_grp_code not in ('43') and "
-                . "led_comp_code='$compcode' and led_status='Y' and led_duplicate='N';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select led_code,led_name from acc_ledger_master where led_grp_code not in ('43') and "
+                . "led_comp_code='$compcode' and led_status='Y' and led_duplicate='N';";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
          
         
     }
@@ -352,15 +353,16 @@ mysql_query("SET NAMES utf8");
     {
 	$finyear=$_POST['finid'];
         $compcode=$_POST['compcode'];
-	//$r=mysql_query("CALL general_sp_mas_selcontrolmaster('ST','$finyear','IRN','STORES ISSUE RETURN NO','$compcode')");
-        $r=mysql_query("select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as con_value from accrefprovision where  accref_finid = '$finyear' and accref_comp_code = '$compcode';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "CALL general_sp_mas_selcontrolmaster('ST','$finyear','IRN','STORES ISSUE RETURN NO','$compcode')";
+        $sql = "select ifnull(max(convert(substring(accref_vouno,3),signed)),0) +1 as con_value from accrefprovision where  accref_finid = '$finyear' and accref_comp_code = '$compcode';";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getPaymentBillsDetailtoAdjust()
@@ -368,45 +370,48 @@ mysql_query("SET NAMES utf8");
 	$finid=$_POST['finid'];
         $compcode=$_POST['compcode'];
         $ledcode=$_POST['ledcode'];
-	$r=mysql_query("CALL acc_sp_trn_selacc_payment_billdetails_new('$compcode','$finid','$ledcode')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "CALL acc_sp_trn_selacc_payment_billdetails_new('$compcode','$finid','$ledcode')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getRegionalGroupName()
     {
         $compcode = $_SESSION['gincompcode'];
-	$r=mysql_query("call acc_sp_selregiongroup('$compcode');");
-        /*$r=mysql_query("select led_code, led_name from acc_ledger_master 
+	$sql = "call acc_sp_selregiongroup('$compcode');";
+        /*$sql = "select led_code, led_name from acc_ledger_master 
             where led_comp_code	= 1 and led_status = 'Y' and led_duplicate = 'N'
-            and led_code <= 30600 order by led_code");*/
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+            and led_code <= 30600 order by led_code";*/
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getHeadBankAccountName()
     {
         $compcode = $_POST['compcode'];
-	//$r=mysql_query("call acc_sp_mas_selledger_master('$compcode');");
-        $r=mysql_query("select led_code, led_name from acc_ledger_master 
-            where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182) and led_status ='Y' and led_duplicate='N'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "call acc_sp_mas_selledger_master('$compcode');";
+        $sql = "select led_code, led_name from acc_ledger_master 
+            where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182) and led_status ='Y' and led_duplicate='N'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getRegionalReceiptNo()
@@ -414,31 +419,33 @@ mysql_query("SET NAMES utf8");
         $compcode=$_POST['compcode'];
         $finid=$_POST['finid'];
         $grpcode=$_POST['grpcode'];
-	$r=mysql_query("call acc_sp_selRegionalReceiptNo('$grpcode','$finid','$compcode');");
-        //$r=mysql_query("select led_code, led_name from acc_ledger_master 
-        //    where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call acc_sp_selRegionalReceiptNo('$grpcode','$finid','$compcode');";
+        //$sql = "select led_code, led_name from acc_ledger_master 
+        //    where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182)";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getRegionalReceiptNoDetail()
     {
         $rcptseq=$_POST['rcptseq'];
-	$r=mysql_query("call acc_sp_selRegionalReceiptDetail('$rcptseq');");
-        //$r=mysql_query("select led_code, led_name from acc_ledger_master 
-        //    where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call acc_sp_selRegionalReceiptDetail('$rcptseq');";
+        //$sql = "select led_code, led_name from acc_ledger_master 
+        //    where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182)";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getReceiptBillsDetailtoAdjust()
@@ -446,14 +453,15 @@ mysql_query("SET NAMES utf8");
 	$finid=$_POST['finid'];
         $compcode=$_POST['compcode'];
         $ledcode=$_POST['ledcode'];
-	$r=mysql_query("CALL acc_sp_trn_selacc_receipt_billdetails_new('$compcode','$finid','$ledcode')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "CALL acc_sp_trn_selacc_receipt_billdetails_new('$compcode','$finid','$ledcode')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getOpeningBillsDetailtoAdjust()
@@ -461,29 +469,31 @@ mysql_query("SET NAMES utf8");
 	$finid=$_POST['finid'];
         $compcode=$_POST['compcode'];
         $ledcode=$_POST['ledcode'];
-	$r=mysql_query("CALL acc_sp_trn_selob_billdetails_balance('$compcode','$finid','$ledcode')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "CALL acc_sp_trn_selob_billdetails_balance('$compcode','$finid','$ledcode')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getRegionalReceiptNoBillDetail()
     {
         $rcptseq=$_POST['rcptseq'];
-	$r=mysql_query("call acc_sp_selRegionalReceiptBillDetail('$rcptseq');");
-        //$r=mysql_query("select led_code, led_name from acc_ledger_master 
-        //    where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182)");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call acc_sp_selRegionalReceiptBillDetail('$rcptseq');";
+        //$sql = "select led_code, led_name from acc_ledger_master 
+        //    where led_comp_code	= '$compcode' and led_grp_code in (20,90,21,22,23,24,25,91,92,93,94,95,96,102,182)";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getReceiptVoucherNumber()
@@ -492,28 +502,30 @@ mysql_query("SET NAMES utf8");
         $finid=$_POST['finid'];
         $voutype=$_POST['voutype'];
         $ledcode=$_POST['ledcode'];
-	$r=mysql_query("call acc_sp_trn_selacc_ref_regrcptvouno('$compcode','$finid','$voutype','$ledcode');");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call acc_sp_trn_selacc_ref_regrcptvouno('$compcode','$finid','$voutype','$ledcode');";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getGroupMaster()
     {
         $compcode = $_SESSION['gincompcode'];
         $grpparent=$_POST['grpparent'];
-	$r=mysql_query("select grp_code, grp_name from acc_group_master where grp_comp_code = '$compcode' and grp_parent_code = '$grpparent';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select grp_code, grp_name from acc_group_master where grp_comp_code = '$compcode' and grp_parent_code = '$grpparent';";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getGroupwiseTotalAmount($grpcode,$grpname){
@@ -522,7 +534,7 @@ mysql_query("SET NAMES utf8");
         //$grpcode=$_POST['grpcode'];
         $pstgrpcode = FindSubgroup($grpcode);
 
-        $r=mysql_query("select b.grp_code, b.grp_name, 'G' as acctype, sum(obdbamt) as totdbamt,sum(obcramt) as totcramt from 
+        $sql = "select b.grp_code, b.grp_name, 'G' as acctype, sum(obdbamt) as totdbamt,sum(obcramt) as totcramt from 
             (select grp_code, grp_name, sum(curbal_obdbamt) as obdbamt,sum(curbal_obcramt) as obcramt 
             from acc_group_master, acc_ledger_master, acc_current_balance 
             where curbal_finid = '$finid' and led_code = curbal_led_code and grp_code = led_grp_code 
@@ -538,9 +550,9 @@ mysql_query("SET NAMES utf8");
             and led_grp_code in (".$pstgrpcode.") and led_grp_code not in ('$grpcode') and accref_comp_code = led_comp_code 
             and led_comp_code = grp_comp_code and grp_comp_code = '$compcode'
             group by grp_code) a, acc_group_master b
-            where b.grp_code = '$grpcode' and grp_comp_code = 1");
-	$nrow = mysql_num_rows($r);
-        while($re = mysql_fetch_array($r))
+            where b.grp_code = '$grpcode' and grp_comp_code = 1";
+	$nrow = mysqli_num_rows($r);
+        while($re = mysqli_fetch_array($r))
         {
             if ($re['grp_code']==NULL){
                 $arr[]=array("grp_code"=>$grpcode,"grp_name"=>$grpname,"totdbamt"=>0,"totcramt"=>0,"acctype"=>'G');
@@ -562,8 +574,8 @@ mysql_query("SET NAMES utf8");
         $finid=22;//$_POST['finid'];
         //$grpcode=$_POST['grpcode'];
         $pstgrpcode = $grpcode;
-        mysql_query("SET NAMES utf8");  
-        $r=mysql_query("select grp_code , grp_name, 'L' as acctype, sum(obdbamt) as totdbamt, sum(obcramt) as totcramt from
+        global $conn;  
+        $sql = "select grp_code , grp_name, 'L' as acctype, sum(obdbamt) as totdbamt, sum(obcramt) as totcramt from
             (select led_code as grp_code, led_name as grp_name, sum(curbal_obdbamt) as obdbamt,sum(curbal_obcramt) as obcramt 
             from acc_ledger_master, acc_current_balance 
             where curbal_finid = '$finid' and led_code = curbal_led_code 
@@ -577,9 +589,9 @@ mysql_query("SET NAMES utf8");
             and accref_voudate >= '2015-04-01' and accref_voudate <= '2016-03-31' 
             and acctran_led_code = led_code and led_grp_code in ('$pstgrpcode') and accref_comp_code = led_comp_code 
             and led_comp_code = '$compcode'
-            group by led_code) a group by grp_name, grp_code;");
-	$nrow = mysql_num_rows($r);
-        while($re = mysql_fetch_array($r))
+            group by led_code) a group by grp_name, grp_code;";
+	$nrow = mysqli_num_rows($r);
+        while($re = mysqli_fetch_array($r))
         {
             if ($re['grp_code']==NULL){
                 $arr[]=array("grp_code"=>$re['grp_code'],"grp_name"=>$re['grp_name'],"totdbamt"=>0,"totcramt"=>0,"acctype"=>'L');
@@ -600,9 +612,9 @@ mysql_query("SET NAMES utf8");
     {
         $compcode = 1;//$_SESSION['gincompcode'];
         $grpparent= $_POST['grpparent'];
-	$r=mysql_query("select grp_code, grp_name from acc_group_master where grp_comp_code = '$compcode' and grp_parent_code = '$grpparent';");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$sql = "select grp_code, grp_name from acc_group_master where grp_comp_code = '$compcode' and grp_parent_code = '$grpparent';";
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
             //$arr[] = $re;
             $arr= getGroupwiseTotalAmount($re['grp_code'],$re['grp_name']);
@@ -624,9 +636,9 @@ mysql_query("SET NAMES utf8");
     
     function getbankname()
     {
-	$res=mysql_query("call acc_sp_mas_selbank_master()");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$res=mysql_query("call acc_sp_mas_selbank_master()";
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -638,49 +650,52 @@ mysql_query("SET NAMES utf8");
     {
         $compcode = $_POST['compcode'];
         //$grpparent=$_POST['grpparent'];
-	$r=mysql_query("call acc_sp_mas_selgroup_master('$compcode');");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "call acc_sp_mas_selgroup_master('$compcode');";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getSelGroup()
     {
-        mysql_query("SET NAMES utf8");  
+        global $conn;  
         $CompCode = $_POST['compcode'];
         $Group = $_POST['gstGroup'];
-	$r=mysql_query("select grp_code,grp_name from acc_group_master where grp_comp_code = 1 and grp_name like '".$Group."'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select grp_code,grp_name from acc_group_master where grp_comp_code = 1 and grp_name like '".$Group."'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function GetMaxGroupCode()
     {
         $CompCode = $_POST['compcode'];
-        $r=mysql_query("select ifnull(max(grp_code),0)+1 as con_value from acc_group_master where grp_comp_code = '$CompCode'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select ifnull(max(grp_code),0)+1 as con_value from acc_group_master where grp_comp_code = '$CompCode'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getcountry()
     {
-	$res=mysql_query("CALL expo_sp_mas_selcountry_master");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$res=mysql_query("CALL expo_sp_mas_selcountry_master";
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -691,9 +706,9 @@ mysql_query("SET NAMES utf8");
     function getbankmaster()
     {
 	$bankseq=$_POST['ginbank'];
-	$res=mysql_query("CALL acc_sp_selbank_master(".$bankseq.")");
-	$nbrow = mysql_num_rows($res);
-	while($rec = mysql_fetch_array($res))
+	$res=mysql_query("CALL acc_sp_selbank_master(".$bankseq.")";
+	$nbrow = mysqli_num_rows($res);
+	while($rec = mysqli_fetch_array($res))
 	{
 	 $arr[]= $rec ;
         }
@@ -704,63 +719,67 @@ mysql_query("SET NAMES utf8");
     function getHeadCashAccountName()
     {
         $compcode = $_POST['compcode'];
-	//$r=mysql_query("call acc_sp_mas_selledger_master('$compcode');");
-        $r=mysql_query("select led_code, led_name from acc_ledger_master 
-            where led_comp_code	= '$compcode' and led_grp_code = 26");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "call acc_sp_mas_selledger_master('$compcode');";
+        $sql = "select led_code, led_name from acc_ledger_master 
+            where led_comp_code	= '$compcode' and led_grp_code = 26";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getBillRealExportInvno()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $ledcode = $_POST['ledcode'];
         $compcode = $_POST['compcode'];
 
-        $r=mysql_query("call acc_sp_trn_selrealisedexportinvoiceno(".$ledcode.",".$compcode.");");
+        $sql = "call acc_sp_trn_selrealisedexportinvoiceno(".$ledcode.",".$compcode.";";
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getExportInvoiceDetailforRealisation()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $cinvseqno = $_POST['cinvseqno'];
         $compcode = $_POST['compcode'];
 
-        $r=mysql_query("call acc_sp_trn_selexpoinvdetailforrealisation(".$cinvseqno.",".$compcode.");");
+        $sql = "call acc_sp_trn_selexpoinvdetailforrealisation(".$cinvseqno.",".$compcode.";";
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getFinancialYear()
     {
-        $r=mysql_query("call acc_sp_mas_selfin_master();");
+        $sql = "call acc_sp_mas_selfin_master();";
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getReversalVoucher()
@@ -771,33 +790,35 @@ mysql_query("SET NAMES utf8");
         $voutype = $_POST['voutype'];
 
         if ($voutype=='P'){
-            $r=mysql_query("call acc_sp_trn_selbp_voucherno('$acctname','$finid','$partyname');");
+            $sql = "call acc_sp_trn_selbp_voucherno('$acctname','$finid','$partyname');";
         }else if ($voutype=='R'){
-            $r=mysql_query("call acc_sp_trn_selbr_voucherno('$acctname','$finid','$partyname');");
+            $sql = "call acc_sp_trn_selbr_voucherno('$acctname','$finid','$partyname');";
         }
         
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getReversalVoucherDetail()
     {
         $accrefseq = $_POST['accrefseq'];
 
-        $r=mysql_query("call acc_sp_trn_selacc_tran_reversalentry('$accrefseq');");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call acc_sp_trn_selacc_tran_reversalentry('$accrefseq');";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getReversalVoucherAdjustedBillDetail()
@@ -807,19 +828,20 @@ mysql_query("SET NAMES utf8");
         $voutype = $_POST['voutype'];
 
         if ($voutype=='P'){
-            $r=mysql_query("call acc_sp_trn_seladjdocument('$accrefseq','$partyname');");
+            $sql = "call acc_sp_trn_seladjdocument('$accrefseq','$partyname');";
         }else if ($voutype=='R'){
-            $r=mysql_query("call acc_sp_trn_selreceiptadjdocument('$accrefseq','$partyname');");
+            $sql = "call acc_sp_trn_selreceiptadjdocument('$accrefseq','$partyname');";
         }
         
         
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getBillAdjustmentVouchers()
@@ -831,17 +853,18 @@ mysql_query("SET NAMES utf8");
         $opdate = "2001-08-31";
 
         if ($voutype=='P'){
-            $r=mysql_query("call acc_sp_trn_selbilladjustment_payment('$partyname','$compcode','$finid','$opdate','N');");
+            $sql = "call acc_sp_trn_selbilladjustment_payment('$partyname','$compcode','$finid','$opdate','N');";
         }else if ($voutype=='R'){
-            $r=mysql_query("call acc_sp_trn_selbilladjustment_receipt('$partyname','$compcode','$finid','$opdate','N');");
+            $sql = "call acc_sp_trn_selbilladjustment_receipt('$partyname','$compcode','$finid','$opdate','N');";
         }
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getBillAdjustmentVoucherDetail()
@@ -849,14 +872,15 @@ mysql_query("SET NAMES utf8");
         $ledcode = $_POST['ledcode'];
         $accrefseq = $_POST['accrefseq'];
 
-        $r=mysql_query("call acc_sp_trn_selaccref_acctrail_invvalue('$ledcode','$accrefseq');");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call acc_sp_trn_selaccref_acctrail_invvalue('$ledcode','$accrefseq');";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getRecpayAmount()
@@ -864,14 +888,15 @@ mysql_query("SET NAMES utf8");
         $ledcode = $_POST['ledcode'];
         $accrefseq = $_POST['accrefseq'];
 
-        $r=mysql_query("call acc_sp_trn_selaccrecpaytran_amount('$ledcode','$accrefseq');");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call acc_sp_trn_selaccrecpaytran_amount('$ledcode','$accrefseq');";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getBillAdjustmentAdjustedBillDetail()
@@ -879,14 +904,15 @@ mysql_query("SET NAMES utf8");
         $ledcode = $_POST['ledcode'];
         $accrefseq = $_POST['accrefseq'];
 
-        $r=mysql_query("call acc_sp_trn_selrecpay_tran('$accrefseq','$ledcode');");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "call acc_sp_trn_selrecpay_tran('$accrefseq','$ledcode');";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
     function getBillAdjustmentUnAdjustedBillDetail()
@@ -895,17 +921,18 @@ mysql_query("SET NAMES utf8");
         $compcode = $_POST['compcode'];
         $ledcode = $_POST['ledcode'];
         if ($voutype=='R'){
-            $r=mysql_query("call acc_sp_trn_selacc_receipt_billdetails('$compcode','11','$ledcode');");
+            $sql = "call acc_sp_trn_selacc_receipt_billdetails('$compcode','11','$ledcode');";
         }else{
-            $r=mysql_query("call acc_sp_trn_selacc_payment_billdetails('$compcode','11','$ledcode');");
+            $sql = "call acc_sp_trn_selacc_payment_billdetails('$compcode','11','$ledcode');";
         }
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
     
 ?>

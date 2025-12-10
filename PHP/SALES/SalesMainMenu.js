@@ -996,7 +996,7 @@ var map = new Ext.KeyMap(document, [
 		        group: 'theme',
 		        handler: function(){
 			    
-		            window.location.href=('http://10.0.0.251/SHVPM/SALES/RepProductoinPlan/RepProductonPlan.php'); 
+		            window.location.href=('http://10.0.0.251/SHVPM/SALES/RepProductionPlan/RepProductonPlan.php'); 
 		        }
                 },
 

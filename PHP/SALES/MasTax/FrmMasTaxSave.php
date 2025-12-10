@@ -20,14 +20,14 @@ $taxseq         = (int)$_POST['taxcode'];
 if ($savetype == "Add")
 {
     $query  = "select ifnull(max(tax_code),0)+1 as taxseq from massal_tax";
-    $result = mysql_query($query);
-    $rec    = mysql_fetch_array($result);
+    $result = mysqli_query($conn, $query);
+    $rec    = mysqli_fetch_array($result);
     $taxseq = $rec['taxseq'];
 
 
     $qry = "select count(*) as cnt from massal_tax where tax_name = '$taxname'";
-    $res  = mysql_query($qry);
-    $recvar = mysql_fetch_array($res);
+    $res  = mysqli_query($conn, $qry);
+    $recvar = mysqli_fetch_array($res);
     $cnt=$recvar['cnt'];
 
     if($cnt==0)
@@ -36,19 +36,23 @@ if ($savetype == "Add")
 
   //    echo $query1;
 
-      $result1 = mysql_query($query1);
+      $result1 = mysqli_query($conn, $query1);
     }
 
     if ($result1 && $cnt==0) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
       echo '({"success":"true","msg":"' . $taxname . '"})';
   } 
     else if ($cnt>0) {
-      mysql_query("ROLLBACK");
+      mysqli_rollback($conn);
+
+
       echo '({"success":"false","cnt":"' . $cnt . '"})';
     
   }else {
-      mysql_query("ROLLBACK");
+      mysqli_rollback($conn);
+
+
       echo '({"success":"false","msg":"' . $taxname . '"})';
   }
 }
@@ -56,14 +60,16 @@ else
 {
 
   $query1=" update massal_tax set tax_name = upper('$taxname'),  tax_shortname = upper('$taxshortname') , tax_sal_led_code = '$taxsalled_code' , tax_sgst_ledcode = '$taxsgst_ledcode' , tax_cgst_ledcode = '$taxcgst_ledcode', tax_igst_ledcode = '$taxigst_ledcode', tax_sgst = '$taxsgst', tax_cgst = '$taxcgst', tax_igst = '$taxigst', tax_type = '$taxtype' where tax_code =  $taxseq";  
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
    
   if ($result1) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
       echo '({"success":"true","msg":"' . $taxname . '"})';
   } 
   else {
-      mysql_query("ROLLBACK");
+      mysqli_rollback($conn);
+
+
       echo '({"success":"false","msg":"' . $taxname . '"})';
   }
 } 

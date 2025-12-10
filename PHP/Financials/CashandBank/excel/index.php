@@ -80,8 +80,8 @@
 				  </thead>
 			<?php
 				$SQLSELECT = "SELECT * FROM excelimport where date(todaydate)=curdate()";
-				$result_set =  mysql_query($SQLSELECT, $conn);
-				while($row = mysql_fetch_array($result_set))
+				$result_set =  mysqli_query($conn, $SQLSELECT, $conn);
+				while($row = mysqli_fetch_array($result_set))
 				{
 				?>
 			

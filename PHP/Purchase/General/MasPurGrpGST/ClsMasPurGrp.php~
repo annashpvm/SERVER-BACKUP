@@ -1,0 +1,149 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task="LoadSalesLedger";
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+
+
+             	case "loadSearchLedgerlist":
+		getSearchLedgerlist();
+		break;
+
+		case "LoadInvtype":
+		getInvtype();
+		break;
+		case "LoadgstLedger":
+		getgstledger();
+		break;
+		case "LoadTaxList":
+		getgstlist();
+		break;
+		case "loadSearchGSTLedgerlist":
+		getsearchgstlist();
+		break;
+
+		case "LoadGSTDetails":
+		findGSTDetails();
+		break;
+
+
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getSearchLedgerlist()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+
+        $ledname = strtoupper($_POST['ledger']);
+        $ledname = trim(str_replace(" ", "", $ledname)); 
+        $ledname = trim(str_replace(".", "", $ledname)); 
+
+         $r=mysql_query(" select cust_code,cust_ref,cust_name from
+(select cust_code,cust_ref,cust_name from massal_customer where cust_type = 'G' and cust_name regexp'%' and cust_acc_group not in (46,44,85,72)
+union all
+select cust_code,cust_ref,cust_name from massal_customer where cust_type = 'G' and cust_name regexp'%' and cust_acc_group in (74,75) order by cust_name ) a where left(cust_name,2) != 'ZZ'  group by cust_code,cust_ref,cust_name order by cust_name");
+
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    } 
+
+
+ function getgstledger()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $gsttype = $_POST['gsttype'];
+        $gst = $_POST['gst'];
+
+        $qry= "select * from massal_customer where cust_type = 'G' and cust_name like '%INPUT%$gsttype%$gst%'";
+//echo $qry;
+        $r=mysql_query("select * from massal_customer where cust_type = 'G' and cust_name like '%INPUT%$gsttype%$gst%'");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function getgstlist()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+
+        $r=mysql_query("select * from maspur_gsttax order by tax_pur_ledname");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+
+ function getsearchgstlist()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $ledname = strtoupper($_POST['ledger']);
+        $ledname = trim(str_replace(" ", "", $ledname)); 
+        $ledname = trim(str_replace(".", "", $ledname)); 
+
+        $r=mysql_query("select * from maspur_gsttax where replace(replace(tax_pur_ledname,' ','')  ,'.','')  like '%$ledname%'  order by tax_pur_ledname");
+
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function findGSTDetails()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $ledcode = $_POST['ledcode'];
+
+        $r=mysql_query("select * from maspur_gsttax where tax_pur_ledcode = $ledcode");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+
+
+
+?>

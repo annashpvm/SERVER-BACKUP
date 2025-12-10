@@ -28,21 +28,21 @@ $rerh_entry_date =  $_POST['rerh_entry_date'];
 
 
  $query1 = "select IFNULL(max(rerh_seqno),0)+1 as rech_seqno from trnrm_receiptret_header";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $rech_seqno=$rec1['rech_seqno'];
 
  $query2 = "select IFNULL(max(rerh_no),0)+1 as rech_no from trnrm_receiptret_header where rerh_fincode = '$rerh_fincode' and rerh_compcode='$rerh_compcode'";
- $result2= mysql_query($query2);
- $rec2 = mysql_fetch_array($result2);
+ $result2= mysqli_query($conn, $query2);
+ $rec2 = mysqli_fetch_array($result2);
  $rech_no=$rec2['rech_no'];
 
  $query5 = "select IFNULL(max(rert_seqno),0)+1 as rect_no from trnrm_receiptret_trailer where rert_hdseqno=$rech_seqno";
- $result5= mysql_query($query5);
- $rec5 = mysql_fetch_array($result5);
+ $result5= mysqli_query($conn, $query5);
+ $rec5 = mysqli_fetch_array($result5);
  $rect_no=$rec5['rect_no'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
  if ($rech_seqno > 0 && $rech_no > 0 && $rerh_fincode > 0 && $rerh_compcode > 0)
@@ -50,7 +50,7 @@ $rerh_entry_date =  $_POST['rerh_entry_date'];
  $query3= "insert into trnrm_receiptret_header values('$rech_seqno','$rerh_compcode','$rerh_fincode','$rech_no','$rerh_grnseqno','$rerh_date','$rerh_itemvalue','0','0','0',
 '0','$rerh_servicecharge','0','$rerh_roundingoff','$rerh_totalvalue','$rerh_lorryno','$rerh_remarks','$rerh_vouno','0','$rerh_cgst_per',
 '$rerh_sgst_per','$rerh_igst_per','$rerh_cgst_amt','$rerh_sgst_amt','$rerh_igst_amt','$rerh_entry_date','0')";
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
@@ -68,7 +68,7 @@ $rech_freight = $griddet[$i]['rech_freight'];
 $retbags = $griddet[$i]['rect_costvalue'];
      
  $query4= "insert into trnrm_receiptret_trailer values($rech_seqno,$rect_no,$lotcode,'0','$itmh_code','$billqty','$grnrate','$retbags','$rect_itemvalue','0','0','$rech_freight','$rect_itemvalue','0','0')";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
 }
 
@@ -76,12 +76,14 @@ $retbags = $griddet[$i]['rect_costvalue'];
         
 	if($result3) 
 	{
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","msg":"'.$rech_no.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","msg":"'.$rech_no.'"})';
         }   
 

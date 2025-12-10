@@ -11,32 +11,36 @@ if ($savetype === "Add")
 {
 
 	$query   = "select ifnull(max(port_code),0)+1 as portcode from mas_port";
-	$result  = mysql_query($query);
-	$rec     = mysql_fetch_array($result);
+	$result  = mysqli_query($conn, $query);
+	$rec     = mysqli_fetch_array($result);
 	$portcode = $rec['portcode'];
 
 	$qry = "select count(*) as cnt from mas_port where port_name = '$portname'";
-	$resag = mysql_query($qry);
-	$recvar = mysql_fetch_array($resag);
+	$resag = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($resag);
 	$cnt=$recvar['cnt'];
 
 	if($cnt==0)
 	{
 	  $query1="insert into mas_port values( '$portcode','$portname', '$countrycode','',1)";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 //echo $query1;
 	}
 
 	  if ($result1 && $cnt==0) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $portname . '"})';
 	} 
 	  else if ($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 	}else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $portname . '"})';
 	}
      }
@@ -44,14 +48,16 @@ if ($savetype === "Add")
      {
 
 	  $query1="update mas_port set port_name ='$portname' , port_country = '$countrycode'   where port_code =$portcode";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 	  if ($result1 ) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $portname . '"})';
 	  } 
 	
 	  else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $portname . '"})';
 	   }
      } 

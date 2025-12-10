@@ -22,26 +22,26 @@ $hsncode=$_POST['hsncode'];
 if ($savetype == "Add")
 {
 	$query = "select ifnull(max(itmh_code),0)+1 as itemseq from masrm_item_header";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$itemseq=$rec['itemseq'];
 
 	$qry = "select count(*) as cnt from masrm_item_header where itmh_name = '$itemname'";
-	$resitem = mysql_query($qry);
-	$recitem = mysql_fetch_array($resitem);
+	$resitem = mysqli_query($conn, $qry);
+	$recitem = mysqli_fetch_array($resitem);
 	$cnt=$recitem['cnt'];
 
 	if($cnt==0)
 	{
 	$query1="insert into masrm_item_header values($itemseq,upper('$itemname'),'$moisture','$spec','$itemtype',$purledcode,$grpcode,'$hsncode',0,0,0,0,0,0)";
 
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
         }
 }
 else
 {
 	$query1="update masrm_item_header  set itmh_name = upper('$itemname') , itmh_moisture_per = '$moisture',  itmh_specification = '$spec', itmh_type = '$itemtype', itmh_hsncode = '$hsncode' , itmh_group = $grpcode where itmh_code = $itemseq";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
 }
 
@@ -49,17 +49,21 @@ if ($savetype == "Add")
 {
 	if ($result1 && $cnt==0) 
 	{
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $itemname . '"})';
 	} 
 	else if ($cnt>0)
 	{
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 
 	}
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $itemname . '"})';
 	}
 }
@@ -67,12 +71,14 @@ else
 {
 	if ($result1) 
 	{
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $itemname . '"})';
 	} 
 	else
 	{
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"true","msg":"' . $itemname . '"})';
 
 	}

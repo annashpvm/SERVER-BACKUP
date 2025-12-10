@@ -7,9 +7,9 @@
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
 	
-        $result=mysql_query("call spacc_rep_json_DOCSUMMARY($compcode,'$finid','$startdate','$enddate')");
+        $result=mysql_query("call spacc_rep_json_DOCSUMMARY($compcode,'$finid','$startdate','$enddate')";
 /*
-	while($re = mysql_fetch_array($r))
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -39,7 +39,7 @@ if (file_put_contents($file,$jsondata2))
     echo '<pre>' . print_r($str, true) . '</pre>';
 }
 else
-    echo("Failed");
+    echo("Failed";
 
     
 ?>

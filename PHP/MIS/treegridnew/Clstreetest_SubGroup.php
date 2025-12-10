@@ -7,15 +7,15 @@ header('Content-Type: application/json');
 
     $tree_array = [];
     $nodearray = [];
-    mysql_query("SET NAMES utf8");  
+    global $conn;  
 
 
     $sql = "select  level2_grpname, level2_grpcode , sum(debit) debit, sum(credit) credit
 from testTB where main_grpcode =  $grpparent   group by  level2_grpname, level2_grpcode ORDER By level2_grpcode";
 
 
-    $result = mysql_query($sql);
-    $nbrows1 = mysql_num_rows($result);    
+    $result = mysqli_query($conn, $sql);
+    $nbrows1 = mysqli_num_rows($result);    
 	    while($data = mysql_fetch_object($result)) {
 		$tree_array = array(
       "id" => $data->level2_grpcode,

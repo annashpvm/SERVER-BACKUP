@@ -15,17 +15,19 @@ $finid = $_REQUEST['finid'];
 	$qc_dev = $griddet[$i]['qc_dev'];
 
  	$socupdqry = "update trnsal_order_trailer set ordt_qcdev_yn = '$qc_dev' , ordt_approved = 'Y'  where  ordt_fincode = $finid  and ordt_comp_code = $compcode   and ordt_var_code =  '$size_code'  and ordt_ackno = '$socno'";
- 	$ressocupdqry = mysql_query($socupdqry);
+ 	$ressocupdqry = mysqli_query($conn, $socupdqry);
  }
 
 
   
 	if ($ressocupdqry ){
-		mysql_query("COMMIT");                        
+		mysqli_begin_transaction($conn);                        
 		echo '({"success":"true","socno":"' . $socno . '"})';
 	}
 	else {
-	    mysql_query("ROLLBACK");            
+	    mysqli_rollback($conn);
+
+            
 	    echo '({"success":"false","socno":"' . $socno . '"})';
 	} 
 ?>

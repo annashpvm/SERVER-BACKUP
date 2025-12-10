@@ -14,14 +14,14 @@ $entrydate = $_POST['entrydate'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == "Add") 
   {
    $query1 = "select ifnull(max(stk_ent_no),0)+1 as sentno from trnsal_finish_stock where stk_finyear= $finid and stk_comp_code= $compcode";
-   $result1= mysql_query($query1);
+   $result1= mysqli_query($conn, $query1);
 
-   $rec2 = mysql_fetch_array($result1);
+   $rec2 = mysqli_fetch_array($result1);
    $entryno=$rec2['sentno'];
   }
 
@@ -29,7 +29,7 @@ else
 {
     $query1 = "delete from trnsal_finish_stock where stk_ent_no = '$entryno' and stk_destag <> 'T' and stk_deltag <> 'T' and stk_comp_code = $compcode 
 and stk_finyear =  $finid ";
-    $result1=mysql_query($query1);            
+    $result1=mysqli_query($conn, $query1);            
 }
 //$inscnt = 5;
 for ($i=0;$i<$rowcnt;$i++)
@@ -50,7 +50,7 @@ $unit     = 1;
 //0,0,'',0,0,'','',0,'0','')";
 
 $query2= "insert into trnsal_finish_stock  (stk_comp_code,stk_finyear,stk_ent_no,stk_ent_date,stk_var_code,stk_sr_no,stk_wt,stk_sono,stk_yymm,stk_rollno,stk_source) VALUES ('$compcode','$finid','$entryno','$entrydate','$itemcode','$number','$weight',$sono,$yymm,$rollno,'R')";
-$result2=mysql_query($query2);            
+$result2=mysqli_query($conn, $query2);            
   
 }
 
@@ -58,12 +58,14 @@ $result2=mysql_query($query2);
 
 
 if ($result1 && $result2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $entryno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $entryno . '"})';
 }
   

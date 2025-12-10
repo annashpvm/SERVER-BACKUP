@@ -26,14 +26,14 @@ $dchparty = $_POST['dchparty'];
 
 
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
  $query1 = "delete from trnpur_deliverychallan_trailer where dct_fincode = $dchfincode and dct_comp_code=$dchcompcode and dct_no = $dchno and dct_type = '$dchtype'";
 
 //echo $query1;
 //echo "<br>";
- $result1= mysql_query($query1);
+ $result1= mysqli_query($conn, $query1);
 
 
  $query2 = "delete from  trnpur_deliverychallan_header where dch_comp_code = $dchcompcode and dch_fincode =  $dchfincode and dch_type = '$dchtype' and dch_no = $dchno";
@@ -41,18 +41,20 @@ mysql_query("BEGIN");
 //echo $query2;
 //echo "<br>";
 
- $result2= mysql_query($query2);
+ $result2= mysqli_query($conn, $query2);
 
 
 
 if($result1 && $result2)
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","dcno":"'.$dchno.'"})';
 }
     else
 {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","dcno":"'.$dchno.'"})';
 }   
     

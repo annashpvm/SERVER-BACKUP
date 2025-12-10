@@ -8,7 +8,7 @@
 <script type="text/javascript" src="/SHVPM/Payroll/PayrollMainMenu.js"></script>
 <script type="text/javascript" src="ishu.js"></script>
 <?php
-    require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/Payroll/PayrollMainPage.php");
+    require($_SERVER["DOCUMENT_ROOT"]."/SHVPM/Payroll/PayrollMainPage.php";
 ?>
 </head>
 <body>

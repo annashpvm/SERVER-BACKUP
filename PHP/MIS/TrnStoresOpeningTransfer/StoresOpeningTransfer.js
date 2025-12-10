@@ -146,7 +146,7 @@ Ext.onReady(function(){
                     tooltip: 'Close...', height: 40, fontSize:30,width:70,
                     icon: '/Pictures/exit.png',
                     handler: function(){	
-                         AccLederOpeningTransferWindow.hide();
+                     StoresOpeningTransferWindow.hide();
                     }
                     
                 },]
@@ -209,6 +209,9 @@ Ext.onReady(function(){
  	listeners:{
                show:function(){
               // RefreshData();
+
+              Ext.getCmp('save').setDisabled(true);  
+
                  txtClosingYear.setRawValue(GinFinYear);
                  if (GinFinid == 22)
                     txtOpeningYear.setRawValue('2023-2024');

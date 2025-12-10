@@ -8,7 +8,9 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+    
+    mysqli_set_charset($conn, "utf8");
+
     switch($task){
 		
 	    	case "loadRollNo":
@@ -29,15 +31,7 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -46,27 +40,28 @@
 
  function getRollNo()
     {
-        mysql_query("SET NAMES utf8");
+    global $conn;
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-         $rdate    = $_POST['rdate'];
-        $stk_rollno      = $_POST['stk_rollno']; 
-        $yr       = $_POST['yr']; 
+    $rdate    = $_POST['rdate'];
+    $stk_rollno      = $_POST['stk_rollno']; 
+    $yr       = $_POST['yr']; 
 
 
-    $r=mysql_query("select stk_rollno from trnsal_finish_stock where stk_ent_date='$rdate' and stk_destag='' group by  stk_rollno order by  stk_rollno desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $sql = "select stk_rollno from trnsal_finish_stock where stk_ent_date='$rdate' and stk_destag='' group by  stk_rollno order by  stk_rollno desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }   
 
 function getReelNo()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
         $rdate    = $_POST['rdate'];
@@ -74,19 +69,20 @@ function getReelNo()
         $yr       = $_POST['yr']; 
 
 
-	$r=mysql_query("select stk_sr_no as reelno from trnsal_finish_stock where stk_ent_date= '$rdate' and stk_destag='' and stk_rollno = $rollno order by reelno ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select stk_sr_no as reelno from trnsal_finish_stock where stk_ent_date= '$rdate' and stk_destag='' and stk_rollno = $rollno order by reelno ";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }   
 
 function getReelNo_WeightChange()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
         $rdate    = $_POST['rdate'];
@@ -94,41 +90,34 @@ function getReelNo_WeightChange()
         $yr       = $_POST['yr']; 
 
 
-	//$r=mysql_query("select stk_sr_no as reelno from trnsal_reelweight_change where ent_date= '$rdate' and stk_destag=''  order by reelno ");
-$r=mysql_query("select srno as reelno from trnsal_reelweight_change where ent_date= '$rdate' order by reelno desc");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	//$sql = "select stk_sr_no as reelno from trnsal_reelweight_change where ent_date= '$rdate' and stk_destag=''  order by reelno ";
+$sql = "select srno as reelno from trnsal_reelweight_change where ent_date= '$rdate' order by reelno desc";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }   
 
 function getReelWeight()
     {
-        mysql_query("SET NAMES utf8");
-	$finid    = $_POST['finid'];
-	$compcode = $_POST['compcode'];
+        global $conn;
+	    $finid    = $_POST['finid'];
+	    $compcode = $_POST['compcode'];
         $rdate    = $_POST['rdate'];       
         $reelno   = $_POST['reelno']; 
-        $r= mysql_query("select  srno ,newweight from trnsal_reelweight_change where ent_date= '$rdate' and srno = $reelno");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+       $sql = "select  srno ,newweight from trnsal_reelweight_change where ent_date= '$rdate' and srno = $reelno";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }   
-
-
- 
-
-
- 
-
-
-
 ?>
 

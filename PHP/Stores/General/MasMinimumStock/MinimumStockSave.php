@@ -11,12 +11,12 @@ $itemgrp  = $_POST['itemgrp'];
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 
  $query1 = "delete from maspur_item_minimum_stock where minstk_dept = $dept  and minstk_grpcode = $itemgrp";
- $result1 = mysql_query($query1);
+ $result1 = mysqli_query($conn, $query1);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++){
@@ -27,7 +27,7 @@ for ($i=0;$i<$rowcnt;$i++){
         if ($minstock >0 )
         {     
            $query2 = "insert into maspur_item_minimum_stock values ($dept ,$itemgrp,$itemcode,$minstock)";
-           $result2 = mysql_query($query2);
+           $result2 = mysqli_query($conn, $query2);
            $inscnt = $inscnt + 1;
         }       
   ///     echo $query1;
@@ -37,12 +37,14 @@ for ($i=0;$i<$rowcnt;$i++){
 
    if ( $result1 && $result2 && $inscnt > 0)
    {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true"})';
    }
    else
    {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false"})';
    }   
 

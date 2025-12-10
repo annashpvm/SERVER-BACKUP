@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    global $conn;
 
     switch($task){
 
@@ -103,15 +103,7 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -119,71 +111,74 @@
 
 function getInvDetails()
     {
-     mysql_query("SET NAMES utf8");
+     global $conn;
 	$fincode = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
 
 	$invno = $_POST['invno'];
 
-	$r=mysql_query("select invt_hsncode,var_name,var_size2 as size,Cast(sum(invt_wt)/1000  as Decimal(10,3)) as weight,invt_urate as rate,invt_taxable as taxval,  invh_cgst_per,invh_sgst_per,invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode from trnsal_invoice_header, trnsal_invoice_trailer , massal_variety  , massal_tax where invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = invt_fincode and invh_seqno = invt_seqno and     invt_var = var_code and  invh_comp_code= $compcode and invh_fincode <= $fincode  and invh_invrefno ='$invno' group by invt_hsncode,var_name,var_size2,invt_wt,invt_urate,invt_taxable, invh_cgst_per,invh_sgst_per, invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode");
+	$sql = "select invt_hsncode,var_name,var_size2 as size,Cast(sum(invt_wt)/1000  as Decimal(10,3)) as weight,invt_urate as rate,invt_taxable as taxval,  invh_cgst_per,invh_sgst_per,invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode from trnsal_invoice_header, trnsal_invoice_trailer , massal_variety  , massal_tax where invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = invt_fincode and invh_seqno = invt_seqno and     invt_var = var_code and  invh_comp_code= $compcode and invh_fincode <= $fincode  and invh_invrefno ='$invno' group by invt_hsncode,var_name,var_size2,invt_wt,invt_urate,invt_taxable, invh_cgst_per,invh_sgst_per, invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode";
 
-	$r=mysql_query("select vargrp_type_name, invt_hsncode,var_name,var_size2 as size,Cast(sum(invt_wt)/1000  as Decimal(10,3)) as weight,invt_urate as rate,invt_taxable as taxval,  invh_cgst_per,invh_sgst_per,invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode 
+	$sql = "select vargrp_type_name, invt_hsncode,var_name,var_size2 as size,Cast(sum(invt_wt)/1000  as Decimal(10,3)) as weight,invt_urate as rate,invt_taxable as taxval,  invh_cgst_per,invh_sgst_per,invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode 
 from trnsal_invoice_header, trnsal_invoice_trailer , massal_variety  , massal_tax ,  masprd_variety , masprd_type  where invt_item = var_groupcode and  var_typecode = vargrp_type_code  and
-invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = invt_fincode and invh_seqno = invt_seqno and     invt_var = var_code and   invh_comp_code= $compcode  and invh_fincode <=  $fincode  and invh_invrefno = '$invno'   group by vargrp_type_name, invt_hsncode,var_name,var_size2,invt_wt,invt_urate,invt_taxable, invh_cgst_per,invh_sgst_per, invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode");
+invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = invt_fincode and invh_seqno = invt_seqno and     invt_var = var_code and   invh_comp_code= $compcode  and invh_fincode <=  $fincode  and invh_invrefno = '$invno'   group by vargrp_type_name, invt_hsncode,var_name,var_size2,invt_wt,invt_urate,invt_taxable, invh_cgst_per,invh_sgst_per, invh_igst_per,tax_sal_led_code,tax_cgst_ledcode,tax_sgst_ledcode,tax_igst_ledcode";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getCGSTledgers()
  {
         $ledtype = "I";
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($ledtype == "I")
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like 'CGST'");
+		    $sql = "select * from massal_customer where cust_name like 'CGST'";
 
 		}
 		else
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like '%CGST%LIA%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like '%CGST%LIA%$gstper%'";
 		}  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getSGSTledgers()
 
     {
         $ledtype = "I";
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($ledtype == "I")
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like 'SGST'");
+		    $sql = "select * from massal_customer where cust_name like 'SGST'";
 
 		}
 		else
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like '%CGST%LIA%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like '%CGST%LIA%$gstper%'";
 		}  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -191,23 +186,24 @@ invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = in
 
     {
         $ledtype = "I";
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($ledtype == "I")
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like 'IGST@12% COLLECTED%'");
+		    $sql = "select * from massal_customer where cust_name like 'IGST@18% COLLECTED%'";
 
 		}
 		else
 		{
-		    $r=mysql_query("select * from massal_customer where cust_name like '%CGST%LIA%$gstper%'");
+		    $sql = "select * from massal_customer where cust_name like '%CGST%LIA%$gstper%'";
 		}  
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -216,16 +212,17 @@ invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = in
     {
   	$fincode = $_POST['fincode'];
 	$compcode = $_POST['compcode'];      
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select dbcr_vouno ,dbcr_seqno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_date desc, convert(substring(dbcr_vouno,5),signed)  desc");
+        global $conn;
+        $sql = "select dbcr_vouno ,dbcr_seqno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$fincode' and dbcr_comp_code = '$compcode' order by dbcr_date desc, convert(substring(dbcr_vouno,5),signed)  desc";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -237,38 +234,41 @@ invh_taxtag = tax_code and invh_comp_code =  invt_compcode and invh_fincode = in
 	$compcode = $_POST['compcode'];
        	$vouno    = $_POST['vouno'];
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-//$r=mysql_query("select * from acc_dbcrnote_header a , acc_dbcrnote_trailer b , massal_customer where dbcr_seqno = dbcrt_seqno and dbcr_partyledcode = led_code and dbcr_comp_code = '$compcode'  and dbcr_finid = '$fincode' and dbcr_vouno = '$vouno'");
+//$sql = "select * from acc_dbcrnote_header a , acc_dbcrnote_trailer b , massal_customer where dbcr_seqno = dbcrt_seqno and dbcr_partyledcode = led_code and dbcr_comp_code = '$compcode'  and dbcr_finid = '$fincode' and dbcr_vouno = '$vouno'";
 
-$r=mysql_query("select * from acc_dbcrnote_header a , acc_dbcrnote_trailer b , massal_customer c, acc_ref d where dbcr_accseqno = accref_seqno and dbcr_seqno = dbcrt_seqno and dbcr_partycode = cust_code and dbcr_comp_code = '$compcode'  and dbcr_finid = '$fincode' and dbcr_vouno = '$vouno'");
+$sql = "select * from acc_dbcrnote_header a , acc_dbcrnote_trailer b , massal_customer c, acc_ref d where dbcr_accseqno = accref_seqno and dbcr_seqno = dbcrt_seqno and dbcr_partycode = cust_code and dbcr_comp_code = '$compcode'  and dbcr_finid = '$fincode' and dbcr_vouno = '$vouno'";
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getControlCreditNo() {
+    global $conn;
     $ginfinid= $_POST['ginfinid'];
     $gincompcode=$_POST['gincompcode'];
 /*
-$r = mysql_query("select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
+$sql = "select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 
-$r = mysql_query("select concat('G-',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
+$sql = "select concat('G-',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 */
 if ($ginfinid < 24)
-$r = mysql_query("select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
+$sql = "select concat('CNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 else
-$r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
+$sql = "select ifnull(max(dbcr_no),0) + 1 as accref_vouno from acc_dbcrnote_header where dbcr_type = 'CNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 
 
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -276,12 +276,13 @@ $r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as accref_vouno from acc_dbc
 }
 
 function getCreditNoteVoucherDetailsTrailer() {
+    global $conn;
     $seqno =$_POST['seqno'];
 
-     $r = mysql_query("select * from acc_dbcrnote_trailer2 where dbcrt2_seqno = $seqno;");
-
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+     $sql = "select * from acc_dbcrnote_trailer2 where dbcrt2_seqno = $seqno;";
+     $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -291,12 +292,13 @@ function getCreditNoteVoucherDetailsTrailer() {
 
 
 function getCustNameList() {
-    mysql_query("SET NAMES utf8"); 
+    global $conn; 
     $compcode=$_POST['gincompany'];
     $finyear=$_POST['ginfinid'];
-    $r = mysql_query("select led_code, cust_name from massal_customer where led_type = 'C' order by cust_name");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $sql = "select led_code, cust_name from massal_customer where led_type = 'C' order by cust_name";
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -306,12 +308,13 @@ function getCustNameList() {
 
 
 function getSRCustNameList() {
-    mysql_query("SET NAMES utf8"); 
+    global $conn; 
     $compcode=$_POST['gincompcode'];
     $finyear =$_POST['ginfinid'];
-    $r = mysql_query("select cust_ref,cust_code from trnsal_salret_header , massal_customer where reth_cust = cust_code and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_accupd = 'N' group by cust_ref,cust_code order by cust_ref");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $sql = "select cust_ref,cust_code from trnsal_salret_header , massal_customer where reth_cust = cust_code and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_accupd = 'N' group by cust_ref,cust_code order by cust_ref";
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -321,14 +324,15 @@ function getSRCustNameList() {
 
 
 function getSRInvNoList() {
-    mysql_query("SET NAMES utf8"); 
+    global $conn; 
     $compcode=$_POST['gincompcode'];
     $finyear =$_POST['ginfinid'];
     $ledcode =$_POST['ledcode'];
 
-    $r = mysql_query("select * from trnsal_salret_header , massal_customer where reth_cust = cust_code and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_accupd = 'N' and reth_cust = $ledcode order by reth_invno");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $sql = "select * from trnsal_salret_header , massal_customer where reth_cust = cust_code and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_accupd = 'N' and reth_cust = $ledcode order by reth_invno";
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -339,7 +343,7 @@ function getSRInvNoList() {
 
 
 function getSRInvNoDetail() {
-    mysql_query("SET NAMES utf8"); 
+    global $conn; 
     $compcode=$_POST['gincompcode'];
     $finyear =$_POST['ginfinid'];
     $ledcode =$_POST['ledcode'];
@@ -348,15 +352,15 @@ function getSRInvNoDetail() {
 
     if ($editchk == 'N')
 
-    $r = mysql_query("select * from trnsal_salret_header , massal_customer , trnsal_invoice_header  where reth_cust = cust_code  and  reth_fincode >= invh_fincode and reth_comp_code= invh_comp_code and reth_cust  = invh_party and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_accupd = 'N' and reth_cust = $ledcode  and reth_invno = invh_invrefno and reth_invno = '$invno'");
+    $sql = "select * from trnsal_salret_header , massal_customer , trnsal_invoice_header  where reth_cust = cust_code  and  reth_fincode >= invh_fincode and reth_comp_code= invh_comp_code and reth_cust  = invh_party and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_accupd = 'N' and reth_cust = $ledcode  and reth_invno = invh_invrefno and reth_invno = '$invno'";
 
     else
-    $r = mysql_query("select * from trnsal_salret_header , massal_customer , trnsal_invoice_header  where reth_cust = cust_code  and  reth_fincode >= invh_fincode and reth_comp_code= invh_comp_code and reth_cust  = invh_party and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_cust = $ledcode  and reth_invno = invh_invrefno and reth_invno = '$invno'");
+    $sql = "select * from trnsal_salret_header , massal_customer , trnsal_invoice_header  where reth_cust = cust_code  and  reth_fincode >= invh_fincode and reth_comp_code= invh_comp_code and reth_cust  = invh_party and  reth_fincode = $finyear and reth_comp_code= $compcode and reth_cust = $ledcode  and reth_invno = invh_invrefno and reth_invno = '$invno'";
 
 
-
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -371,32 +375,35 @@ function getSRInvNoDetail() {
         $gsttype = $_POST['gsttype'];
 
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
         if ($gsttype == "1")
-	    $r=mysql_query("select * from massal_customer where cust_name like 'IGST SALE%RETURN%'");
+	    $sql = "select * from massal_customer where cust_name like 'IGST SALE%RETURN%18%";
 	else
-	    $r=mysql_query("select * from massal_customer where cust_name like 'GST SALE%RETURN%'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	    $sql = "select * from massal_customer where cust_name like 'GST SALE%RETURN%18%'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 function getSRInvNoHSN() {
-    mysql_query("SET NAMES utf8"); 
+    global $conn; 
     $compcode=$_POST['gincompcode'];
     $finyear =$_POST['ginfinid'];
     $ledcode =$_POST['ledcode'];
     $invno   =$_POST['invoiceno'];
 
-    $r = mysql_query("	select max(rett_hsncode) hsncode from trnsal_salret_header , trnsal_salret_trailer where 
-     reth_fincode = $finyear and reth_comp_code= $compcode  and  reth_no = rett_no and  reth_fincode =  rett_fincode  and reth_comp_code= rett_comp_code and reth_invno = '$invno'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $sql = "	select max(rett_hsncode) hsncode from trnsal_salret_header , trnsal_salret_trailer where 
+     reth_fincode = $finyear and reth_comp_code= $compcode  and  reth_no = rett_no and  reth_fincode =  rett_fincode  and reth_comp_code= rett_comp_code and reth_invno = '$invno'";
+
+     $r = mysqli_query($conn, $sql);     
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -407,13 +414,15 @@ function getSRInvNoHSN() {
 
 
 function getInvSeqno() {
-    mysql_query("SET NAMES utf8"); 
+    global $conn; 
     $compcode=$_POST['compcode'];
     $invno   =$_POST['invoiceno'];
 
-    $r = mysql_query("select * from trnsal_invoice_header where invh_comp_code = $compcode and invh_invrefno = '$invno'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $sql = "select * from trnsal_invoice_header where invh_comp_code = $compcode and invh_invrefno = '$invno'";
+    
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -422,56 +431,57 @@ function getInvSeqno() {
 
  function getPartyList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
         $ledname = strtoupper($_POST['ledger']);
         $ledname = trim(str_replace(" ", "", $ledname)); 
         $ledname = trim(str_replace(".", "", $ledname)); 
-//        $qry = "select * from massal_customer where cust_name like '%$ledname%'";
-  //      $qry = "select * from massal_customer where led_type = 'C' and replace(cust_name,' ','') like '%$ledname%' or replace(cust_name,'.','') like '%$ledname%' order by cust_name";
-      $qry = "select * from massal_customer where cust_type = 'C' and replace(replace(cust_name,' ','')  ,'.','')  like '%$ledname%' order by cust_name";
+//        $sql = "select * from massal_customer where cust_name like '%$ledname%'";
+  //      $sql = "select * from massal_customer where led_type = 'C' and replace(cust_name,' ','') like '%$ledname%' or replace(cust_name,'.','') like '%$ledname%' order by cust_name";
+      $sql = "select * from massal_customer where cust_type = 'C' and replace(replace(cust_name,' ','')  ,'.','')  like '%$ledname%' order by cust_name";
 
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getEInvStatus()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$invno = $_POST['invno'];
 
-        $r=mysql_query("select * from AIS_OEIV where invEntry = '$invno' and DocEntry in (select max(DocEntry) from AIS_OEIV where invEntry = '$invno'");
+        $sql = "select * from AIS_OEIV where invEntry = '$invno' and DocEntry in (select max(DocEntry) from AIS_OEIV where invEntry = '$invno'";
 
-        $r=mysql_query("select * from AIS_OEIV where invEntry = '$invno' order by CreateDate desc");
+        $sql = "select * from AIS_OEIV where invEntry = '$invno' order by CreateDate desc";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
     
     function getDebitBills() {
+        global $conn;
         $finyear=$_POST['ginfinid'];
         $compcode=$_POST['gincompany'];
         $ledgercode=$_POST['ledgercode'];
-        $r = mysql_query("CALL acc_sp_load_debit_bills('$compcode','$finyear','$ledgercode');");
-        $nrow = mysql_num_rows($r);
-        while ($re = mysql_fetch_array($r)) {
+        $sql = "CALL acc_sp_load_debit_bills('$compcode','$finyear','$ledgercode');";
+        $r = mysqli_query($conn, $sql);
+        $nrow = mysqli_num_rows($r);
+        while ($re = mysqli_fetch_array($r)) {
             $arr[] = $re;
         }
         $jsonresult = JEncode($arr);
@@ -482,64 +492,63 @@ function getInvSeqno() {
 
  function getInvoiceVarity()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
         $invno = $_POST['invno'];
         $compcode = $_POST['compcode'];
 
 
 
-        $qry = "select * from trnsal_invoice_header , trnsal_invoice_trailer ,
+        $sql = "select * from trnsal_invoice_header , trnsal_invoice_trailer ,
 masprd_variety , masprd_type  where invt_item = var_groupcode and  var_typecode = vargrp_type_code  and
 invh_comp_code = invt_compcode and invh_fincode  = invt_fincode and invh_seqno =  invt_seqno and invh_comp_code = $compcode  and invh_invrefno = '$invno' LIMIT 1;";
 
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
  function getTCSledgers()
 
     {
+        global $conn;
         $ledtype = "I";
 
-   $r=mysql_query("select * from massal_customer where cust_name like 'TCS @0.1% COLLECTED%'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+   $sql = "select * from massal_customer where cust_name like 'TCS @0.1% COLLECTED%'";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getFreightledgers()
 
     {
+        global $conn;
         $custtype = $_POST['gsttype'];
-
-
-
-
         if ($custtype == 1) 
-           $r=mysql_query("select * from massal_customer where cust_name like 'FREIGHT COLLECTED-IGST%'");
+           $sql = "select * from massal_customer where cust_name like 'FREIGHT COLLECTED-IGST%'";
         else
-           $r=mysql_query("select * from massal_customer where cust_name like 'FREIGHT COLLECTED-GST%'");
+           $sql = "select * from massal_customer where cust_name like 'FREIGHT COLLECTED-GST%'";
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
 
 
     }
@@ -551,22 +560,23 @@ invh_comp_code = invt_compcode and invh_fincode  = invt_fincode and invh_seqno =
 	$compcode = $_POST['compcode'];
        	$vouno    = $_POST['vouno'];
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
 
-$r=mysql_query("select count(*) as nos from  acc_dbcrnote_sales_purchase  where cn_compcode = $compcode  and cn_fincode = $fincode  and  cn_vouno = '$vouno'");
+$sql = "select count(*) as nos from  acc_dbcrnote_sales_purchase  where cn_compcode = $compcode  and cn_fincode = $fincode  and  cn_vouno = '$vouno'";
 
 
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 ?>

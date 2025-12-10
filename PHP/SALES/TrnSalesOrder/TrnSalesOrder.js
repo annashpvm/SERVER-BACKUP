@@ -4682,11 +4682,29 @@ function priceConfirm()
 		txtCashDiscMT_30Days_60dayPT.setValue('0');
 		txtCashDiscMT_45Days_60dayPT.setValue('0');
 
-		txtCashDiscMT_7Days_90dayPT.setValue('2000');
-		txtCashDiscMT_30Days_90dayPT.setValue('1500');
-		txtCashDiscMT_45Days_90dayPT.setValue('1000');
-		txtCashDiscMT_60Days_90dayPT.setValue('500');
-		txtCashDiscMT_75Days_90dayPT.setValue('0');
+
+        var ptmt7 = 2500;
+        var ptmt30 = 2000;
+        var ptmt45 = 1500;
+        var ptmt60 = 1000;
+        var ptmt75 = 500;
+
+        if (Number(txtGraceDays.getValue()) == 30 || Number(txtGraceDays.getValue()) == 60)
+        {
+            ptmt7 -=  1000;
+            ptmt30 -=  1000;
+            ptmt45 -=  1000;
+            ptmt60 =  0;
+            ptmt75 =  0;
+        }    
+                    
+
+
+        txtCashDiscMT_7Days_90dayPT.setValue(ptmt7);
+		txtCashDiscMT_30Days_90dayPT.setValue(ptmt30);
+		txtCashDiscMT_45Days_90dayPT.setValue(ptmt45);
+		txtCashDiscMT_60Days_90dayPT.setValue(ptmt60);
+		txtCashDiscMT_75Days_90dayPT.setValue(ptmt75);
                 }
            }
            if (no_of_days == 90) 
@@ -4719,11 +4737,28 @@ function priceConfirm()
 		txtCashDiscMT_30Days_60dayPT.setValue('0');
 		txtCashDiscMT_45Days_60dayPT.setValue('0');
 
-		txtCashDiscMT_7Days_90dayPT.setValue('2500');
-		txtCashDiscMT_30Days_90dayPT.setValue('2000');
-		txtCashDiscMT_45Days_90dayPT.setValue('1500');
-		txtCashDiscMT_60Days_90dayPT.setValue('1000');
-		txtCashDiscMT_75Days_90dayPT.setValue('500');
+        var ptmt7 = 2500;
+        var ptmt30 = 2000;
+        var ptmt45 = 1500;
+        var ptmt60 = 1000;
+        var ptmt75 = 500;
+
+        if (Number(txtGraceDays.getValue()) == 30 ||  Number(txtGraceDays.getValue()) == 60)
+        {
+            ptmt7 -=  1000;
+            ptmt30 -=  1000;
+            ptmt45 -=  1000;
+            ptmt60 =  0;
+            ptmt75 =  0;
+        }    
+                    
+
+
+        txtCashDiscMT_7Days_90dayPT.setValue(ptmt7);
+		txtCashDiscMT_30Days_90dayPT.setValue(ptmt30);
+		txtCashDiscMT_45Days_90dayPT.setValue(ptmt45);
+		txtCashDiscMT_60Days_90dayPT.setValue(ptmt60);
+		txtCashDiscMT_75Days_90dayPT.setValue(ptmt75);
                 }
            }
 

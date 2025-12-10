@@ -335,20 +335,21 @@ style: {
 				         flxDetail.getStore().insert(
 				            flxDetail.getStore().getCount(),
 				            new dgrecord({
-					    sno         : loadissuenoDatastore.getAt(j).get('iss_slno'),
+					        sno         : loadissuenoDatastore.getAt(j).get('iss_slno'),
 				            machine     : loadissuenoDatastore.getAt(j).get('iss_machine'),
-					    section     : loadissuenoDatastore.getAt(j).get('section_name'),
-					    sectioncode : loadissuenoDatastore.getAt(j).get('iss_section'),
-					    equipment   : loadissuenoDatastore.getAt(j).get('equip_name'),
-					    equipcode   : loadissuenoDatastore.getAt(j).get('iss_equip'), 	
-					    item        : loadissuenoDatastore.getAt(j).get('item_name'),
+					        section     : loadissuenoDatastore.getAt(j).get('section_name'),
+					        sectioncode : loadissuenoDatastore.getAt(j).get('iss_section'),
+					        equipment   : loadissuenoDatastore.getAt(j).get('equip_name'),
+					        equipcode   : loadissuenoDatastore.getAt(j).get('iss_equip'), 	
+					        item        : loadissuenoDatastore.getAt(j).get('item_name'),
 				            itemcode    : loadissuenoDatastore.getAt(j).get('iss_item_code'),
 				            uom         : loadissuenoDatastore.getAt(j).get('uom_short_name'),
-				            rate        : loadissuenoDatastore.getAt(j).get('iss_rate'),
-				            stock       : Number(loadissuenoDatastore.getAt(j).get('item_stock'))+Number(loadissuenoDatastore.getAt(j).get('iss_qty')),
-					    issqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
-                                 	    oldqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
-					    issval      : Ext.util.Format.number(isval, "0.00"),
+				            rate        : Ext.util.Format.number(loadissuenoDatastore.getAt(j).get('iss_rate'), "0.00000"),
+				            stock       : Ext.util.Format.number((Number(loadissuenoDatastore.getAt(j).get('item_stock'))+Number(loadissuenoDatastore.getAt(j).get('iss_qty'))), "0.000"),
+					        issqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
+                            oldqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
+					        issval      : Ext.util.Format.number(isval, "0.00"),
+                            oldissval   : Ext.util.Format.number(isval, "0.00"),
 				            })
 				         );
 				     }
@@ -811,6 +812,22 @@ var txtAvgRate = new Ext.form.NumberField({
         allowBlank  :  false,
 	tabindex : 1,
         decimalPrecision: 5,
+        enableKeyEvents: true,
+
+        listeners:{
+           change:function(){
+                  checkqty();
+            }, 
+           keyup:function(){
+                checkqty();
+            },
+            keydown:function(){ 
+                checkqty();
+            },
+            blur:function(){
+               checkqty();
+            },
+         } 
    //     readOnly   : true,
     });
 
@@ -837,8 +854,9 @@ var txtVouList = new Ext.form.TextField({
         name        : 'txtVouList',
         width       :  120,
         allowBlank  :  false,
-	tabindex : 1,
+     	tabindex : 1,
         enableKeyEvents: true,
+        autoCreate:{tag:'input',type:'text',size:'20',autocomplete:'off',maxlength:'14'},
     	listeners:{
           specialkey:function(f,e){
              if (e.getKey() == e.ENTER)
@@ -1046,23 +1064,24 @@ var flxDetail = new Ext.grid.EditorGridPanel({
     y:100,
     height: 210,
     hidden:false,
-    width: 1050,
+    width: 1150,
     columns:
     [
         {header: "SNo", dataIndex: 'sno',sortable:true,width:50,align:'left'},
         {header: "Machine", dataIndex: 'machine',sortable:true,width:100,align:'left'},
-        {header: "Section", dataIndex: 'section',sortable:true,width:250,align:'left'},
-        {header: "Equipment", dataIndex: 'equipment',sortable:true,width:250,align:'left'},
-        {header: "Item Name", dataIndex: 'item',sortable:true,width:270,align:'left'},
-        {header: "ItemCode", dataIndex: 'itemcode',sortable:true,width:50,align:'left'},
-        {header: "Unit", dataIndex: 'uom',sortable:true,width:100,align:'left'},
-        {header: "AvgRate", dataIndex: 'rate',sortable:true,width:100,align:'right'},
+        {header: "Section", dataIndex: 'section',sortable:true,width:100,align:'left'},
+        {header: "Equipment", dataIndex: 'equipment',sortable:true,width:100,align:'left'},
+        {header: "Item Name", dataIndex: 'item',sortable:true,width:300,align:'left'},
+        {header: "ItemCode", dataIndex: 'itemcode',sortable:true,width:50,align:'left',hidden : true,},
+        {header: "Unit", dataIndex: 'uom',sortable:true,width:70,align:'left'},
         {header: "Stock Qty", dataIndex: 'stock',sortable:true,width:100,align:'right'},
-        {header: "Issue Qty", dataIndex: 'issqty',sortable:true,width:50,align:'right'},
-        {header: "Issue Value", dataIndex: 'issval',sortable:true,width:70,align:'right'},
-        {header: "Sec.Code", dataIndex: 'sectioncode',sortable:true,width:100,align:'left'},
-        {header: "EquipCode", dataIndex: 'equipcode',sortable:true,width:100,align:'left'},
-        {header: "Old Qty", dataIndex: 'oldqty',sortable:true,width:50,align:'left'},
+        {header: "AvgRate", dataIndex: 'rate',sortable:true,width:100,align:'right'},
+        {header: "Issue Qty", dataIndex: 'issqty',sortable:true,width:100,align:'right'},
+        {header: "Issue Value", dataIndex: 'issval',sortable:true,width:100,align:'right'},
+        {header: "Sec.Code", dataIndex: 'sectioncode',sortable:true,width:100,align:'left',hidden : true,},
+        {header: "EquipCode", dataIndex: 'equipcode',sortable:true,width:100,align:'left',hidden : true,},
+        {header: "Old Qty", dataIndex: 'oldqty',sortable:true,width:50,align:'left',hidden : true,},
+        {header: "Old IssVal", dataIndex: 'oldissval',sortable:true,width:50,align:'left',hidden : true,},
     ],
 	store : [],
     listeners:{	
@@ -1084,7 +1103,10 @@ var flxDetail = new Ext.grid.EditorGridPanel({
 	
 		    	txtAvgRate.setValue(selrow.get('rate'));
 		    	txtIssQty.setValue(selrow.get('issqty'));
-		    	txtStock.setValue(selrow.get('stock'));
+                if (gstFlag == "Edit")
+		    	    txtStock.setValue(selrow.get('stock')+ selrow.get('issqty'));
+                else
+                    txtStock.setValue(selrow.get('stock'));
 		    	txtIssQty.setRawValue(selrow.get('issqty'));
 		    	txtIssVal.setRawValue(selrow.get('issval'));
                         txtUOM.setRawValue(selrow.get('uom')); 
@@ -1403,10 +1425,10 @@ function save_click()
                 layout  : 'hbox',
                 border  : true,
                 height  : 515,
-                width   : 1150,
+                width   : 1230,
 		style:{ border:'1px solid red',color:' #581845 '},
                 layout  : 'absolute',
-                x       : 60,
+                x       : 30,
                 y       : 10,
                 items:[
 
@@ -1475,7 +1497,7 @@ function save_click()
                 layout  : 'hbox',
                 border  : true,
                 height  : 380,
-                width   : 1100,
+                width   : 1180,
 		style:{ border:'1px solid red',color:' #581845 '},
                 layout  : 'absolute',
                 x       : 10,
@@ -1683,7 +1705,6 @@ function save_click()
 	},
 	listeners:{
                show:function(){
-
  RefreshData();
 			txtIssueNo.focus();
 			DeptDataStore.load({

@@ -88,9 +88,9 @@ if ($sort != "") {
 }
 $query .= " LIMIT ".$start.",".$count;
 
-$rs = mysql_query($query);
+$rs = mysqli_query($conn, $query);
 $total = mysql_query("SELECT COUNT(id) FROM demo WHERE ".$where);
-$total = mysql_result($total, 0, 0);
+$total = mysqli_result($total, 0, 0);
 
 $arr = array();
 while($obj = mysql_fetch_object($rs)) {

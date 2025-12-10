@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadscrapitemcode":
 		getscrapitemcode();
@@ -44,160 +44,161 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
   function getscrapitem()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select mas_othersales_item_master.salitem_code, salitem_name, salitem_uom, uom.uom_short_name,salitem_hsn,hsn_type  from mas_othersales_item_master INNER JOIN mas_uom as uom ON salitem_uom = uom_code LEFT OUTER JOIN mas_hsncode ON hsn_code = salitem_hsn");
+        $sql = "select mas_othersales_item_master.salitem_code, salitem_name, salitem_uom, uom.uom_short_name,salitem_hsn,hsn_type  from mas_othersales_item_master INNER JOIN mas_uom as uom ON salitem_uom = uom_code LEFT OUTER JOIN mas_hsncode ON hsn_code = salitem_hsn");
 
-        $r=mysql_query("select a.* ,f.uom_short_name ,b.cust_code as salesledcodetn,b.cust_name as saleslednametn ,c.cust_code as cgstledcode,c.cust_name as cgstledname   ,d.cust_code as sgstledcode,d.cust_name as sgstledname  ,e.cust_code as igstledcode,e.cust_name as igstledname ,g.cust_code as salesledcodeos,g.cust_name as saleslednameos   from mas_othersales_item_master a, massal_customer b , massal_customer c , massal_customer d , massal_customer e ,mas_uom f  , massal_customer g  where a.salitem_salesledcode_tn = b.cust_code and a.salitem_cgstledcode = c.cust_code and a.salitem_sgstledcode = d.cust_code and a.salitem_igstledcode = e.cust_code and a.salitem_uom = f.uom_code and a.salitem_salesledcode_os = g.cust_code  order by salitem_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select a.* ,f.uom_short_name ,b.cust_code as salesledcodetn,b.cust_name as saleslednametn ,c.cust_code as cgstledcode,c.cust_name as cgstledname   ,d.cust_code as sgstledcode,d.cust_name as sgstledname  ,e.cust_code as igstledcode,e.cust_name as igstledname ,g.cust_code as salesledcodeos,g.cust_name as saleslednameos   from mas_othersales_item_master a, massal_customer b , massal_customer c , massal_customer d , massal_customer e ,mas_uom f  , massal_customer g  where a.salitem_salesledcode_tn = b.cust_code and a.salitem_cgstledcode = c.cust_code and a.salitem_sgstledcode = d.cust_code and a.salitem_igstledcode = e.cust_code and a.salitem_uom = f.uom_code and a.salitem_salesledcode_os = g.cust_code  order by salitem_name");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
   function getscrapitemcode()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select max(salitem_code) +1 as itemcode from mas_othersales_item_master");
+        $sql = "select max(salitem_code) +1 as itemcode from mas_othersales_item_master");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
   function getuom()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select * from mas_uom");
+        $sql = "select * from mas_uom");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
   function gethsncode()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select * from mas_hsncode");
+        $sql = "select * from mas_hsncode");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
    
   function getscrapitemledger()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select * from massal_customer");
+        $sql = "select * from massal_customer");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  
    
    
   function getsalescountry()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select * from mas_country");
+        $sql = "select * from mas_country");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  
 
    
   function getsalestax()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
-        $r=mysql_query("select * from mas_tax");
+        $sql = "select * from mas_tax");
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
  
 
 
  function getSalesledgers()
     {
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from massal_customer where cust_type = 'G' and cust_name like '%SALES%' order by cust_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select * from massal_customer where cust_type = 'G' and cust_name like '%SALES%' order by cust_name");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getCGSTledgers()
 
     {
 
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from massal_customer where cust_name like 'CGST'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select * from massal_customer where cust_name like 'CGST'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -206,15 +207,16 @@
 
     {
 
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from massal_customer where cust_name like 'SGST'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select * from massal_customer where cust_name like 'SGST'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
@@ -222,15 +224,16 @@
 
     {
 
-        mysql_query("SET NAMES utf8");
-        $r=mysql_query("select * from massal_customer where cust_name like 'IGST%@%'");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+        $sql = "select * from massal_customer where cust_name like 'IGST%@%'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 

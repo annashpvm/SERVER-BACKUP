@@ -11,20 +11,20 @@ $lorryitemrate=$_POST['lorryitemrate'];
 $tipperitemrate=$_POST['tipperitemrate'];
 $chkrate=$_POST['chkrate'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 if ($chkrate == 0) {
 	$query1 = "select ifnull(max(aif_seqno),0)+1 as aif_seqno from mas_areaitemfreight";
-	$result1 = mysql_query($query1);
-	$rec = mysql_fetch_array($result1);
+	$result1 = mysqli_query($conn, $query1);
+	$rec = mysqli_fetch_array($result1);
 	$aif_seqno=$rec['aif_seqno'];
 
 	$query2="call sp_ins_tonfreight ('$aif_seqno','$partycode','$areacode','1','$itemcode','$lorryitemrate','$tipperitemrate')";
-  	$result2 = mysql_query($query2);
+  	$result2 = mysqli_query($conn, $query2);
 
 }
 else{
 	$query3="call sp_upd_tonfreight ('$chkrate','$lorryitemrate','$tipperitemrate')";
-  	$result3 = mysql_query($query3);
+  	$result3 = mysqli_query($conn, $query3);
 	
 }
 
@@ -32,21 +32,25 @@ else{
 if ($chkrate == 0) {
 
 	if ($result2){
-    		mysql_query("COMMIT");
+    		mysqli_begin_transaction($conn);
     		echo '({"success":"true","msg":"' . $itemcode . '"})';
 	}
 	else{
-		mysql_query("ROLLBACK");
+		mysqli_rollback($conn);
+
+
 		echo '({"success":"false","msg":"' . $itemcode . '"})';
 	}
 } 
 else {
 	if ($result3){
-    		mysql_query("COMMIT");
+    		mysqli_begin_transaction($conn);
     		echo '({"success":"true","msg":"' . $chkrate . '"})';
 	}
 	else{
-		mysql_query("ROLLBACK");
+		mysqli_rollback($conn);
+
+
 		echo '({"success":"false","msg":"' . $chkrate . '"})';
 	}
 }

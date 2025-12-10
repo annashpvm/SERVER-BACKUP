@@ -29,35 +29,35 @@ $entrypoint = $_REQUEST['entrypoint'];
 
     
         $cquery1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $cresult1 = mysql_query($cquery1);
-        $crec1 = mysql_fetch_array($cresult1);
+        $cresult1 = mysqli_query($conn, $cquery1);
+        $crec1 = mysqli_fetch_array($cresult1);
         $caccrefseq=$crec1['con_value'];
         
         $cquery2 = "select led_prefix from acc_ledger_master where led_code = '$headacct' and led_comp_code = '$compcode';";
         $cquery2 = "select led_prefix from acc_ledger_master, acc_current_balance where led_code = '$headacct' and curbal_comp_code = '$compcode' and curbal_led_code = led_code  and curbal_finid = '$finid'";
         $cquery2 = "select led_prefix from acc_ledger_master where led_code = '$headacct'";
 
-        $cresult2 = mysql_query($cquery2);
-        $crec2 = mysql_fetch_array($cresult2);
+        $cresult2 = mysqli_query($conn, $cquery2);
+        $crec2 = mysqli_fetch_array($cresult2);
         $cledprefix=$crec2['led_prefix'];
         
         $cquery3 = "select curbal_rec_seqno from acc_current_balance where curbal_led_code = '$headacct' and curbal_finid = '$finid'  and curbal_comp_code = '$compcode';";
-        $cresult3 = mysql_query($cquery3);
-        $crec3 = mysql_fetch_array($cresult3);
+        $cresult3 = mysqli_query($conn, $cquery3);
+        $crec3 = mysqli_fetch_array($cresult3);
         $crcptno = $crec3['curbal_rec_seqno'];
         
         $cvouno=$cledprefix."BR".$crcptno;
 
         $query4 = "select ifnull(max(recpay_seqno),0) + 1 as con_value from acc_recpay_tran;";
-        $result4 = mysql_query($query4);
-        $rec4 = mysql_fetch_array($result4);
+        $result4 = mysqli_query($conn, $query4);
+        $rec4 = mysqli_fetch_array($result4);
         $ginrecpayseq=$rec4['con_value'];
         
-        mysql_query("BEGIN");
+        mysqli_query($conn, "BEGIN");
 
         $cquerya2 = "call acc_sp_trn_insacc_ref(".$caccrefseq.",'".$cvouno."',".$compcode.",".$finid.",'".$voudate."','BR','".$bankname."','"
             .$paymode."','".$payno."','".$paydate."','".$narration."',0,0,'$entrypoint');";
-        $cresulta2 = mysql_query($cquerya2);
+        $cresulta2 = mysqli_query($conn, $cquerya2);
       //  echo ($cquerya2);
         $inscnt = 0;
         for($i=0;$i<$rowcnt;$i++){
@@ -86,12 +86,12 @@ $entrypoint = $_REQUEST['entrypoint'];
            // if ($ledtype <> "G") { // Updated 21-Oct-2021
 //               $querya3 = "call acc_sp_trn_insacc_trail('$caccrefseq','$slno','$refno','$refdate','$totamt','$adjamt','$ledseq','$amtmode');";
                $querya3 = "call acc_sp_trn_insacc_trail('$caccrefseq','$slno','$cvouno','$voudate','$totamt','$adjamt','$ledseq','$amtmode');";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
            //    echo ($querya3);
          //   } 
 
             $querya4 = "call acc_sp_trn_insacc_tran('$caccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$curseq','$amount','$exgrate','','$paytype');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
           //  echo ($querya4);
             if($resulta3 && $resulta4){
                 $inscnt = $inscnt + 1;
@@ -101,16 +101,16 @@ $entrypoint = $_REQUEST['entrypoint'];
 /*
         if ($ledtype <> "G") { 
            $querya8 = "call acc_sp_trn_insacc_trail('$caccrefseq','$slno','$refno','$refdate','$rcptamt','$totadjamt','$headacct');";
-           $resulta8 = mysql_query($querya8);
+           $resulta8 = mysqli_query($conn, $querya8);
         }
 */
         $querya9 = "call acc_sp_trn_insacc_tran('$caccrefseq','$slno','$headacct','$rcptamt','0','$rcptamt','$curseq','$amount','$exgrate','','$paytype');";
-        $resulta9 = mysql_query($querya9);
+        $resulta9 = mysqli_query($conn, $querya9);
      //   echo ($querya9);
         $crcptno += 1;
 
         $querya10 = "call acc_sp_trn_updcurbal_recpay_seqno('REC','$crcptno','$headacct','$finid','$compcode');";
-        $resulta10 = mysql_query($querya10);
+        $resulta10 = mysqli_query($conn, $querya10);
       //  echo ($querya10);
       //  echo ($rowcnt);
         for($i=0;$i<$arowcnt;$i++){
@@ -126,31 +126,31 @@ $entrypoint = $_REQUEST['entrypoint'];
 
                 $querya5 = "call acc_sp_trn_insrecpay_tran('$ginrecpayseq','$oaccrefseq','$oaccvouno','$oaccvoudt','$caccrefseq','$recpayamt','$dbcramt');";
 
-                $resulta5 = mysql_query($querya5);
+                $resulta5 = mysqli_query($conn, $querya5);
 //echo ($querya5);
 		$queryref = "select ifnull(max(refseqno),0) + 1 as refseqno from acc_recpay_ref;";
-		$resultref = mysql_query($queryref);
-		$recref = mysql_fetch_array($resultref);
+		$resultref = mysqli_query($conn, $queryref);
+		$recref = mysqli_fetch_array($resultref);
 		$recrefseq=$recref['refseqno'];
 
 		$queryrefchk = "select accref_vou_type,accref_vouno from acc_ref where accref_seqno='$oaccrefseq'";
-		$resultrefchk = mysql_query($queryrefchk);
-		$recrefchk = mysql_fetch_array($resultrefchk);
+		$resultrefchk = mysqli_query($conn, $queryrefchk);
+		$recrefchk = mysqli_fetch_array($resultrefchk);
 		$accvoutype=$recrefchk['accref_vou_type'];
 		$refvounumber=$recrefchk['accref_vouno'];
 
 		$queryrefchkbal = "select sum(acctrail_adj_value) as adjvalueref from acc_trail where acctrail_accref_seqno='$oaccrefseq'";
-		$resultrefchkbal = mysql_query($queryrefchkbal);
-		$recrefchkbal = mysql_fetch_array($resultrefchkbal);
+		$resultrefchkbal = mysqli_query($conn, $queryrefchkbal);
+		$recrefchkbal = mysqli_fetch_array($resultrefchkbal);
 		$balamtref=$recrefchkbal['adjvalueref'];
 
 		$querydate = "select datediff(curdate(),'$oaccvoudt') as daysin";
-		$resultdate = mysql_query($querydate);
-		$recdatenew = mysql_fetch_array($resultdate);
+		$resultdate = mysqli_query($conn, $querydate);
+		$recdatenew = mysqli_fetch_array($resultdate);
 		$refdays=$recdatenew['daysin'];
 
 		$queryrefins = "insert into acc_recpay_ref values ('$recrefseq','$oaccrefseq','$caccrefseq','$recpayamt',curdate(),'$balamtref','$accvoutype','$refvounumber','$cvouno','$finid','$compcode','$oaccvouno','$oaccvoudt','$dbcramt','$refdays','RECEIPT')";
-                $resultrefins = mysql_query($queryrefins);
+                $resultrefins = mysqli_query($conn, $queryrefins);
 	       // echo ($queryrefins);
                 if($remark!==""){
 		$queryremark ="insert into acc_recpay_tranremark
@@ -175,18 +175,18 @@ $entrypoint = $_REQUEST['entrypoint'];
 					'$dbcramt',
 					'$remark'
 				)";
-		$queryremarkres = mysql_query($queryremark);
+		$queryremarkres = mysqli_query($conn, $queryremark);
 		}
 		
                 $ginrecpayseq = $ginrecpayseq + 1;
 
                 if($ovoutype=='OB'){
                     $querya7 = "call acc_sp_trn_updob_billdetails_adjvalue('$oaccrefseq','$recpayamt');";
-                    $resulta7 = mysql_query($querya7);
+                    $resulta7 = mysqli_query($conn, $querya7);
                 }else{
                     $ledseqno = $griddet[0]['ledseq'];
                     $querya6 = "call acc_sp_trn_updacc_trail_seq_no('$oaccrefseq','$oaccvouno','$recpayamt','$ledseqno');";
-                    $resulta6 = mysql_query($querya6);
+                    $resulta6 = mysqli_query($conn, $querya6);
                 }
             }
         }
@@ -195,12 +195,14 @@ $entrypoint = $_REQUEST['entrypoint'];
 //      if($cresulta2 && ($inscnt==$rowcnt) && $resulta9 && $resulta10)
       if($cresulta2 && $resulta9 && $resulta10)
         {
-            mysql_query("COMMIT");
+            mysqli_begin_transaction($conn);
             echo '({"success":"true","vouno":"'.$cvouno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");
+            mysqli_rollback($conn);
+
+
             echo '({"success":"false","vouno":"'.$cvouno.'"})';
         }
   

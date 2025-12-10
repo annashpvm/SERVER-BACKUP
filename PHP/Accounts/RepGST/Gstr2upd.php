@@ -9,7 +9,7 @@ $todate   = $_REQUEST['todate'];
 
 
                $query0 =  "delete from tmp_gstr2  where g_seqno > 0 ";     
-               $result0 = mysql_query($query0);
+               $result0 = mysqli_query($conn, $query0);
 
 
 	 $query1 = "select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join acc_ledger_master mas on  tran.acctran_led_code = mas.led_code 
@@ -18,7 +18,7 @@ $todate   = $_REQUEST['todate'];
 //echo $query1;
 
 
-	 $result1 = mysql_query($query1);
+	 $result1 = mysqli_query($conn, $query1);
 	 while ($row = mysql_fetch_assoc($result1)) {
                $seqno   = $row['accref_seqno'];
                $vouno   = $row['accref_vouno'];
@@ -44,7 +44,7 @@ $todate   = $_REQUEST['todate'];
                { 
                $query3 =  "insert into tmp_gstr2 (g_seqno,g_vouno, g_date, g_supplier, g_billno, g_billdate, g_gstin, g_billamount)  values($seqno,'$vouno','$voudate',  '$ledname','$billno','$billdate', '$gstin', '$billamt')";     
 // echo $query3;
-               $result3 = mysql_query($query3);
+               $result3 = mysqli_query($conn, $query3);
                }  
                else
                {
@@ -52,48 +52,48 @@ $todate   = $_REQUEST['todate'];
 		       { 
 		       $query4 =  "update tmp_gstr2 set g_purledger = '$ledcode' , g_purledname =  '$ledname' , g_purvalue  = '$billamt' where g_seqno = $seqno";
 //	 echo $query4;
-		       $result4 = mysql_query($query4);
+		       $result4 = mysqli_query($conn, $query4);
 		       } 
                        else
                        {
 			    switch($ledcode){
 				case  ($ledcode == "1667" ||  $ledcode == "1674") :
 		      		   $query5 =  "update tmp_gstr2 set g_cgst2_5 = '$billamt' ,  g_sgst2_5 = '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1668" ||  $ledcode == "1675") :
 		      		   $query5 =  "update tmp_gstr2 set g_cgst6= '$billamt' ,  g_sgst6 = '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1669" ||  $ledcode == "1676") :
 		      		   $query5 =  "update tmp_gstr2 set g_cgst9= '$billamt' ,  g_sgst9 = '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1666" ||  $ledcode == "1673") :
 		      		   $query5 =  "update tmp_gstr2 set g_cgst14= '$billamt' ,  g_sgst14 = '$billamt' where g_seqno = $seqno";
 //	 echo $query5;
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1672") :
 		      		   $query5 =  "update tmp_gstr2 set g_igst5= '$billamt' where g_seqno = $seqno";
 
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1671") :
 		      		   $query5 =  "update tmp_gstr2 set g_igst18= '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1670") :
 		      		   $query5 =  "update tmp_gstr2 set g_igst12= '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "2026") :
 		      		   $query5 =  "update tmp_gstr2 set g_cess = '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1757") :
 		      		   $query5 =  "update tmp_gstr2 set g_handling= '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1859") :
                                 if ($dramt >0)
@@ -101,7 +101,7 @@ $todate   = $_REQUEST['todate'];
                                 else
                                    $query5 =  "update tmp_gstr2 set g_round = '$billamt' * -1 where g_seqno = $seqno";
 
-                                $result5 = mysql_query($query5);
+                                $result5 = mysqli_query($conn, $query5);
 				break;
 //IInd updation
                             }
@@ -109,15 +109,15 @@ $todate   = $_REQUEST['todate'];
 			    switch($ledcode){
 				case  ($ledcode == "1666" ||  $ledcode == "1667" ||  $ledcode == "1668" ||  $ledcode == "1669") :
 		      		   $query5 =  "update tmp_gstr2 set g_cgst = g_cgst + '$billamt' where g_seqno = $seqno";
-                                   $result5 = mysql_query($query5);
+                                   $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1673" ||  $ledcode == "1674" ||  $ledcode == "1675" ||  $ledcode == "1676" ) :
 		      		   $query5 =  "update tmp_gstr2 set g_sgst = g_sgst + '$billamt'where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				case  ($ledcode == "1670"  ||  $ledcode == "1671"   ||  $ledcode == "1672" ) :
 		      		   $query5 =  "update tmp_gstr2 set g_igst= g_igst+ '$billamt' where g_seqno = $seqno";
-		       $result5 = mysql_query($query5);
+		       $result5 = mysqli_query($conn, $query5);
 				break;
 				
                             }

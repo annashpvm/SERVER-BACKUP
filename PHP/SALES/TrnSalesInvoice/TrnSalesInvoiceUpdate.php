@@ -25,7 +25,7 @@ $query1= "update trnsal_invoice_header set invh_crd_days = '$invhcrddays' ,  inv
 
 //$query1= "update trnsal_invoice_header set invh_crd_days = '$invhcrddays',invh_ewaybillno = '$ewaybillno',U_EWayBillNo = '$ewaybillno'  where invh_invrefno = '$invhrefno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
 
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
 
 //echo $query1;
 //echo "<br>";
@@ -33,12 +33,12 @@ $result1=mysql_query($query1);
 
 
 $query2= "update  acc_trail set acctrail_crdays = '$invhcrddays' , acctrail_gracedays =  '$invhgracedays'  where  acctrail_accref_seqno =$accseqno";
-$result2=mysql_query($query2);   
+$result2=mysqli_query($conn, $query2);   
  
 
 $query5= "update trnsal_packslip_header set pckh_truck = '$invhvehino' Where pckh_no = $invhslipno  and pckh_fincode = '$invhfincode'  and pckh_comp_code = '$invhcompcode'";
 	      
-	$result5=mysql_query($query5);    
+	$result5=mysqli_query($conn, $query5);    
 
 
 //Accounts Updation --- End
@@ -48,12 +48,14 @@ $query5= "update trnsal_packslip_header set pckh_truck = '$invhvehino' Where pck
 
 if ($result1 && $result2)
 {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $invhrefno . '"})';
 }
   

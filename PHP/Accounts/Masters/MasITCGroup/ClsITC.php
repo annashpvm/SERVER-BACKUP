@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+mysqli_set_charset($conn, "utf8");
     switch($task){
              	case "loadSearchLedgerlist":
 		getSearchLedgerlist();
@@ -29,73 +29,62 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
  function getSearchLedgerlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
         $ledname = strtoupper($_POST['ledger']);
         $grp     = strtoupper($_POST['grp']);
 
         if ($grp == 'INPUT CGST')
-            $qry = "select * from acc_ledger_master where led_name like 'INPUT%CGST%@%' and led_name like '%$ledname%' order by led_name";
+            $sql = "select * from massal_customer where cust_name like 'INPUT%CGST%@%' and cust_name like '%$ledname%' order by cust_name";
         else if ($grp == 'INPUT SGST')
-            $qry = "select * from acc_ledger_master where led_name like 'INPUT%SGST%@%' and led_name like '%$ledname%' order by led_name";
+            $sql = "select * from massal_customer where cust_name like 'INPUT%SGST%@%' and cust_name like '%$ledname%' order by cust_name";
 else if ($grp == 'INPUT IGST')
-            $qry = "select * from acc_ledger_master where led_name like 'INPUT%IGST%@%' and led_name like '%$ledname%' order by led_name";
+            $sql = "select * from massal_customer where cust_name like 'INPUT%IGST%@%' and cust_name like '%$ledname%' order by cust_name";
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
  function getGroupList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $qry = "SELECT hd.* , grp.led_name grpname,led.led_name ledname from acc_gstitc_group hd , acc_ledger_master grp , acc_ledger_master led  where hd.itc_grpcode  = grp.led_code and  hd.itc_ledcode = led.led_code";
+        $sql = "SELECT hd.* , grp.cust_name grpname,led.cust_name ledname from acc_gstitc_group hd , massal_customer grp , massal_customer led  where hd.itc_grpcode  = grp.cust_code and  hd.itc_ledcode = led.cust_code";
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 
  function getGSTGroupLedgerList()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
-        $qry = "select * from acc_ledger_master where led_code in (2239,2240,2241) order by led_name";
+        $sql = "select * from massal_customer where cust_code in (2239,2240,2241) order by cust_name";
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 ?>

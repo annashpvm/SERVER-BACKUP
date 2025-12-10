@@ -1,7 +1,7 @@
 
 <?php
 
-require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php";
 
     $task='yarncust';
     if ( isset($_POST['task'])){
@@ -72,10 +72,10 @@ require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
    function getyarncust()
     {
      $query = "select yarn_cust_code,yarn_cust_name from yarn_customer_master ";
-        $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -89,10 +89,10 @@ require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
     {
 //        $query = "SELECT led_code,led_name  from acc_ledger_mater where led_comp_code = 1 and led_code in(26835, 26836,17194,18150)";
      $query = "SELECT month_code,month_name  from month_master ";
-        $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -107,10 +107,10 @@ require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
     {
 //        $query = "SELECT led_code,led_name  from acc_ledger_mater where led_comp_code = 1 and led_code in(26835, 26836,17194,18150)";
      $query = "SELECT bank_seqno,bank_name  from acc_bank_master ";
-        $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -139,10 +139,10 @@ select yarn_waste_sales_no,fin_year, 'WY' 'sale_type' from
 yarn_waste_sales_header ywsh, fin_master Where fin_id = yarn_waste_sales_finid 
 and yarn_waste_sales_finid = '$finid' and yarn_waste_sales_accref_seqno = 0 
 and yarn_waste_sales_cust_code = '$custcode'";    
-       $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+       $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -156,10 +156,10 @@ and yarn_waste_sales_cust_code = '$custcode'";
     {
         $query = "SELECT led_code,led_name  from acc_ledger_master where led_comp_code = 1 and led_code in(26835, 26836,17194,18150)";
     // $query = "SELECT led_code,led_name  from acc_ledger_master where led_comp_code = 1";
-        $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -174,10 +174,10 @@ and yarn_waste_sales_cust_code = '$custcode'";
   function getDrgroup()
     {
         $query = "select grp_code,grp_name from acc_group_master where grp_code in (61,133,134,135,136,137,138,140,141,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,150,151,152,153,44,45,61,62,63,148,181,185,191,210,211,212,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,133,134,135,136,137,138,140,141,150,151,152,153,183) and grp_comp_code = 1 order by grp_name ";
-        $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -215,11 +215,11 @@ and yarn_waste_sales_cust_code = '$custcode'";
     order by  acctran_serialno";
         $sql = $query;
 	$arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -259,11 +259,11 @@ and yarn_waste_sales_cust_code = '$custcode'";
         acc_tran.acctran_led_code         =     18150";
         $sql = $query;
 	$arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -309,10 +309,10 @@ and yarn_waste_sales_cust_code = '$custcode'";
 			acctran_cramt   		>  	0
 		group by accref_seqno, accref_vouno
 		having sum(acctrail_inv_value) - sum(acctrail_adj_value) > 0 ";
-        $result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -333,12 +333,12 @@ and yarn_waste_sales_cust_code = '$custcode'";
 
         $sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
+            $rs_count = mysqli_query($conn, $query);
 
-            $results = mysql_num_rows($rs_count);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
                 $arr[] = $obj;
             // $WtNo= $rs['WtNo'];
@@ -364,12 +364,12 @@ and yarn_waste_sales_cust_code = '$custcode'";
 
         $sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
+            $rs_count = mysqli_query($conn, $query);
 
-            $results = mysql_num_rows($rs_count);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
                 $arr[] = $obj;
             // $WtNo= $rs['WtNo'];
@@ -390,10 +390,10 @@ and yarn_waste_sales_cust_code = '$custcode'";
        function getFinyear()
     {
 	$query = "call plan_sp_trn_selfinyear";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -407,10 +407,10 @@ and yarn_waste_sales_cust_code = '$custcode'";
     function getCurrentdate()
     {
 	$query = "select curdate() as curdate;";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -430,7 +430,7 @@ and yarn_waste_sales_cust_code = '$custcode'";
     function JEncode($arr){
         if (version_compare(PHP_VERSION,"5.2","<"))
         {
-            require_once("./JSON.php");   //if php<5.2 need JSON class
+            require_once("./JSON.php";   //if php<5.2 need JSON class
             $json = new Services_JSON();  //instantiate new json object
             $data=$json->encode($arr);    //encode the data in json format
         } else

@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadsupplier":
 		getsupplier();
@@ -32,15 +32,7 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -50,10 +42,10 @@
 
 function getsupplier(){
     $query = "select sup_code,sup_refname from maspur_supplier_master union select cust_code as sup_code,cust_ref as sup_refname from massal_customer where cust_taxtag=9";
-    $result = mysql_query($query);
-    $nbrows = mysql_num_rows($result);
+    $result = mysqli_query($conn, $query);
+    $nbrows = mysqli_num_rows($result);
     if ($nbrows > 0) {
-        while ($rec = mysql_fetch_array($result)) {
+        while ($rec = mysqli_fetch_array($result)) {
             $arr[] = $rec;
         }
         $jsonresult = JEncode($arr);
@@ -65,73 +57,78 @@ function getsupplier(){
 	
  function getothersaleno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$finid = $_POST['finid'];
 	$compcode = $_POST['compcode'];
-        $r=mysql_query("select ifnull(max(os_docno),0)+1 as salenoteno from trnpur_other_sales where os_fincode=27 and os_compcode=1");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select ifnull(max(os_docno),0)+1 as salenoteno from trnpur_other_sales where os_fincode=27 and os_compcode=1");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getcarrier()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select * from mas_transport");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select * from mas_transport");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 function getpayterms()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getitem()
     {
-        mysql_query("SET NAMES utf8");
-	$r=mysql_query("select salitem_code,salitem_name from mas_othersales_item_master order by salitem_code,salitem_name");
-	//$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        mysqli_set_charset($conn, "utf8");
+	$sql = "select salitem_code,salitem_name from mas_othersales_item_master order by salitem_code,salitem_name");
+	//$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 function getgstno()
     {
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 	$supplier = $_POST['supplier'];
-	$r=mysql_query("select * from maspur_supplier_master where sup_code=$supplier");
-	//$r=mysql_query("select * from mas_terms");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+	$sql = "select * from maspur_supplier_master where sup_code=$supplier");
+	//$sql = "select * from mas_terms");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 ?>

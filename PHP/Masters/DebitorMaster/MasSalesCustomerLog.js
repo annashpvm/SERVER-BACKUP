@@ -1477,6 +1477,8 @@ var MasSalesCustomerFormpanel = new Ext.FormPanel({
 	listeners:{
                show:function(){
    saveflag = "Add";
+
+
          flxParty.hide();   
          Ext.getCmp('cmbGST').setDisabled(true);  
 

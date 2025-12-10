@@ -1,0 +1,259 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task='loadCountryList';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadINVNo":
+		getINVNo();
+		break;
+
+		case "loadCountryList":
+		getCountryList();
+		break;
+
+		case "LoadPONoList":
+		getPONoList();
+		break;
+		case "loadPODetail":
+		getPODetail();
+		break;
+		case "LoadPOItemList":
+		getPOItemList();
+		break;
+		case "LoadPOItemDetail":
+		getPOItemDetail();
+		break;
+		case "loadPortList":
+		getPortList();
+		break;
+		case "loadsupplier":
+		getsupplier();
+		break;
+		case "loadAllsupplier":
+		getAllsupplier();
+		break;
+
+		case "loadINVNoList":
+		getINVNoList();
+		break;
+		case "loadINVNoDetail":
+		getINVNoDetail();
+		break;
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+
+
+   
+ function getsupplier()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$supplierid = $_POST['supplierid'];
+	$sql = " select sup_refname, sup_code from trnirm_order_header , maspur_supplier_master where ordh_sup_code = sup_code  group by sup_refname, sup_code order by sup_refname");
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+ function getPONoList()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+ 	$supcode  = $_POST['supcode'];
+	$sql = "select ordh_no,ordh_seqno from trnirm_order_header where ordh_sup_code = '$supcode'  and  ordh_fincode = '$finid' and ordh_compcode='$compcode'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+   
+ function getCountryList()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select  country_name,country_code  from mas_country  order by country_name");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+	
+	
+ function getPortList()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = "select * from mas_port , mas_country where port_country = country_code order by port_name");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+ function getPODetail()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$ordno = $_POST['ordno'];
+	$finid = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+
+
+
+	$sql = "call spirm_sel_ordno('$ordno','$compcode','$finid')");
+
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+   
+ function getAllsupplier()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$supplierid = $_POST['supplierid'];
+	$sql = "select sup_code,sup_refname from maspur_supplier_master  where sup_acc_group = '$supplierid' order by sup_refname");
+	$sql = "select sup_code,sup_refname from maspur_supplier_master order by sup_refname");
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+ function getPOItemList()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$seqno = $_POST['seqno'];
+
+	$sql = "select itmh_name,itmh_code from trnirm_order_trailer , masrm_item_header where ordt_hdseqno = '$seqno' and ordt_item_code =  itmh_code");
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+ function getPOItemDetail()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$seqno = $_POST['seqno'];
+	$item = $_POST['itemcode'];
+	$sql = "select * from trnirm_order_trailer where ordt_hdseqno = '$seqno'  and ordt_item_code = '$item'");
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+ function getINVNo()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $compcode = $_POST['compcode'];
+        $finid = $_POST['finid'];
+	$sql = "select IFNULL(max(invh_invoiceno),0)+1 as invno from trnirm_invoice_header where invh_compcode ='$compcode' and invh_fincode ='$finid'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+ function getINVNoList()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$sql = "select invh_invoiceno from trnirm_invoice_header where invh_fincode = '$finid' and invh_compcode='$compcode' order by invh_invoiceno");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+
+ function getINVNoDetail()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$invno    = $_POST['invno'];
+	$sql = "select * from trnirm_invoice_header , trnirm_invoice_trailer ,trnirm_order_header ,masrm_item_header  where    invt_item_code = itmh_code and invh_poseqno = ordh_seqno and invh_seqno = invt_hdseqno and invh_compcode = '$compcode' and  invh_fincode = '$finid'  and invh_invoiceno = '$invno'");
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+
+?>

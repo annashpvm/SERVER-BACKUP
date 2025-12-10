@@ -24,14 +24,14 @@ if ($savetype === "Add")
 	$query   = "select ifnull(max(fw_seqno),0)+1 as fw_seqno from trn_dayprod_feltwire where fw_compcode= $compcode";
 
 
-	$result  = mysql_query($query);
-	$rec     = mysql_fetch_array($result);
+	$result  = mysqli_query($conn, $query);
+	$rec     = mysqli_fetch_array($result);
 	$entryno = $rec['fw_seqno'];
 }
 else
 {
 	$query   = "delete from trn_dayprod_feltwire where fw_compcode= $compcode and fw_seqno = $entryno;";
-	$result  = mysql_query($query);
+	$result  = mysqli_query($conn, $query);
 
 
 }
@@ -42,14 +42,16 @@ else
 
 
 
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
 	  if ($result1 ) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $wireno . '"})';
 	} 
          else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $wireno . '"})';
 	}
 

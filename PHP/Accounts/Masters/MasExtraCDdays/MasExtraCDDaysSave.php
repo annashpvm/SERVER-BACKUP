@@ -14,7 +14,7 @@ for ($i=0;$i<$rowcnt;$i++)
 	$custname = $griddet[$i]['cust_ref'];
 	$cust_cd_days  = (int)$griddet[$i]['cust_addnl_cd_days'];
 	$query1 = "update massal_customer set cust_addnl_cd_days = '$cust_cd_days' where  cust_code = $custcode";
-	$result1=mysql_query($query1);            
+	$result1=mysqli_query($conn, $query1);            
   
 //echo $query1;
 
@@ -22,11 +22,13 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($result1 ) 
 {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $custname . '"})';
 } 
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $custname . '"})';
 }
 

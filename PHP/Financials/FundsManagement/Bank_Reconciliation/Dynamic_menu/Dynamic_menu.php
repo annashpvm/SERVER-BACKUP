@@ -42,7 +42,7 @@ header('Content-type: text/html; charset=utf-8');
                 }
                 
 
-                while ($row = mysql_fetch_array($res)) {
+                while ($row = mysqli_fetch_array($res)) {
                     ?>
                     <li>
                         <a href="#"> <?php echo $row['m_menu_name']; ?></a>
@@ -59,7 +59,7 @@ header('Content-type: text/html; charset=utf-8');
                         </font>
                         <ul><font size="1" face="Arial">				
     <?php
-    while ($pro_row = mysql_fetch_array($res_pro)) {
+    while ($pro_row = mysqli_fetch_array($res_pro)) {
         ?><li><a target='_blank' href="<?php echo $pro_row['s_menu_link'] . '/?user=' . $user; ?>"><?php echo $pro_row['s_menu_name']; ?></a></li><?php
                             }
                             ?>

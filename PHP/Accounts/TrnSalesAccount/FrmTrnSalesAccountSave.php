@@ -89,29 +89,29 @@ $today = date("Y-m-d H:i:s");
 
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 if ($savetype == 'Edit')
 {
 
 	$cquery1 = "select ifnull(max(accvou_slno),0) + 1 as reccount  from acc_voucher_logs where accvou_seqno = '$ginaccrefseq';";
-	$cresult1 = mysql_query($cquery1);
-	$crec1 = mysql_fetch_array($cresult1);
+	$cresult1 = mysqli_query($conn, $cquery1);
+	$crec1 = mysqli_fetch_array($cresult1);
 	$reccount = $crec1['reccount'];
 
 
 
 	$query1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
-        $resulta1 = mysql_query($query1);
+        $resulta1 = mysqli_query($conn, $query1);
 
 	$query2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
-        $resulta2 = mysql_query($query2);
+        $resulta2 = mysqli_query($conn, $query2);
 	
         $query3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
-        $resulta3 = mysql_query($query3);
+        $resulta3 = mysqli_query($conn, $query3);
 
         $query4 = "delete from  acc_direct_sales where sal_compcode = '$compcode' and sal_finid = '$finid' and sal_vouno = '$vouno'";
-        $resulta4 = mysql_query($query4);
+        $resulta4 = mysqli_query($conn, $query4);
 
 
 
@@ -121,14 +121,14 @@ else
 {
 	#Get Max AccRef Seqno from acc_ref
 	$query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-	$result1 = mysql_query($query1);
-	$rec1 = mysql_fetch_array($result1);
+	$result1 = mysqli_query($conn, $query1);
+	$rec1 = mysqli_fetch_array($result1);
 	$ginaccrefseq = $rec1['con_value'];
 
 	#Get Voucher Number
 	$query2 = "select ifnull(max(sal_seqno),0) + 1 as seq_no from acc_direct_sales where sal_finid = '$finid' and sal_compcode = '$compcode';";
-	$result2 = mysql_query($query2);
-	$rec2 = mysql_fetch_array($result2);
+	$result2 = mysqli_query($conn, $query2);
+	$rec2 = mysqli_fetch_array($result2);
 	$conval = $rec2['seq_no'];
 	$vouno = $voutype . $conval;
 
@@ -145,7 +145,7 @@ else
             if ($value > 0)
             {
 		   $querya1 = "insert into acc_direct_sales values ('$conval', '$compcode', '$finid','$vouno', '$voudate', '$party', '$refno', '$refdate', '$inscnt' , '$description', '$hsn',  '$rate' , '$qty', '1',  $value, '$taxable', '$drcrledger', '$cgstper', '$cgstval', '$cgstledcode', '$sgstper' , '$sgstval','$sgstledcode', '$igstper', '$igstval', '$igstledcode', '$rounding', '$roundoff', '$totalamount','$ginaccrefseq')";
-		   $resulta1 = mysql_query($querya1);
+		   $resulta1 = mysqli_query($conn, $querya1);
 		   $inscnt =    $inscnt  + 1;
 
 //echo $querya1;
@@ -160,12 +160,12 @@ if ($conval > 0) {
 
 
     $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate','$voutype', '$bankname','$paymode','$payno', '$paydate','$narration');";
-    $resulta2 = mysql_query($querya2);
+    $resulta2 = mysqli_query($conn, $querya2);
 
 //echo $querya2;
 
 $cquerya3 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-$cresulta3 = mysql_query($cquerya3);
+$cresulta3 = mysqli_query($conn, $cquerya3);
 
 //echo $cquerya3;
 
@@ -191,7 +191,7 @@ $cresulta3 = mysql_query($cquerya3);
                if ($ledtype != 'G')
                {
                $querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$refno', '$refdate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 //echo  $querya3;
 
                }  
@@ -200,7 +200,7 @@ $cresulta3 = mysql_query($cquerya3);
             #Insert AccTran
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 //echo  $querya4;	   
             if(resulta4){
@@ -223,10 +223,12 @@ $cresulta3 = mysql_query($cquerya3);
 
 	if ($resulta1 && $resulta2 && $resulta3 && $resulta4   ) 
 	{
-	  mysql_query("COMMIT");
+	  mysqli_begin_transaction($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","vouno":"' . $vouno . '"})';
 	}
 

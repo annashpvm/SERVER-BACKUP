@@ -3,6 +3,7 @@
 
     require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
+	global $conn;
 $jsondata  = "";
 $jsondata1 = "";
 $jsondata2 = "";
@@ -18,6 +19,9 @@ error_reporting(E_ALL);
 	$filename  = $_POST['fname'];
 
 
+	//echo $filename;
+	//echo "<br>";
+
 $timestamp = strtotime($startdate);
 $month = date("M", $timestamp); 
 $year  = date("Y", $timestamp);
@@ -26,45 +30,50 @@ $year  = date("Y", $timestamp);
 
 
 
-        $result=mysql_query("call spacc_rep_json_B2CS($compcode,'$finid','$startdate','$enddate')");
+        $sql="call spacc_rep_json_B2CS($compcode,'$finid','$startdate','$enddate')";
+
+		$result = mysqli_query($conn, $sql);
+		$row = mysqli_fetch_assoc($result);
+
+        mysqli_next_result($conn); // clear connection for next query
+        
+        // Get raw JSON string
+        $jsondata = $row['jsonnew'] ?? '';
+        $jsondata = trim($jsondata);  
+        $jsondata = trim($jsondata, "'"); // remove starting/ending single quotes if any
+  
+
+		$jsondata = stripslashes($jsondata); // remove escaped quotes if any
+
+		$decoded = json_decode($jsondata, true);
+	
+	
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			die("Invalid JSON: " . json_last_error_msg() . "\nJSON: $jsondata");
+		}
+		
+		// If JSON is nested inside an array, get first element
+		$inner_json = $decoded[0] ?? $decoded; // fallback to decoded itself
+		$decoded_inner = is_string($inner_json) ? json_decode($inner_json, true) : $inner_json;
+		
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			die("Invalid inner JSON: " . json_last_error_msg());
+		}
+		
+		// Save to file
+		$cleanJson = json_encode($decoded_inner, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+		$file = $_SERVER["DOCUMENT_ROOT"] . '/' . ltrim($filename, '/');
 
 
-$temp = array();
-while($row = mysql_fetch_assoc($result)) {
-    $temp[] = array($row['jsonnew']);
-}
-
-$jsondata = stripslashes(json_encode($temp));
-
-
-
-$jsondata1 = str_replace('[["','',$jsondata);
-$jsondata2 = str_replace('}"]]','}',$jsondata1);
+		
+		if (file_put_contents($file, $cleanJson)) {
+			echo "File saved successfully: " . htmlspecialchars($filename);
+		} else {
+			echo "Failed to write file.";
+		}
+	
 
 
-// $filename = "/SHVPM/Report/"."b2cs_".$month.$year.".json";
-
-//$file = $_SERVER["DOCUMENT_ROOT"].'/SHVPM/Report/'."b2cs.json";
-$file = $_SERVER["DOCUMENT_ROOT"].$filename;
-
-//echo $file;
-
-$str = '';
-if (file_put_contents($file,$jsondata2))
-{
- //   echo '<h3>JSON File Created Successfully:</h3>';
-$str = file_get_contents($file);
-
-echo '<pre>' . print_r($str, true) . '</pre>';
-
-}
-
-else
-    echo("Failed");
-
-
-// echo '({"success":"true","filename":"'.$filename.'"})';
-   
 ?>
 
 

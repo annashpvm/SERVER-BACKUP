@@ -15,8 +15,8 @@ $pw         = $_POST['pw'];
 if ($savetype === "Add")
 {
 	$qry = "select  count(*) as cnt from mas_password where pw_dept = '$department' and pw_subject = '$subject'";
-	$resag = mysql_query($qry);
-	$recvar = mysql_fetch_array($resag);
+	$resag = mysqli_query($conn, $qry);
+	$recvar = mysqli_fetch_array($resag);
 	$cnt=$recvar['cnt'];
 
 
@@ -25,7 +25,7 @@ if ($savetype === "Add")
 	{
 
 	  $query1="insert into mas_password values('$department','$subject', '$pw')";
-	  $result1 = mysql_query($query1);
+	  $result1 = mysqli_query($conn, $query1);
 
 //        echo $query1;
 
@@ -34,17 +34,21 @@ if ($savetype === "Add")
 
 
 	  if ($result1 && $cnt==0) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $subject . '"})';
 	} 
 	  else if ($cnt>0) {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	
 	}
 
        else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $subject . '"})';
 	}
  }
@@ -55,17 +59,19 @@ if ($savetype === "Add")
 
 
          $query1 = "update  mas_password set pw_password ='$pw' where pw_dept = '$department' and pw_subject = '$subject'";
-         $result1 = mysql_query($query1); 
+         $result1 = mysqli_query($conn, $query1); 
 //echo $query1;
 
 
 	  if ($result1) {
-	    mysql_query("COMMIT");
+	    mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $subject . '"})';
 	  } 
 	
 	  else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	    echo '({"success":"false","msg":"' . $subject . '"})';
 	   }
      } 

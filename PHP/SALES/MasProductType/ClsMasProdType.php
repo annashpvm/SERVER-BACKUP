@@ -8,7 +8,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadProdGroup":
 		getVarMainGroup();
@@ -35,93 +35,90 @@
     }
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
    
  function getVarMainGroup()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-//        $r=mysql_query("select a.*,b.cust_name tnledname,c.cust_name osledname  from masprd_type a, massal_customer b , massal_customer c  where a.tn_sales_ledcode = b.cust_code and a.os_sales_ledcode = c.cust_code order by vargrp_type_name");
+//        $sql = "select a.*,b.cust_name tnledname,c.cust_name osledname  from masprd_type a, massal_customer b , massal_customer c  where a.tn_sales_ledcode = b.cust_code and a.os_sales_ledcode = c.cust_code order by vargrp_type_name");
 
-        $r=mysql_query("select a.*,b.cust_name tnledname,c.cust_name osledname ,d.cust_name sezledname from masprd_type a, massal_customer b , massal_customer c, massal_customer d  where a.tn_sales_ledcode = b.cust_code and a.os_sales_ledcode = c.cust_code   and a.sez_sales_ledcode = d.cust_code order by vargrp_type_name");
+        $sql = "select a.*,b.cust_name tnledname,c.cust_name osledname ,d.cust_name sezledname from masprd_type a, massal_customer b , massal_customer c, massal_customer d  where a.tn_sales_ledcode = b.cust_code and a.os_sales_ledcode = c.cust_code   and a.sez_sales_ledcode = d.cust_code order by vargrp_type_name";
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
 	
  function gethsnlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select tariff_code,tariff_name from massal_tariff ");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select tariff_code,tariff_name from massal_tariff ";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 
 	
  function getTNLedgers()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select * from massal_customer where cust_name like 'GST SAL%' order by cust_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer where cust_name like 'GST SAL%' order by cust_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getOSLedgers()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select * from massal_customer where cust_name like 'IGST SAL%' order by cust_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer where cust_name like 'IGST SAL%' order by cust_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
  function getSEZLedgers()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;  
 
-        $r=mysql_query("select * from massal_customer where cust_name like 'EXPORT SALES TO%' order by cust_name");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+        $sql = "select * from massal_customer where cust_name like 'EXPORT SALES TO%' order by cust_name";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
 ?>

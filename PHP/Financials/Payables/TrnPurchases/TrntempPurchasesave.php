@@ -9,65 +9,65 @@ $comp=$_REQUEST['comp'];
 if($flag=="S"){
 if($comp==1){
 $query = "delete from tempstore";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==4){
 $query = "delete from tempstoresbm";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==11){
 $query = "delete from tempstoreagro";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }
 } else if($flag=="Q"){
 if($comp==1){
 $query = "delete from tempstore";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==4){
 $query = "delete from tempstoresbm";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==11){
 $query = "delete from tempstoreagro";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }
 } else if($flag=="M"){
 $query = "delete from tempifdstore";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($flag=="W"){
 if($comp==4){
 $query = "delete from tempworkoder";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==1){
 $query = "delete from tempworkodervm";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==11){
 $query = "delete from tempworkoderagro";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }
 }else if($flag=="CT"){
 $query = "delete from tempcotton";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($flag=="Y"){
 if($comp==1){
 $query = "delete from tempyarn";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($comp==4){
 $query = "delete from tempyarnsbm";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }
 }else if($flag=="A"){
 $query = "delete from tempmadeups";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($flag=="IY"){
 $query = "delete from tempimportyarn";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($flag=="IM"){
 $query = "delete from tempworkorderifd";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($flag=="K"){
 $query = "delete from tempfibre";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }else if($flag=="T"){
 $query = "delete from tempaccterry";
-$result = mysql_query($query);
+$result = mysqli_query($conn, $query);
 }
 
 $inscnt = 0;
@@ -97,7 +97,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($comp==4){
     $query2 = "insert into tempstoresbm
 	    (
@@ -116,7 +116,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($comp==11){
     $query2 = "insert into tempstoreagro
 	    (
@@ -135,7 +135,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }
 } else if($flag=="Q"){
 if($comp==1){
@@ -156,7 +156,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($comp==4){
     $query2 = "insert into tempstoresbm
 	    (
@@ -175,7 +175,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($comp==11){
     $query2 = "insert into tempstoreagro
 	    (
@@ -194,7 +194,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }
 } else if($flag=="M"){
     $query2 = "insert into tempifdstore
@@ -214,7 +214,7 @@ if($comp==1){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 } else if($flag=="W"){
 if($comp==4){
     $query2 = "insert into tempworkoder
@@ -234,7 +234,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($comp==1){
     $query2 = "insert into tempworkodervm
 	    (
@@ -253,7 +253,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($comp==11){
     $query2 = "insert into tempworkoderagro
 	    (
@@ -272,7 +272,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }
 }else if($flag=="A"){
     $query2 = "insert into kgdl.tempmadeups
@@ -292,7 +292,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($flag=="CT"){
     $query2 = "insert into tempcotton
 	    (
@@ -311,7 +311,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($flag=="Y"){
    if($comp==1){
     $query2 = "insert into tempyarn
@@ -331,7 +331,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 } else if($comp==4){
     $query2 = "insert into tempyarnsbm
 	    (
@@ -350,7 +350,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }
 }else if($flag=="IY"){
     $query2 = "insert into tempimportyarn
@@ -370,7 +370,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($flag=="IM"){
     $query2 = "insert into tempworkorderifd
 	    (
@@ -389,7 +389,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($flag=="K"){
     $query2 = "insert into tempfibre
 	    (
@@ -408,7 +408,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }else if($flag=="T"){
     $query2 = "insert into tempaccterry
 	    (
@@ -427,7 +427,7 @@ if($comp==4){
 		'$DebitAmtt',
 		'$ValueDef'
 	    )";
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 }
     if ($result2) {
         $inscnt = $inscnt + 1;

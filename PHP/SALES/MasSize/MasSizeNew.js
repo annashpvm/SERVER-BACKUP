@@ -1131,6 +1131,8 @@ var optshade = new Ext.form.FieldSet({
 },
 	listeners:{
                show:function(){
+
+                alert("test");
                         Ext.getCmp('txtLength').setReadOnly(true);  
                         Ext.getCmp('txtSheets').setReadOnly(true);  
                         Ext.getCmp('txtReams').setReadOnly(true);  

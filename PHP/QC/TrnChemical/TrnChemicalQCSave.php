@@ -21,7 +21,7 @@
 	$itemcode  = $_REQUEST['itemcode'];
 	$billqty   = $_REQUEST['billqty'];
 	$actqty    = $_REQUEST['actqty'];
-	mysql_query("BEGIN");
+	mysqli_query($conn, "BEGIN");
 
 
 
@@ -29,8 +29,8 @@
 
         if ($gstFlag === "Add") {
 		 $query1 = "select ifnull(max(qc_cd_entryno),0)+1 as qc_cd_entryno from trn_qc_chemical_inspection where qc_cd_fincode = '$finid' and qc_cd_compcode ='$compcode'";
-		 $result1= mysql_query($query1);
-		 $rec2 = mysql_fetch_array($result1);
+		 $result1= mysqli_query($conn, $query1);
+		 $rec2 = mysqli_fetch_array($result1);
 		 $cdentryno=$rec2['qc_cd_entryno'];
 
 
@@ -38,7 +38,7 @@
         else
         {
          $query1 = "delete from trn_qc_chemical_inspection where qc_cd_compcode = '$compcode' and qc_cd_fincode = '$finid' and qc_cd_entryno = $cdentryno";
-		 $result1= mysql_query($query1);
+		 $result1= mysqli_query($conn, $query1);
 
         }              
  	
@@ -70,7 +70,7 @@
 //echo "<br>";
 
 
-       $result2=mysql_query($query2);
+       $result2=mysqli_query($conn, $query2);
 	} 
 }
 
@@ -78,14 +78,16 @@
 
 if( $result2  )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","EntryNo":"' . $cdentryno . '"})';
 
 	    
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","EntryNo":"' . $cdentryno . '"})';
 }
  

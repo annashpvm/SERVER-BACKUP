@@ -12,19 +12,21 @@ session_start();
 if($finid!='' && $compcode !='' && $fmdate != '' && $todate!= '' )
  {  
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 $query2 = "call PrcAccFinyearProcess('$finid','$compcode','$fmdate','$todate')";
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
  if($result2)
         {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
              Echo '{success:true,results:1}';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             Echo '{success:false,results:1}';
         } 
 }

@@ -22,15 +22,17 @@ $query2="update trn_weight_card set wc_sup_code =  $supplier ,  wc_partyloadwt =
 
 //echo $query2;
 
-$result2 = mysql_query($query2);
+$result2 = mysqli_query($conn, $query2);
 
 
 
 if ($result2) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","wtno":"' . $ticketno . '"})';
 }
   

@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    mysqli_set_charset($conn, "utf8");
 
     switch($task){
 		case "viewcreate":
@@ -21,15 +21,7 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
@@ -37,13 +29,13 @@
 
 function create_view_vew_sal_rt12stat()
     {
-        mysql_query("SET NAMES utf8");
+     global $conn;
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
 	$compcode  = $_POST['compcode'];
 	$finid     = $_POST['finid'];
         $query1    = "drop view IF EXISTS vew_sal_rt12stat";
-        $result1   = mysql_query($query1);
+        $result1   = mysqli_query($conn, $query1);
 /*
 $query1="create view vew_sal_rt12stat as select '$compcode'     as comp_code,'$finid' as fincode, a.var_code, case when (sum(stk_qty)+sum(sal_qty)- 
 sum(prod_qty)-sum(salr_qty)+sum( move_to_wip)-sum(wt_change)+sum(pulp_stk)  ) <=0 then 0  else (sum(stk_qty)+sum(sal_qty)- sum(prod_qty)-sum(salr_qty)+sum( move_to_wip)-sum(wt_change)+sum(pulp_stk)) end as opstk,sum(pulp_stk) as pulp_stk,sum(move_to_wip) as move_to_wip,sum(wt_change) as wt_change, sum(stk_nos) as stk_nos, sum(sal_val) As sal_val, sum(cgst) As cgst,  sum(sgst) As sgst,sum(stk_qty) as stk_qty, sum(prod_qty) As prod_qty,  sum(sal_qty) As sal_qty,sum(salr_qty) as salr_qty,sum(stk_nos)as nos ,sum(wt_change2) as wt_changed2  from  (
@@ -97,7 +89,7 @@ where oldweight > newweight and  stk_sr_no = srno and a.oldsize=b.var_code and c
 
 )a  group by a.var_code having (sum(stk_qty) + sum(sal_qty) - sum(prod_qty)) > 0 or sum(prod_qty) > 0 or
 sum(sal_qty) >0 or sum(pulp_stk) > 0 or sum(move_to_wip) > 0";
-  $result1= mysql_query($query1);
+  $result1= mysqli_query($conn, $query1);
 }
 //echo $query1;
 
@@ -107,7 +99,7 @@ function findOpeningClosingStock()
 {
 
 
-        mysql_query("SET NAMES utf8");
+     global $conn;
 
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
@@ -317,15 +309,16 @@ trnsal_salvage , trnsal_finish_stock    where   stk_comp_code = comp_code and   
 
 //echo $query1;
 
-  $r= mysql_query($query1);
+  $r= mysqli_query($conn, $query1);
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
 }
 
 /*
@@ -334,7 +327,7 @@ function findOpeningClosingStock()
 {
 
 
-        mysql_query("SET NAMES utf8");
+        mysqli_set_charset($conn, "utf8");
 
 	$startdate = $_POST['fromdate'];
 	$enddate   = $_POST['todate'];
@@ -501,15 +494,16 @@ trnsal_salvage , trnsal_finish_stock    where   stk_comp_code = comp_code and   
 
 
 
-  $r= mysql_query($query1);
+  $r= mysqli_query($conn, $query1);
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
 }
 
 */

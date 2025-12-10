@@ -35,11 +35,11 @@ if ($savetype === "Add")
 {
 
 	 $query1 = "select IFNULL(max(prdh_id),0)+1 as prodseqno from trn_dayprod_header where prdh_compcode = $prdhcompcode and  prdh_fincode  = $prdhfincode";
-	 $result1 = mysql_query($query1);
-	 $rec1    = mysql_fetch_array($result1);
+	 $result1 = mysqli_query($conn, $query1);
+	 $rec1    = mysqli_fetch_array($result1);
 	 $prdhseqno=$rec1['prodseqno'];
 
-         mysql_query("BEGIN");
+         mysqli_query($conn, "BEGIN");
 
 
 	 if ($prdhseqno > 0 )
@@ -49,7 +49,7 @@ if ($savetype === "Add")
  
 	 $query3= "call spprod_ins_header ('$prdhseqno','$prdhcompcode','$prdhfincode', '$prdhdate', '$prdhshift','$prdhspvrcode', '$prdhoperator', '$prdhppno', '$prdhavlhrs', '$prdhrunmins','$prdhdownmins','$prdhprodn','$prdhopenpulp', '$prdhclosepulp', '$prdhopenbroke', '$prdhclosebroke', '$prdhpower','$prdhsteam')";
  
-	  $result3=mysql_query($query3);
+	  $result3=mysqli_query($conn, $query3);
 	}
 
 	$inscnt = 0;
@@ -74,7 +74,7 @@ if ($savetype === "Add")
 
 	$query4= "call spprod_ins_roll_details ('$prdhseqno','$prdhcompcode', '$prdhfincode', '$prdhdate' , '$ppno', '$prdhshift','$sno', '$rollno', '$speed','$deckle','$draw','$intime','$outtime','$rolldia', '$runmins','$breaks', '$rollwt','$finwt','$reason',
 'A', 'N', 'N', '', '$prdhdate')";
-	$result4=mysql_query($query4);            
+	$result4=mysqli_query($conn, $query4);            
 	  
 	}
 
@@ -91,7 +91,7 @@ if ($savetype === "Add")
 	$reason    = $griddet_downtime[$i]['reason'];
 
 $query5= "call spprod_ins_downtime ('$prdhseqno','$prdhcompcode', '$prdhfincode', '$qlycode' , '$deptcode', '$seccode', '$equipcode',  '$fromtime', '$totime', '$downmins', '$reason')";
-	$result5=mysql_query($query5);            
+	$result5=mysqli_query($conn, $query5);            
 	  
 	}
 
@@ -105,7 +105,7 @@ $query5= "call spprod_ins_downtime ('$prdhseqno','$prdhcompcode', '$prdhfincode'
 	$mins     = $griddet_roll[$i]['mins'];
 	$set      = $griddet_roll[$i]['set'];
         $query6   = "insert into  trn_dayprod_roll_variety_details values ('$prdhseqno','$prdhfincode','$rollno', '$qlycode' , '$qty', '$mins', '$set')";
-	$result6=mysql_query($query6);            
+	$result6=mysqli_query($conn, $query6);            
 	  
 	}
 
@@ -114,13 +114,15 @@ $query5= "call spprod_ins_downtime ('$prdhseqno','$prdhcompcode', '$prdhfincode'
 
 if ($savetype == "Add") {
 	if ($result3  )  {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $prdhseqno . '"})';
 
 	}
@@ -128,13 +130,15 @@ if ($savetype == "Add") {
 else
  {
 	if ($result3) {
-	   mysql_query("COMMIT");
+	   mysqli_begin_transaction($conn);
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 
 	
 	else {
-	    mysql_query("ROLLBACK");
+	    mysqli_rollback($conn);
+
+
 	   echo '({"success":"false","msg":"' . $prdhseqno . '"})';
 
 	}

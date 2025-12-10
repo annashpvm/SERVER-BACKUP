@@ -25,12 +25,12 @@ $totclearing  = (float)$_POST['totclearing'];
  $query3= "update trnirm_invoice_header set invh_BCD = '$bcd',invh_ACD = '$acd', invh_SWS = '$sws', invh_CVD = '$cvd', invh_IGST = '$igst' , invh_otherduty = '$otherdurty', invh_interest ='$interest', invh_penalty = '$penalty', invh_fine = '$fine' , invh_totduty = '$totduty', invh_clearing = '$totclearing' where invh_compcode = '$invhcompcode' and  invh_fincode = '$invhfincode'  and invh_seqno = '$invseqno'";
 
 
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 //  echo  $query3;
 
   $query4= "delete from trnirm_invoice_expenses where invc_hdcode = '$invseqno'";
-  $result4=mysql_query($query4);
+  $result4=mysqli_query($conn, $query4);
 
 //  echo  $query4;
 
@@ -65,7 +65,7 @@ $invamt  = (float)$griddet[$i]['invamt'];
 
  $query4= "insert into trnirm_invoice_expenses values (
 '$invseqno', '$sno', '$parycode','$invno','$invdate','$handling','$maint','$usage','$admin','$clearing', '$additional', '$custduty','$demurrage','$service','$others','$taxable','$cgstper','$cgstamt','$sgstper','$sgstamt','$igstper','$igstamt','$invamt')";
- $result4=mysql_query($query4);            
+ $result4=mysqli_query($conn, $query4);            
   
 //echo  $query4;
 
@@ -75,12 +75,14 @@ $invamt  = (float)$griddet[$i]['invamt'];
 
 if( $result3 && $result4 )
 {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","ino":"'.$invhno.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","ino":"' .$invhno. '"})';
         }   

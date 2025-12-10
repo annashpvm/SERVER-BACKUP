@@ -49,7 +49,7 @@ $cdqty     = (float) $_POST['cdqty'];
 
 $reason = '';
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 for ($i = 0; $i < $rowDebit; $i++) {
@@ -59,7 +59,7 @@ for ($i = 0; $i < $rowDebit; $i++) {
     if ($adjusted  > 0) 
     { 
        $query1 = "call acc_sp_trn_updacc_trail_seq_no('$seqno','$invno','$adjusted','$ledcode')";
-       $result1 = mysql_query($query1);
+       $result1 = mysqli_query($conn, $query1);
     }
 
 //echo $query1;
@@ -73,7 +73,7 @@ for ($i = 0; $i < $rowCredit; $i++) {
     if ($adjusted  > 0)
     {      
        $query2 = "call acc_sp_trn_updacc_trail_seq_no('$seqno','$invno','$adjusted','$ledcode')";
-       $result2 = mysql_query($query2);
+       $result2 = mysqli_query($conn, $query2);
     }
 
 
@@ -105,8 +105,8 @@ for ($i = 0; $i < $rowCredit; $i++) {
           if ($i == 0)
           {     
 		$query2 = " select max(invt_hsncode) as hsncode from trnsal_invoice_header,trnsal_invoice_trailer where 	invh_comp_code =invt_compcode and invh_fincode = invt_fincode and invh_seqno = invt_seqno and invh_comp_code= '$compcode' and invh_invrefno = '$invno';";
-		$result2 = mysql_query($query2);
-		$rec2 = mysql_fetch_array($result2);
+		$result2 = mysqli_query($conn, $query2);
+		$rec2 = mysqli_fetch_array($result2);
 	   	$hsncode=$rec2['hsncode'];
                 $newDate = date("d-m-Y", strtotime($invdate));
                 if ($gridInvoice[$i]['cdamount'] > 0)
@@ -142,16 +142,16 @@ for ($i = 0; $i < $rowCredit; $i++) {
 // for updating Credit Note
 
         $cquery1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-        $cresult1 = mysql_query($cquery1);
-        $crec1 = mysql_fetch_array($cresult1);
+        $cresult1 = mysqli_query($conn, $cquery1);
+        $crec1 = mysqli_fetch_array($cresult1);
         $ref_docseqno =$crec1['con_value'];
 
         #Get Voucher Number
 
         $query2 = "select ifnull(max(convert(substring(accref_vouno,5),signed)),0) +1 as vou_no from acc_ref where accref_vou_type = 'CNG' and accref_finid = '$finid' and accref_comp_code = '$compcode';";
   
-        $result2 = mysql_query($query2);
-        $rec2 = mysql_fetch_array($result2);
+        $result2 = mysqli_query($conn, $query2);
+        $rec2 = mysqli_fetch_array($result2);
         $conval2=$rec2['vou_no'];
         if ($conval2 < 10)
         {                                              
@@ -172,8 +172,8 @@ for ($i = 0; $i < $rowCredit; $i++) {
 
 
 	$query3 = "select ifnull(max(dbcr_seqno),0) + 1 as con_value from acc_dbcrnote_header;";
-	$result3 = mysql_query($query3);
-	$rec3 = mysql_fetch_array($result3);
+	$result3 = mysqli_query($conn, $query3);
+	$rec3 = mysqli_fetch_array($result3);
 	$gindbcrseq = $rec3['con_value'];
 
 
@@ -185,13 +185,13 @@ for ($i = 0; $i < $rowCredit; $i++) {
     $querya2 = "call acc_sp_trn_insacc_ref('$ref_docseqno','$vouno','$compcode','$finid','$voudate','CNG', '','','$invnolist2', '$invoicedate','$CNRemarks');";
 
 
-    $resulta2 = mysql_query($querya2);
+    $resulta2 = mysqli_query($conn, $querya2);
 
 // echo $querya2;
 // echo "<br>";
 
 $cquerya3 = "insert into acc_voucher_logs values ($ref_docseqno,$reccount,'$today',$usercode,'$reason')";
-$cresulta3 = mysql_query($cquerya3);
+$cresulta3 = mysqli_query($conn, $cquerya3);
 
 
 
@@ -219,7 +219,7 @@ $cresulta3 = mysql_query($cquerya3);
                if ($ledtype != 'G')
                {
                $querya3 = "call acc_sp_trn_insacc_trail ('$ref_docseqno','$slno','$vouno', '$voudate', '$totamt' ,'0' ,'$ledseq' ,'$amtmode','0','0')";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 //echo  $querya3;
 //echo "<br>";
 
@@ -229,7 +229,7 @@ $cresulta3 = mysql_query($cquerya3);
             #Insert AccTran
 
             $querya4 = "call acc_sp_trn_insacc_tran('$ref_docseqno','$slno','$ledseq','$dbamt','$cramt','$totamt','CNG','');";
-            $resulta4 = mysql_query($querya4);
+            $resulta4 = mysqli_query($conn, $querya4);
 
 //echo  $querya4;	 
 //echo "<br>";  
@@ -248,14 +248,14 @@ $cresulta3 = mysql_query($cquerya3);
 
 
 		$querya6 = "call acc_sp_insdbcrnoteheader('$gindbcrseq','$compcode','$finid','CNG','$conval2','$vouno','$voudate','$ledcode','$ledcode','1741', '$cdamount','$CNRemarks', 'C','N', '$ref_docseqno','$hsncode','$usercode','$invqty','CASH DISC','0','KRAFT PAPER','$today','$today');";
-		$resulta6 = mysql_query($querya6);
+		$resulta6 = mysqli_query($conn, $querya6);
 
 
 //echo  $querya6;	 
 //echo "<br>";
 
 		$querya7 = "call acc_sp_insdbcrnotetrailer ('$gindbcrseq', '$invnolist3', '$invdate', '$cdvalue' , '$cdamount', '0', '$cdcgst', '$cdsgst','0','6', '6','1646',  '1644', '1645',0,0,0,0,0,'$cdround',0,0,$cdvalue)";
-		$resulta7 = mysql_query($querya7);
+		$resulta7 = mysqli_query($conn, $querya7);
 
 //echo  $querya7;	 
 //echo "<br>";
@@ -283,7 +283,7 @@ $cresulta3 = mysql_query($cquerya3);
           if ( $gridInvoice[$i]['invbalance'] ==  0)
           {
   $querya8 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$cdvalue1' ,'$cdamount','0', '$cdcgst1','$cdsgst1','0','6','6','1646','1644','1645',0,0,0,0,0,'$cdround',0,0,$cdvalue1 ,  $invqty)";
-		$resulta8 = mysql_query($querya8);   
+		$resulta8 = mysqli_query($conn, $querya8);   
 
 //echo  $querya8;	 
 //echo "<br>";      
@@ -291,7 +291,7 @@ $cresulta3 = mysql_query($cquerya3);
 
     $querya9 = "insert into acc_dbcrnote_sales_purchase (cn_compcode, cn_fincode, cn_adjust_date, cn_vouno, cn_voudate, cn_invno, cn_invdate, cn_invamt, cn_pendingamt, cn_adjusted, cn_balance, cn_qty, cd_value, cd_cgst, cd_sgst, cd_round, cd_amount) values ('$compcode','$finid','$adjustmentdate','$vouno','$voudate','$invno','$invdate', '$invvalue', '$pending','$invadjust','$invbal','$invqty','$cdvalue1','$cdcgst1','$cdsgst1','$cdround','$cdamount')";
 
-		$resulta9 = mysql_query($querya9);   
+		$resulta9 = mysqli_query($conn, $querya9);   
 
 
 //echo  $querya9;	 
@@ -324,15 +324,15 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
     if ($adjamt > 0) {
 	$query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$ginrefslno = $rec['refslno'];
 
 	$ginrefslno = $ginrefslno + 1;
 
 	$querydate = "select datediff('$maindocdate','$adjvoudate') as daysin";
-	$resultdate = mysql_query($querydate);
-	$recdatenew = mysql_fetch_array($resultdate);
+	$resultdate = mysqli_query($conn, $querydate);
+	$recdatenew = mysqli_fetch_array($resultdate);
 	$adjdays=$recdatenew['daysin'];
 
 
@@ -341,7 +341,7 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 '$mainseqno','$maindocno','$maindocdate','$adjseqno','$adjvouno', '$adjinvno','$adjvoudate', 
 '$adjamt',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' );";
 
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 
 
 //echo $query3;
@@ -350,7 +350,7 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
         $query4 = "insert into acc_dbcrnote_trailer_Credit_Note_Adjustments (dbcn_seqno, dbcn_adj_seqno) values ('$gindbcrseq', '$ginrefslno');";
 
-        $result4 = mysql_query($query4);
+        $result4 = mysqli_query($conn, $query4);
 
 
     }
@@ -358,10 +358,12 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 if ( $result1 && $result2 && $result3 &&  $result4 && $resulta2 && $resulta3 && $resulta4 && $resulta6 && $resulta7 && $resulta8 && $resulta9 ) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","vouno":"' . $vouno . '"})';
 }
 ?>

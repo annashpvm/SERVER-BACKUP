@@ -6256,6 +6256,7 @@ var tabAccounts = new Ext.TabPanel({
 },
         listeners: {
             show: function () {
+               
                 //  Ext.getCmp('save').setDisabled(true);
            
 //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');

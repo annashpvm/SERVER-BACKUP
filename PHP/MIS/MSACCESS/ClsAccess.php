@@ -8,7 +8,7 @@ $connStr = 'odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};','Dbq=D:\att
 
 $mdbFilename = "D:\att2000.mdb";
 
-$connStr = odbc_connect("Driver={Microsoft Access Driver (*.mdb)};Dbq=$mdbFilename");
+$connStr = odbc_connect("Driver={Microsoft Access Driver (*.mdb)};Dbq=$mdbFilename";
 
 $dbh = new PDO($connStr);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -30,8 +30,8 @@ while ($row = $sth->fetch()) {
 
 /*
 $mdbFilename = "D:\att2000.mdb";
-//$db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=".$mdbFilename.";Uid=; Pwd=;");
-$db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=".$mdbFilename.";Uid=; Pwd=;");
+//$db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=".$mdbFilename.";Uid=; Pwd=;";
+$db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=".$mdbFilename.";Uid=; Pwd=;";
 $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
 		
@@ -44,7 +44,7 @@ $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 <?php
 $dbName = "D:\att2000.mdb";
 if (!file_exists($dbName)) {
-    die("Could not find database file.");
+    die("Could not find database file.";
 }
 $db = new PDO("odbc:DRIVER={Microsoft Access Driver (*.mdb)}; DBQ=$dbName; Uid=; Pwd=;")
 */

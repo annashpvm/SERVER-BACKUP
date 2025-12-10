@@ -1,0 +1,119 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+
+
+    $task='loadProdGroup';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+        mysqli_set_charset($conn, "utf8");
+    switch($task){
+		case "loadProdGroup":
+		getVarMainGroup();
+		break;
+
+		case "loadhsnlist":
+		gethsnlist();
+		break;
+
+		case "loadTNLedgers":
+		getTNLedgers();
+		break;
+
+		case "loadOSLedgers":
+		getOSLedgers();
+		break;
+		case "loadSEZLedgers":
+		getSEZLedgers();
+		break;
+
+	        default:
+        	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	    break;
+    }
+    
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+   
+ function getVarMainGroup()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+//        $r=mysql_query("select a.*,b.cust_name tnledname,c.cust_name osledname  from masprd_type a, massal_customer b , massal_customer c  where a.tn_sales_ledcode = b.cust_code and a.os_sales_ledcode = c.cust_code order by vargrp_type_name");
+
+        $r=mysql_query("select a.*,b.cust_name tnledname,c.cust_name osledname ,d.cust_name sezledname from masprd_type a, massal_customer b , massal_customer c, massal_customer d  where a.tn_sales_ledcode = b.cust_code and a.os_sales_ledcode = c.cust_code   and a.sez_sales_ledcode = d.cust_code order by vargrp_type_name");
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+	
+	
+ function gethsnlist()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $r=mysql_query("select tariff_code,tariff_name from massal_tariff ");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+	
+ function getTNLedgers()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $r=mysql_query("select * from massal_customer where cust_name like 'GST SAL%' order by cust_name");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function getOSLedgers()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $r=mysql_query("select * from massal_customer where cust_name like 'IGST SAL%' order by cust_name");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+ function getSEZLedgers()
+    {
+        mysqli_set_charset($conn, "utf8");
+
+        $r=mysql_query("select * from massal_customer where cust_name like 'EXPORT SALES TO%' order by cust_name");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+?>

@@ -24,11 +24,11 @@
 
          $today = date("Y-m-d H:i:s"); 
 
-	mysql_query("BEGIN");
+	mysqli_query($conn, "BEGIN");
         if ($gstFlag === "Add") {
 		 $query1 = "select ifnull(max(qc_rm_entryno),0)+1 as qc_rm_entryno from trn_qc_rm_inspection where qc_rm_fincode = '$finid' and qc_rm_compcode ='$compcode'";
-		 $result1= mysql_query($query1);
-		 $rec2 = mysql_fetch_array($result1);
+		 $result1= mysqli_query($conn, $query1);
+		 $rec2 = mysqli_fetch_array($result1);
 		 $rmentryno=$rec2['qc_rm_entryno'];
 
         }
@@ -36,11 +36,11 @@
         {
 
                  $query1 = "update trn_weight_card set wc_process = 'N' where wc_compcode = $compcode and wc_fincode = $finid and wc_ticketno in (select qc_rm_ticketno from trn_qc_rm_inspection where qc_rm_compcode = $compcode and qc_rm_fincode = '$finid' and qc_rm_entryno = $rmentryno)";
-		 $result1= mysql_query($query1);
+		 $result1= mysqli_query($conn, $query1);
 
 
                  $query1 = "delete from trn_qc_rm_inspection where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = $rmentryno";
-		 $result1= mysql_query($query1);
+		 $result1= mysqli_query($conn, $query1);
 
         }              
  	
@@ -131,7 +131,7 @@ values('$compcode','$finid','$rmentryno','$entrydate' , '$ticketdate', '$supcode
 //echo $query2;
 // echo "<br>";
 	
-                $result2=mysql_query($query2);
+                $result2=mysqli_query($conn, $query2);
 
 
 
@@ -150,7 +150,7 @@ values('$compcode','$finid','$rmentryno','$entrydate' , '$ticketdate', '$supcode
                 $query3 = "update trn_weight_card set wc_process = 'Y' WHERE wc_compcode = '$compcode' and wc_fincode = '$finid' and  wc_ticketno = $ticketno1";
 
 //echo $query3;
-	        $result3=mysql_query($query3);
+	        $result3=mysqli_query($conn, $query3);
                 }
 
          }
@@ -158,14 +158,16 @@ values('$compcode','$finid','$rmentryno','$entrydate' , '$ticketdate', '$supcode
 
 if($result1 && $result2 && $result3 )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","EntryNo":"' . $rmentryno . '"})';
 
 	    
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","EntryNo":"' . $rmentryno . '"})';
 }
  

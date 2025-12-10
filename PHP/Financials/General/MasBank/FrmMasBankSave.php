@@ -18,9 +18,9 @@ session_start();
  //echo"$CompanyName";
  $query = "select ifnull(max(bank_seqno),0)+1 as con_value from acc_bank_master";
 
- $result = mysql_query($query);
+ $result = mysqli_query($conn, $query);
 	
-        $rec = mysql_fetch_array($result);
+        $rec = mysqli_fetch_array($result);
 	$ginbankseq=$rec['con_value'];
 
 
@@ -43,7 +43,7 @@ session_start();
             '$ContactPerson',
             '$Designation'
             )";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 
   
       if ((!$result1))

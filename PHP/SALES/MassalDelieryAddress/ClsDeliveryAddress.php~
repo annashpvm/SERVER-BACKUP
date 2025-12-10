@@ -1,0 +1,64 @@
+<?php
+    require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
+
+    $task='loadDeliveryAddress';
+
+    if ( isset($_POST['task'])){
+        $task = $_POST['task']; // Get this from Ext
+    }
+    mysqli_set_charset($conn, "utf8");
+
+    switch($task){
+
+		case "loadDeliveryAddress":
+		getDeliveryAddress();
+		break;
+
+		case "loadstates":
+		getstatelist();
+		break;
+
+		default:
+        	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
+        	break;
+    }
+
+    function JEncode($arr){
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
+        return $data;
+    }
+    
+
+ function getDeliveryAddress()
+    {
+        mysqli_set_charset($conn, "utf8");
+	$custcode = $_POST['custcode'];
+
+
+
+        $r=mysql_query("select * from trnsal_delivery_address, mas_state  where delivery_state = state_code and  d_custcode = '$custcode'");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+   function getstatelist()
+    {
+        mysqli_set_charset($conn, "utf8");
+        $r=mysql_query("select state_code,state_name from mas_state order by state_name");
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+?>

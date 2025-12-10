@@ -37,19 +37,19 @@ $phditeminfo      =  $_POST['phditeminfo'];
 
 $cancelflag       =  $_POST['cancelflag'];
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 if ($savetype == "Add") {
 
      $query1 = "select ifnull(max(phd_pono),0)+1 as phd_pono from trnpur_purchase_header where phd_comp_code = $phdcompcode and phd_fin_code = $phdfincode";
-     $result1 = mysql_query($query1);
-     $rec1 = mysql_fetch_array($result1);
+     $result1 = mysqli_query($conn, $query1);
+     $rec1 = mysqli_fetch_array($result1);
      $pono=$rec1['phd_pono'];
  
      $query3= "insert into trnpur_purchase_header values('$phdcompcode','$pono','$phdfincode','$phdpodate','$phdsupcode','$phdcreditdays','$phdtransport','$phdpayterms','$phdinsterms','$phddelypoint','
 $phddelysch','$phdfrtterms','$phdremarks','$phdadvance','$phdroundoff','$phdtotal','$phdamndstatus','$phdcancelstatus','$phdcancelreason','$phdbank','$phdtol','$phdentdate','$phdpartyrefno','$phdpartyrefdate','$phdpaymentinfo')";
-     $result3=mysql_query($query3);
+     $result3=mysqli_query($conn, $query3);
 }
 
 
@@ -58,17 +58,17 @@ else
 
      $query3= "update trnpur_purchase_header set phd_sup_code = '$phdsupcode', phd_podate = '$phdpodate',phd_credit_days = '$phdcreditdays', phd_transport = '$phdtransport', phd_pay_terms = '$phdpayterms', phd_ins_terms = '$phdinsterms', phd_dely_point = '$phddelypoint', phd_dely_sch = '$phddelysch', phd_frt_terms = '$phdfrtterms', phd_remarks= '$phdremarks', phd_advance = '$phdadvance', phd_roundoff = '$phdroundoff', phd_total = '$phdtotal', phd_bank = '$phdbank', phd_tol = '$phdtol' , phd_party_refno = '$phdpartyrefno', phd_party_refdate = '$phdpartyrefdate', phd_payment_info = '$phdpaymentinfo' where  phd_comp_code = '$phdcompcode' and  phd_pono = '$pono' and  phd_fin_code = '$phdfincode'";
 
-     $result3=mysql_query($query3);
+     $result3=mysqli_query($conn, $query3);
 
 //echo $query3;
 
 $query4= "update trnpur_indent,trnpur_purchase_trailer set  ind_po_qty =  ind_po_qty - ptr_ord_qty where ind_comp_code =ptr_comp_code and ind_fin_code = ptr_fin_code and  ptr_ind_no = ind_no and  ptr_ind_fin_code = ind_fin_code and  ptr_item_code = ind_item_code and ptr_comp_code = '$phdcompcode' and ptr_fin_code = '$phdfincode' and ptr_pono =  '$pono'";
 
-     $result4 = mysql_query($query4);
+     $result4 = mysqli_query($conn, $query4);
 
 
     $query5= "delete from trnpur_purchase_trailer where ptr_comp_code = '$phdcompcode' and ptr_fin_code = '$phdfincode' and ptr_pono =  '$pono'";
-    $result5 = mysql_query($query5);
+    $result5 = mysqli_query($conn, $query5);
 
 
 }
@@ -113,12 +113,12 @@ for ($i=0;$i<$rowcnt;$i++)
  $query4= "insert into trnpur_purchase_trailer values(
 '$phdcompcode', '$phdfincode','$pono' ,'$phdpodate' ,'$ptritem_code' ,'$ptrslno' ,'$ptrind_fin_code','$ptrind_no', '$ptrunit_rate' ,'$ptrord_qty' , '$ptrrec_qty','$ptrdiscount' ,'$ptrpf_per' ,'$ptrfreight_amt' ,'$ptroth_amt' , '$ptrdisval' ,'$ptrpfval','$ptrcgst_per' ,  '$ptrcgst_amt' ,'$ptrsgst_per' ,  '$ptrsgst_amt' ,  '$ptrigst_per' ,  '$ptrigst_amt' , '$ptritcs_per' , '$ptritcs_amt','$ptrfrt2' ,'$ptrreason' ,'N','N')"; 
 
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
 
 //echo $query4;
 
  $query5 = "update trnpur_indent set ind_po_qty =  ind_po_qty + $ptrord_qty where ind_no = '$ptrind_no' and ind_item_code = '$ptritem_code' and ind_comp_code = '$phdcompcode' and ind_fin_code = '$ptrind_fin_code'";                                                                     
- $result5=mysql_query($query5);   
+ $result5=mysqli_query($conn, $query5);   
 }
  
 
@@ -130,12 +130,14 @@ $result4=mysql_query($query4);
 if($result3 && $result4 && $result5)
 
        {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$pono.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' . $pono . '"})';
         }   

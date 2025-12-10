@@ -41,13 +41,13 @@ $cancelflag       =  $_POST['cancelflag'];
 
 
  $query1 = "select ifnull(max(phd_pono),0)+1 as phd_pono from trnpur_purchase_header where phd_comp_code = $phdcompcode and phd_fin_code = $phdfincode";
- $result1 = mysql_query($query1);
- $rec1 = mysql_fetch_array($result1);
+ $result1 = mysqli_query($conn, $query1);
+ $rec1 = mysqli_fetch_array($result1);
  $pono=$rec1['phd_pono'];
 
 
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
  
  //if ($po_seqno > 0  && $po_company_code > 0)
  //{ 
@@ -60,7 +60,7 @@ $phddelysch','$phdfrtterms','$phdremarks','$phdadvance','$phdroundoff','$phdtota
 
 
 
- $result3=mysql_query($query3);
+ $result3=mysqli_query($conn, $query3);
 
 
 
@@ -104,12 +104,12 @@ for ($i=0;$i<$rowcnt;$i++)
  $query4= "insert into trnpur_purchase_trailer values(
 '$phdcompcode', '$phdfincode','$pono' ,'$phdpodate' ,'$ptritem_code' ,'$ptrslno' ,'$ptrind_fin_code','$ptrind_no', '$ptrunit_rate' ,'$ptrord_qty' , '$ptrrec_qty','$ptrdiscount' ,'$ptrpf_per' ,'$ptrfreight_amt' ,'$ptroth_amt' , '$ptrdisval' ,'$ptrpfval','$ptrcgst_per' ,  '$ptrcgst_amt' ,'$ptrsgst_per' ,  '$ptrsgst_amt' ,  '$ptrigst_per' ,  '$ptrigst_amt' , '$ptritcs_per' , '$ptritcs_amt','$ptrfrt2' ,'$ptrreason' ,'N','N')"; 
 
-$result4=mysql_query($query4);            
+$result4=mysqli_query($conn, $query4);            
 
 //echo $query4;
 
  $query5 = "update trnpur_indent set ind_po_qty =  ind_po_qty + $ptrord_qty where ind_no = '$ptrind_no' and ind_item_code = '$ptritem_code' and ind_comp_code = '$phdcompcode' and ind_fin_code = '$ptrind_fin_code'";                                                                     
- $result5=mysql_query($query5);   
+ $result5=mysqli_query($conn, $query5);   
 }
  
 
@@ -120,12 +120,14 @@ $result4=mysql_query($query4);
         
 if($result3 && $result4 && $result5)
        {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","pono":"'.$pono.'"})';
         }
         else
         {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
           
 	    echo '({"success":"false","pono":"' . $pono . '"})';
         }   

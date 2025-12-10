@@ -26,14 +26,14 @@
     $today = date("Y-m-d H:i:s"); 
 
 
-	mysql_query("BEGIN");
+	mysqli_query($conn, "BEGIN");
 
 	$reccount = 0;
 
 	if ($gstFlag === "Add" ) {
 		$query1 = "select count(*) as nos from trn_qc_rm_inspection where qc_rm_compcode  = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_ticketno in ($findTicketNo );";
-		$result1= mysql_query($query1);
-		$rec2 = mysql_fetch_array($result1);
+		$result1= mysqli_query($conn, $query1);
+		$rec2 = mysqli_fetch_array($result1);
 		$reccount =$rec2['nos'];
 	   }
 
@@ -41,8 +41,8 @@
 
 	if ($gstFlag === "Add" && $reccount == 0 ) {
 		 $query1 = "select ifnull(max(qc_rm_entryno),0)+1 as qc_rm_entryno from trn_qc_rm_inspection where qc_rm_fincode = '$finid' and qc_rm_compcode ='$compcode'";
-		 $result1= mysql_query($query1);
-		 $rec2 = mysql_fetch_array($result1);
+		 $result1= mysqli_query($conn, $query1);
+		 $rec2 = mysqli_fetch_array($result1);
 		 $rmentryno=$rec2['qc_rm_entryno'];
 
 		 for ($i=0;$i<$rowcnt;$i++)
@@ -87,28 +87,34 @@
 	 
 			 $actmois     = (float)$griddet[$i]['actmois'];
 			 $moistol     = (float)$griddet[$i]['moistol'];
-	  
+			 
+			 $taxable = 0;
+
 	    	 if ($itemtype == "F")
 		    {
 				 $dnqty = $ticketwt +  $shortage - $acceptqty - $degradeqty;
+
+
+;				 
+
 	 //                    if ($acceptqty+$shortage+$degradeqty == $dnqty )
 	 //                        $dnqty = 0;
          	 } 
 		    else
 				 $dnqty =  $acceptqty;
 	 	 
-				 if ($dedrate >0 && $dnqty > 0)
+			if ($dedrate >0 && $dnqty != 0)
 					$taxable = round($dnqty/1000 *  $dedrate,3);
-				 else
+			 else
 					$taxable = 0;
 	 
 	 
 	 
 	 // New Addion on 20/06/2025 - Start
-				 if ($rate  >   $dedrate && $dnqty == 0  )
-				 {
-				   $taxable = round($ticketwt/1000 *  $dedrate,3);         
-				 }
+			if ($rate  >   $dedrate && $dnqty != 0  )
+			{
+			   $taxable = round($ticketwt/1000 *  $dedrate,3);         
+			}
 	  
 	 //echo  $taxable;
 	 //echo "<br>";
@@ -124,7 +130,7 @@
 	 //echo $query2;
 	 // echo "<br>";
 		 
-				 $result2=mysql_query($query2);
+				 $result2=mysqli_query($conn, $query2);
 	 
 	 
 	 
@@ -142,7 +148,7 @@
 				 $query3 = "update trn_weight_card set wc_process = 'Y' WHERE wc_compcode = '$compcode' and wc_fincode = '$finid' and  wc_ticketno = $ticketno1";
 	 
 	 //echo $query3;
-				 $result3=mysql_query($query3);
+				 $result3=mysqli_query($conn, $query3);
 			 }
 	 
 		  }		 
@@ -154,11 +160,17 @@
     {
 
          $query1 = "update trn_weight_card set wc_process = 'N' where wc_compcode = $compcode and wc_fincode = $finid and wc_ticketno in (select qc_rm_ticketno from trn_qc_rm_inspection where qc_rm_compcode = $compcode and qc_rm_fincode = '$finid' and qc_rm_entryno = $rmentryno)";
-		 $result1= mysql_query($query1);
-         $query1 = "delete from trn_qc_rm_inspection where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = $rmentryno";
-		 $result1= mysql_query($query1);
+		 $result1= mysqli_query($conn, $query1);
+
+		 //echo $query1;
+//echo "<br>";
+
+		 $query1 = "delete from trn_qc_rm_inspection where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = $rmentryno";
+		 $result1= mysqli_query($conn, $query1);
         
- 	
+//		 echo $query1;
+		 //echo "<br>";
+			  
 		for ($i=0;$i<$rowcnt;$i++)
 		{
 		$sno = $i + 1;
@@ -205,9 +217,29 @@
 
         if ($itemtype == "F")
         {
+			/*
+			if ($shortage < 0)
+               $shortageqty2 = 0;
+			else
+			   $shortageqty2 = $shortage;
+
+			   */
             $dnqty = $ticketwt +  $shortage - $acceptqty - $degradeqty;
 //                    if ($acceptqty+$shortage+$degradeqty == $dnqty )
 //                        $dnqty = 0;
+/*
+echo $ticketwt;
+echo "<br>";
+echo $shortage;
+echo "<br>";
+echo $acceptqty;
+echo "<br>";
+echo $degradeqty;
+echo "<br>";
+*/
+//echo $dnqty;
+//echo "<br>";
+
 
         } 
         else
@@ -216,7 +248,7 @@
 
 //$dnqty =  $dnqty / 1000;    
 
-        if ($dedrate >0 && $dnqty > 0)
+        if ($dedrate >0 && $dnqty != 0)
             $taxable = round($dnqty/1000 *  $dedrate,3);
         else
             $taxable = 0;
@@ -224,7 +256,7 @@
 
 
 // New Addion on 20/06/2025 - Start
-        if ($rate  >   $dedrate && $dnqty == 0  )
+        if ($rate  >   $dedrate && $dnqty != 0  )
         {
             $taxable = round($ticketwt/1000 *  $dedrate,3);         
 
@@ -242,9 +274,9 @@ values('$compcode','$finid','$rmentryno','$entrydate' , '$ticketdate', '$supcode
 
 
 //echo $query2;
-// echo "<br>";
+//echo "<br>";
 	
-        $result2=mysql_query($query2);
+        $result2=mysqli_query($conn, $query2);
 
 
 
@@ -257,32 +289,37 @@ values('$compcode','$finid','$rmentryno','$entrydate' , '$ticketdate', '$supcode
 
 		$ticketno1    = $griddetTicket[$k]['wc_ticketno'];
 		$processwt    = $griddetTicket[$k]['processwt'];
-        if ($processwt > 0) 
+        if ($processwt != 0) 
         { 
             $query3 = "update trn_weight_card set wc_process = 'Y' WHERE wc_compcode = '$compcode' and wc_fincode = '$finid' and  wc_ticketno = $ticketno1";
 
 //echo $query3;
-	        $result3=mysql_query($query3);
+//echo "<br>";
+	        $result3=mysqli_query($conn, $query3);
         }
 
     }
 }
 
 if ($gstFlag === "Add" && $reccount > 0 ) {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"Available","EntryNo":"' . $findTicketNo . '"})';
 }
 
 elseif ($result1 && $result2 && $result3 )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","EntryNo":"' . $rmentryno . '"})';
 
 	    
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","EntryNo":"' . $rmentryno . '"})';
 }
  

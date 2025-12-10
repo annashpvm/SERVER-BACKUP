@@ -116,13 +116,13 @@ $voudate = $_REQUEST['grndate'];
 
 $voutype = 'PLW';
 
- mysql_query("BEGIN");
+ mysqli_query($conn, "BEGIN");
 
 
 #Get Max AccRef Seqno from acc_ref
 $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-$result1 = mysql_query($query1);
-$rec1 = mysql_fetch_array($result1);
+$result1 = mysqli_query($conn, $query1);
+$rec1 = mysqli_fetch_array($result1);
 $ginaccrefseq=$rec1['con_value'];
 
 
@@ -130,19 +130,19 @@ $ginaccrefseq=$rec1['con_value'];
 
 //echo $query1;
 //echo "<br>";
-$result1=mysql_query($query1);
+$result1=mysqli_query($conn, $query1);
 
 if ($ginaccrefseq > 0) {
 
 
     $query7 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$rech_no','$compcode','$finid','$voudate','$voutype', '','','$billno', '$billdate','$narration');";
-    $result7 = mysql_query($query7);
+    $result7 = mysqli_query($conn, $query7);
 
 //echo $query7;
 //echo "<br>";
 
    $query4 = "insert into acc_voucher_logs values ($ginaccrefseq,$reccount,'$today',$usercode,'$reason')";
-   $result4 = mysql_query($query4);
+   $result4 = mysqli_query($conn, $query4);
 
 
         $inscnt = 0;
@@ -167,7 +167,7 @@ if ($ginaccrefseq > 0) {
                if ($ledtype != 'G')
                {
                $query5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$billno', '$billdate', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-               $result5 = mysql_query($query5);
+               $result5 = mysqli_query($conn, $query5);
 
 //echo $query5;
 //echo "<br>";
@@ -178,7 +178,7 @@ if ($ginaccrefseq > 0) {
             #Insert AccTran
 
             $query6 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype');";
-            $result6 = mysql_query($query6);
+            $result6 = mysqli_query($conn, $query6);
 
 //echo $query6;
 //echo "<br>";
@@ -193,13 +193,15 @@ $vno = $rech_no;
 
 if( $result1 && $result5   && $result6   && $result7 )
 {
-	mysql_query("COMMIT");                        
+	mysqli_begin_transaction($conn);                        
 	echo '({"success":"true","GRNNo":"'. $vno . '"})';
     
 }
 else
 {
-    mysql_query("ROLLBACK");            
+    mysqli_rollback($conn);
+
+            
     echo '({"success":"false","GRNNo":"' . $vno . '"})';
 } 
 

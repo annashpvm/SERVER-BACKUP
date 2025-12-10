@@ -2,20 +2,12 @@
     require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
     
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
 
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$compcode  = $_POST['fcompcode'];
 	$finid     = $_POST['finid'];
@@ -29,12 +21,12 @@
 
 
 
-        $r = mysql_query("select * from massal_customer ");      
+        $r = mysql_query("select * from massal_customer ";      
 
 
 
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }

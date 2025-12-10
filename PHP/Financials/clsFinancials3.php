@@ -1,7 +1,7 @@
 
 <?php
    $CompCode=1;
-  require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php");
+  require($_SERVER["DOCUMENT_ROOT"] . "/dbConn.php";
 
     $task='cmbBank';
     if ( isset($_POST['task'])){
@@ -103,10 +103,10 @@
    function getCompany()
    {
         $query = "select comp_code,comp_name,comp_password from acc_company_master where comp_code in(1)";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -118,10 +118,10 @@
    function getCountry()
    {
         $query = "select country_code,country_name from country_master order by country_name";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -149,11 +149,11 @@
                 comp_website from acc_company_master where comp_code=$company";
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -165,10 +165,10 @@
    {
         $CompCode =1;
         $query = "select grp_code,grp_name from  acc_group_master where  grp_comp_code = '$CompCode'";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -182,10 +182,10 @@
         $CompCode =1;
         $Group=$_POST['gstGroup'];
         $query = "select grp_code,grp_name from acc_group_master where grp_comp_code ='$CompCode'and grp_name like'$Group%'";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -200,11 +200,11 @@
         $query = "select CONCAT('G',con_Value) as con_value from control_master where con_module='AC' and con_finyear='GENERAL'and con_prefix='GRP'and con_desc='GROUP MASTER'";
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -218,11 +218,11 @@
         $query = "select grp_code,grp_name from  acc_group_master where (grp_name like 'trade%' or (grp_code = 4 or grp_parent_code=4)) and
                 grp_comp_code         =         '$company'
         order by grp_name";
-        $result = mysql_query($query);
+        $result = mysqli_query($conn, $query);
 	
-	$nbrows = mysql_num_rows($result);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -239,11 +239,11 @@
         where         led_grp_code   =   '$GroupCode'       and
                 led_comp_code        =   '$company'
         order by         led_name";
-        $result = mysql_query($query);
+        $result = mysqli_query($conn, $query);
 
-	$nbrows = mysql_num_rows($result);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -255,10 +255,10 @@
    function getselMill()
    {
         $query = "select g_milid,mil_name from cot_mill_master";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -270,10 +270,10 @@
    function getselCottonParty()
    {
         $query = "select g_parid,par_name from party_master where par_type in ('SS','SC','SB','AA','CC') and g_parid not in (1615) order by par_type,par_name";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -290,11 +290,11 @@
         where  g_parid='$Partyid'";
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -308,10 +308,10 @@
 
 	$query = "call general_sp_mas_finmaster_new";
 
-        $result = mysql_query($query);
-        $nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query);
+        $nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
                         //$IndSeqno=$rec['ind_seqno'];
                         //echo"$IndSeqno";
@@ -325,10 +325,10 @@
    function getVarity()
    {
         $query = "select g_varid,g_varprefix from variety_master";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -344,8 +344,8 @@
         $invno=$_POST['invno'];
         $query = "select par_add1,par_add2,par_add3 from party_master
         where  g_parid='$partyid'";
-        $result = mysql_query($query);
-        $rec = mysql_fetch_array($result); 
+        $result = mysqli_query($conn, $query);
+        $rec = mysqli_fetch_array($result); 
 
         $par_add1=$rec['par_add1'];
         $par_add2=$rec['par_add2'];
@@ -354,11 +354,11 @@
         $query1 = "select '$par_add1' AS par_add1,'$par_add2' AS par_add2,'$par_add3' AS par_add3,pur_parinvno from purinv_header where g_parid='$partyid' and g_finyear='$finyear'and pur_parinvno='$invno'";
 	$sql = $query1;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query1);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query1);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -376,10 +376,10 @@
       elseif($company=4) {
          $query = "select fab_sup_code as PartyCode,fab_supname as PartyName from dfd..fab_supplier_master where fab_sup_compcode ='$company'";
         }
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -394,11 +394,11 @@
         $query = "select grp_code,grp_name from  acc_group_master where (grp_name like 'credit%' or (grp_code = 4 or grp_parent_code=4)) and
                 grp_comp_code         =    '$company'
         order by grp_name";
-        $result = mysql_query($query);
+        $result = mysqli_query($conn, $query);
 
-	$nbrows = mysql_num_rows($result);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -410,10 +410,10 @@
     function getBank()
    {
         $query = "select led_code,led_name from acc_ledger_master where led_grp_code in(20,23,22)";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -438,10 +438,10 @@
         aref.accref_comp_code     =    '$CompCode'         and
         aref.accref_finid         =     '$Finid'           and
         atrn.acctran_cramt         >     0  ";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -459,11 +459,11 @@
         $query = "call proc acc_sp_rep_selleddetails_vouprint(".$VoucherId.",'".$VoucherNo."',".$Account.",".$CompanyCode.")";
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -473,13 +473,13 @@
    }
    function getLedger()
    {
-mysql_query("SET NAMES utf8"); 
+global $conn; 
         $CompCode =1;
         $query = "select led_code,led_name from  acc_ledger_master where  led_comp_code = '$CompCode'";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -491,10 +491,10 @@ mysql_query("SET NAMES utf8");
     function getCurrency()
    {
         $query = "select currency_code,currency_symbol from currency_master";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -529,8 +529,8 @@ mysql_query("SET NAMES utf8");
                 acctran_dbamt        >  0 and
                 acctran_led_code     =  '$LedCode'";
         }
-	$InvNo = mysql_query($query);
-        $rec1 = mysql_fetch_array($InvNo);
+	$InvNo = mysqli_query($conn, $query);
+        $rec1 = mysqli_fetch_array($InvNo);
 
         $Seqno=$rec1['accref_seqno'];
        // echo"$Seqno";
@@ -544,10 +544,10 @@ mysql_query("SET NAMES utf8");
                 cinv_seqno,
                 cinv_no";
         }
-        $result = mysql_query($query1);
-	$nbrows = mysql_num_rows($result);
+        $result = mysqli_query($conn, $query1);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -583,8 +583,8 @@ mysql_query("SET NAMES utf8");
                 acctran_dbamt        >  0 and
                 acctran_led_code     =  '$LedCode'";
         }
-	$InvNo = mysql_query($query);
-        $rec1 = mysql_fetch_array($InvNo);
+	$InvNo = mysqli_query($conn, $query);
+        $rec1 = mysqli_fetch_array($InvNo);
 
         $Seqno=$rec1['accref_seqno'];
        // echo"$Seqno";
@@ -602,11 +602,11 @@ mysql_query("SET NAMES utf8");
         }
         $sql = $query1;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query1);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query1);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -621,10 +621,10 @@ mysql_query("SET NAMES utf8");
         $LedCode=$_POST['ledcode'];
         $Finid=24;
         $query = "call acc_sp_trn_selvoucher_no_bill_realisation(".$LedCode.",".$CompCode.",".$Finid.")";
-	$result = mysql_query($query);
-	$nbrows = mysql_num_rows($result);
+	$result = mysqli_query($conn, $query);
+	$nbrows = mysqli_num_rows($result);
 	if($nbrows>0){
-		while($rec = mysql_fetch_array($result)){
+		while($rec = mysqli_fetch_array($result)){
 			$arr[] = $rec;
 		}
 		$jsonresult = JEncode($arr);
@@ -642,11 +642,11 @@ mysql_query("SET NAMES utf8");
         $query = "select concat('CT',ifnull(max(CAST(substring(accref_vouno,3,8) as decimal)),0) + 1) as con_value  from 			acc_ref where  accref_comp_code = '$companycode' and accref_finid = '$finid' and accref_vouno like 'CT%'";
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -662,12 +662,12 @@ mysql_query("SET NAMES utf8");
         $query3="update control_master set con_value=con_value+1 where con_module='AC' and con_finyear='2013-2014' and con_prefix='ACT'and
           con_desc='ACC. CONTRA VOUCHER NO.' and con_company_code='$CompCode'";
 
-        $result3 = mysql_query($query3);
+        $result3 = mysqli_query($conn, $query3);
 
         $query4="update control_master set con_value=con_value+1 where con_module='AC' and con_finyear='GENERAL' and con_prefix='ARS'and
           con_desc='ACC_REF_SEQNO' and con_company_code='$CompCode'";
 
-        $result4 = mysql_query($query4);
+        $result4 = mysqli_query($conn, $query4);
 
    }
    function GetPartyBillNo()
@@ -770,11 +770,11 @@ mysql_query("SET NAMES utf8");
 
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -787,7 +787,7 @@ mysql_query("SET NAMES utf8");
    {
         $company=1;
         $query = "Delete from acc_purchase_ageing";
-        $result = mysql_query($query);
+        $result = mysqli_query($conn, $query);
    }
    function GetPaymentVouDetails()
    {
@@ -834,11 +834,11 @@ mysql_query("SET NAMES utf8");
         ";
 	$sql = $query;
         $arr = array();
-        If (!$rs = mysql_query($sql)) {
+        If (!$rs = mysqli_query($conn, $sql)) {
             Echo '{success:false}';
         }else{
-            $rs_count = mysql_query($query);
-            $results1 = mysql_num_rows($rs_count);
+            $rs_count = mysqli_query($conn, $query);
+            $results1 = mysqli_num_rows($rs_count);
             while($obj = mysql_fetch_object($rs)){
             $arr[] = $obj;
             }
@@ -854,7 +854,7 @@ mysql_query("SET NAMES utf8");
     function JEncode($arr){
         if (version_compare(PHP_VERSION,"5.2","<"))
         {
-            require_once("./JSON.php");   //if php<5.2 need JSON class
+            require_once("./JSON.php";   //if php<5.2 need JSON class
             $json = new Services_JSON();  //instantiate new json object
             $data=$json->encode($arr);    //encode the data in json format
         } else

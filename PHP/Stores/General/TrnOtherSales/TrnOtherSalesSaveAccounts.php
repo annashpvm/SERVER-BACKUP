@@ -37,20 +37,20 @@ $ewaybillno   = $_POST['ewaybillno'];
 
 $ginaccrefseq = (int)$_POST['accseqno'];
 
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
    #Get Max AccRef Seqno from acc_ref
    $query1 = "select ifnull(max(accref_seqno),0) + 1 as con_value from acc_ref;";
-   $result1 = mysql_query($query1);
-   $rec1 = mysql_fetch_array($result1);
+   $result1 = mysqli_query($conn, $query1);
+   $rec1 = mysqli_fetch_array($result1);
    $ginaccrefseq=$rec1['con_value'];
 
 
    #Insert AccRef
    $querya1 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$snhinvno','$snhcompcode','$snhfincode', '$snhdate','OSI','--', '$paymode','$snhinvno', '$snhdate','$snhremarks');";
 
-   $resulta1 = mysql_query($querya1);
+   $resulta1 = mysqli_query($conn, $querya1);
 
 //echo $querya1;
 //echo "<br>";
@@ -82,7 +82,7 @@ mysql_query("BEGIN");
 
 
                $querya3 = "call acc_sp_trn_insacc_trail('$ginaccrefseq','$slno','$snhinvno','$snhdate','$totamt','$adjamt','$ledseq','$amtmode',0,0 );";
-               $resulta3 = mysql_query($querya3);
+               $resulta3 = mysqli_query($conn, $querya3);
 
 
 //echo $querya3;
@@ -93,7 +93,7 @@ mysql_query("BEGIN");
             #Insert AccTran
 
             $querya2 = "call acc_sp_trn_insacc_tran('$ginaccrefseq','$slno','$ledseq','$dbamt','$cramt','$totamt','$voutype','');";
-            $resulta2 = mysql_query($querya2);
+            $resulta2 = mysqli_query($conn, $querya2);
 
 
 
@@ -136,12 +136,14 @@ $tcsamt    = (float)$griddet[$i]['tcsamt'];
         
    if ( $resulta3 && $resulta1  && $resulta2)
    {
-            mysql_query("COMMIT");                        
+           mysqli_query($conn, "COMMIT");                       
             echo '({"success":"true","saleno":"'.$snhinvno.'"})';
    }
    else
    {
-            mysql_query("ROLLBACK");            
+            mysqli_rollback($conn);
+
+            
             echo '({"success":"false","saleno":"'.$snhinvno.'"})';
    }  
        

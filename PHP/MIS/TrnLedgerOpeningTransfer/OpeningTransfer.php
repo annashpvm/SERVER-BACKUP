@@ -10,12 +10,12 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysql_query("BEGIN");
+    mysqli_query($conn, "BEGIN");
 
 //    $query1= "select * from acc_ledger_master where led_status <> 'N'";
     $query1= "select * from massal_customer";
 
-    $result11=mysql_query($query1);
+    $result11=mysqli_query($conn, $query1);
 
 
     while ($row = mysql_fetch_assoc($result11)) {
@@ -34,8 +34,8 @@
            if ($findrow[0]  == 0)
            {
 		$query1="select ifnull(max(curbal_seqno),0)+1 as curbal_seqno from acc_current_balance";
-		$result1=mysql_query($query1);
-		$rec1=mysql_fetch_array($result1);
+		$result1=mysqli_query($conn, $query1);
+		$rec1=mysqli_fetch_array($result1);
 		$curbalseqno= $rec1['curbal_seqno'];
 
 
@@ -43,7 +43,7 @@
 
 
 	        $query1 = "CALL acc_sp_inscurrent_balance('$curbalseqno','$ledcode','$nextfinid','1' );";
-                $result1 = mysql_query($query1);
+                $result1 = mysqli_query($conn, $query1);
 
 //echo $query1;
 	        $curbalseqno = $curbalseqno + 1;
@@ -53,7 +53,7 @@
 
 
                 $query1 = "CALL acc_sp_inscurrent_balance('$curbalseqno','$ledcode','$nextfinid','90' );";
-                $result1 = mysql_query($query1);
+                $result1 = mysqli_query($conn, $query1);
 
 //echo $query1;
 
@@ -65,7 +65,7 @@
 
 
 	 $query = "update acc_current_balance set curbal_obdbamt = '0' , curbal_obcramt = '0' where curbal_finid = '$nextfinid' and curbal_comp_code = '$compcode'  and curbal_led_code > 0 ";
-         $result = mysql_query($query);
+         $result = mysqli_query($conn, $query);
 
 /*
  $query1  = "select maingrp, maingroupname,subgrp, subgroupname,subgrp2,subgrouplevel3,led_name ,led_code,closing , case when closing > 0 then closing else 0 end as debit , case when closing < 0 then -closing else 0 end as credit 
@@ -172,7 +172,7 @@ having closing <> 0 order by maingrp,a2.grp_name,a3.grp_name,a4.grp_name
 //echo $query1;
 
 
-    $result12=mysql_query($query1);
+    $result12=mysqli_query($conn, $query1);
 
     while ($row = mysql_fetch_assoc($result12)) {
            $ledcode  = $row['cust_code'];
@@ -185,12 +185,12 @@ having closing <> 0 order by maingrp,a2.grp_name,a3.grp_name,a4.grp_name
 	   if ($debit > 0)
            { 
    $queryupd = "update acc_current_balance set curbal_obdbamt = $debit , curbal_obcramt = 0 where curbal_finid = $nextfinid and curbal_comp_code = $compcode  and curbal_led_code = $ledcode";
-         $resultupd =mysql_query($queryupd);
+         $resultupd =mysqli_query($conn, $queryupd);
            }     
 	   else
            {  
 	 $queryupd = "update acc_current_balance set curbal_obdbamt = '0' , curbal_obcramt = '$credit' where curbal_finid = '$nextfinid' and curbal_comp_code = '$compcode'  and curbal_led_code = '$ledcode' and curbal_seqno > 0";
-         $resultupd = mysql_query($queryupd);
+         $resultupd = mysqli_query($conn, $queryupd);
           }    
 
 //  echo $queryupd;
@@ -206,12 +206,14 @@ mysql_free_result($result12);
 
      if ($resultupd)
      {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $compcode . '"})';
      }
      

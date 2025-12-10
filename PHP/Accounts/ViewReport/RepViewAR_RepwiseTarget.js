@@ -360,7 +360,16 @@ var optRepOpt = new Ext.form.FieldSet({
 				}
 			}
 		},  
-                  
+
+		{boxLabel: '>=100 Days Outstanding - Monthwise Collections and Due', name: 'optRepOpt', id:'opt_100days_coll_due', inputValue: 11,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+                                          repopt ='>=100 Days Outstanding - Monthwise Collections and Due';
+					}
+				}
+			}
+		},                    
           
         ],
     }
@@ -1824,6 +1833,10 @@ style: {
     listeners:{	
 
        'cellclick': function (flxRepwiseDue, rowIndex, cellIndex, e) {
+
+
+        alert(repopt);
+
 		var sm = flxRepwiseDue.getSelectionModel();
 		var selrow = sm.getSelected();
                 grpcode = selrow.get('grpcode');
@@ -1909,7 +1922,7 @@ style: {
 		if (printtype == "PDF") 
 				    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_RepTarget_Collection7Days.rptdesign&__format=pdf&'+param,  '_blank' );
 				    else if (printtype == "XLS") 
-				    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_RepTarget_Collection7Days.rptdesign&__format=XLSX' + param, '_blank');
+				    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_RepTarget_Collection7DaysExcel.rptdesign&__format=XLSX' + param, '_blank');
 				    else
 				    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_RepTarget_Collection7Days.rptdesign' + param, '_blank');
             }	
@@ -2009,7 +2022,23 @@ style: {
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_SelectiveRep_ARBillwise_OutstandingBills_with_percentage_Collections.rptdesign' + param, '_blank');
             }
 
-
+            else if (repopt == '>=100 Days Outstanding - Monthwise Collections and Due')
+                { 
+    
+                var p1 ="&fincode="+encodeURIComponent(finid);      
+                var p2 = "&repcode="+encodeURIComponent(RepresentativeCode);
+                var param = (p1+p2) ;
+    
+                if (printtype == "PDF") 
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Above100Days_Collection_due.rptdesign&__format=pdf&' + param, '_blank');
+                else if (printtype == "XLS") 
+    {
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Above100Days_Collection_due.rptdesign&__format=XLSX&' + param, '_blank');
+    
+    }
+                else
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Above100Days_Collection_due.rptdesign' + param, '_blank');
+                }
         }      
 
 	

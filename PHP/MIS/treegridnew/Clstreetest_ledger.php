@@ -7,15 +7,15 @@
 
     $tree_array = [];
     $nodearray = [];
-    mysql_query("SET NAMES utf8");  
+    global $conn;  
 
 
     $sql = "select  ledgername, ledgercode, sum(debit) debit, sum(credit) credit
 from testTB where level1_grpcode =  $grpparent   group by  ledgername, ledgercode ORDER By ledgername";
 
 
-    $result = mysql_query($sql);
-    $nbrows1 = mysql_num_rows($result);    
+    $result = mysqli_query($conn, $sql);
+    $nbrows1 = mysqli_num_rows($result);    
 	    while($data = mysql_fetch_object($result)) {
 		$tree_array = array("ledgercode"=>$data->ledgercode,"ledgername"=>$data->ledgername,"debit"=>$data->debit,"credit"=>$data->credit);
 		array_push($nodearray,$tree_array);

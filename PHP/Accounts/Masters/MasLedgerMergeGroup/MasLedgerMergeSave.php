@@ -13,13 +13,13 @@ $cnt= 0;
 if ($savetype === "Add")
 {
 	$query = "select ifnull(max(rep_merge_code),0)+1 as ledmergecode from acc_rep_ledger_merge";
-	$result = mysql_query($query);
-	$rec = mysql_fetch_array($result);
+	$result = mysqli_query($conn, $query);
+	$rec = mysqli_fetch_array($result);
 	$mergecode = $rec['ledmergecode'];
 
 	$qry = "select count(*) as cnt from acc_rep_ledger_merge where rep_merge_name = '$mergename'";
-	$resgrp = mysql_query($qry);
-	$recgrp = mysql_fetch_array($resgrp);
+	$resgrp = mysqli_query($conn, $qry);
+	$recgrp = mysqli_fetch_array($resgrp);
 	$cnt=$recgrp['cnt'];
         if ($cnt == 0) 
         {
@@ -27,7 +27,7 @@ if ($savetype === "Add")
 		    $slno = $i+1;
 		    $ledgercode = $griddet[$i]['led_code'];
 		    $query1="insert into acc_rep_ledger_merge values($mergecode,'$mergename',$ledgercode)";
-		    $result1 = mysql_query($query1);
+		    $result1 = mysqli_query($conn, $query1);
 		}     
          }  
 
@@ -36,26 +36,30 @@ if ($savetype === "Add")
 else
 {
 	$query1="delete from acc_rep_ledger_merge where rep_merge_code = $mergecode";
-        $result1 = mysql_query($query1);
+        $result1 = mysqli_query($conn, $query1);
   	for($i=0;$i<$rowcnt;$i++){
 	    $slno = $i+1;
 	    $ledgercode = $griddet[$i]['led_code'];
 	    $query1="insert into acc_rep_ledger_merge values($mergecode,'$mergename',$ledgercode)";
-	    $result1 = mysql_query($query1);
+	    $result1 = mysqli_query($conn, $query1);
         }     
 }
 if ($savetype === "Add" && $cnt > 0) 
     {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","cnt":"' . $cnt . '"})';
     }  
 else
 if ($result1) {
-    mysql_query("COMMIT");
+    mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $mergename . '"})';
 } 
 else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $mergename . '"})';
 }
 

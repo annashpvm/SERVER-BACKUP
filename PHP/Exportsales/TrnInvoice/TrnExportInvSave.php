@@ -22,7 +22,7 @@ $destag   = $griddet[$i]['destag'];
 $hsncode  = $griddet[$i]['hsncode'];
      
 $query1= "insert into trnsal_finish_stock values('$compcode','$finid','$sentno','$dtpEntry' ,'$itemcode' ,1,'$number','$weight',0,'$dtpEntry')";
-$result1=mysql_query($query1);            
+$result1=mysqli_query($conn, $query1);            
   
 }
 
@@ -30,12 +30,14 @@ $result1=mysql_query($query1);
 
 
 if ($result1) {
-   mysql_query("COMMIT");
+   mysqli_begin_transaction($conn);
     echo '({"success":"true","msg":"' . $sentno . '"})';
 } 
 	
 }else {
-    mysql_query("ROLLBACK");
+    mysqli_rollback($conn);
+
+
     echo '({"success":"false","msg":"' . $sentno . '"})';
 }
   

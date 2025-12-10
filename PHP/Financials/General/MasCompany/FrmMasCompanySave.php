@@ -20,9 +20,9 @@
  //echo"$CompanyName";
  $query = "select con_value from control_master where con_module='AC' and con_finyear='GENERAL'and con_prefix='COM'and con_desc='COMPANY MASTER'";
 
- $result = mysql_query($query);
+ $result = mysqli_query($conn, $query);
 	
-        $rec = mysql_fetch_array($result);
+        $rec = mysqli_fetch_array($result);
 	$fin_companycode=$rec['con_value'];
 
 
@@ -45,13 +45,13 @@
             '$Website',
             ''
             )";
-  $result1 = mysql_query($query1);
+  $result1 = mysqli_query($conn, $query1);
 
   $query2 = "update control_master
            set con_value=con_value+1
            where con_module='AC' and con_finyear='GENERAL'and con_prefix='COM'and con_desc='COMPANY MASTER'";
 
-    $result2 = mysql_query($query2);
+    $result2 = mysqli_query($conn, $query2);
 
       if ((!$result1))
       {

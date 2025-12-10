@@ -4,8 +4,8 @@
 //session_start();	
 
 //query = "select ifnull(max(rate_code),0)+1 as ratecode from massal_rate where rate_comp_code = 1 and rate_fincode=20";
-//$result = mysql_query($query);
-//$rec = mysql_fetch_array($result);
+//$result = mysqli_query($conn, $query);
+//$rec = mysqli_fetch_array($result);
 //$rateseq=$rec['ratecode'];
 
 
@@ -14,7 +14,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-    mysql_query("SET NAMES utf8");
+    global $conn;
 
     switch($task){
 		case "findVouNo":
@@ -37,46 +37,39 @@
     }
 
     function JEncode($arr){
-        if (version_compare(PHP_VERSION,"5.2","<"))
-        {    
-            require_once("./JSON.php");   //if php<5.2 need JSON class
-            $json = new Services_JSON();  //instantiate new json object
-            $data=$json->encode($arr);    //encode the data in json format
-        } else
-        {
-            $data = json_encode($arr);    //encode the data in json format
-        }
+        $data = json_encode($arr, JSON_UNESCAPED_UNICODE);    //encode the data in json format
         return $data;
     }
     
 
  function getVouNo()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 	$finid    = $_POST['finid'];
 	$compcode = $_POST['compcode'];
 	$vouno    = strtoupper($_POST['vouno']);
 
-        $r=mysql_query(" select * from acc_ref ref left join acc_tran trn
+        $sql = " select * from acc_ref ref left join acc_tran trn
  on ref.accref_seqno = trn.acctran_accref_seqno
  left join acc_trail trail 
  on ref.accref_seqno = trail.acctrail_accref_seqno
  join massal_customer mas
  on trn.acctran_led_code = mas.cust_code  
- where accref_comp_code = $compcode and accref_finid = '$finid' and  accref_vouno =  '$vouno'  and cust_type in ('C','D')");
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+ where accref_comp_code = $compcode and accref_finid = '$finid' and  accref_vouno =  '$vouno'  and cust_type in ('C','D')";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     }
           
 
  function getAdjustmentDetails()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 	$finid     = $_POST['finid'];
 	$compcode  = $_POST['compcode'];
@@ -85,23 +78,23 @@
 	$ledcode   = $_POST['ledcode'];
 
         if ($db_cr == 'cr')
-        $qry = " select * from (
+        $sql = " select * from (
  select  ref_invno,DATE_FORMAT(ref_invdate, '%d-%m-%Y') voudate,ref_paymt_terms,ref_adjamount,ref_adj_days   from acc_adjustments  , acc_trail where  ref_adjseqno = acctrail_accref_seqno and ref_compcode = $compcode and ref_finid = $finid and  ref_docno = '$vouno'  and acctrail_amtmode = 'D' and acctrail_led_code = ref_ledcode and ref_ledcode = $ledcode
  union all
  select ref_docno ref_invno,DATE_FORMAT(ref_docdate, '%d-%m-%Y') voudate,ref_paymt_terms,ref_adjamount,ref_adj_days  from acc_adjustments  , acc_trail where  ref_docseqno = acctrail_accref_seqno and ref_compcode = $compcode and ref_finid = $finid and  ref_adjvouno = '$vouno'  and acctrail_amtmode = 'D' and acctrail_led_code = ref_ledcode and ref_ledcode = $ledcode ) a1 order by voudate";      
         else
-         $qry = " select * from (
+         $sql = " select * from (
  select  ref_invno,DATE_FORMAT(ref_invdate, '%d-%m-%Y') voudate,ref_paymt_terms,ref_adjamount,ref_adj_days   from acc_adjustments  , acc_trail where  ref_adjseqno = acctrail_accref_seqno and ref_compcode = $compcode and ref_finid = $finid and  ref_docno = '$vouno'  and acctrail_amtmode = 'C' and acctrail_led_code = ref_ledcode and ref_ledcode = $ledcode
  union all
  select ref_docno ref_invno,DATE_FORMAT(ref_docdate, '%d-%m-%Y') voudate,ref_paymt_terms,ref_adjamount,ref_adj_days  from acc_adjustments  , acc_trail where  ref_docseqno = acctrail_accref_seqno and ref_compcode = $compcode and ref_finid = $finid and  ref_adjvouno = '$vouno'  and acctrail_amtmode = 'C' and acctrail_led_code = ref_ledcode  and ref_ledcode = $ledcode) a1 order by voudate";         
 
 
-//echo $qry;
+//echo $sql;
 //echo "<br>";
 
-        $r = mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
+        $r = mysqli_query($conn, $sql);
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;
         }
@@ -113,29 +106,28 @@
 
  function getSearchLedgerlist()
     {
-        mysql_query("SET NAMES utf8");
+        global $conn;
 
 
 //        $ledname = strtoupper($_POST['ledger']);
-//        $qry = "select * from massal_customer where cust_name like '%$ledname%' order by cust_name";
+//        $sql = "select * from massal_customer where cust_name like '%$ledname%' order by cust_name";
 
         $ledname = strtoupper($_POST['ledger']);
         $ledname = trim(str_replace(" ", "", $ledname)); 
         $ledname = trim(str_replace(".", "", $ledname)); 
         $ledname = trim(str_replace("-", "", $ledname));
-//        $qry = "select * from massal_customer where cust_name like '%$ledname%'";
-      $qry = "select * from massal_customer where left(cust_name,2) != 'zz' and replace(replace(replace(cust_name,' ','')  ,'.',''),'-','')   like '%$ledname%' order by cust_name";
+//        $sql = "select * from massal_customer where cust_name like '%$ledname%'";
+      $sql = "select * from massal_customer where left(cust_name,2) != 'zz' and replace(replace(replace(cust_name,' ','')  ,'.',''),'-','')   like '%$ledname%' order by cust_name";
 
-//echo $qry;
+//echo $sql;
 
-        $r=mysql_query($qry);
-	$nrow = mysql_num_rows($r);
-	while($re = mysql_fetch_array($r))
-	{
-	$arr[]= $re ;
-        }
-		$jsonresult = JEncode($arr);
-		echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+  $r = mysqli_query($conn, $sql);
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
     } 
 
 

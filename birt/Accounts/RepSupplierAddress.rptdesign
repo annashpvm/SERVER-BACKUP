@@ -19,6 +19,18 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="custtype" id="82">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
@@ -46,14 +58,26 @@
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="5">
+            <list-property name="columnHints"/>
             <list-property name="parameters">
+                <structure>
+                    <property name="name">ledtype</property>
+                    <property name="paramName">custtype</property>
+                    <property name="nativeName">ledtype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
                 <structure>
                     <property name="name">scode</property>
                     <property name="paramName">scode</property>
                     <property name="nativeName">scode</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                     <property name="allowNull">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -248,7 +272,7 @@
                     </structure>
                     <structure>
                         <property name="position">38</property>
-                        <property name="name">cust_wp_gstinv_supplier_yn</property>
+                        <property name="name">cust_wp_gst_dnote_yn</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -559,8 +583,8 @@
                 </structure>
                 <structure>
                     <property name="position">38</property>
-                    <property name="name">cust_wp_gstinv_supplier_yn</property>
-                    <property name="nativeName">cust_wp_gstinv_supplier_yn</property>
+                    <property name="name">cust_wp_gst_dnote_yn</property>
+                    <property name="nativeName">cust_wp_gst_dnote_yn</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -660,7 +684,7 @@
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{call sppur_rep_address(?)} ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[{call sppur_rep_address(?,?)} ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -670,11 +694,11 @@
         <design:inOutMode>In</design:inOutMode>
         <design:attributes>
           <design:identifier>
-            <design:name>scode</design:name>
+            <design:name>ledtype</design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>10</design:precision>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>1</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>NotNullable</design:nullability>
         </design:attributes>

@@ -334,13 +334,19 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 		    vouno    =  sel[i].data.accref_vouno;
 		    voudate  =  sel[i].data.accref_voudate;
 
-                    voudate2 = new Date(voudate);
-                    invdate2 = new Date(invdate);
+            voudate2 = new Date(voudate);
+            invdate2 = new Date(invdate);
+            
+            //alert(voudate);
+            //alert(invdate);
 
 			var diffdays = voudate2.getTime()-invdate2.getTime();
+        
 			diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24));
+            if (diffdays > 0 )
+                diffdays = diffdays + 1;
 
-
+//alert(diffdays);
                         cdeligibledays = diffdays;
 
 
@@ -360,9 +366,9 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 		     {
                           actual_adjusted = Number(sel[i].data.pendingamt)-Number(sel[i].data.adjamt);  
                           totadj =  sel[i].data.pendingamt - sel[i].data.adjamt;
-		          sel[i].set('adjamt', sel[i].data.pendingamt);
+		                  sel[i].set('adjamt', sel[i].data.pendingamt);
                           totaladjusted =  Number(totaladjusted) + Number(totadj);
-		          tobeadjust1 = Number(tobeadjust1)- Number(totadj);
+		                  tobeadjust1 = Number(tobeadjust1)- Number(totadj);
                           tobeadjust1 = Ext.util.Format.number(tobeadjust1, '0.00');
                           tobeadjust2 = Number(tobeadjust2)-Number(totadj);
      //                     alert(tobeadjust2);
@@ -488,11 +494,23 @@ function chk_adjustments()
 
                     debit[db].set('adjamt', Ext.util.Format.number(Number(totaladjusted), '0.00') );
 
-                    var amt1 =  parseFloat(tobeadjust3.toFixed(0)); 
-                    var amt2 =  parseFloat(totaladjusted.toFixed(0)); 
+//                    var amt1 =  parseFloat(tobeadjust3.toFixed(0)); 
+//                    var amt2 =  parseFloat(totaladjusted.toFixed(0)); 
 
-                    if (Number(amt1) > Number(amt2) || Number(cdeligibledays) > 7 )
+                    var amt1 = parseFloat((Number(tobeadjust3) || 0).toFixed(0));
+                    var amt2 = parseFloat((Number(totaladjusted) || 0).toFixed(0));
+//                    if (Number(amt1) > Number(amt2) || Number(cdeligibledays) > 7 )
+                    if ((Number(amt1) - Number(amt2)) > 1 || Number(cdeligibledays) > 7)                        
                     {
+/*                        
+                        if (invno == "TN/2761/25-26")
+                            {    
+                               alert(invno);
+                               alert(amt1);
+                               alert(amt2);
+                               alert(Number(amt1) - Number(amt2));
+                            }   
+*/
                         debit[db].set('cdvalue1',0 );
                         debit[db].set('cdcgst1',0 );
                         debit[db].set('cdsgst1',0 );
@@ -955,7 +973,7 @@ function load_data()
      
                       }
 CalcTotalDebitCredit();
-chk_adjustments();
+ chk_adjustments();
                     }
 
 	        }
@@ -1038,8 +1056,8 @@ function flxaccupdation() {
           flxAccounts.getStore().getCount(),
           new dgrecord({
               slno      : RowCnt1,
-	      ledcode   : '1741',
-	      ledname   : 'GST SALES @12%',
+	      ledcode   : '5130',
+	      ledname   : 'GST SALES @ 18%',
 	      debit     : Ext.util.Format.number(txtCDValue.getRawValue(),'0.00') ,
               credit    : "0",
               ledtype   : 'G',
@@ -2111,7 +2129,9 @@ listeners: {
 onEsc:function(){
 },
         listeners:
-            {
+
+        {
+
                 show:function(){
 //  Ext.getCmp('save').setDisabled(true); 
 

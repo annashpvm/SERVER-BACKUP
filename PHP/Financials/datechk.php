@@ -1,7 +1,7 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
-     mysql_query("SET NAMES utf8");
+     mysqli_set_charset($conn, "utf8");
 
     $task='';
     
@@ -36,8 +36,7 @@ function JEncode($arr) {
 }
 function getExpbm() {
     $finid=$_POST['finid'];
-    $r = mysql_query("
-select * from(
+    $sql = "select * from(
 select 
     accref_vouno,
     CASE
@@ -57,8 +56,8 @@ group by accref_seqno , accref_vouno , accref_seqno
 having sum(acctran_dbamt) <> sum(acctran_cramt)
 )x
 ");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);
@@ -67,8 +66,8 @@ having sum(acctran_dbamt) <> sum(acctran_cramt)
 function getTdsLedgerget() {
     $ledger=$_POST['ledger'];
     $r = mysql_query("select led_grp_code from acc_ledger_master where led_code='$ledger'");
-    $nrow = mysql_num_rows($r);
-    while ($re = mysql_fetch_array($r)) {
+    $nrow = mysqli_num_rows($r);
+    while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
     }
     $jsonresult = JEncode($arr);

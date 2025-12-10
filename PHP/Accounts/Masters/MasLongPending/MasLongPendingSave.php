@@ -12,7 +12,7 @@ session_start();
 $data = '';
 
 #Begin Transaction
-mysql_query("BEGIN");
+mysqli_query($conn, "BEGIN");
 
 
 
@@ -24,17 +24,19 @@ $query1="insert into massal_longpending_customers values  ('$custcode','$custnam
 
 //echo  $query1;
 
-$result1 = mysql_query($query1);
+$result1 = mysqli_query($conn, $query1);
  }     
 
       if ($result1)
       {
-          mysql_query("COMMIT");
+          mysqli_begin_transaction($conn);
           echo '({"success":"true","msg":"' . $custname  . '"})';
       }
      else
      {
-         mysql_query("ROLLBACK");
+         mysqli_rollback($conn);
+
+
          echo '({"success":"false","msg":"' . $custname  . '"})';
 
      }
