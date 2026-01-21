@@ -2447,9 +2447,9 @@ style:{
 
 
  if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign&__format=pdf&' + param, '_blank');
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign&__format=PDF&' + param, '_blank');
                     else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign&__format=xlsX&' + param, '_blank');
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_GroupwiseExcel.rptdesign&__format=XLSX&' + param, '_blank');
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign' + param, '_blank');	
                 /*    if (printtype == "PDF") 

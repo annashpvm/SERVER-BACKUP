@@ -707,7 +707,7 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 	$adjdays=$recdatenew['daysin'];
 
 
-$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate) values ('$ginrefslno','$compcode','$finid','$ref_docseqno2','$vouno2', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$cdamount',$adjdays,'CN',curdate(),$payterms,$ledgercode,'$voutype' ,'$invdate');";
+$query10 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid','$ref_docseqno2','$vouno2', '$voudate', '$accadjseqno','$adjvouno','$invno','$invdate','$cdamount',$adjdays,'CN',curdate(),$payterms,$ledgercode,'$voutype' ,'$invdate','D');";
 
 $result10 = mysqli_query($conn, $query10);
 

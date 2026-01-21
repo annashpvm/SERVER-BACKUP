@@ -16,7 +16,8 @@ $issentdate  = $_POST['issentdate'];
 
 
 
-mysqli_query($conn, "BEGIN");
+
+mysqli_begin_transaction($conn);   
 
 if ($savetype == "Add") 
 {
@@ -139,7 +140,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if($result2 && $result3 && $result4)
 {
-  	mysqli_begin_transaction($conn);                        
+	mysqli_commit($conn);                               
   	echo '({"success":"true","IssNo":"'. $isshno . '"})';
 }
 else

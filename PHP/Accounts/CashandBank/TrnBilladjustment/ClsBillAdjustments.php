@@ -133,7 +133,7 @@ $sql = "select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_se
 		$sql = "select   accref_seqno, DATE_FORMAT(accref_voudate, '%d-%m-%Y') voudate, accref_voudate ,accref_vouno,acctrail_inv_no,acctrail_inv_value,acctrail_adj_value,
  acctrail_inv_value-acctrail_adj_value balamt, ref_invno, DATE_FORMAT(ref_invdate, '%d-%m-%Y') ref_invdate, ref_adjamount ,acctrail_amtmode 
 from  acc_ref ref left join acc_trail trn  on ref.accref_seqno = trn.acctrail_accref_seqno and accref_vou_type in ('$voutype')  left  join acc_adjustments on accref_comp_code = ref_compcode  
-and accref_finid = ref_finid and  (accref_seqno = ref_docseqno OR  accref_seqno = ref_adjseqno)  where accref_comp_code = $compcode and accref_finid = $fincode   and trn.acctrail_led_code = $ledcode   and ref_adjamount > 0  order by accref_voudate desc ,accref_vouno desc,ref_invno desc";
+and accref_finid = ref_finid  and  trn.acctrail_led_code = ref_ledcode  and   (accref_seqno = ref_docseqno OR  accref_seqno = ref_adjseqno)  where accref_comp_code = $compcode and accref_finid = $fincode   and trn.acctrail_led_code = $ledcode   and ref_adjamount > 0  order by accref_voudate desc ,accref_vouno desc,ref_invno desc";
 
 //echo $sql;
 

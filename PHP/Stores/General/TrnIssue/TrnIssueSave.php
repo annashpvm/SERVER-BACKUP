@@ -18,7 +18,7 @@ $vounolist   = $_POST['vounolist'];
 
 global $conn; 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);    
 
 if ($savetype == "Add") 
 {
@@ -51,12 +51,12 @@ else
    }
 
    
-   $query12= "update  trnpur_item_issues , maspur_item_trailer  set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END  where iss_comp_code = item_comp_code and iss_fin_code = item_fin_code and iss_item_code = item_code and  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = $isstype and iss_no =  $isshno";	
-   $result12=mysqli_query($conn, $query12);      
+   $query5 = "update  trnpur_item_issues , maspur_item_trailer  set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END  where iss_comp_code = item_comp_code and iss_fin_code = item_fin_code and iss_item_code = item_code and  iss_comp_code = item_comp_code and  iss_fin_code = item_fin_code and iss_comp_code = $isscompcode and iss_fin_code = $issfincode and iss_type = '$isstype' and iss_no =  $isshno";	
+   $result5=mysqli_query($conn, $query5);      
 
    
 
-//echo $query12;   
+//echo $query5;   
 //echo "<br>";
 
 
@@ -141,11 +141,11 @@ for ($i=0;$i<$rowcnt;$i++)
 //echo "<br>";
         }       
 		
-		$query4= "update maspur_item_trailer set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
-		$result12=mysqli_query($conn, $query12);      
+		$query5= "update maspur_item_trailer set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END where item_code = $issitemcode and item_comp_code = $isscompcode  and item_fin_code =$issfincode";
+		$result5=mysqli_query($conn, $query5);      
 
-//		echo $query4;   
-       //echo "<br>";
+//		echo $query5;   
+//        echo "<br>";
 
 
     } //END IF
@@ -155,9 +155,9 @@ for ($i=0;$i<$rowcnt;$i++)
 
 
 
-if($result2 && $result3 && $result4)
+if($result2 && $result3 && $result4 && $result5) 
 {
-  	mysqli_begin_transaction($conn);                        
+	mysqli_commit($conn);                    
   	echo '({"success":"true","IssNo":"'. $isshno . '"})';
 }
 else

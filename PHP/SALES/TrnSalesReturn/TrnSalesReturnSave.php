@@ -45,8 +45,7 @@ mysqli_set_charset($conn, "utf8");
 
 
 
-
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -120,14 +119,27 @@ else
 	 $query1= "update trnsal_salret_header set reth_noofreels =  '$rethnoofreels' ,reth_totwt = '$rethtotwt',reth_insper =  '$rethinsper', reth_insamt = '$rethinsamt' , reth_frieght ='$rethfrieght',reth_roff =  '$rethroff', reth_amt =  '$rethamt', reth_taxable = '$rethtaxable',  reth_cgst_amt = '$rethcgstamt', reth_sgst_amt = '$rethsgstamt', reth_igst_amt = '$rethigstamt',reth_date = '$rethdate' ,reth_return_wt = '$rethretwt' , reth_tcs =  '$rethtcs' where reth_comp_code = '$rethcompcode'  and reth_fincode =  '$rethfincode' and reth_no = '$rethno'";
 	 $result1=mysqli_query($conn, $query1); 
 
+//echo $query1; 
+//echo "<br>";
+
 	$query2 = "update trnsal_finish_stock, trnsal_salret_trailer set  stk_retno = 0, stk_rettag = '' , stk_retdt = NULL where rett_var = stk_var_code and rett_sr_no = stk_sr_no and  rett_comp_code = stk_comp_code  and rett_fincode = stk_finyear and rett_comp_code = '$rethcompcode' and rett_fincode = '$rethfincode' and rett_no ='$rethno'";
 	 $result2=mysqli_query($conn, $query2);  
 
+//echo $query2; 
+//echo "<br>";
+	 
 	$query3 = "update trnsal_packslip_trailer, trnsal_salret_trailer set pckt_rettag = 'N' where rett_var = pckt_size and rett_sr_no = pckt_sr_no and  rett_comp_code = pckt_comp_code  and rett_fincode = pckt_fincode and rett_comp_code = '$rethcompcode' and rett_fincode = '$rethfincode' and rett_no ='$rethno'";
 	 $result3=mysqli_query($conn, $query3);
 
+//echo $query3; 
+//echo "<br>";
+	 
+
 	$query4 = "delete from trnsal_salret_trailer where rett_comp_code = '$rethcompcode' and rett_fincode = '$rethfincode' and rett_no ='$rethno'";
-	 $result4=mysqli_query($conn, $query4);  
+	$result4=mysqli_query($conn, $query4);  
+
+//echo $query4; 
+//echo "<br>";	
 
 }
 
@@ -146,32 +158,32 @@ $retwtchange   = $griddet[$i]['wtchange'];
 $retnewno      = (int) $griddet[$i]['newnumber'];
 $diffwt        =  $retwt-$retretwt;
 
-$query3= "insert into trnsal_salret_trailer values('$rethcompcode','$rethfincode','$rethno','$retvar','$retsrno','$retwt','$returate', '$retsrnofincode', '$rethsncode','$retretwt','$retwtchange','$retnewno')";
+$query5= "insert into trnsal_salret_trailer values('$rethcompcode','$rethfincode','$rethno','$retvar','$retsrno','$retwt','$returate', '$retsrnofincode', '$rethsncode','$retretwt','$retwtchange','$retnewno')";
 
-//echo $query3; 
+//echo $query5; 
 //echo "<br>";
 
-$result3=mysqli_query($conn, $query3);       
+$result5=mysqli_query($conn, $query5);       
 
 
 
-$query4 = "update trnsal_finish_stock set stk_wt =  $retretwt , stk_destag = '', stk_rettag = 'T' , stk_retno = '$rethno' ,stk_retdt = '$rethdate'  where stk_slipno = '$rethslipno' and  stk_sr_no = '$retsrno' and stk_comp_code = '$rethcompcode' and stk_finyear = '$retsrnofincode'";
+$query6 = "update trnsal_finish_stock set stk_wt =  $retretwt , stk_destag = '', stk_rettag = 'T' , stk_retno = '$rethno' ,stk_retdt = '$rethdate'  where stk_slipno = '$rethslipno' and  stk_sr_no = '$retsrno' and stk_comp_code = '$rethcompcode' and stk_finyear = '$retsrnofincode'";
 
-//echo $query4; 
+//echo $query6; 
 //echo "<br>";
-$result4=mysqli_query($conn, $query4);  
+$result6=mysqli_query($conn, $query6);  
 
   
 
 
 //$query5 = "update trnsal_packslip_trailer set pckt_wt = $retretwt , pckt_rettag = 'T' where pckt_sr_no = '$retsrno'  and pckt_fincode = '$rethvouyear' and pckt_comp_code = '$rethcompcode'";  
 
-$query5 = "update trnsal_packslip_trailer set pckt_rettag = 'T' where pckt_sr_no = '$retsrno'  and pckt_fincode = '$rethvouyear' and pckt_comp_code = '$rethcompcode'";  
+$query7 = "update trnsal_packslip_trailer set pckt_rettag = 'T' where pckt_sr_no = '$retsrno'  and pckt_fincode = '$rethvouyear' and pckt_comp_code = '$rethcompcode'";  
 
-//echo $query5; 
+//echo $query7; 
 //echo "<br>";
 
-$result5=mysqli_query($conn, $query5);
+$result7=mysqli_query($conn, $query7);
 
 
 
@@ -179,7 +191,7 @@ if ($retnewno > 0)
 { 
 	$query = "select * from trnsal_finish_stock where stk_comp_code = '$rethcompcode' and stk_sr_no = '$retsrno'  ;";
 	$result= mysqli_query($conn, $query);
-        while ($row = mysql_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc($result)) {
             $proddate = $row['stk_ent_date'];
             $sono     = $row['stk_sono'];
             $yymm     = $row['stk_yymm'];
@@ -189,18 +201,18 @@ if ($retnewno > 0)
             $despdate = $row['stk_desdt'];
         }   
 
-	$query6 = "insert into trnsal_finish_stock  (stk_comp_code,stk_finyear,stk_ent_no,stk_ent_date,stk_var_code,stk_sr_no,stk_wt,stk_sono,stk_source,stk_yymm, stk_rollno, stk_shift, stk_first_wt,stk_slipno,stk_desdt,stk_destag) VALUES ('$rethcompcode','$rethfincode','500','$proddate','$retvar','$retnewno' , '$diffwt','$sono','R' , '$yymm'  ,'$rollno' , '$shift', '$diffwt','$slipno','$despdate','T')";
+	$query8 = "insert into trnsal_finish_stock  (stk_comp_code,stk_finyear,stk_ent_no,stk_ent_date,stk_var_code,stk_sr_no,stk_wt,stk_sono,stk_source,stk_yymm, stk_rollno, stk_shift, stk_first_wt,stk_slipno,stk_desdt,stk_destag) VALUES ('$rethcompcode','$rethfincode','500','$proddate','$retvar','$retnewno' , '$diffwt','$sono','R' , '$yymm'  ,'$rollno' , '$shift', '$diffwt','$slipno','$despdate','T')";
 
-	//echo $query6; 
-	//echo "<br>";
-	$result6=mysqli_query($conn, $query6);  
+//	echo $query8; 
+//	echo "<br>";
+	$result8=mysqli_query($conn, $query8);  
 
 	$query = "select * from trnsal_packslip_trailer where pckt_fincode = '$rethvouyear'  and  pckt_comp_code = '$rethcompcode' and pckt_no = '$rethslipno';";
 	$result= mysqli_query($conn, $query);
 //echo $query; 
 //echo "<br>";
 
-        while ($row = mysql_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc($result)) {
             $psize    = $row['pckt_size'];
             $psono    = $row['pckt_sono'];
             $psodate  = $row['pckt_sodate'];
@@ -211,11 +223,11 @@ if ($retnewno > 0)
 
         }   
 
-	$query7 = "insert into trnsal_packslip_trailer  (pckt_comp_code, pckt_fincode, pckt_no, pckt_size, pckt_sono, pckt_sodate, pckt_sr_no, pckt_wt, pckt_rettag, pckt_srno_fincode) VALUES ('$rethcompcode','$rethvouyear','$rethslipno','$psize','$psono','$psodate','$retnewno', '$diffwt','N', '$pfincode')";
+	$query9 = "insert into trnsal_packslip_trailer  (pckt_comp_code, pckt_fincode, pckt_no, pckt_size, pckt_sono, pckt_sodate, pckt_sr_no, pckt_wt, pckt_rettag, pckt_srno_fincode) VALUES ('$rethcompcode','$rethvouyear','$rethslipno','$psize','$psono','$psodate','$retnewno', '$diffwt','N', '$pfincode')";
 
-//	echo $query7; 
+//	echo $query9; 
 //	echo "<br>";
-	$result7=mysqli_query($conn, $query7); 
+	$result9=mysqli_query($conn, $query9); 
 }
 }
 
@@ -223,9 +235,9 @@ if ($retnewno > 0)
 
 
 if ($savetype == "Add") {
-	if( $result1  &&  $result3  && $result4  && $result5)
+	if( $result1  &&  $result5  && $result6  && $result7)
 	{
-		mysqli_begin_transaction($conn);                        
+		mysqli_commit($conn);                        
 		echo '({"success":"true","retno":"'. $rethno . '"})';
 
 		    
@@ -240,9 +252,9 @@ if ($savetype == "Add") {
 }
 else
 {
-	if( $result1  && $result2 && $result3 && $result4)
+	if( $result1  && $result2 && $result3 && $result4 &&  $result5  && $result6  && $result7)
 	{
-		mysqli_begin_transaction($conn);                        
+	    mysqli_commit($conn);                   
 		echo '({"success":"true","retno":"'. $rethno . '"})';
 
 		    

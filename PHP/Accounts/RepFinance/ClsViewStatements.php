@@ -32,9 +32,9 @@ mysqli_set_charset($conn, "utf8");
                 getDocumentList();
 		break;
 
-		case "loadSalesDocumentList":
-                getSalesDocumentList();
-		break;
+//		case "loadOpeningStock":
+  //              getSalesDocumentList();
+//		break;
 
 		case "loadPurchaseDocumentList":
                 getPurchaseDocumentList();

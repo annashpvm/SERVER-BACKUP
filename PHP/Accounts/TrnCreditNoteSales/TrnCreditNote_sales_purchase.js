@@ -500,7 +500,7 @@ function chk_adjustments()
                     var amt1 = parseFloat((Number(tobeadjust3) || 0).toFixed(0));
                     var amt2 = parseFloat((Number(totaladjusted) || 0).toFixed(0));
 //                    if (Number(amt1) > Number(amt2) || Number(cdeligibledays) > 7 )
-                    if ((Number(amt1) - Number(amt2)) > 1 || Number(cdeligibledays) > 7)                        
+                    if ((Number(amt1) - Number(amt2)) > 1 || Number(cdeligibledays) > 10)                        
                     {
 /*                        
                         if (invno == "TN/2761/25-26")

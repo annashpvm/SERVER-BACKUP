@@ -324,6 +324,55 @@ function getSizeChange()
 }
 
 
+
+
+
+function check_password()
+{
+   if (txtPassword.getRawValue() == "admin@123")
+   {
+
+      Ext.getCmp('delete').setDisabled(false);
+   }
+   else
+   {
+      Ext.getCmp('delete').setDisabled(true);
+   }    
+
+} 
+
+var txtPassword  = new Ext.form.TextField({
+     fieldLabel  : 'PassWord',
+     id          : 'txtPassword',
+     name        : 'txtPassword',
+     inputType   : 'password',
+     fieldStyle  : 'text-transform:uppercase',
+     width       :  80,
+//	readOnly    : true,
+     labelStyle  : "font-size:12px;font-weight:bold;",
+     style       :"border-radius: 5px;",
+  enableKeyEvents: true,
+     listeners   :{
+
+       change: function (obj, newValue) {
+//            console.log(newValue);
+//            obj.setRawValue(newValue.toUpperCase());
+         check_password();
+       },
+
+
+        blur:function(){
+           check_password();
+        },
+        keyup:function(){
+           check_password();
+        },
+     }
+
+
+ });
+
+
 var cmbSize = new Ext.form.ComboBox({
         fieldLabel      : 'Size',
         width           :  200,
@@ -1041,6 +1090,49 @@ bodyStyle:{"background-color":"#ebebdf"},
 
 });
 
+
+var btnGridRefresh = new Ext.Button({
+    text   : "Clear",
+    width  : 80,
+    height : 30,
+    id     : 'btnGridRefresh',
+    border : true,
+
+    style: {
+        borderColor: 'blue',
+        borderStyle: 'solid'
+    },
+
+    handler: function () {
+
+        var grid = Ext.getCmp('my-grid');
+        if (!grid) {
+            Ext.Msg.alert('Error', 'Grid not found');
+            return;
+        }
+
+        var store = grid.getStore();
+        if (!store) return;
+
+        var removeRecs = [];
+
+        store.each(function (rec) {
+            if (rec.get('Update') === 'N') {
+                removeRecs.push(rec);
+            }
+        });
+
+        if (removeRecs.length === 0) {
+            Ext.Msg.alert('Info', 'No rows with UPDATED = N');
+            return;
+        }
+
+        store.remove(removeRecs);
+    }
+});
+    
+
+
 var btnAdd = new Ext.Button({
     style   : 'text-align:center;',
     text    : "ADD",
@@ -1048,7 +1140,7 @@ var btnAdd = new Ext.Button({
     height  : 30,
     id      : 'btnAdd',
     x       : 0,
-    y       : 00,
+
           border: 1,
           style: {
               borderColor: 'blue',
@@ -1703,6 +1795,80 @@ var BundleReceiptPanel = new Ext.FormPanel({
                          	} //loop v start 
                    } 
             },'-',
+
+            {
+                //Delete
+                            text: 'Remove from Stock',
+                            id:'delete',
+                            style  : 'text-align:center;',
+                            tooltip: 'Delete Details...',
+                            height: 40,
+                            fontSize:30,
+                            width:70,
+                            icon: '/Pictures/save.png',
+                            listeners:{
+                                click:function() {
+                                       Ext.MessageBox.show({
+                                           title: 'Confirmation',
+                                           icon: Ext.Msg.QUESTION,
+                                           buttons: Ext.MessageBox.YESNO,
+                                           msg: "Do You Want to Remove from  the Stock",
+                                           fn: function(btn)
+                                           {         
+                                           if (btn == 'yes')
+                                               {   
+                                                 var finData = flxDetails.getStore().getRange();                                        
+                                                 var finupdData = new Array();
+                                                 Ext.each(finData, function (record) {
+                                                         finupdData.push(record.data);
+                                                 });  
+                                                 Ext.Ajax.request({
+                                                 url: 'TrnSalesBundleReceiptStockDelete.php',
+                                                 params:
+                                                 {
+                                                       savetype:gstFlag,
+                                                       cnt: finData.length,
+                                                       griddet: Ext.util.JSON.encode(finupdData),
+                                                       compcode :Gincompcode,
+                                                       fincode :GinFinid,  
+                                                       receiptno : txtBundRecptNo.getRawValue(),
+                                                       receiptdate :Ext.util.Format.date(dptBundRecpt.getValue(),"Y-m-d"),	
+                                                       cutter       : cmbConverter.getValue(),
+                                                       seqno        : dcseqNumber,	
+                                                       dcno         : cmbDCNo.getRawValue(),
+                                                       dcdate       : Ext.util.Format.date(dptDC.getValue(),"Y-m-d"),	
+                                                       party        : cmbCustomer.getValue(),
+                                                       originalsize : cmbDCSize.getValue(),
+                                                       finishedsize : cmbSize.getValue(),
+                                                       sono         : cmbSONO.getRawValue(),
+                                                       sodt         : Ext.util.Format.date(dptDC.getValue(),"Y-m-d"),       
+                                                    },
+                                                    callback: function(options, success, response)
+                                                    {
+                                                                 var obj = Ext.decode(response.responseText);
+                                        if (obj['success']==="true")
+                                        {                                
+                                                        Ext.MessageBox.alert("Stock Removed  No -" + obj['dcno']);
+                                                        BundleReceiptPanel.getForm().reset();
+                                                        flxDetails.getStore().removeAll();
+                                                        RefreshData();
+                                        }else
+                                        {
+                                             Ext.MessageBox.alert("Stock Not Removed Pls Check!- " + obj['dcno']);                                                  
+                                        }
+                                                }
+                                 //-- loop Z end           
+                
+                                                                    });      //loop y end
+                                                                  }       //loop x start
+                                                                 } 
+                                                            });   
+                
+                                                        }  //loop w start   
+                                             } //loop v start 
+                                   
+                            },'-',
+
         {
             text: 'Refresh',
             style  : 'text-align:center;',
@@ -2146,6 +2312,16 @@ alert(param);
                        items: [btnAdd]
                    },
                    { 
+                    xtype       : 'fieldset',
+                    title       : '',
+                    labelWidth  : 80,
+                    width       : 400,
+                    x           : 600,
+                    y           : 200,
+                    border      : false,
+                    items: [btnGridRefresh]
+                },                   
+                   { 
                        xtype       : 'fieldset',
                        title       : '',
                        labelWidth  : 80,
@@ -2192,6 +2368,17 @@ alert(param);
                    },
 
 
+                   { 
+                    xtype       : 'fieldset',
+                    title       : '',
+                    labelWidth  : 80,
+                    width       : 400,
+                    x           : 500,
+                    y           : 450,
+                    border      : false,
+                    items: [txtPassword]
+                },
+
 
 
 
@@ -2205,6 +2392,7 @@ alert(param);
 });
 
    function RefreshData(){
+           Ext.getCmp('delete').setDisabled(true);
             gstFlag = "Add";
             updchk = 0;
             Ext.getCmp('cmbBundRecptNo').hide();

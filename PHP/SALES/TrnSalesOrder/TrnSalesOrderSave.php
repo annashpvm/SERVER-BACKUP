@@ -71,8 +71,7 @@ $cd90_60days = (float) $_POST['cd90_60days'];
 $cd90_75days = (float) $_POST['cd90_75days'];
 
 
-mysqli_query($conn, "BEGIN");
-
+mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") {
 
@@ -216,7 +215,8 @@ if ($savetype == "Add") {
 else
  {
 	if ($result2 && $result3) {
-	   mysqli_begin_transaction($conn);
+	   
+	   mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $ordhackno . '"})';
 		 
 	} 

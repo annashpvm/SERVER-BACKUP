@@ -2294,6 +2294,25 @@ if (printtype == "PDF")
 		            } 
 		           }   
                   } 
+
+
+                  LoadClosingValueDataStore.load({
+                    url:'/SHVPM/Accounts/TrnOpening/clsLedgerOpening.php',
+                    params:{
+                        task:'loadClosingValue',
+                        compcode : Gincompcode,
+                        fincode : GinFinid,
+
+                    },
+                    callback:function(){
+                    var cnt=LoadClosingValueDataStore.getCount();
+
+                    if (cnt > 0)
+                         closingstock = LoadClosingValueDataStore.getAt(0).get('curbal_obdbamt');
+
+
+                     if (closingstock == 0)    
+                         closingstock = openingstock;
 // EXPENSES
 
 //alert(openingstock);
@@ -2302,7 +2321,7 @@ if (printtype == "PDF")
 //alert(salesaccount);
 //alert(indirectexpenses);
 
-                  subtotalexp = Number(openingstock) + Number(purchaseaccount) + Number(directexpenses) ;
+subtotalexp = Number(openingstock) + Number(purchaseaccount) + Number(directexpenses) ;
 
 //                  profit_loss =  Number(purchaseaccount) + Number(directexpenses) - Number(salesaccount);
 
@@ -2668,6 +2687,11 @@ if (printtype == "PDF")
 		        );
 		  }
 
+
+
+                    }
+                });
+
                 }         
 	  });
 
@@ -2918,22 +2942,6 @@ grid_tot();
 
 
 
-                LoadClosingValueDataStore.load({
-                    url:'/SHVPM/Accounts/TrnOpening/clsLedgerOpening.php',
-                    params:{
-                        task:'loadClosingValue',
-                        compcode : Gincompcode,
-                        fincode : GinFinid,
-
-                    },
-                    callback:function(){
-                    var cnt=LoadClosingValueDataStore.getCount();
-
-                    if (cnt > 0)
-                         closingstock = LoadClosingValueDataStore.getAt(0).get('curbal_obdbamt');
-
-                    }
-                });
 
 
     }  

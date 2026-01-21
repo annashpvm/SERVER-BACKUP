@@ -18,6 +18,9 @@ Ext.onReady(function () {
     var gstfincompcode = localStorage.getItem('gincompcode');
 
 
+
+    var recptdate = '';
+    
    var cnslno = 0;
    var GinUserid = localStorage.getItem('ginuserid');
    var GinUserType = localStorage.getItem('ginusertype');
@@ -90,6 +93,25 @@ var LoadTCSLedgerDataStore = new Ext.data.Store({
       ]),
     });
 
+
+
+    var LoadBankReceiptDataStore = new Ext.data.Store({
+        id: 'LoadBankReceiptDataStore',
+    //    autoLoad : true,
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsCreditNote.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"LoadBankReceipt"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },[
+            'accref_payref_date'
+        ]),
+      });
 
 
 var LoadCreditNoteVoucherDetailDataStore = new Ext.data.Store({
@@ -1137,7 +1159,7 @@ var cmbCNNo = new Ext.form.ComboBox({
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         listeners:{
            select: function(){
-
+            recptdate = '';
                        Ext.getCmp('editchk').hide();
                        flxDetail.getStore().removeAll();
      	               LoadVouNoDetailsdatastore.removeAll();
@@ -1166,6 +1188,10 @@ var cmbCNNo = new Ext.form.ComboBox({
 		          callback: function () {
 
 
+
+
+                
+
                         if (LoadCreditNoteVoucherTypeDataStore.getAt(0).get('nos') >0 )
                	       {  
                           alert("We can't Change the Credit Note... Because this entry made from Auto Adjustments");
@@ -1174,7 +1200,34 @@ var cmbCNNo = new Ext.form.ComboBox({
                           }
                           });  
 
- 
+
+                          if (LoadCreditNoteVoucherDetailDataStore.getAt(0).get('accref_link_seqno')  > 0)
+                            {
+                              LoadBankReceiptDataStore.removeAll();
+                              LoadBankReceiptDataStore.load({
+                              url: 'ClsCreditNote.php',
+                              params: {
+                                  task     : 'LoadBankReceipt',
+                                  fincode  : ginfinid,
+                                  compcode : gstfincompcode,
+                                  accseqno : LoadCreditNoteVoucherDetailDataStore.getAt(0).get('accref_link_seqno') ,
+                              },
+                              callback: function () {
+
+                                  var cnt = LoadBankReceiptDataStore.getCount();
+                                  if (cnt > 0)    
+                                  {  
+                                      recptdate = Ext.util.Format.date(LoadBankReceiptDataStore.getAt(0).get('accref_payref_date'), 'd/m/Y');
+  
+                                  }    
+
+
+
+                              }
+                              });
+                        }
+  
+                          
 
           //             alert(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_no'));
                          cnslno = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_no');
@@ -2080,6 +2133,65 @@ function add_btn_click()
         }
        }  
     });
+
+
+    var btnHSN = new Ext.Button({
+        style: 'text-align:center;',
+        text: "Update HSN",
+        width: 10,
+        x: 1000,
+        y: 440,
+          border: 1,
+          style: {
+              borderColor: 'blue',
+              borderStyle: 'solid',
+              fontSize  : '14px',
+
+          },
+        listeners: {
+            click: function () {
+    
+             if (txtTotDebit.getValue() == 0 || txtTotCredit.getValue() == 0 )
+             {
+                 alert("Debit / Credit Amount is Empty.. ");
+             }           
+             else
+             {
+	      Ext.Ajax.request({
+	      url: 'FrmTrnCreditNoteHSNUpdate.php',
+	      params :
+	      {
+                        finid: ginfinid,
+                        compcode  : gstfincompcode,
+			            vouno     : cmbCNNo.getRawValue(),
+                        accseqno  : accseqno,
+                        dncrseqno : dncrseqno,
+                        narration : txtNarration.getRawValue(),          
+                        hsn       : cmbHSNList.getRawValue(),
+
+
+	      },
+	      callback: function(options, success, response)
+	      {
+                  var obj = Ext.decode(response.responseText);
+                  if (obj['success']==="true")
+                  { 
+                      Ext.MessageBox.alert("CREDIT NOTE Modified -" + obj['vouno']);
+
+                      RefreshData();
+                  }else
+                  {
+                  Ext.MessageBox.alert("Credit Note not Modified. Please check.." + obj['vouno']);                                                  
+                  }
+	      }
+              });                   
+
+           }
+        }
+       }  
+    });
+
+    
  var loadSearchLedgerListDatastore = new Ext.data.Store({
       id: 'loadSearchLedgerListDatastore',
 //      autoLoad : true,
@@ -3316,11 +3428,20 @@ function edit_click()
                     icon: '/Pictures/save.png',
                     listeners: {
                         click: function () {
+
+
+                            if (recptdate && recptdate.trim() !== '') {
+                                rptDateParam = recptdate;  // pass actual value
+                            } else {
+                                rptDateParam = '';          // pass blank
+                            }
+
 				var compcode = "&compcode=" + encodeURIComponent(gstfincompcode);
 				var fincode = "&fincode=" + encodeURIComponent(ginfinid);
 				var vouno = "&vouno=" + encodeURIComponent(cmbCNNo.getRawValue());
+                var rdate    = "&recptdate=" + (rptDateParam);
 
-				var param =(compcode+fincode+vouno);
+				var param =(compcode+fincode+vouno+rdate);
 
 				window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouPrint_ECreditNote.rptdesign&__format=pdf&' + param, '_blank'); 
                         }
@@ -3825,7 +3946,7 @@ flxLedger,
                 border: false,
                 items: [txtPartyCredit]
             },
-btnAdd, btnUpdate,
+btnAdd, btnUpdate,btnHSN,
                     {
                         xtype: 'fieldset',
                         title: '',

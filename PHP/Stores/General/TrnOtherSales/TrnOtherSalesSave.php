@@ -47,7 +47,7 @@ $deliverygst=   strtoupper($_POST['deliverygst']);
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);      
 
 if ($savetype == "Add") {
    $query2    = "select ifnull(max(os_seqno),0)+1 as seqno from trn_other_sales where  os_fincode = '$snhfincode' and os_compcode = '$snhcompcode'";
@@ -193,15 +193,13 @@ os_delivery_addr1, os_delivery_addr2, os_delivery_addr3, os_delivery_city, os_de
         
    if ( $result4 && $resulta1  && $resulta2)
    {
-           mysqli_query($conn, "COMMIT");                       
-            echo '({"success":"true","saleno":"'.$snhinvno.'"})';
+      mysqli_commit($conn);                       
+      echo '({"success":"true","saleno":"'.$snhinvno.'"})';
    }
    else
    {
-            mysqli_rollback($conn);
-
-            
-            echo '({"success":"false","saleno":"'.$snhinvno.'"})';
+      mysqli_rollback($conn);
+      echo '({"success":"false","saleno":"'.$snhinvno.'"})';
    }  
        
  

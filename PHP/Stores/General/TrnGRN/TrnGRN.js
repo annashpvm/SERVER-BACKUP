@@ -1065,6 +1065,28 @@ Ext.onReady(function(){
     function save_click()
     {
     
+
+
+        var hasError = false;
+        var Row= flxAccounts.getStore().getCount();  
+        for(var i=0;i<Row;i++)
+        {
+
+            var rec = flxAccounts.getStore().getAt(i);
+            if ( rec.get('ledcode') == 0 && Number(rec.get('debit')) +  Number(rec.get('credit')) > 0)
+            {   
+                    hasError = true;
+                    break;   // stop loop on first error
+               
+            }
+         }
+ 
+         if (hasError) {
+            alert("Error in Accounts Ledger .. Please select Ledger");
+            return
+        }
+                
+
          if (gstFlag == "Add")
             BillNoChecking();
          else
@@ -3345,8 +3367,8 @@ Ext.onReady(function(){
                             flxAccounts.getStore().getCount(),
                             new dgrecord({
                       slno      : RowCnt1,
-                      ledcode   : 2020,
-                      ledname   : 'FREIGHT INWARD -GST',
+                      ledcode   : 5088,
+                      ledname   : 'FREIGHT INWARD GST -18%',
         //		      debit     : txtTotPF.getValue(),
                       debit     : Ext.util.Format.number(txttotfreight1.getValue(),'0.00'),
                        billno    : txtBillNo.getRawValue(),
@@ -3402,8 +3424,8 @@ Ext.onReady(function(){
                             flxAccounts.getStore().getCount(),
                             new dgrecord({
                       slno      : RowCnt1,
-                      ledcode   : 2522,
-                      ledname   : 'FREIGHT INWARD - IGST',
+                      ledcode   : 5176,
+                      ledname   : 'FREIGHT INWARD  IGST-18%',
         //		      debit     : txtTotPF.getValue(),
                       debit     : Ext.util.Format.number(txttotfreight1.getValue(),'0.00'),
                        billno    : txtBillNo.getRawValue(),
@@ -6412,6 +6434,12 @@ Ext.onReady(function(){
     {
     
 
+        if (grn_status == 'C' &&  Number(txtitemvalue.getValue()) == 0)
+           return;
+
+
+
+
 
     if (mintype == "I" && Number(txtitemvalue.getValue()) > 1000 )
        alert("Item Value is greater then Rs.1000, You can't make GRN")
@@ -8798,8 +8826,10 @@ Ext.onReady(function(){
                                         RefreshData();	
     
     
+
+                         
     
-    //alert( "New Days : " + NewDays + "   Edit Days :  " + EditDays );
+//    alert( "New Days : " + NewDays + "   Edit Days :  " + EditDays );
     /*
                                             if (purtype == "PSC")
                                                 Ext.getCmp('myFormPanel').setTitle('Goods Receipt Note - for POWER PLANT');

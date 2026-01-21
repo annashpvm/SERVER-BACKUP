@@ -154,12 +154,12 @@ a.item_hsncode = e.hsn_sno order by item_name ";*/
 
         $item = trim(str_replace(" ", "", $item)); 
         $item = trim(str_replace(".", "", $item));
-
+        $item = trim(str_replace("-", "", $item));
 
         if ($item == '')   
            $sql = "select * from maspur_item_header  order by item_name";
         else
-           $sql = "select * from maspur_item_header where replace(replace(item_name,' ','')  ,'.','') like '%$item%' order by item_name";         
+           $sql = "select * from maspur_item_header where replace(replace(replace(item_name,' ','')  ,'.','')  ,'-','')  like '%$item%' order by item_name";         
 
 
 

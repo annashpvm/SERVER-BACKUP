@@ -5,9 +5,9 @@ Ext.onReady(function(){
    var fm = Ext.form;
    var userid   = localStorage.getItem('ginuser');
    var usertype = localStorage.getItem('ginusertype');
-var usertype = localStorage.getItem('ginuser');
-var UserName = localStorage.getItem('ginusername');
-var UserId   = localStorage.getItem('ginuserid');
+   var usertype = localStorage.getItem('ginuser');
+   var UserName = localStorage.getItem('ginusername');
+   var UserId   = localStorage.getItem('ginuserid');
 
 
    var finStartDate = localStorage.getItem('gfinstdate');
@@ -464,16 +464,17 @@ var GetAreaRatecodeDatastore = new Ext.data.Store({
 
                 custchange = 0;
                 if (checked === true) {
-		 if (Number(txtInvQty.getValue()) > 0 || Number(txtFinQty.getValue()) > 0 ) 
+	         	 if (Number(txtInvQty.getValue()) > 0 || Number(txtFinQty.getValue()) > 0 ) 
                  {        
-                       alert("Already Finished/ Invoice Entries are made. You Can't Change Customer");
-		       Ext.getCmp('txtCustomer').setDisabled(true); 
-                           }  
+                    alert("Already Finished/ Invoice Entries are made. You Can't Change Customer");
+		            Ext.getCmp('txtCustomer').setDisabled(true); 
+                  }  
 		 else
                  {
 		    Ext.getCmp('txtCustomer').setDisabled(false);
-     //               flxDetail.getStore().removeAll();  
+                    flxDetail.getStore().removeAll();  
                     flxParty.getStore().removeAll();  
+                    flxParty.setDisabled(false); 
                     custchange = 1;
                  }    
                 } else {
@@ -2135,7 +2136,7 @@ var LoadordernoDetailsDatastore = new Ext.data.Store({
 'ordh_cashdisamt2','ordh_cashdisamt3','ordh_cashdisamt4','ordh_cgst','ordh_sgst','ordh_igst','cancelflag','cust_ref','tax_name',
 'tax_sgst','tax_cgst','tax_igst','sup_name','repr_name','type_name','agentname','ordh_creditdays','ordh_gracedays','ordh_comm','ordh_apprno','ordh_appr_type',
 'ordh_destination','ordh_payterm_30days_7days_receipt' , 'ordh_payterm_60days_30days_receipt' , 'ordh_payterm_60days_45days_receipt','ordh_ratediff','ordh_payterm_90days_30days_receipt','ordh_payterm_90days_45days_receipt','ordh_payterm_90days_60days_receipt','ordh_payterm_90days_75days_receipt',
-'ordh_payterm_60days_7days_receipt','ordh_payterm_45days_7days_receipt','ordh_payterm_45days_30days_receipt','cust_area' ,  'ordh_appr_fincode'
+'ordh_payterm_60days_7days_receipt','ordh_payterm_45days_7days_receipt','ordh_payterm_45days_30days_receipt','cust_area' ,  'ordh_appr_fincode','ordh_payterm_90days_7days_receipt'
 ])
     });
 
@@ -3100,7 +3101,6 @@ function get_ratedetails() {
                 {    
 
 
-
       // alert(getRatedetailsDataStore.getAt(0).get('rate_bf30'));
 
                                                                   
@@ -3120,8 +3120,8 @@ function get_ratedetails() {
 
 //alert("extraamt");
 //alert(extraamt);
-//alert(gsmfrom2);
-//alert(gsmto2);
+//alert(gsmfrom1);
+//alert(gsmto1);
 
 
     //            if (getRatedetailsDataStore.getAt(0).get('var_typecode') != 1) 
@@ -3150,6 +3150,8 @@ function get_ratedetails() {
 		   else if (gsm >= gsmfrom4 && gsm <= gsmto4 && bf > 0)
 			{
 			extraamt = getRatedetailsDataStore.getAt(0).get('rate4_extraamt');
+
+         //   alert(extraamt);
 			}
 		   else if (gsm >= gsmfrom5 && gsm <= gsmto5 && bf > 0)
 			{
@@ -3218,9 +3220,15 @@ function get_ratedetails() {
                  } 
 
 
+//alert(gsmfrom1);
+//alert(gsmto1);
+
+
+
 			if (bf == 0)
 			{
 			   rate = Number(getRatedetailsDataStore.getAt(0).get('rate_rate')) + Number(extraamt);
+//alert(rate);
 			} 
 			else if (bf == 12)
 			{
@@ -3393,6 +3401,7 @@ function get_ratedetails() {
 
                }
 
+//alert(rate)
                if (gsmto3 > 0)
                {
                     if (extraamt == 0 && gsm > gsmto3) 
@@ -3410,6 +3419,7 @@ function get_ratedetails() {
 
                        if (areacode == 24 &&  cmbDestination.getRawValue() != "SIVAKASI" && txtrate.getValue() > 5000)
                        {  
+                     
                           txtrate.setValue(Number(rate)+Number(ExtraAmt_PT) -500 );
 
 
@@ -4484,6 +4494,7 @@ function priceConfirm()
 
   txtCustomer.setDisabled(true); 
   cmbPriceno.setDisabled(true); 
+  flxParty.setDisabled(true); 
 
           txtrate.setValue('0');
 
@@ -4844,6 +4855,7 @@ var btnPriceTermRefresh = new Ext.Button({
            {     
 		   cmbvarietylist.setDisabled(true); 
 		   cmbDestination.setDisabled(false);     
+           flxParty.setDisabled(false); 
 		   flxDetail.getStore().removeAll();
 		   txtrate.setValue('');
 /*
@@ -6282,21 +6294,21 @@ function add_btn_click()
 
 	    if(txtqty.getRawValue()=="" || txtqty.getValue()==0)
 	    {
-		alert("Enter Order  Quantity..");
+		        alert("Enter Order  Quantity..");
                 gstadd="false";
                 txtqty.focus();
 	    }
 
             if  (sotype == "F" && (txtSONo.getRawValue().length != 6 && txtSONo.getRawValue().length != 4)  )
             {
-		alert("Error in SO Number..");
+		        alert("Error in SO Number..");
                 gstadd="false";
                 txtSONo.focus();
             }
 
             if  (sotype == "S" && txtSONo.getRawValue().length != 7 )
             {
-		alert("Error in SO Number..");
+		        alert("Error in SO Number..");
                 gstadd="false";
                 txtSONo.focus();
             }
@@ -6876,7 +6888,7 @@ function RefreshData(){
   txtCustomer.setDisabled(false); 
   cmbPriceno.setDisabled(false); 
 
-
+  flxParty.setDisabled(false); 
 	TrnSalesOrderPanel.getForm().reset();
         tabSalesOrder.setActiveTab(0);
         cmbDestination.setRawValue('');   
@@ -6959,7 +6971,7 @@ function RefreshData(){
 },
  	listeners:{
                show:function(){
-//alert(userid);
+//alert(UserId);
 //alert(usertype);
       //              Ext.getCmp('txtrate').setDisabled(true);
 

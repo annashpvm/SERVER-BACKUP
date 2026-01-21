@@ -12,7 +12,7 @@ $ewaybillno     = $_POST['ewaybillno'];
 $accseqno       = $_POST['accseqno'];
 
 
-
+mysqli_begin_transaction($conn);
 
 
 $query1= "update trnsal_invoice_header set invh_ewaybillno = '$ewaybillno',U_EWayBillNo = '$ewaybillno'  where invh_invrefno = '$invhrefno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
@@ -27,7 +27,7 @@ $result1=mysqli_query($conn, $query1);
 
 if ($result1)
 {
-   mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	

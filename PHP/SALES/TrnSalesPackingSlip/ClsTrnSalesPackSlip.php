@@ -59,7 +59,14 @@
 		getHSNCODE();
 		break;
 
+		case "loadPackSlipNo_Header":
+            getPackSlipNo_Header();
+            break;
 
+        case "loadPackSlipNo_Trailer":
+            getPackSlipNo_Trailer();
+            break;
+    
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -76,16 +83,56 @@
        global $conn;  
 	$finid = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
-        $sql = "select ifnull(max(pckh_no),0)+1 as packno from trnsal_packslip_header where pckh_fincode= $finid  and pckh_comp_code= $compcode";
+    //$sql = "select ifnull(max(pckh_no),0)+1 as packno from trnsal_packslip_header where pckh_fincode= $finid  and pckh_comp_code= $compcode";
+
+    $sql = "select max(packno) packno from (
+select ifnull(max(pckh_no),0)+1 as packno from trnsal_packslip_header where pckh_fincode= $finid   and pckh_comp_code= $compcode
+union all
+select ifnull(max(pckt_no),0)+1 as packno from trnsal_packslip_trailer where pckt_fincode= $finid   and pckt_comp_code= $compcode
+) a1 ";
+
+
+
     $r = mysqli_query($conn, $sql);
 
     $arr = [];
     while ($re = mysqli_fetch_assoc($r)) {
         $arr[] = $re;
     }
-
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
+
+
+    function getPackSlipNo_Header()
+    {
+       global $conn;  
+	$finid = $_POST['fincode'];
+	$compcode = $_POST['compcode'];
+    $sql = "select ifnull(max(pckh_no),0)+1 as packno from trnsal_packslip_header where pckh_fincode= $finid  and pckh_comp_code= $compcode";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }    
+
+    function getPackSlipNo_Trailer()
+    {
+    global $conn;  
+	$finid = $_POST['fincode'];
+	$compcode = $_POST['compcode'];
+    $sql = "select ifnull(max(pckt_no),0)+1 as packno from trnsal_packslip_trailer where pckt_fincode = $finid  and pckt_comp_code = $compcode";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }    
+
  function getPackSlipNoedit()
     {
        global $conn;  

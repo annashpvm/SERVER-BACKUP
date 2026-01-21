@@ -79,7 +79,7 @@ if ($others > 0 && $addnl_ledcode == 0)
 
 $voutype = 'DNG';
 
- mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);     
 
 
 
@@ -212,10 +212,8 @@ else
 //echo $query2;
 //echo "<br>";
  $result2=mysqli_query($conn, $query2);
-
  
-
- $query12  = "update trnpur_grn_ret_trailer , maspur_item_trailer set CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END  where debt_comp_code = item_comp_code and debt_fin_code = item_fin_code and debt_item_code = item_code and debt_comp_code =  $compcode  and debt_fin_code = $fincode and debt_no= $rrno";  
+ $query12  = "update trnpur_grn_ret_trailer , maspur_item_trailer set  item_avg_rate =  CASE  WHEN item_stock > 0 and item_stockvalue > 0 THEN ROUND(item_stockvalue / item_stock, 5)  ELSE 0  END  where debt_comp_code = item_comp_code and debt_fin_code = item_fin_code and debt_item_code = item_code and debt_comp_code =  $compcode  and debt_fin_code = $fincode and debt_no= $rrno";  
  $result12 = mysqli_query($conn, $query12);
 
 //echo $query12;
@@ -525,7 +523,7 @@ if ($savetype == "Add") {
    if ( $result1 && $result6 &&  $result12 &&  $result13 &&  $result15 &&  $resulta1 &&  $resulta2  &&  $resulta3  &&  $resulta4  &&  $resulta5 &&  $resulta6 &&  $result10) 
    {
 
-           mysqli_query($conn, "COMMIT");                       
+        mysqli_commit($conn);                     
             echo '({"success":"true","returnno":"'.$rrno.'"})';
    }
    else
@@ -540,7 +538,7 @@ if ($savetype == "Add") {
 else {
    if ($result1 && $result2 &&  $result3 &&  $result4 &&  $result5 && $result6 &&  $result12 &&  $result13 &&  $result15)
    {
-           mysqli_query($conn, "COMMIT");                       
+        mysqli_commit($conn);                       
             echo '({"success":"true","returnno":"'.$rrno.'"})';
    }
    else

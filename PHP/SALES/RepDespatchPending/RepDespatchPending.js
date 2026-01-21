@@ -136,6 +136,24 @@ var txtCustomer = new Ext.form.TextField({
     	style      :"border-radius: 5px;textTransform: uppercase; ", 
 	enableKeyEvents: true,
 	listeners:{
+    specialkey:function(f,e){
+      if (e.getKey() == e.ENTER)
+      {
+            flxchk = 1;
+              
+
+  //         flxParty.hide();
+//                   btnAdd.focus();
+    
+      }
+      if (e.getKey() == e.DOWN)
+      {
+
+      flxParty.getSelectionModel().selectRow(0)
+      flxParty.focus;
+      flxParty.getView().focusRow(0);
+      }
+   },
 	    keyup: function () {
                 loadSearchPartyListDatastore.removeAll();
                   if (txtCustomer.getRawValue() != '')
@@ -164,32 +182,65 @@ var dgrecord = Ext.data.Record.create([]);
         store:loadSearchPartyListDatastore,
 
     listeners:{	
+
+
+      'render' : function(cmp) {
+        cmp.getEl().on('keypress', function(e) {
+            if (e.getKey() == e.ENTER) {
+              var sm = flxParty.getSelectionModel();
+              var selrow = sm.getSelected();
+              var chkitem = (selrow.get('cust_code'));
+               custcode = 0;              
+              gridedit = "true";
+              editrow = selrow;
+              custcode = selrow.get('cust_code');
+              custname = selrow.get('cust_ref');
+              txtCustomer.setRawValue(selrow.get('cust_ref'));
+      
+              FlxReel.getStore().removeAll();
+              loadSONodatastore.load({
+                url: 'ClsDespatchPending.php',
+                params: {
+                task: 'loadSONo',
+                party: custcode,
+                compcode : Gincompcode,
+                      finid    : GinFinid
+                },
+                 callback:function()
+                { 
+                }
+              });
+            }
+         });
+ },
+
+
         'cellclick' : function(flxDesc, rowIndex, cellIndex, e){
 			var sm = flxParty.getSelectionModel();
 			var selrow = sm.getSelected();
 			var chkitem = (selrow.get('cust_code'));
-                        custcode = 0;
+       custcode = 0;
 			if ((selrow != null)){
 
 				gridedit = "true";
 				editrow = selrow;
 				custcode = selrow.get('cust_code');
 				custname = selrow.get('cust_ref');
-                                txtCustomer.setRawValue(selrow.get('cust_ref'));
+        txtCustomer.setRawValue(selrow.get('cust_ref'));
 
-                FlxReel.getStore().removeAll();
-		loadSONodatastore.load({
-			url: 'ClsDespatchPending.php',
-			params: {
+        FlxReel.getStore().removeAll();
+		    loadSONodatastore.load({
+			    url: 'ClsDespatchPending.php',
+			    params: {
 			    task: 'loadSONo',
 			    party: custcode,
 			    compcode : Gincompcode,
 		            finid    : GinFinid
-			},
-	 	        callback:function()
-		        { 
-		        }
-                });
+			    },
+	 	      callback:function()
+		      { 
+		      }
+        });
 
 			}
 
@@ -783,6 +834,33 @@ var btnPrint = new Ext.Button({
                 else
   	    	window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rpt_despatch_pending_Repwise.rptdesign' + param, '_blank');
                 } 
+
+                else if (repprint == 16 )
+                  { 
+  
+      var p1 = "&compcode=" + encodeURIComponent(Gincompcode);
+      var p2 = "&fincode=" + encodeURIComponent(GinFinid);
+      var p3 = "&asondate=" + encodeURIComponent(Ext.util.Format.date(dtpasondate.getValue(),"Y-m-d"));
+                      if (cmbRepresentative.getRawValue() == '')
+                          rcode = 0;
+                      else
+                          rcode =  cmbRepresentative.getValue();
+  
+                  var p4 = "&repcode=" + encodeURIComponent(rcode);
+                      var param = (p1+p2+p3+p4) ;
+  
+  
+  
+  
+                  if (printtype == "PDF")
+              window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rpt_despatch_pending_RepwiseNew.rptdesign&__format=pdf&' + param, '_blank');
+                  else if (printtype == "XLS")
+            window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rpt_despatch_pending_RepwiseNew.rptdesign&__format=XLS&' + param, '_blank');
+                  else
+            window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/rpt_despatch_pending_RepwiseNew.rptdesign' + param, '_blank');
+                  }                 
+
+
                 else
                  {
                 if (printtype == "PDF")
@@ -1029,7 +1107,7 @@ var optRepopt = new Ext.form.FieldSet({
     layout : 'hbox',
   //  header : 'Select',
     width:400,
-    height:280,
+    height:320,
     x:20,
     y:130,
     border: true,
@@ -1037,7 +1115,7 @@ var optRepopt = new Ext.form.FieldSet({
         {
         xtype: 'radiogroup',
         columns: 1,
-        rows : 2,
+        //rows : 2,
         items: [
             {boxLabel: 'Despatch Pending New', name: 'optRepopt', id:'optRepopt11', inputValue: 1,checked:true, 
               listeners:{
@@ -1212,6 +1290,18 @@ var optRepopt = new Ext.form.FieldSet({
                }
               }
             }, 
+            {boxLabel: 'REPwise Despatch Pending-New', name: 'optRepopt', id:'optRepopt16', inputValue: 1, 
+              listeners:{
+              check:function(rb,checked){
+                  if(checked==true){
+                     repprint  = 16;
+//                     Ext.getCmp('fromtodate').show();
+//                     Ext.getCmp('asondate').hide();
+                    
+                  }
+               }
+              }
+            },             
             ]
              }
              ]

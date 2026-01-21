@@ -40,7 +40,9 @@ $dchrefdate = $_POST['dchrefdate'];
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);      
+
+
 if ($savetype == "Add") {
     $query2 = "select IFNULL(max(dch_no),0)+1 as dcno from trnpur_deliverychallan_header where dch_fincode = $dchfincode and dch_comp_code=$dchcompcode and dch_type = $dchtype'";
     $result2= mysqli_query($conn, $query2);
@@ -98,7 +100,7 @@ if ($savetype == "Add")
 {
         if($result3 && $result4)
         {
-           mysqli_query($conn, "COMMIT");                       
+            mysqli_commit($conn);                    
             echo '({"success":"true","dcno":"'.$dcno.'"})';
         }
         else
@@ -113,7 +115,7 @@ else
 {
         if($result2 && $result3 && $result4)
         {
-           mysqli_query($conn, "COMMIT");                       
+            mysqli_commit($conn);                        
             echo '({"success":"true","dcno":"'.$dcno.'"})';
         }
         else

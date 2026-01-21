@@ -351,7 +351,7 @@ var btnStkChange = new Ext.Button({
       else
       {
         btnStkChange.hide();
-        btnStkChange.show();
+        //btnStkChange.show();
         Ext.getCmp('txtYearOpeningStock').setReadOnly(true);   
         Ext.getCmp('txtYearOpeningValue').setReadOnly(true);   
         Ext.getCmp('txtTodayClosingStock').setReadOnly(true);   
@@ -1821,7 +1821,7 @@ function grid_chk_flxItem()
         txtOpeningValue.setValue('');
         txtClosingStock.setValue('');
         txtClosingValue.setValue('');
-        btnStkChange.show();
+        btnStkChange.hide();
 
     }
 
@@ -1844,6 +1844,7 @@ function grid_chk_flxItem()
 
 	listeners:{
                show:function(){
+
 
                   RefreshData();           
                }    

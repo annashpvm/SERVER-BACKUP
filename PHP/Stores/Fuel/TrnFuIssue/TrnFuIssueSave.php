@@ -17,6 +17,8 @@ $isstype ='C';
 // $issremarks= $_POST['issremarks'];
 $usrcode= $_POST['usrcode'];
 
+mysqli_begin_transaction($conn);    
+
 if ($AEDFlag === "Add")
 {
 
@@ -30,7 +32,7 @@ if ($AEDFlag === "Add")
 	 $rec2 = mysqli_fetch_array($result2);
 	 $issh_no=$rec2['issh_no'];
 
- mysqli_query($conn, "BEGIN");
+
 
  if ($issseqno > 0  && $issfincode > 0 && $isscompcode > 0)
  { 
@@ -64,7 +66,7 @@ $itemtype = $griddet[$i]['itemtype'];
 }
 else if ($AEDFlag === "Edit")
 {
- mysqli_query($conn, "BEGIN");  
+
  $query5= "call spfu_upd_issue_stock ('$seqnoed')";
  $result5=mysqli_query($conn, $query5); 
 //echo $query5;
@@ -93,8 +95,8 @@ $issrate = $griddet[$i]['avgrate'];
 $issvalue = $griddet[$i]['issval'];
 $issbillqty = $griddet[$i]['actiss'];
 
-	 $query8= "call spfu_ins_issue_trailer ('$isscompcode','$issfincode','$seqnoed','$sno','$itemseq','$issqty','$issrate','$issvalue','$itemtype')";
-        $result8=mysqli_query($conn, $query8);   
+$query8= "call spfu_ins_issue_trailer ('$isscompcode','$issfincode','$seqnoed','$sno','$itemseq','$issqty','$issrate','$issvalue','$itemtype')";
+$result8=mysqli_query($conn, $query8);   
 
 //echo $query8;
 //echo "<br>";
@@ -106,34 +108,27 @@ if ($AEDFlag === "Add")
 {
 	if($result3 && $result4)
 	{
-	 mysqli_query($conn, "COMMIT");                       
+	  mysqli_commit($conn);                       
 	  echo '({"success":"true","IssNo":"'.$issh_no.'"})';
 	}
 	else
-	       {
+    {
 		echo '({"success":"false","IssNo":"'.$issh_no.'"})';
-		mysqli_rollback($conn);
-
-            
-		    
-		} 
+		mysqli_rollback($conn);   
+	} 
 }
 else
 {
 	if(  $result7 && $result8)
 	{
-	 mysqli_query($conn, "COMMIT");                       
+      mysqli_commit($conn);                         
 	  echo '({"success":"true","IssNo":"'.$isspno.'"})';
 	}
 	else
-	       {
-mysqli_rollback($conn);
-
-       
-		echo '({"success":"false","IssNo":"'.$isspno.'"})';
-		     
-		    
-		} 
+	{
+       mysqli_rollback($conn);    
+	   echo '({"success":"false","IssNo":"'.$isspno.'"})';   
+	} 
 }
   
         

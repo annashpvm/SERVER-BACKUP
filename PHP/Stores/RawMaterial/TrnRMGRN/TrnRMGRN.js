@@ -166,7 +166,7 @@ var opt_GRN_Status = new Ext.form.FieldSet({
     layout : 'vbox',
     defaultType : 'textfield',
     width:140,
-    height:100,
+    height:85,
     x:85,
     y:100,
     border: true,
@@ -883,12 +883,9 @@ if (gstFlag === "Add"){ flxGRNDetail.getSelectionModel().selectAll();
 			{                                
                     RefreshData();
                     Ext.MessageBox.alert("GRN SAVED No.-" + obj['GRNNo']);
-//                                    TrnGrnformpanel.getForm().reset();
                     flxGRNDetail.getStore().removeAll();
-
-
                     RefreshData();
-//				    TrnGrnformpanel.getForm().reset();
+				    TrnGrnformpanel.getForm().reset();
                   }else
 			{
 	Ext.MessageBox.alert("GRN Not Saved! Pls Check!- " + obj['GRNNo']);                                                  
@@ -4374,6 +4371,7 @@ chkratediff = 0
                         cmbQCEntNo.setValue(loadgrndetaildatastore.getAt(0).get('rech_qc_ins_no'));
 
 
+
                         txtGRNNo.setValue(cmbGRNNo.getRawValue());
                         txtNewGRNNo.setValue(cmbGRNNo.getRawValue());    
 			dtpGRNDate.setRawValue(Ext.util.Format.date(loadgrndetaildatastore.getAt(0).get('rech_date'),'d-m-Y'));
@@ -5269,17 +5267,23 @@ var cmbQCEntNo = new Ext.form.ComboBox({
 //                        txttotAcceptWt.setValue('');
 			for (var i=0;i<RowCnt;i++)
 			{
+
+                        var billrateNew = 0;   
                                 if (loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_packtype') == "B")
                                     bl = "BUNDLE";
                                 else 
                                     bl = "LOOSE";
 
-
-                               if (RowCnt == 1)
-                                bwt  =   Ext.util.Format.number(loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_billqty')/1000,'0.000'); 
+                               if (Number(loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_billqty'))  > 1)
+                               { 
+                                bwt         =   Ext.util.Format.number(loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_billqty')/1000,'0.000'); 
+                                billrateNew =   Ext.util.Format.number(loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_rate'),'0.00'); 
+                               } 
                                else
+                               {
                                    bwt = 0;
-
+                                   billrateNew = 0;
+                               } 
                                 twt  =   Ext.util.Format.number(loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_ticketwt')/1000,'0.000'); 
 
                                 moiswt  =   Ext.util.Format.number(loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_moisqty')/1000,'0.000'); 
@@ -5298,10 +5302,10 @@ var ival = Number(grnwt) *  loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_rat
 				flxGRNDetail.getStore().getCount(),
 				new dgrecord({
 				      	slno        :  loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_slno'),	
-                                        billwt      :  bwt,	
+                        billwt      :  bwt,	
 				      	ticketno    :  loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_ticketno'),
-					ticketwt    :  twt,
-                                        billrate    :  0,
+					    ticketwt    :  twt,
+                                        billrate    :  billrateNew,
                                         billvalue   :  0, 
 					itemname    :  loadQCEntryNoDetailDatastore.getAt(i).get('itmh_name'),
 					itemcode    :  loadQCEntryNoDetailDatastore.getAt(i).get('qc_rm_itemcode'),
@@ -7261,8 +7265,8 @@ var flxGRNDetail = new Ext.grid.EditorGridPanel({
     stripeRows : true,
     scrollable: true,
     x:10,
-    y:50,
-    height: 110,
+    y:35,
+    height: 130,
     hidden:false,
     width: 1220,
     columns:
@@ -7601,7 +7605,7 @@ var tabgrn = new Ext.TabPanel({
     height      : 670,
     width       : 1320,
     x           : 2,
-    y           : 60, 
+    y           : 50, 
 		listeners: {
 
 		    'tabchange': function(tabPanel, tab) {
@@ -7626,7 +7630,7 @@ var tabgrn = new Ext.TabPanel({
 	                title   : 'Item Details',
         	        layout  : 'hbox',
         	        border  : true,
-        	        height  : 220,	
+        	        height  : 230,	
         	        width   : 1300,
 			style:{ border:'1px solid red',color:' #581845 '},
         	        layout  : 'absolute',
@@ -7651,7 +7655,7 @@ var tabgrn = new Ext.TabPanel({
                              { 
                                 	xtype       : 'fieldset',
                                 	title       : '',
-                                	labelWidth  : 50,
+                                	labelWidth  : 60,
                                 	width       : 220,
                                 	x           : 200,
                                 	y           : -10,
@@ -7661,9 +7665,9 @@ var tabgrn = new Ext.TabPanel({
                            { 
                                 	xtype       : 'fieldset',
                                 	title       : '',
-                                	labelWidth  : 60,
+                                	labelWidth  : 70,
                                 	width       : 260,
-                                	x           : 375,
+                                	x           : 380,
                                 	y           : -10,
                                     	border      : false,
                                 	items: [dtpBillDate]
@@ -7718,9 +7722,9 @@ var tabgrn = new Ext.TabPanel({
 				 {
 		                    xtype       : 'fieldset',
 		                    title       : '',
-		                    labelWidth  : 120,
+		                    labelWidth  : 130,
 		                    width       : 500,
-		                    x           : 780,
+		                    x           : 770,
 		                    y           : -10,
 		                    border      : false,
 		                    items: [cmbPurchaseLedger]
@@ -7754,10 +7758,10 @@ var tabgrn = new Ext.TabPanel({
 				 {
 		                    xtype       : 'fieldset',
 		                    title       : '',
-		                    labelWidth  : 100,
+		                    labelWidth  : 80,
 		                    width       : 500,
-		                    x           : 10,
-		                    y           : 153,
+		                    x           : 0,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtWTShortageQty]
 		                },
@@ -7767,8 +7771,8 @@ var tabgrn = new Ext.TabPanel({
 		                    title       : '',
 		                    labelWidth  : 60,
 		                    width       : 500,
-		                    x           : 200,
-		                    y           : 153,
+		                    x           : 170,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtWTShortageValue]
 		                },
@@ -7778,8 +7782,8 @@ var tabgrn = new Ext.TabPanel({
 		                    title       : '',
 		                    labelWidth  : 80,
 		                    width       : 500,
-		                    x           : 360,
-		                    y           : 153,
+		                    x           : 330,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtRateDiffValue]
 		                },
@@ -7790,10 +7794,10 @@ var tabgrn = new Ext.TabPanel({
 				 {
 		                    xtype       : 'fieldset',
 		                    title       : '',
-		                    labelWidth  : 70,
+		                    labelWidth  : 110,
 		                    width       : 500,
-		                    x           : 520,
-		                    y           : 153,
+		                    x           : 500,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtTotalDNTaxValue]
 		                },
@@ -7804,8 +7808,8 @@ var tabgrn = new Ext.TabPanel({
 		                    title       : '',
 		                    labelWidth  : 90,
 		                    width       : 500,
-		                    x           : 680,
-		                    y           : 153,
+		                    x           : 690,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtTotalItemDiffValue]
 		                },
@@ -7817,8 +7821,8 @@ var tabgrn = new Ext.TabPanel({
 		                    title       : '',
 		                    labelWidth  : 130,
 		                    width       : 500,
-		                    x           : 870,
-		                    y           : 153,
+		                    x           : 880,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtTotalDiffValue]
 		                },
@@ -7829,8 +7833,8 @@ var tabgrn = new Ext.TabPanel({
 		                    title       : '',
 		                    labelWidth  : 90,
 		                    width       : 500,
-		                    x           : 1110,
-		                    y           : 153,
+		                    x           : 1115,
+		                    y           : 164,
 		                    border      : false,
 		                    items: [txtQCShortQty]
 		                },
@@ -7843,10 +7847,10 @@ var tabgrn = new Ext.TabPanel({
         	        border  : true,
         	        height  : 195,
         	        width   : 1300,
-			style:{ border:'1px solid red',color:' #581845 '},
+			        style:{ border:'1px solid red',color:' #581845 '},
         	        layout  : 'absolute',
         	        x       : 10,
-        	        y       : 220,
+        	        y       : 230,
         	        items:[
 				{ 
                                 	xtype       : 'fieldset',
@@ -8633,7 +8637,7 @@ var tabgrn = new Ext.TabPanel({
            xtype       : 'fieldset',
            title       : '',
            width       : 1160,
-           height      : 85,
+           height      : 83,
            x           : 10,
            y           : 2,
            border      : true,
@@ -8665,7 +8669,7 @@ var tabgrn = new Ext.TabPanel({
                         	labelWidth  : 80,
                         	width       : 400,
                         	x           : 0,
-                        	y           : 30,
+                        	y           : 28,
                             	border      : false,
                         	items: [dtpGRNDate]
                     },
@@ -8686,7 +8690,7 @@ var tabgrn = new Ext.TabPanel({
                         	labelWidth  : 110,
                         	width       : 400,
                         	x           : 200,
-                        	y           : 30,
+                        	y           : 28,
                             	border      : false,
                         	items: [cmbQCEntNo]
                     },
@@ -8753,8 +8757,8 @@ var tabgrn = new Ext.TabPanel({
                 	labelWidth  : 80,
                 	width       : 1400,
                 	x           : 0,
-                	y           : 83,
-                    	border      : false,
+                	y           : 77,
+                   	border      : false,
                 	items: [tabgrn]
             },
 

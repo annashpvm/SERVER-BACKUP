@@ -1,17 +1,11 @@
 
-
-
-
 Ext.onReady(function() {
     Ext.QuickTips.init();
 
 
-//Ext.ns('Ext.ux.grid');
+//Ext.ns('var grid = .grid');
 
 
-let script = document.createElement('script');
-script.src = '/ext-3.4.1/examples/ux/Groupsummary.js';
-document.head.appendChild(script);
 
 
 
@@ -155,10 +149,8 @@ var loadAdjustmentsDatastore = new Ext.data.GroupingStore({
 
 
 
-  // utilize custom extension for Group Summary
-//    var summary = new Ext.ux.grid.GroupSummary();
 
-    var summary = new Ext.ux.grid.GroupSummary();
+    //var summary = new Ext.ux.grid.GroupSummary();
 function ProcessData()
 {
 
@@ -260,7 +252,38 @@ var btnPrint = new Ext.Button({
        	 }
 });
 
+var grid = new Ext.grid.EditorGridPanel({
+    store: loadAdjustmentsDatastore,
 
+    columns: [
+        {
+            header: 'Date / Voucher No',
+            dataIndex: 'heading',
+            summaryType: 'count'
+        },
+        {
+            header: 'Adjusted',
+            dataIndex: 'ref_adjamount',
+            summaryType: 'sum'
+        }
+    ],
+
+    view: new Ext.grid.GroupingView({
+        forceFit: true,
+        showGroupName: false,
+        enableGroupingMenu: false,
+        hideGroupedColumn: true
+    }),
+
+    plugins: [ new Ext.ux.grid.GroupSummary() ],
+
+    frame: true,
+    height: 400,
+    width: 800,
+    renderTo: document.body
+});
+
+/*
 var flxBillDetails = new Ext.grid.EditorGridPanel({
     frame: false,
     sm: new Ext.grid.RowSelectionModel(),
@@ -280,10 +303,6 @@ style: {
     columns:
     [ 	 	
 
-//        {header: "Description " , dataIndex: 'grp_name',sortable:false,width:100,align:'left', menuDisabled: true,hidden :true},
-//        {header: "Description " , dataIndex: 'subgrp',sortable:false,width:100,align:'left', menuDisabled: true,hidden :true},
-//        {header: "led code " , dataIndex: 'acctran_led_code',sortable:false,width:100,align:'left', menuDisabled: /true,hidden :true},
-//        {header: "led type " , dataIndex: 'led_type',sortable:false,width:100,align:'left', menuDisabled: true,hidden :true},
 
         {header: "Date / Voucher No " , dataIndex: 'heading',sortable:false,width:200,align:'left', menuDisabled: true,
                 summaryType: 'count',
@@ -322,14 +341,11 @@ style: {
 
         }),
 
-        plugins:  [new Ext.ux.grid.GroupSummary()],
-/*
-        tbar : [{
-            text: 'Toggle',
-            tooltip: 'Toggle the visibility of summary row',
-            handler: function(){summary.toggleSummaries();}
-        }],
-*/
+        plugins: [
+            new Ext.ux.grid.GroupSummary()
+        ],
+
+
 
  
         frame: true,
@@ -360,7 +376,7 @@ style: {
 
 
 });
-
+*/
  
  var tabOverall = new Ext.TabPanel({
     id          : 'tabOverall',

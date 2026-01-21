@@ -68,11 +68,44 @@ new Ext.KeyMap( Ext.getBody(), [{
         id          : 'txtSlipNo',
         name        : 'txtSlipNo',
         width       :  100,
-	readOnly : true,
-        tabindex : 2
+	     readOnly : true,
+        tabindex : 2,
+        style: {
+		    'color':'#7d0835',readOnly:true,'text-align': 'left',
+		    'style': 'Helvetica',
+		    'font-size': '13px','font-weight':'bold'
+		},            
     });
 
+    var txtHeaderSlipNo = new Ext.form.NumberField({
+        fieldLabel  : 'Header No.',
+        id          : 'txtHeaderSlipNo',
+        name        : 'txtHeaderSlipNo',
+        width       :  80,
+	     readOnly : true,
+        tabindex : 2,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff", 
+        style: {
+		    'color':'#7d0835',readOnly:true,'text-align': 'right',
+		    'style': 'Helvetica',
+		    'font-size': '13px','font-weight':'bold'
+		},                  
+    });
 
+    var txtTrailerSlipNo = new Ext.form.NumberField({
+        fieldLabel  : 'Trailer No.',
+        id          : 'txtTrailerSlipNo',
+        name        : 'txtTrailerSlipNo',
+        width       :  80,
+	     readOnly : true,
+        tabindex : 2,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff", 
+        style: {
+		    'color':'#7d0835',readOnly:true,'text-align': 'right',
+		    'style': 'Helvetica',
+		    'font-size': '13px','font-weight':'bold'
+		},             
+    });
 
   var txtPartyRef = new Ext.form.NumberField({
         fieldLabel  : 'Party Order.',
@@ -150,6 +183,57 @@ var btnRefresh = new Ext.Button({
        }
    }
 });  
+
+
+
+
+var btnCorrect = new Ext.Button({
+    id      : 'btnCorrect',
+    style   : 'text-align:center;',
+    text    : "Check & Correct",
+    width   : 10,
+    height  : 30,
+  
+    labelStyle : "font-size:12px;font-weight:bold;color:#b8309f",
+
+    border: 1,
+    style: {
+           borderColor: 'blue',
+           borderStyle: 'solid',
+
+    },
+     tabindex : 1,
+    listeners:{
+       click: function(){
+
+        Ext.Ajax.request({
+            url: 'TrnSalesPackSlipTrailerDelete.php',
+            params:
+            {
+              compcode :Gincompcode,
+              fincode :GinFinid,                                      
+              slipno : txtHeaderSlipNo.getValue(),
+             },
+             callback: function(options, success, response)
+            {
+                var obj = Ext.decode(response.responseText);
+                if (obj['success']==="true")
+                { 
+                   RefreshData();                               
+                   Ext.MessageBox.alert("Packing List No Removed -" + obj['slipno']);
+                   TrnSalesPackSlipPanel.getForm().reset();
+                   flxDetail.getStore().removeAll();
+                   RefreshData();
+                }else
+                {
+                Ext.MessageBox.alert("Packing List Not Removed! Pls Check!- " + obj['slipno']);                                                  
+                }
+             }
+         });      
+
+       }
+   }
+});       
 
 
 
@@ -2168,7 +2252,7 @@ var TrnSalesPackSlipPanel = new Ext.FormPanel({
            {   
            xtype       : 'fieldset',
            title       : '',
-           width       : 480,
+           width       : 490,
            height      : 130,
            x           : 10,
            y           : 10,
@@ -2239,7 +2323,7 @@ var TrnSalesPackSlipPanel = new Ext.FormPanel({
                 title       : '',
                 width       : 450,
                 height      : 130,
-                x           : 620,
+                x           : 520,
                 y           : 10,
                 border      : true,
                 layout      : 'absolute',
@@ -2326,6 +2410,49 @@ var TrnSalesPackSlipPanel = new Ext.FormPanel({
             },
 
 
+            {   
+                xtype       : 'fieldset',
+                title       : 'Running Sl.No. In ',
+                width       : 220,
+                height      : 130,
+                x           : 1000,
+                y           : 10,
+                border      : true,
+                layout      : 'absolute',
+                items:[
+                   { 
+                       xtype       : 'fieldset',
+                       title       : '',
+                       labelWidth  : 100,
+                       width       : 220,
+                       x           : 0,
+                       y           : -10,
+                       border      : false,
+                       items: [txtHeaderSlipNo]
+                   },
+                   { 
+                    xtype       : 'fieldset',
+                    title       : '',
+                    labelWidth  : 100,
+                    width       : 220,
+                    x           : 0,
+                    y           : 20,
+                    border      : false,
+                    items: [txtTrailerSlipNo]
+                   },    
+                   { 
+                    xtype       : 'fieldset',
+                    title       : '',
+                    labelWidth  : 100,
+                    width       : 240,
+                    x           : 40,
+                    y           : 50,
+                    border      : false,
+                    items: [btnCorrect]
+                   },                  
+                
+                ]    
+            },
           {
             xtype: 'tabpanel',
             activeTab: 0,
@@ -2574,6 +2701,45 @@ var TrnSalesPackSlipPanel = new Ext.FormPanel({
 		}
             });
 
+
+            loadPackSlipnoHeaderdatastore.load({
+                url: 'ClsTrnSalesPackSlip.php',
+                params: {
+                   task: 'loadPackSlipNo_Header',
+                   fincode:GinFinid,
+                   compcode:Gincompcode,
+                },
+            callback:function()
+               {
+                txtHeaderSlipNo.setValue(loadPackSlipnoHeaderdatastore.getAt(0).get('packno'));
+                
+               if ( Number(txtHeaderSlipNo.getValue()) ==  Number(txtTrailerSlipNo.getValue()))
+                Ext.getCmp('btnCorrect').setDisabled(true);
+             else
+                Ext.getCmp('btnCorrect').setDisabled(false);
+    
+               }
+            });        
+    
+            loadPackSlipnoTrailerdatastore.load({
+                url: 'ClsTrnSalesPackSlip.php',
+                params: {
+                   task: 'loadPackSlipNo_Trailer',
+                   fincode:GinFinid,
+                   compcode:Gincompcode,
+                },
+            callback:function()
+               {
+                txtTrailerSlipNo.setValue(loadPackSlipnoTrailerdatastore.getAt(0).get('packno'));
+                
+               if ( Number(txtHeaderSlipNo.getValue()) ==  Number(txtTrailerSlipNo.getValue()))
+                Ext.getCmp('btnCorrect').setDisabled(true);
+             else
+                Ext.getCmp('btnCorrect').setDisabled(false);
+    
+               }
+            });                 
+
    };
 
 
@@ -2595,10 +2761,48 @@ var TrnSalesPackSlipPanel = new Ext.FormPanel({
       ]),
     });
 
- 
+
+    var loadPackSlipnoHeaderdatastore = new Ext.data.Store({
+        id: 'loadPackSlipnoHeaderdatastore',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsTrnSalesPackSlip.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"loadPackSlipNo_Header"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },[
+      'packno'
+        ]),
+      });
+
+      
+
+      var loadPackSlipnoTrailerdatastore = new Ext.data.Store({
+        id: 'loadPackSlipnoTrailerdatastore',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsTrnSalesPackSlip.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"loadPackSlipNo_Trailer"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },[
+      'packno'
+        ]),
+      });
+  
+    
+
 var TrnSalesPackSlipWindow = new Ext.Window({
 	height      : 600,
-        width       : 1100,
+        width       : 1250,
         y           : 30,
         title       : 'SALES - PACKING SLIP ENTRY',
         items       : TrnSalesPackSlipPanel,
@@ -2623,15 +2827,51 @@ var TrnSalesPackSlipWindow = new Ext.Window({
                   params: {
                      task: 'loadPackSlipNo',
                      fincode:GinFinid,
-		     compcode:Gincompcode,
+		             compcode:Gincompcode,
                   },
-		  callback:function()
+		 callback:function()
                  {
                     txtSlipNo.setValue(loadPackSlipnodatastore.getAt(0).get('packno'));
                  }
-               });
+        });
 
+		loadPackSlipnoHeaderdatastore.load({
+            url: 'ClsTrnSalesPackSlip.php',
+            params: {
+               task: 'loadPackSlipNo_Header',
+               fincode:GinFinid,
+               compcode:Gincompcode,
+            },
+        callback:function()
+           {
+            txtHeaderSlipNo.setValue(loadPackSlipnoHeaderdatastore.getAt(0).get('packno'));
+            
+           if ( Number(txtHeaderSlipNo.getValue()) ==  Number(txtTrailerSlipNo.getValue()))
+            Ext.getCmp('btnCorrect').setDisabled(true);
+         else
+            Ext.getCmp('btnCorrect').setDisabled(false);
 
+           }
+        });        
+
+		loadPackSlipnoTrailerdatastore.load({
+            url: 'ClsTrnSalesPackSlip.php',
+            params: {
+               task: 'loadPackSlipNo_Trailer',
+               fincode:GinFinid,
+               compcode:Gincompcode,
+            },
+        callback:function()
+           {
+            txtTrailerSlipNo.setValue(loadPackSlipnoTrailerdatastore.getAt(0).get('packno'));
+            
+           if ( Number(txtHeaderSlipNo.getValue()) ==  Number(txtTrailerSlipNo.getValue()))
+            Ext.getCmp('btnCorrect').setDisabled(true);
+         else
+            Ext.getCmp('btnCorrect').setDisabled(false);
+
+           }
+        });           
                loadinvoicetypedataStore.load({
                   url: 'ClsTrnSalesPackSlip.php',
                   params: {

@@ -218,6 +218,8 @@ where b.rect_item_code = c.itmh_code and a.rech_seqno = b.rect_hdseqno and qc_rm
 	$sql = "select a1.* , case when c1.ordt_pen_qty > 0 then c1.ordt_pen_qty else 0 end as pendqty from (select * from  trnrm_receipt_header a, trnrm_receipt_trailer b,  masrm_item_header  c  , trn_qc_rm_inspection d 
 where b.rect_item_code = c.itmh_code and a.rech_seqno = b.rect_hdseqno and qc_rm_compcode = rech_compcode and qc_rm_fincode = rech_fincode and  qc_rm_entryno = rech_qc_ins_no and  qc_rm_itemcode =  rect_item_code and  a.rech_compcode = '$compcode'  and a.rech_fincode = '$finid' and rech_no = '$grnno'  and rect_item_code = qc_rm_itemcode and rect_ticketno = qc_rm_ticketno ) a1 left join trnrm_order_header b1 on a1.rech_ordhdseqno = b1.ordh_seqno left join trnrm_order_trailer c1 on c1.ordt_hdseqno = b1.ordh_seqno and  a1.rect_item_code = c1.ordt_item_code  and ordt_status = '' order by rect_seqno";
 
+//echo $sql;
+
     $r = mysqli_query($conn, $sql);
 
     $arr = [];

@@ -1050,8 +1050,8 @@ style: {
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockGroupSummary.rptdesign&__format=pdf&' + param, '_blank');
-                    else if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockGroupSummary.rptdesign&__format=XLS&' + param, '_blank');
+                    else if (printtype == "XLS") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockGroupSummary.rptdesign&__format=XLSX&' + param, '_blank');
 
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockGroupSummary.rptdesign' + param, '_blank');	
@@ -1255,14 +1255,12 @@ function tab2grid_tot(){
        var sel=flxSubGroup.getSelectionModel().getSelections();
        for(var i=0;i<Row;i++)
        {
-              if (Number(sel[i].data.clo_val) > 0)
-              {
+
 		      t2oval =t2oval+Number(sel[i].data.op_value);
                       t2rval =t2rval+Number(sel[i].data.rec_val);
  		      t2ival =t2ival+Number(sel[i].data.iss_val);
   		      t2cval =t2cval+Number(sel[i].data.clo_val);
 
-              }
          }
    
          txttab2openingval.setValue(t2oval);
@@ -1523,6 +1521,47 @@ function FUgrid_tot(){
 
 
 
+        var btnSubGroupItemwise = new Ext.Button({
+                style   : 'text-align:center;',
+                text    : "Item Wise",
+                width   : 90,
+                height  : 35,
+                id:'btnSubGroupItemwise',
+                border: 1,
+                style: {
+                borderColor: 'blue',
+                borderStyle: 'solid',
+        
+                }, 
+                listeners: {
+                    click: function(){
+                            var p1 ="&compcode="+encodeURIComponent(GinCompcode);      
+                            var p2 ="&finid="+encodeURIComponent(GinFinid);    
+                            var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
+                            var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                            var p5 = "&grpcode=" + encodeURIComponent(grpcode);
+                            var p6 = "&grpname=" + encodeURIComponent(grpname);
+                            var p7 = "&allitems=0";
+                             var param = (p1+p2+p3+p4+p5+p6+p7) ;
+        //alert(param);
+                            if (printtype == "PDF") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockSubGroupSummary_Itemwise2.rptdesign&__format=pdf&' + param, '_blank');
+        
+                        else if (printtype == "XLS") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockSubGroupSummary_Itemwise2.rptdesign&__format=XLS&' + param, '_blank');
+        
+                
+                            else
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStockSubGroupSummary_Itemwise2.rptdesign' + param, '_blank');	
+        
+        
+        
+                    }
+                }
+                });
+        
+
+                
     var btnAllSubGroup = new Ext.Button({
         style   : 'text-align:center;',
         text    : "All Sub Group view ",
@@ -3700,7 +3739,7 @@ var lblClosing = new Ext.form.Label({
                      labelWidth  : 70,
                      width       : 140,
                      border  : false,
-	             x       : 950,
+	             x       : 850,
 		     y       : 435,
                      items: [btnSubGroup]
                 },
@@ -3711,10 +3750,22 @@ var lblClosing = new Ext.form.Label({
                      labelWidth  : 70,
                      width       : 130,
                      border  : false,
-	             x       : 1100,
+	             x       : 1000,
 		     y       : 435,
                      items: [btnAllSubGroup]
                 },
+
+                	
+		{ 
+                        xtype   : 'fieldset',
+                        title   : '',
+                        labelWidth  : 70,
+                        width       : 130,
+                        border  : false,
+                        x       : 1200,
+                        y       : 435,
+                        items: [btnSubGroupItemwise]
+                   },
 { 
 	xtype       : 'fieldset',
 	title       : '',

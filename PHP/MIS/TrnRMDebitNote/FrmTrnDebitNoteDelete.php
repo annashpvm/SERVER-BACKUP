@@ -18,8 +18,8 @@ $finid   = $_REQUEST['finid'];
 
 #Begin Transaction
 
-mysqli_query($conn, "BEGIN");
 
+mysqli_begin_transaction($conn);
 
 
 	$query1 = "select dbcr_seqno from acc_dbcrnote_header where dbcr_vouno = '$vouno' and dbcr_comp_code = $compcode and dbcr_finid = $finid";
@@ -36,7 +36,7 @@ mysqli_query($conn, "BEGIN");
 //echo $query1 ;
 //echo "<br>";
 
-	$query2 = "delete from tmpacc_dbcrnote_header where dbcr_vouno = '$vouno' and dbcr_comp_code = $compcode and dbcr_finid = $finid and dbcr_seqno = $seqNo;";
+	$query2 = "delete from acc_dbcrnote_header where dbcr_vouno = '$vouno' and dbcr_comp_code = $compcode and dbcr_finid = $finid and dbcr_seqno = $seqNo;";
 	$result2 = mysqli_query($conn, $query2);
 
 //echo $query2 ;
@@ -45,17 +45,35 @@ mysqli_query($conn, "BEGIN");
 
 	$result3 = mysqli_query($conn, $query3);
 
+
+
+	$querya1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
+	$resulta1 = mysqli_query($conn, $querya1);
+
+
+    $querya2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
+	$resulta2 = mysqli_query($conn, $querya2);
+
+//echo $query2;
+//echo "<br>";
+
+
+	$querya3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
+	$resulta3 = mysqli_query($conn, $querya3);
+
+
 //echo $query3 ;
 //echo "<br>";
-	if ( $result1 && $result2  && $result3) 
+	if ( $result1 && $result2 && $result3 && $resulta1 && $resulta2 && $resulta3) 
 	{
-	  mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
 
 
 	    echo '({"success":"false","vouno":"' . $vouno . '"})';
+		mysqli_rollback($conn);
 	}
 
 

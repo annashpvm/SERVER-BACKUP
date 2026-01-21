@@ -10169,7 +10169,7 @@ function BillNoChecking()
         draggable   : false,
 	listeners:{
                show:function(){
-
+//alert("Test");
 dtpTicketDate.hide();
 			InitialData();
 

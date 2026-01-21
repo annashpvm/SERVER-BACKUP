@@ -17,6 +17,9 @@ $isstype ='C';
 // $issremarks= $_POST['issremarks'];
 $usrcode= $_POST['usrcode'];
 
+
+mysqli_begin_transaction($conn);    
+
 if ($AEDFlag === "Add")
 {
 
@@ -30,7 +33,7 @@ if ($AEDFlag === "Add")
 	 $rec2 = mysqli_fetch_array($result2);
 	 $issh_no=$rec2['issh_no'];
 
- mysqli_query($conn, "BEGIN");
+
 
  if ($issseqno > 0  && $issfincode > 0 && $isscompcode > 0)
  { 
@@ -64,7 +67,7 @@ if ($AEDFlag === "Add")
 }
 else if ($AEDFlag === "Edit")
 {
- mysqli_query($conn, "BEGIN");  
+
  $query5= "call sprm_upd_iss_stock ('$seqnoed')";
  $result5=mysqli_query($conn, $query5); 
 //echo $query5;
@@ -103,7 +106,7 @@ if ($AEDFlag === "Add")
 {
 	if($result3 && $result4)
 	{
-	 mysqli_query($conn, "COMMIT");                       
+		mysqli_commit($conn);                     
 	  echo '({"success":"true","IssNo":"'.$issh_no.'"})';
 	}
 	else
@@ -119,7 +122,7 @@ else
 {
 	if(  $result7 && $result8)
 	{
-	 mysqli_query($conn, "COMMIT");                       
+		mysqli_commit($conn);                            
 	  echo '({"success":"true","IssNo":"'.$isspno.'"})';
 	}
 	else

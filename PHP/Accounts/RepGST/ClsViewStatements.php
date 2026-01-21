@@ -130,10 +130,18 @@ function getInvoiceDetails()
 	$startdate = $_POST['startdate'];
 	$enddate   = $_POST['enddate'];
 	$voutype   = $_POST['voutype'];	
-	$hsnno     = $_POST['hsnno'];	
-        $sql = "call spacc_rep_hsnwise_sales_Detailed($compcode,'$finid','$startdate','$enddate','$hsnno', '$voutype')";
+	$hsnno     = $_POST['hsnno'];
+
+    $taxrate     = $_POST['taxrate'];
+    $supplytype = trim($_POST['supplytype']);
+  
+
+
+
+        $sql = "call spacc_rep_hsnwise_sales_Detailed($compcode,'$finid','$startdate','$enddate','$hsnno', '$voutype','$taxrate','$supplytype')";
     $r = mysqli_query($conn, $sql);
 
+//echo $sql;    
     $arr = [];
     while ($re = mysqli_fetch_assoc($r)) {
         $arr[] = $re;

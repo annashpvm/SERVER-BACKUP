@@ -81,6 +81,8 @@ $invhtransportname = trim(strtoupper($_POST['invhtransportname']));
 $invhtransportgst  = trim(strtoupper($_POST['invhtransportgst']));
 
 $usercode          = $_POST['usercode'];
+$frtparty          = (int) $_POST['frtparty'];
+
 $invfind =0;
 
 $TCSledger = 0;
@@ -171,7 +173,7 @@ $ginaccrefseq = $rec1['con_value'];
 '$invhvouno','$invhvouyear','$invhtaxableamt','$invhothers','$invhsgstper','$invhsgstamt','$invhcgstper','$invhcgstamt','$invhigstper',
 '$invhigstamt','$invhtcsper','$invhtcsamt','$invhdelivery_add1','$invhdelivery_add2','$invhdelivery_add3','$invhdelivery_city','$invhdelivery_pin',
 '$invhdelivery_gst','$invhstatecode','','$invhinstruction','$ginaccrefseq','','','','','','','N','N','','$invhdate',
-'','','','','','','$invhdate','N','$invhdate','',$frtqty,$roaddistance ,'$invhgracedays','$invhtransportname', '$invhtransportgst')";
+'','','','','','','$invhdate','N','$invhdate','',$frtqty,$roaddistance ,'$invhgracedays','$invhtransportname', '$invhtransportgst','$frtparty')";
 
 
 
@@ -197,7 +199,7 @@ else
 
 
 
-$query1= "update trnsal_invoice_header set invh_party_ordno = '$invhpartyordno',invh_party_orddt =  '$invhpartyorddt',invh_our_ordno = '$invhourordno',invh_our_orddt = '$invhourorddt',invh_party =  '$invhparty',invh_crd_days = '$invhcrddays', invh_grace_days = '$invhgracedays',  invh_taxtag = '$invhtaxtag',invh_insper = '$invhinsper',invh_insamt = '$invhinsamt' ,invh_frt_rate = '$invhfrtrate',invh_frt_amt = '$invhfrtamt',invh_roff = '$invhroff' ,invh_netamt = '$invhnetamt',invh_noofreels = '$invhnoofreels',invh_totwt = '$invhtotwt',invh_vehi_no = UPPER('$invhvehino') ,invh_lrno  = '$invhlrno' ,invh_lrdate= '$invhlrdate' ,invh_taxableamt = '$invhtaxableamt' ,invh_others = '$invhothers',invh_sgst_per = '$invhsgstper',invh_sgst_amt = '$invhsgstamt',invh_cgst_per = '$invhcgstper',invh_cgst_amt = '$invhcgstamt', invh_igst_per = '$invhigstper',invh_igst_amt ='$invhigstamt' ,invh_delivery_add1 = '$invhdelivery_add1',invh_delivery_add2 = '$invhdelivery_add2',invh_delivery_add3 = '$invhdelivery_add3',invh_delivery_city = '$invhdelivery_city', invh_ewaybillno = '$invhewaybillno', invh_delivery_pin  = '$invhdelivery_pin',invh_delivery_gst  = '$invhdelivery_gst',invh_delivery_statecode = '$invhstatecode', invh_instruction =  '$invhinstruction' , invh_tcs_per = $invhtcsper  , invh_tcs_amt = $invhtcsamt , invh_frtqty = $frtqty , invh_distance = $roaddistance, invh_transportname = '$invhtransportname' ,invh_transportGST = '$invhtransportgst'  where invh_seqno = '$invhseqno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
+$query1= "update trnsal_invoice_header set invh_party_ordno = '$invhpartyordno',invh_party_orddt =  '$invhpartyorddt',invh_our_ordno = '$invhourordno',invh_our_orddt = '$invhourorddt',invh_party =  '$invhparty',invh_crd_days = '$invhcrddays', invh_grace_days = '$invhgracedays',  invh_taxtag = '$invhtaxtag',invh_insper = '$invhinsper',invh_insamt = '$invhinsamt' ,invh_frt_rate = '$invhfrtrate',invh_frt_amt = '$invhfrtamt',invh_roff = '$invhroff' ,invh_netamt = '$invhnetamt',invh_noofreels = '$invhnoofreels',invh_totwt = '$invhtotwt',invh_vehi_no = UPPER('$invhvehino') ,invh_lrno  = '$invhlrno' ,invh_lrdate= '$invhlrdate' ,invh_taxableamt = '$invhtaxableamt' ,invh_others = '$invhothers',invh_sgst_per = '$invhsgstper',invh_sgst_amt = '$invhsgstamt',invh_cgst_per = '$invhcgstper',invh_cgst_amt = '$invhcgstamt', invh_igst_per = '$invhigstper',invh_igst_amt ='$invhigstamt' ,invh_delivery_add1 = '$invhdelivery_add1',invh_delivery_add2 = '$invhdelivery_add2',invh_delivery_add3 = '$invhdelivery_add3',invh_delivery_city = '$invhdelivery_city', invh_ewaybillno = '$invhewaybillno', invh_delivery_pin  = '$invhdelivery_pin',invh_delivery_gst  = '$invhdelivery_gst',invh_delivery_statecode = '$invhstatecode', invh_instruction =  '$invhinstruction' , invh_tcs_per = $invhtcsper  , invh_tcs_amt = $invhtcsamt , invh_frtqty = $frtqty , invh_distance = $roaddistance, invh_transportname = '$invhtransportname' ,invh_transportGST = '$invhtransportgst' , invh_frtparty = '$frtparty '  where invh_seqno = '$invhseqno'  and invh_fincode = '$invhfincode'  and invh_comp_code = '$invhcompcode'";
 
 
 $result1=mysqli_query($conn, $query1);            
@@ -375,7 +377,7 @@ if ($result2  && $result3  && $result5  && $resulta1  && $resulta2 && $resulta4)
 
 //if ($result1)
 {
-   mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	

@@ -6104,10 +6104,31 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                     <expression name="expression" type="javascript">dataSetRow["qc_rm_otherdeduction_remarks"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">qc_rm_billqty</property>
+                    <text-property name="displayName">qc_rm_billqty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["qc_rm_billqty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">qc_rm_millqty</property>
+                    <text-property name="displayName">qc_rm_millqty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["qc_rm_millqty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">qc_rm_ticketwt</property>
+                    <text-property name="displayName">qc_rm_ticketwt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["qc_rm_ticketwt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
             <column id="1769">
                 <property name="width">1.8in</property>
             </column>
+            <column id="2518"/>
+            <column id="2544"/>
+            <column id="2531"/>
             <column id="1770"/>
             <column id="1771"/>
             <column id="1772"/>
@@ -6119,12 +6140,12 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
             <column id="1801"/>
             <column id="1821"/>
             <column id="1816">
-                <property name="width">0.7in</property>
+                <property name="width">0.6in</property>
             </column>
             <header>
                 <row id="1779">
                     <cell id="1780">
-                        <property name="colSpan">2</property>
+                        <property name="colSpan">5</property>
                         <property name="rowSpan">1</property>
                         <label id="1788">
                             <property name="fontSize">10pt</property>
@@ -6159,6 +6180,7 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                     </cell>
                 </row>
                 <row id="1742">
+                    <property name="fontSize">8pt</property>
                     <cell id="1743">
                         <property name="borderBottomStyle">dotted</property>
                         <property name="borderBottomWidth">1px</property>
@@ -6170,6 +6192,45 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                         <property name="borderTopWidth">1px</property>
                         <label id="1777">
                             <text-property name="text">Item Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2507">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1201">
+                            <text-property name="text">Party Wt</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2533">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1203">
+                            <text-property name="text">Mill Wt</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2520">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1205">
+                            <text-property name="text">Accepted</text-property>
                         </label>
                     </cell>
                     <cell id="1744">
@@ -6320,6 +6381,7 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
             </header>
             <detail>
                 <row id="1751">
+                    <property name="fontSize">8pt</property>
                     <cell id="1752">
                         <property name="borderBottomStyle">dotted</property>
                         <property name="borderBottomWidth">1px</property>
@@ -6331,6 +6393,57 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                         <property name="borderTopWidth">1px</property>
                         <data id="1778">
                             <property name="resultSetColumn">itmh_name</property>
+                        </data>
+                    </cell>
+                    <cell id="2508">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="2545">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">qc_rm_billqty</property>
+                        </data>
+                    </cell>
+                    <cell id="2534">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="2546">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">qc_rm_millqty</property>
+                        </data>
+                    </cell>
+                    <cell id="2521">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="2547">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="resultSetColumn">qc_rm_ticketwt</property>
                         </data>
                     </cell>
                     <cell id="1753">
@@ -6554,7 +6667,7 @@ true</expression>
                             <property name="fontSize">8.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <list-property name="visibility">
@@ -6622,7 +6735,7 @@ true</expression>
                 </row>
                 <row id="1832">
                     <cell id="1833">
-                        <property name="colSpan">10</property>
+                        <property name="colSpan">13</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">dotted</property>
                         <property name="borderBottomWidth">1px</property>
@@ -6673,6 +6786,36 @@ true</expression>
                         <label id="2218">
                             <text-property name="text">TOTAL</text-property>
                         </label>
+                    </cell>
+                    <cell id="2510">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="2536">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="2523">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
                     </cell>
                     <cell id="2170">
                         <property name="borderBottomStyle">dotted</property>
@@ -6933,7 +7076,7 @@ true</expression>
                         </structure>
                     </list-property>
                     <cell id="1761">
-                        <property name="colSpan">5</property>
+                        <property name="colSpan">8</property>
                         <property name="rowSpan">3</property>
                         <data id="2342">
                             <property name="resultSetColumn">qc_rm_otherdeduction_remarks</property>
@@ -7021,6 +7164,9 @@ true</expression>
                         </structure>
                     </list-property>
                     <cell id="2220"/>
+                    <cell id="2514"/>
+                    <cell id="2540"/>
+                    <cell id="2527"/>
                     <cell id="2221"/>
                     <cell id="2222"/>
                     <cell id="2223"/>
@@ -7053,6 +7199,9 @@ true</expression>
                         </structure>
                     </list-property>
                     <cell id="2291"/>
+                    <cell id="2515"/>
+                    <cell id="2541"/>
+                    <cell id="2528"/>
                     <cell id="2292"/>
                     <cell id="2293"/>
                     <cell id="2294"/>
@@ -7081,6 +7230,9 @@ true</expression>
                         </structure>
                     </list-property>
                     <cell id="2182"/>
+                    <cell id="2516"/>
+                    <cell id="2542"/>
+                    <cell id="2529"/>
                     <cell id="2183"/>
                     <cell id="2184"/>
                     <cell id="2185"/>
@@ -7112,7 +7264,7 @@ true</expression>
                     <property name="borderTopStyle">dotted</property>
                     <property name="borderTopWidth">1px</property>
                     <cell id="2247">
-                        <property name="colSpan">2</property>
+                        <property name="colSpan">5</property>
                         <property name="rowSpan">1</property>
                         <data id="2326">
                             <property name="resultSetColumn">dnword</property>

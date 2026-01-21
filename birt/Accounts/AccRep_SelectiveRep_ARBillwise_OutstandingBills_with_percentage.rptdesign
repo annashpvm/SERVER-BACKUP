@@ -830,7 +830,12 @@ else&#13;
                 <structure>
                     <property name="name">bal_100_percent</property>
                     <text-property name="displayName">bal_100_percent</text-property>
-                    <expression name="expression" type="javascript">if ( row["oddays"] >= 5  || row["acctrail_crdays"] &lt;=7 )&#13;
+                    <expression name="expression" type="javascript">//if ( row["oddays"] >= 5  || row["acctrail_crdays"] &lt;=7 )&#13;
+//   row["Balance"]&#13;
+//else &#13;
+//   0&#13;
+&#13;
+if ( row["oddays"] >= 0  || row["acctrail_crdays"] &lt;=7 )&#13;
    row["Balance"]&#13;
 else &#13;
    0</expression>
@@ -841,7 +846,8 @@ else &#13;
                     <property name="name">bal_50_percent</property>
                     <text-property name="displayName">bal_50_percent</text-property>
                     <expression name="expression" type="javascript">if (row["oddays"] >= 0 &amp;&amp; row["oddays"] &lt; 5  &amp;&amp; row["acctrail_crdays"] > 7)&#13;
-   row["Balance"]&#13;
+//   row["Balance"]&#13;
+0&#13;
 else &#13;
    0</expression>
                     <property name="dataType">float</property>
@@ -978,6 +984,12 @@ else&#13;
                 <property name="width">0.8in</property>
             </column>
             <column id="756">
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
                 <property name="width">0.8in</property>
             </column>
             <column id="730">

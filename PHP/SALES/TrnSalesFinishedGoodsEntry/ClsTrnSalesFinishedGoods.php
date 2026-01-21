@@ -27,6 +27,13 @@
 		case "loadSONo":
 		getSONo();
 		break;
+		case "loadRollNos":
+        getRollNos();
+            break;
+        case "loadShift":
+                getShift();
+                    break;
+
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -83,7 +90,7 @@ and  b.var_grpcode = c.var_groupcode and stk_comp_code =$compcode  and stk_finye
 
         $sql = "select * from trnsal_finish_stock a ,massal_variety b ,masprd_variety c ,massal_customer where  stk_party = cust_code and b.var_grpcode = c.var_groupcode and stk_comp_code = $compcode  and stk_finyear = $finid   and stk_ent_no =$entno    and stk_var_code = b.var_code and  a.stk_deltag <> 'T' order by var_name, stk_sr_no";
 
-        $sql = "select * from trnsal_finish_stock a ,massal_variety b ,masprd_variety c ,massal_customer d, trnsal_order_header e where  stk_sono = ordh_sono and ordh_party = cust_code and b.var_grpcode = c.var_groupcode and stk_comp_code = $compcode  and stk_finyear = $finid   and stk_ent_no =$entno    and stk_var_code = b.var_code and  a.stk_deltag <> 'T' order by var_name, stk_sr_no";
+        $sql = "select * from trnsal_finish_stock a ,massal_variety b ,masprd_variety c ,massal_customer d, trnsal_order_header e where  stk_sono = ordh_sono and ordh_party = cust_code and b.var_grpcode = c.var_groupcode and stk_comp_code = $compcode  and stk_finyear = $finid   and stk_ent_no =$entno    and stk_var_code = b.var_code and  a.stk_deltag <> 'T' and ordh_comp_code = stk_comp_code order by var_name, stk_sr_no";
 
     $r = mysqli_query($conn, $sql);
 
@@ -174,4 +181,39 @@ global $conn;
 }
 
 
+
+function getRollNos()
+{
+global $conn;  
+	$finid = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$rdate = $_POST['rdate'];
+    $sql = "select stk_rollno from trnsal_finish_stock where  stk_comp_code =  $compcode and stk_finyear = $finid  and stk_ent_date = '$rdate' group by stk_rollno order by stk_rollno";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+}
+
+function getShift()
+{
+global $conn;  
+	$finid = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$rdate = $_POST['rdate'];
+    $rollno = $_POST['rollno'];
+    $sql = "select * from trnsal_finish_stock where  stk_comp_code =  $compcode and stk_finyear = $finid  and stk_ent_date = '$rdate' and  stk_rollno = $rollno  ";
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+}
 ?>

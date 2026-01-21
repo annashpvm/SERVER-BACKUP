@@ -430,7 +430,7 @@ new Ext.Toolbar.SplitButton({
        
        }),
 new Ext.Toolbar.SplitButton({
-        text: '<b> CORRECTIONS </b>',
+        text: '<b> SALES / PRODUCTIONS </b>',
         width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
@@ -445,7 +445,8 @@ new Ext.Toolbar.SplitButton({
                         window.location.href=('http://10.0.0.251/SHVPM/MIS/MasCorrections/frmFinCorrection.php');
                     }
                 },
-{
+
+               {
                     text: '<b> ReelWeight Change Corrections  </b>',
                     group: 'theme',
                     handler: function(){
@@ -453,6 +454,15 @@ new Ext.Toolbar.SplitButton({
                     }
                 },
 
+                
+               {
+                text: '<b> SO - Correction  </b>',
+                group: 'theme',
+                handler: function(){
+                    localStorage.setItem("SOTYPE",'F');  
+                    window.location.href=('http://10.0.0.251/SHVPM/MIS/Sales/Order/TrnSalesOrder.php');
+                }
+            },
 
        ],
 
@@ -460,6 +470,34 @@ new Ext.Toolbar.SplitButton({
        
        }),
 
+
+       new Ext.Toolbar.SplitButton({
+        text: '<b> ACCOUNTS </b>',
+        width: 150,
+       // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
+        menu:{
+            items:[
+
+
+
+            	{
+                    text: '<b> Credit Note Delete / No. Change </b>',
+                    group: 'theme',
+                    handler: function(){
+                        window.location.href=('http://10.0.0.251/SHVPM/MIS/CreditNote/FrmTrnCreditNote.php');
+                    }
+                },
+
+
+
+                
+
+
+       ],
+
+}
+       
+       }),
 
 
 new Ext.Toolbar.SplitButton({

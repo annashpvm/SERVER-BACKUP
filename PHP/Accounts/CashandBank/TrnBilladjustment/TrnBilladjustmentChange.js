@@ -359,9 +359,9 @@ function UpdateReceiptBillsAdjusted(){
         id: 'my-grid',  
 
         columns: [         
-            {header: "Adj SlNO", dataIndex: 'ref_slno',sortable:true,width:110,align:'left',hidden : false},
-            {header: "BR SeqNO", dataIndex: 'ref_docseqno',sortable:true,width:110,align:'left',hidden : false},
-            {header: "Adj SeqNO", dataIndex: 'ref_adjseqno',sortable:true,width:110,align:'left',hidden : false},
+            {header: "Adj SlNO", dataIndex: 'ref_slno',sortable:true,width:110,align:'left',hidden : true},
+            {header: "BR SeqNO", dataIndex: 'ref_docseqno',sortable:true,width:110,align:'left',hidden : true},
+            {header: "Adj SeqNO", dataIndex: 'ref_adjseqno',sortable:true,width:110,align:'left',hidden : true},
             {header: "Vou. No.", dataIndex: 'ref_docno',sortable:true,width:100,align:'center',hidden : true},
             {header: "VouDate", dataIndex: 'ref_docdate',sortable:true,width:100,align:'center',hidden : true},            
             {header: "Inv. No.", dataIndex: 'acctrail_inv_no',sortable:true,width:180,align:'center'},

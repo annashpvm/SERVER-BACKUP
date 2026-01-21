@@ -956,8 +956,8 @@ function flxaccupdation() {
         var rebate = 0;
 
         flxAccounts.getStore().removeAll();
-	var Row= flxDetail.getStore().getCount();
-	flxDetail.getSelectionModel().selectAll();
+	    var Row= flxDetail.getStore().getCount();
+	    flxDetail.getSelectionModel().selectAll();
         var sel=flxDetail.getSelectionModel().getSelections();
 
 
@@ -1059,14 +1059,17 @@ function flxaccupdation() {
                     flxAccounts.getStore().insert(
                         flxAccounts.getStore().getCount(),
                         new dgrecord({
-			      slno      : RowCnt1,
-			      ledcode   : purlcode,
-			      ledname   : purlname,
-			      debit     : "0",
-                              billno    : txtBillNo.getRawValue(),
-                              billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
-			      credit    : puramt,
-                              ledtype   : "G",
+                            slno      : RowCnt1,
+//                            ledcode   : purlcode,
+//                            ledname   : purlname,
+                            ledcode   : '4993',
+                            ledname   : 'CREDIT NOTE TO BE RECEIVED',
+
+                            debit     : "0",
+                            billno    : txtBillNo.getRawValue(),
+                            billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
+		                    credit    : puramt,
+                            ledtype   : "G",
                         }) 
                         );
             } 
@@ -1094,20 +1097,22 @@ function flxaccupdation() {
                     flxAccounts.getStore().insert(
                         flxAccounts.getStore().getCount(),
                         new dgrecord({
-			      slno      : RowCnt1,
-			      ledcode   : cgstlcode,
-			      ledname   : cgstlname,
-			      credit    : cgstamt,
-			      debit     : "0",
-                              billno    : txtBillNo.getRawValue(),
-                              billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),           
-                              ledtype   : "G",
+                        slno      : RowCnt1,
+//                        ledcode   : cgstlcode,
+//                        ledname   : cgstlname,
+                        ledcode   : '4993',
+                        ledname   : 'CREDIT NOTE TO BE RECEIVED',                        
+                        credit    : Number(cgstamt) +  Number(sgstamt) +  Number(igstamt)  ,
+                        debit     : "0",
+                        billno    : txtBillNo.getRawValue(),
+                        billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),           
+                        ledtype   : "G",
 
                         }) 
                         );
             } 
 //--end
-
+/*
 
 //-- For SGST Ledger
             cramt = 0;
@@ -1177,6 +1182,7 @@ function flxaccupdation() {
             } 
 //--end
 
+*/
 //-- For Inward Ledger - Debit
             cramt = 0;
             k =0;

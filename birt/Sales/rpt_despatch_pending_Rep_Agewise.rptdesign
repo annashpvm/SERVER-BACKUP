@@ -3453,6 +3453,21 @@ else if (params["reelopt"].value == "B")&#13;
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">avg_days</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>shadegrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">MAX</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["diffdays"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <property name="pageBreakInterval">0</property>
             <column id="26">
@@ -3460,6 +3475,7 @@ else if (params["reelopt"].value == "B")&#13;
             </column>
             <column id="27"/>
             <column id="669"/>
+            <column id="876"/>
             <column id="679"/>
             <column id="28"/>
             <column id="29"/>
@@ -3487,6 +3503,7 @@ else if (params["reelopt"].value == "B")&#13;
                         </auto-text>
                     </cell>
                     <cell id="660"/>
+                    <cell id="859"/>
                     <cell id="670"/>
                     <cell id="86"/>
                     <cell id="87"/>
@@ -3521,7 +3538,7 @@ else if (params["reelopt"].value == "B")&#13;
                         </structure>
                     </list-property>
                     <cell id="77">
-                        <property name="colSpan">8</property>
+                        <property name="colSpan">9</property>
                         <property name="rowSpan">1</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -3542,7 +3559,7 @@ else if (params["reelopt"].value == "B")&#13;
                         </structure>
                     </list-property>
                     <cell id="56">
-                        <property name="colSpan">8</property>
+                        <property name="colSpan">9</property>
                         <property name="rowSpan">1</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -3561,7 +3578,7 @@ else if (params["reelopt"].value == "B")&#13;
                     <property name="borderTopWidth">1px</property>
                     <property name="verticalAlign">middle</property>
                     <cell id="540">
-                        <property name="colSpan">8</property>
+                        <property name="colSpan">9</property>
                         <property name="rowSpan">1</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -3632,6 +3649,16 @@ else if (params["reelopt"].value == "B")&#13;
                             <text-property name="text">SHADE</text-property>
                         </label>
                     </cell>
+                    <cell id="863">
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="878">
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Age Days</text-property>
+                        </label>
+                    </cell>
                     <cell id="674">
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -3689,7 +3716,7 @@ else if (params["reelopt"].value == "B")&#13;
                 <header>
                     <row id="834">
                         <cell id="835">
-                            <property name="colSpan">4</property>
+                            <property name="colSpan">5</property>
                             <property name="rowSpan">1</property>
                             <property name="fontSize">12pt</property>
                             <property name="fontWeight">bold</property>
@@ -3723,6 +3750,16 @@ else if (params["reelopt"].value == "B")&#13;
                                 <property name="textAlign">right</property>
                                 <property name="resultSetColumn">repname</property>
                             </data>
+                        </cell>
+                        <cell id="874">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
                         </cell>
                         <cell id="847">
                             <property name="borderBottomStyle">dotted</property>
@@ -3827,7 +3864,7 @@ else if (params["reelopt"].value == "B")&#13;
                 <header>
                     <row id="564">
                         <cell id="565">
-                            <property name="colSpan">8</property>
+                            <property name="colSpan">9</property>
                             <property name="rowSpan">1</property>
                             <property name="fontWeight">bold</property>
                             <property name="borderLeftStyle">dotted</property>
@@ -3867,6 +3904,12 @@ else if (params["reelopt"].value == "B")&#13;
                                 <property name="textAlign">center</property>
                                 <property name="resultSetColumn">party_pending</property>
                             </data>
+                        </cell>
+                        <cell id="873">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
                         </cell>
                         <cell id="761">
                             <property name="borderLeftStyle">dotted</property>
@@ -3992,6 +4035,7 @@ true</expression>
                         <cell id="685"/>
                         <cell id="686"/>
                         <cell id="687"/>
+                        <cell id="866"/>
                         <cell id="688"/>
                         <cell id="689"/>
                         <cell id="690"/>
@@ -4010,6 +4054,7 @@ true</expression>
                         <cell id="694"/>
                         <cell id="695"/>
                         <cell id="696"/>
+                        <cell id="872"/>
                         <cell id="697"/>
                         <cell id="698"/>
                         <cell id="699"/>
@@ -4040,6 +4085,7 @@ true</expression>
                         </cell>
                         <cell id="706"/>
                         <cell id="707"/>
+                        <cell id="867"/>
                         <cell id="708"/>
                         <cell id="709"/>
                         <cell id="710"/>
@@ -4058,6 +4104,7 @@ true</expression>
                         <cell id="714"/>
                         <cell id="715"/>
                         <cell id="716"/>
+                        <cell id="871"/>
                         <cell id="717"/>
                         <cell id="718"/>
                         <cell id="719"/>
@@ -4102,6 +4149,20 @@ true</expression>
                             <data id="744">
                                 <property name="textAlign">center</property>
                                 <property name="resultSetColumn">shade</property>
+                            </data>
+                        </cell>
+                        <cell id="868">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <data id="879">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">avg_days</property>
                             </data>
                         </cell>
                         <cell id="728">
@@ -4220,6 +4281,7 @@ true</expression>
                         <cell id="734"/>
                         <cell id="735"/>
                         <cell id="736"/>
+                        <cell id="870"/>
                         <cell id="737"/>
                         <cell id="738"/>
                         <cell id="739"/>
@@ -4250,6 +4312,16 @@ true</expression>
                         <property name="borderLeftWidth">1px</property>
                         <property name="borderRightStyle">dotted</property>
                         <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="869">
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="877">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">diffdays</property>
+                        </data>
                     </cell>
                     <cell id="676">
                         <property name="borderLeftStyle">dotted</property>
@@ -4320,6 +4392,12 @@ true</expression>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">TOTAL DESPATCH PENDING </text-property>
                         </label>
+                    </cell>
+                    <cell id="875">
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
                     </cell>
                     <cell id="767">
                         <property name="borderLeftStyle">dotted</property>

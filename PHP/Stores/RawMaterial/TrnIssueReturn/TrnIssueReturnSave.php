@@ -22,8 +22,8 @@ $usrcode= $_POST['usrcode'];
  $result2= mysqli_query($conn, $query2);
  $rec2 = mysqli_fetch_array($result2);
  $issretno=$rec2['issretno'];
+ mysqli_begin_transaction($conn);      
 
- mysqli_query($conn, "BEGIN");
 
  if ($issretseqno > 0  && $retfincode > 0 && $retcompcode > 0)
  { 
@@ -63,7 +63,7 @@ isrt_hdseqno, isrt_seqno, isrt_varty, isrt_itemcode, isrt_qty, isrt_rate, isrt_v
 //echo '({"success":"true","IssNo":"'.$issseqno.'"})';        
 if($result3 && $result4)
 {
- mysqli_query($conn, "COMMIT");                       
+  mysqli_commit($conn);                          
   echo '({"success":"true","IssRetNo":"'.$issretno.'"})';
 }
 else

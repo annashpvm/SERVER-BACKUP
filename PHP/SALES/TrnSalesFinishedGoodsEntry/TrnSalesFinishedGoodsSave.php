@@ -13,8 +13,7 @@ $entrydate = $_POST['entrydate'];
 
 
 
-
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") 
   {
@@ -46,19 +45,20 @@ $rollno   = (int)$griddet[$i]['rollno'];
 //$unit     = $griddet[$i]['unit'];
 $unit     = 1;
 
-//$query2= "insert into trnsal_finish_stock VALUES ('$compcode','$finid','$entryno','$entrydate','$itemcode','$number','$weight',
-//0,0,'',0,0,'','',0,'0','')";
 
 $query2= "insert into trnsal_finish_stock  (stk_comp_code,stk_finyear,stk_ent_no,stk_ent_date,stk_var_code,stk_sr_no,stk_wt,stk_sono,stk_yymm,stk_rollno,stk_source) VALUES ('$compcode','$finid','$entryno','$entrydate','$itemcode','$number','$weight',$sono,$yymm,$rollno,'R')";
 $result2=mysqli_query($conn, $query2);            
-  
+
+//echo $query2;
+//echo "<br>";
 }
 
  
 
 
 if ($result1 && $result2) {
-    mysqli_begin_transaction($conn);
+    
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $entryno . '"})';
 } 
 	

@@ -345,7 +345,8 @@ style: {
 				            itemcode    : loadissuenoDatastore.getAt(j).get('iss_item_code'),
 				            uom         : loadissuenoDatastore.getAt(j).get('uom_short_name'),
 				            rate        : Ext.util.Format.number(loadissuenoDatastore.getAt(j).get('iss_rate'), "0.00000"),
-				            stock       : Ext.util.Format.number((Number(loadissuenoDatastore.getAt(j).get('item_stock'))+Number(loadissuenoDatastore.getAt(j).get('iss_qty'))), "0.000"),
+//				            stock       : Ext.util.Format.number((Number(loadissuenoDatastore.getAt(j).get('item_stock'))+Number(loadissuenoDatastore.getAt(j).get('iss_qty'))), "0.000"),
+                            stock       : Ext.util.Format.number((Number(loadissuenoDatastore.getAt(j).get('item_stock'))), "0.000"),
 					        issqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
                             oldqty      : loadissuenoDatastore.getAt(j).get('iss_qty'),   
 					        issval      : Ext.util.Format.number(isval, "0.00"),
@@ -691,20 +692,20 @@ function add_btn_click()
 
            {
 
-		gridedit = "false";
-        	var idx = flxDetail.getStore().indexOf(editrow);
-                sel[idx].set('machine'   , cmbMachine.getRawValue()); 
-		sel[idx].set('sectioncode', cmbSection.getValue());
-		sel[idx].set('section'  , cmbSection.getRawValue());
-		sel[idx].set('equipcode', cmbEquipment.getValue());
-		sel[idx].set('equipment', cmbEquipment.getRawValue());
-                sel[idx].set('uom'      ,  txtUOM.getRawValue()); 
-        	sel[idx].set('item'     , txtItemName.getRawValue());
-        	sel[idx].set('itemcode' , strItemCode);
-		sel[idx].set('issqty'   , txtIssQty.getRawValue());
- 		sel[idx].set('issval'   , txtIssVal.getRawValue());
-		sel[idx].set('stock'    , txtStock.getRawValue());
-		sel[idx].set('rate'     , txtAvgRate.getRawValue());
+            gridedit = "false";
+            var idx = flxDetail.getStore().indexOf(editrow);
+            sel[idx].set('machine'   , cmbMachine.getRawValue()); 
+            sel[idx].set('sectioncode', cmbSection.getValue());
+            sel[idx].set('section'  , cmbSection.getRawValue());
+            sel[idx].set('equipcode', cmbEquipment.getValue());
+            sel[idx].set('equipment', cmbEquipment.getRawValue());
+            sel[idx].set('uom'      ,  txtUOM.getRawValue()); 
+            sel[idx].set('item'     , txtItemName.getRawValue());
+            sel[idx].set('itemcode' , strItemCode);
+            sel[idx].set('issqty'   , txtIssQty.getRawValue());
+            sel[idx].set('issval'   , txtIssVal.getRawValue());
+            sel[idx].set('stock'    , stockqty);
+            sel[idx].set('rate'     , txtAvgRate.getRawValue());
 
 		flxDetail.getSelectionModel().clearSelections();
               
@@ -810,10 +811,10 @@ var txtAvgRate = new Ext.form.NumberField({
         name        : 'txtAvgRate',
         width       :  80,
         allowBlank  :  false,
-	tabindex : 1,
+	    tabindex : 1,
         decimalPrecision: 5,
         enableKeyEvents: true,
-
+        //readOnly   : true,
         listeners:{
            change:function(){
                   checkqty();
@@ -828,7 +829,7 @@ var txtAvgRate = new Ext.form.NumberField({
                checkqty();
             },
          } 
-   //     readOnly   : true,
+   
     });
 
 var txtTotValue = new Ext.form.NumberField({
@@ -1052,7 +1053,7 @@ function grid_tot()
 
 
 
-
+var stockqty = 0;
  var fm = Ext.form;
 var dgrecord = Ext.data.Record.create([]);
 var flxDetail = new Ext.grid.EditorGridPanel({
@@ -1093,32 +1094,37 @@ var flxDetail = new Ext.grid.EditorGridPanel({
              msg: 'Press YES to Modify   -  NO to Delete - CANCEL to EXIT',
              fn: function(btn){
         	if (btn === 'yes'){
-
-			var sm = flxDetail.getSelectionModel();
-			var selrow = sm.getSelected();
-         		gridedit = "true";
-			editrow = selrow;
-                      	txtItemName.setRawValue(selrow.get('item'));
-                       	strItemCode = selrow.get('itemcode');
+			    var sm = flxDetail.getSelectionModel();
+			    var selrow = sm.getSelected();
+         	    gridedit = "true";
+			    editrow = selrow;
+                txtItemName.setRawValue(selrow.get('item'));
+                strItemCode = selrow.get('itemcode');
 	
 		    	txtAvgRate.setValue(selrow.get('rate'));
 		    	txtIssQty.setValue(selrow.get('issqty'));
+
+                
+                stockqty = selrow.get('stock');
+
                 if (gstFlag == "Edit")
-		    	    txtStock.setValue(selrow.get('stock')+ selrow.get('issqty'));
-                else
+		    	    txtStock.setValue(Number(selrow.get('stock'))+ Number(selrow.get('issqty')));
+                else                
                     txtStock.setValue(selrow.get('stock'));
+
+
+
 		    	txtIssQty.setRawValue(selrow.get('issqty'));
 		    	txtIssVal.setRawValue(selrow.get('issval'));
-                        txtUOM.setRawValue(selrow.get('uom')); 
-            		cmbMachine.setRawValue(selrow.get('machine'));
+                txtUOM.setRawValue(selrow.get('uom')); 
+            	cmbMachine.setRawValue(selrow.get('machine'));
 
-			cmbSection.setValue(selrow.get('sectioncode'));
-			cmbEquipment.setValue(selrow.get('equipcode'));
+           		cmbSection.setValue(selrow.get('sectioncode'));
+			    cmbEquipment.setValue(selrow.get('equipcode'));
 
-			cmbSection.setRawValue(selrow.get('section'));
-			cmbEquipment.setRawValue(selrow.get('equipment'));
-
-			flxDetail.getSelectionModel().clearSelections();
+			    cmbSection.setRawValue(selrow.get('section'));
+			    cmbEquipment.setRawValue(selrow.get('equipment'));
+            	flxDetail.getSelectionModel().clearSelections();
 			}
                    else if (btn === 'no'){
                         var sm = flxDetail.getSelectionModel();

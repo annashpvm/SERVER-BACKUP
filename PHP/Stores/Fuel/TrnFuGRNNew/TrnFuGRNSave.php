@@ -142,7 +142,7 @@ $DNdate    = $_REQUEST['DNdate'];
 
 
 
- mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);   
 
 $sno = 1;
 if ($gstFlaggrn === "Add") {
@@ -164,7 +164,7 @@ $result1 = mysqli_query($conn, $query1);
 $rec1 = mysqli_fetch_array($result1);
 $ginaccrefseq=$rec1['con_value'];
 
-//		 mysqli_query($conn, "BEGIN");
+
 
 
 
@@ -488,7 +488,7 @@ if ($debitnoteamount > 0)
             #Insert AccTrail
                if ($ledtype != 'G')
                {
-               $DNquery5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseqDN','$slno','$billno', '$billdate', '$debitnoteamount' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$payterms','0')";
+               $DNquery5 = "call acc_sp_trn_insacc_trail ('$ginaccrefseqDN','$slno','$billno', '$DNdate', '$debitnoteamount' ,'$debitnoteamount' ,'$ledseq' ,'$amtmode','$payterms','0')";
                $DNresult5 = mysqli_query($conn, $DNquery5);
 
 //echo $DNquery5;
@@ -579,7 +579,7 @@ $DNresult8 = mysqli_query($conn, $DNquery8);
 	$adjdays=$recdatenew['daysin'];
 
 
-$DNquery9 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid','$ginaccrefseqDN','$vouno','$grndate', '$ginaccrefseq', '$rech_no','$billno','$billdate','$debitnoteamount',$adjdays,'DN',curdate(),$payterms,$supcode,'$dntype' ,'C');";
+$DNquery9 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid','$ginaccrefseqDN','$vouno','$DNdate', '$ginaccrefseq', '$rech_no','$billno','$billdate','$debitnoteamount',$adjdays,'DN',curdate(),$payterms,$supcode,'$dntype' ,'C');";
 
 $DNresult9 = mysqli_query($conn, $DNquery9);
 
@@ -642,7 +642,7 @@ if ($gstFlaggrn === "Add") {
 
 		if( $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $result11  && $result12)
 		{
-			mysqli_begin_transaction($conn);                        
+			mysqli_commit($conn);                      
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
@@ -661,7 +661,7 @@ if ($gstFlaggrn === "Add") {
 
 		if( $result1 && $result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1  && $result11  && $result12) 
 		{
-			mysqli_begin_transaction($conn);                        
+			mysqli_commit($conn);                        
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
@@ -690,7 +690,7 @@ if ($debitnoteamount > 0)
 
 		if( $result4 && $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12)
 		{
-			mysqli_begin_transaction($conn);                        
+			mysqli_commit($conn);                    
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}
@@ -710,7 +710,7 @@ if ($debitnoteamount > 0)
 
 		if($result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12)
 		{
-			mysqli_begin_transaction($conn);                        
+			mysqli_commit($conn);              
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
 		    
 		}

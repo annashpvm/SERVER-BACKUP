@@ -804,15 +804,16 @@ else
 
  function findQCTicketNumber()
     {
-        global $conn;
+    global $conn;
 	$wbdate   = $_POST['wbdate'];
 	$ticketno = $_POST['ticketno'];
+	$compcode = $_POST['compcode'];
+	$finid    = $_POST['finid'];
 
+    $sql = "select qc_rm_entryno from trn_qc_rm_inspection where  qc_rm_compcode = $compcode and qc_rm_fincode = $finid and qc_rm_ticketdate = '$wbdate' and qc_rm_ticketno  = '$ticketno'  group by qc_rm_entryno";
 
-      $sql = "select qc_rm_entryno from trn_qc_rm_inspection where qc_rm_ticketdate = '$wbdate' and qc_rm_ticketno  = '$ticketno'  group by qc_rm_entryno";
-
-      $r = mysqli_query($conn, $sql);
-        $nrow = mysqli_num_rows($r);
+    $r = mysqli_query($conn, $sql);
+    $nrow = mysqli_num_rows($r);
 	while($re = mysqli_fetch_array($r))
 	{
 	$arr[]= $re ;

@@ -266,7 +266,7 @@ var flxDatewiseList = new Ext.grid.EditorGridPanel({
     scrollable: true,
     x:50,
     y:60,
-    height: 420,
+    height: 380,
     hidden:false,
     width: 700,
     id: 'my-grid',  
@@ -461,9 +461,9 @@ function Month_Add_inGrid()
         new dgrecord({
            moncode : monthcode,
            month  : monthdisplay,
-           debit  : '',
-           credit : '',
-           closing : '',
+           debit  : '0 ',
+           credit : '0',
+           closing : '0',
        }) 
        );
    }
@@ -1841,15 +1841,14 @@ renderer: function (val, metaData, r){
 },
         {header: "Closing"  , dataIndex: 'closing',sortable:false,width:150,align:'right', menuDisabled: true,
 renderer: function (val, metaData, r){
-    if (val > 0) 
-    { 
+
      return  parseFloat(val).toLocaleString('en-In', {
          maximumFractionDigits: 2,
          minimumFractionDigits: 2,
 //         style: 'currency',
          currency: 'INR',
          });
-      }
+
    }
 },
 
@@ -2425,6 +2424,7 @@ var lblText = Ext.getCmp('lblCrDr3').getEl().dom.innerHTML;
 
 //-- opening
   
+
 	loadCashBankOpeningDatastore.removeAll();
 	loadCashBankOpeningDatastore.load({
 	 url: 'ClsViewStatements.php',
@@ -2502,6 +2502,7 @@ var lblText = Ext.getCmp('lblCrDr3').getEl().dom.innerHTML;
                    var cnt=loadCashBankDetailsDatastore.getCount();
                    var dr  = 0;
                    var cr  = 0;
+                   var clo = 0;
                    clo = openDr - openCr; 
 
                    if(cnt>0)
@@ -2517,22 +2518,27 @@ var lblText = Ext.getCmp('lblCrDr3').getEl().dom.innerHTML;
 //alert(loadCashBankDetailsDatastore.getAt(j).get('rmonth')); 
 //alert(sel[i].data.month); 
           
-                     		    if (sel[i].data.month === loadCashBankDetailsDatastore.getAt(j).get('rmonth'))
-                  		    {
-                                        dr = Number(loadCashBankDetailsDatastore.getAt(j).get('dramt'));
-                                        cr = Number(loadCashBankDetailsDatastore.getAt(j).get('cramt'));
-                                        clo = clo + dr - cr;
+                                if (sel[i].data.month === loadCashBankDetailsDatastore.getAt(j).get('rmonth'))
+                                {
 
+                                            dr = parseFloat(loadCashBankDetailsDatastore.getAt(j).get('dramt')) || 0;
+                                            cr = parseFloat(loadCashBankDetailsDatastore.getAt(j).get('cramt')) || 0;
 
-	                                sel[i].set('debit', Ext.util.Format.number(loadCashBankDetailsDatastore.getAt(j).get('dramt'),'0.00'));
-                                        sel[i].set('credit', Ext.util.Format.number(loadCashBankDetailsDatastore.getAt(j).get('cramt'),'0.00'));
-	                               sel[i].set('closing', Ext.util.Format.number(clo,'0.00'));
+                  
+                                            clo    = parseFloat(clo) || 0;
+                                            clo = clo + dr - cr;
 
-			            }
-                              }
-			}
+                                            clo = Math.round(clo * 100) / 100;
 
-                       grid_tot();
+                                            sel[i].set('debit', Ext.util.Format.number(loadCashBankDetailsDatastore.getAt(j).get('dramt'),'0.00'));
+                                            sel[i].set('credit', Ext.util.Format.number(loadCashBankDetailsDatastore.getAt(j).get('cramt'),'0.00'));
+                                            sel[i].set('closing', Ext.util.Format.number(clo,'0.00'));
+
+                                }
+                            }
+			          }
+
+//                       grid_tot();
 
                 }   
 
@@ -2849,7 +2855,7 @@ var lblText = Ext.getCmp('lblCrDr3').getEl().dom.innerHTML;
 		    xtype       : 'fieldset',
 		    title       : '',
 		    width       : 1300,
-		    height      : 350,
+		    height      : 400,
 		    x           : 10,
 		    y           : 50,
 		    border      : false,

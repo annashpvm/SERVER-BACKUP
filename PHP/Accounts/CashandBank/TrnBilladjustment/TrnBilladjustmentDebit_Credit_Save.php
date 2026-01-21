@@ -84,9 +84,9 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 
-        $query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype) values ('$ginrefslno','$compcode','$finid',
+        $query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid',
 '$adjseqno','$adjdocno','$adjdocdate','$mainseqno','$maindocno', '$maindocno','$maindocdate', 
-'$adjamt',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' );";
+'$adjamt',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'C');";
 
         $result3 = mysqli_query($conn, $query3);
 

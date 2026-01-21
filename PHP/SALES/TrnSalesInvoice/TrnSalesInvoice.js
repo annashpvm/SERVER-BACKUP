@@ -58,6 +58,7 @@ Ext.onReady(function(){
     var einvconfirm = 'N';
     var errcode = 0;
     var partyname = '';
+    var frtpartycode = 0;
  new Ext.KeyMap( Ext.getBody(), [{
              key: "s",
              ctrl:true,
@@ -164,6 +165,30 @@ Ext.onReady(function(){
  
  */
  
+
+     var loadSearchFrtPartyListDatastore = new Ext.data.Store({
+        id: 'loadSearchFrtPartyListDatastore',
+  //      autoLoad : true,
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsTrnSalesInvoice.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"loadSearchFrtPartylist"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },[
+  
+  
+            'cust_code', 'cust_ref','cust_led_code','cust_cr_days' , 'cust_grace_days','area_code', 'rate_areacode','area_rategrp','cust_partygroup','cust_destination_enable_yn'
+   
+  
+        ]),
+      });
+  
+  
  function grid_move() {
      // Clear the destination store first
      let finalStore = flxSizeRate.getStore();
@@ -274,19 +299,19 @@ Ext.onReady(function(){
                url: 'TrnSalesInvoiceIRN_ACK_Update.php',
                params :
                {
-                              invhcompcode  : Gincompcode,
+                     invhcompcode  : Gincompcode,
                      invhfincode   : GinFinid,
-                         invhparty     : cmbCustomer.getRawValue(),
-                      invhrefno     : txtInvNo.getRawValue(),
-                  invhdate      : Ext.util.Format.date(dptInvNo.getValue(),"d-m-Y"),
-                            invhIRN       : txtIRNNo.getRawValue(),  
-                           invhACK       : txtAckNo.getRawValue(),  
-                                 invhqrcode    : txtQRCode.getRawValue(),                        	
+                     invhparty     : cmbCustomer.getRawValue(),
+                     invhrefno     : txtInvNo.getRawValue(),
+                     invhdate      : Ext.util.Format.date(dptInvNo.getValue(),"d-m-Y"),
+                     invhIRN       : txtIRNNo.getRawValue(),  
+                     invhACK       : txtAckNo.getRawValue(),  
+                     invhqrcode    : txtQRCode.getRawValue(),                        	
  
                },
                callback: function(options, success, response)
                {
-                  Ext.MessageBox.alert("Invoice Payment Terms  -Updated "); 
+                  Ext.MessageBox.alert("Invoice Ack No , IRN & QRcodes  -Updated "); 
                           TrnSalesInvoicePanel.getForm().reset();
                           RefreshData();
  
@@ -561,7 +586,7 @@ Ext.onReady(function(){
  'invh_instruction','invh_instruction','invh_dest','invh_party_ordno','invh_party_orddt','invh_our_ordno','invh_our_orddt','invh_sgst_per','invh_cgst_per',
  'invh_igst_per','invh_insper','invh_comm','invh_frt_rate','invh_frt_amt','invh_party_bank','invh_noofbun','invh_noofreels','invh_type','type_name',
  'invh_vouno','invh_acc_refno','invh_seqno','invh_ewaybillno','U_TCSStatus','invh_tcs_per','invh_grace_days', 'invh_tcs_amt','SMSsent','invh_frtqty','invh_delivery_statecode' ,'invh_acc_refno','invh_distance','U_EWBStatus','E_inv_confirm',
- 'invh_transportname' ,'invh_transportGST','U_ReUpload','U_AckNo','U_EWayBillNo','U_QR', 'U_irnno'
+ 'invh_transportname' ,'invh_transportGST','U_ReUpload','U_AckNo','U_EWayBillNo','U_QR', 'U_irnno','invh_frtparty','freightParty'
   
        ]),
      });
@@ -594,6 +619,27 @@ Ext.onReady(function(){
        ]),
      });
  
+
+ 
+     var loadFreightParytDataStore = new Ext.data.Store({
+        id: 'loadFreightParytDataStore',
+        autoLoad : true,
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsTrnSalesInvoice.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"loadFreightParty"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },[
+      {name:'cust_code', type: 'int',mapping:'cust_code'},
+      {name:'cust_ref', type: 'string',mapping:'cust_ref'},
+        ]),
+      });
+       
  var PackslipnoDataStore = new Ext.data.Store({
        id: 'PackslipnoDataStore',
        autoLoad : true,
@@ -1085,6 +1131,31 @@ Ext.onReady(function(){
     }
  });       
  
+
+ function disableSmsByTime() {
+    var now   = new Date();
+    var hour  = now.getHours();   // 0–23
+    var min   = now.getMinutes();
+
+    // Convert current time to minutes
+    var currentMinutes = (hour * 60) + min;
+
+    // 8:59 PM = 20*60 + 59 = 1259
+    // 9:00 AM = 9*60 = 540
+    var disableFrom = 20 * 60 + 59; // 1259
+    var disableTill = 9 * 60+1;       // 540
+
+//    var disableFrom = 16 * 60 + 10; // 1259
+    //var disableTill = 16 * 60 + 20 ;       // 540
+
+    // Disable if time is between 8:59 PM → 9:00 AM
+    if (currentMinutes >= disableFrom || currentMinutes < disableTill) {
+        Ext.getCmp('btnSMS').setDisabled(true);
+    } else {
+        Ext.getCmp('btnSMS').setDisabled(false);
+    }
+}
+
  
  
  var btnSMS = new Ext.Button({
@@ -1117,34 +1188,20 @@ Ext.onReady(function(){
                url: 'TrnSalesSMS.php',
                params :
                {
-                              invhcompcode  :Gincompcode,
+                     invhcompcode  :Gincompcode,
                      invhfincode   :GinFinid,
  //		                invhparty  : cmbCustomer.getRawValue(),
-                         invhparty  : partyname,
-                      invhrefno  : txtInvNo.getRawValue(),
-                  invhdate   : Ext.util.Format.date(dptInvNo.getValue(),"d-m-Y"),
-                 invhtotwt  : txttotqty.getRawValue(),
-                 invhnetamt : txtNetAmt.getRawValue(),
-                         smsnumber  : txtSMSNo.getRawValue(),
+                     invhparty  : partyname,
+                     invhrefno  : txtInvNo.getRawValue(),
+                     invhdate   : Ext.util.Format.date(dptInvNo.getValue(),"d-m-Y"),
+                     invhtotwt  : txttotqty.getRawValue(),
+                     invhnetamt : txtNetAmt.getRawValue(),
+                     smsnumber  : txtSMSNo.getRawValue(),
                },
                callback: function(options, success, response)
                {
                   Ext.MessageBox.alert("SMS  Send to Customer - "); 
                           Ext.getCmp('btnSMS').setDisabled(true);  
-     /*
- 
-                     var obj = Ext.decode(response.responseText);
- 
-                     if (obj['success']==="true")					     
-                     {
-                         Ext.MessageBox.alert("SMS SENT  -" + obj['msg']);
-                     }  
-                     else
-                     {
-                  Ext.MessageBox.alert("SMS not Send - Please check customer SMS Number.." + obj['msg']);                                                  
-                     }
- 
-     */
                }
                        }); 
              }
@@ -1620,7 +1677,129 @@ Ext.onReady(function(){
  
      });
  
+
+
+
+     function flx_change()
+     {
+     
+                 var sm = flxParty.getSelectionModel();
+                 var selrow = sm.getSelected();
+                 var chkitem = (selrow.get('cust_code'));
+                 frtpartycode  = 0;
+                 custledcode = 0;
+                 if ((selrow != null)){
+     
+                     gridedit = "false";
+                     editrow = selrow;
+                     frtpartycode = selrow.get('cust_code');
+                     custledcode = selrow.get('cust_led_code');
+     
+                     custname = selrow.get('cust_ref');
+                     txtFreightParty.setRawValue(selrow.get('cust_ref'));
+                     flxParty.hide();
+                     }
+       }
+                            
+     
+     
+     
+var dgrecord = Ext.data.Record.create([]);
+var flxParty = new Ext.grid.EditorGridPanel({
+     frame: false,
+     sm: new Ext.grid.RowSelectionModel(),
+     autoShow: true,
+     stripeRows : true,
+     scrollable: true,
+     height: 280,
+     width: 400,
+//        header : false,
+     x: 870,
+     y: 190,
+     labelStyle	: "font-size:12px;font-weight:bold;",
+     style      :"border-radius: 5px;textTransform: uppercase; ",  
+     columns: [   
+//            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
+     {header: "Customer Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
+     {header: "", dataIndex: 'cust_ref',sortable:true,width:330,align:'left'},
+     {header: "Customer Code", dataIndex: 'cust_led_code',sortable:true,width:60,align:'left',hidden:true},   
+
+
+     ],
+     store:loadSearchFrtPartyListDatastore,
+
+ listeners:{	
+
+          'render' : function(cmp) {
+                 cmp.getEl().on('keypress', function(e) {
+                     if (e.getKey() == e.ENTER) {
+                        flx_change();
+                     }
+                  });
+          },
+
+     'cellclick' : function(flxDesc, rowIndex, cellIndex, e){
+                        flx_change();
+     
+      }
+
+         }
+
+
+
+});
+
+function PartySearch()
+{
+        flxParty.show();
+        loadSearchFrtPartyListDatastore.removeAll();
+        loadSearchFrtPartyListDatastore.load({
+		url: 'ClsTrnSalesInvoice.php',
+		params:
+		{
+			task:"loadSearchFrtPartylist",
+			party : txtFreightParty.getRawValue(),
+		},
+        });
+}
+
+     var txtFreightParty = new Ext.form.TextField({
+        fieldLabel  : 'Freight Party',
+        id          : 'txtFreightParty',
+        name        : 'txtFreightParty',
+        width       :  350,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    	style      :"border-radius: 5px;textTransform: uppercase; ", 
+	enableKeyEvents: true,
+	listeners:{
+          specialkey:function(f,e){
+             if (e.getKey() == e.ENTER)
+             {
+                   flxchk = 1;
+                     
+
+                   flxParty.hide();
+//                   btnAdd.focus();
+           
+             }
+             if (e.getKey() == e.DOWN)
+             {
  
+             flxParty.getSelectionModel().selectRow(0)
+             flxParty.focus;
+             flxParty.getView().focusRow(0);
+             }
+          },
+
+	    keyup: function () {
+                loadSearchFrtPartyListDatastore.removeAll();
+                  if (txtFreightParty.getRawValue() != '')
+                     PartySearch();
+            }
+         }  
+    });
+
+
     var txtInsAmt = new Ext.form.NumberField({
          fieldLabel  : '',
          id          : 'txtInsAmt',
@@ -2360,6 +2539,7 @@ Ext.onReady(function(){
  }
  
  
+
  var cmbCustomer = new Ext.form.ComboBox({
          fieldLabel      : 'Customer ',
          width           : 350,
@@ -2374,7 +2554,7 @@ Ext.onReady(function(){
          triggerAction   : 'all',
          selectOnFocus   : true,
          editable        : true,
-     tabIndex	: 0,
+         tabIndex	: 0,
          allowblank      : true ,
          labelStyle	: "font-size:12px;font-weight:bold;",
          style      :"border-radius: 5px;  textTransform: uppercase ",         
@@ -2948,7 +3128,7 @@ Ext.onReady(function(){
          selectOnFocus   : true,
          editable        : true,
          hidden          : true,
-     tabIndex	: 0,
+         tabIndex	: 0,
          allowblank      : true  ,
          labelStyle	: "font-size:12px;font-weight:bold;",
          style      :"border-radius: 5px;  textTransform: uppercase ",         
@@ -2980,10 +3160,10 @@ Ext.onReady(function(){
              loadAllCustomerStore.load({
                          url: 'ClsTrnSalesInvoice.php',
                          params: {
-                             task: 'loadcustomer',
-                     fincode:GinFinid,
-                     compcode:Gincompcode,
-                                     invno:cmbInvNo.getValue(),
+                         task: 'loadcustomer',
+                         fincode:GinFinid,
+                         compcode:Gincompcode,
+                         invno:cmbInvNo.getValue(),
                                          
                          },
                  scope: this,
@@ -3059,7 +3239,11 @@ Ext.onReady(function(){
                                  invseqno =  loadInvoicedetailsDataStore.getAt(0).get('invh_seqno');
  
                                  txtDistance.setValue(loadInvoicedetailsDataStore.getAt(0).get('invh_distance'));
- 
+                                 frtpartycode = loadInvoicedetailsDataStore.getAt(0).get('invh_frtparty');
+                              //   txtfromparty.setRawValue(loadInvoicedetailsDataStore.getAt(0).get('invh_frtparty);
+                                 txtFreightParty.setValue(loadInvoicedetailsDataStore.getAt(0).get('freightParty'));
+
+                             
                                  txtReference.setRawValue(loadInvoicedetailsDataStore.getAt(0).get('invh_party_ordno'));
                                  txtSO.setRawValue(loadInvoicedetailsDataStore.getAt(0).get('invh_our_ordno'));
                                  dptRef.setRawValue(Ext.util.Format.date(loadInvoicedetailsDataStore.getAt(0).get('invh_party_orddt'),"d-m-Y"));
@@ -3078,6 +3262,7 @@ Ext.onReady(function(){
  
  
                 
+                               
                                  
                                  cmbSlipNo.setRawValue(loadInvoicedetailsDataStore.getAt(0).get('invh_slipno'));        
                                  cmbSlipNo.setValue(loadInvoicedetailsDataStore.getAt(0).get('invh_slipno'));    
@@ -3131,7 +3316,7 @@ Ext.onReady(function(){
                                  txtIRNNo.setValue(loadInvoicedetailsDataStore.getAt(0).get('U_irnno'));
                                  txtQRCode.setValue(loadInvoicedetailsDataStore.getAt(0).get('U_QR'));
  
- 
+
  
                                  vouno  =  loadInvoicedetailsDataStore.getAt(0).get('invh_vouno');
   
@@ -3230,6 +3415,7 @@ Ext.onReady(function(){
                                   if (loadInvoicedetailsDataStore.getAt(0).get('SMSsent') == "N")
                                  {
                                      Ext.getCmp('btnSMS').show();
+                                     disableSmsByTime() 
                                  }
                                  else
                                  {
@@ -4760,7 +4946,19 @@ Ext.onReady(function(){
                                              border      : false,
                                              items: [txtCustIns]
                                           },
+                                       
  
+                                         { 
+                                            xtype       : 'fieldset',
+                                            title       : '',
+                                            labelWidth  : 110,
+                                            width       : 800,
+                                            x           : 800,
+                                            y           :160,
+                                            border      : false,
+                                            items: [txtFreightParty]
+                                         },  flxParty,                                        
+                                          
  //btnRefreshService,
  btnAccUpdate,
  
@@ -4774,7 +4972,7 @@ Ext.onReady(function(){
                                    width       : 600,
                                    height      : 200,
                                    x           : 15,
-                                   y           : 200,
+                                   y           : 250,
                                    border      : true,
                                    layout      : 'absolute',
                                    items:[
@@ -5012,6 +5210,11 @@ Ext.onReady(function(){
          Ext.Msg.alert('Sales-Invoice','Select Tax Type.....');
          gstSave="false";
      }
+     else if ( frtpartycode == 0 )
+        {
+            Ext.Msg.alert('Sales-Invoice','Select Freight Party .....');
+            gstSave="false";
+        }     
  /*
      else if (cmbTransport.getValue()==0 || cmbTransport.getRawValue()=="")
      {
@@ -5163,6 +5366,7 @@ Ext.onReady(function(){
                  invhtransportname :txtTransport.getRawValue(),
                  invhtransportgst  :txtTransportGST.getRawValue(),
                  usercode          : userid,
+                 frtparty          :frtpartycode,
          },
                callback: function(options, success, response)
                {
@@ -5401,7 +5605,7 @@ Ext.onReady(function(){
  
     function RefreshData(){
  
- 
+        flxParty.hide();
  
  /*
  var itime =Ext.util.Format.date(new Date(),"H:i")
@@ -5599,6 +5803,16 @@ Ext.onReady(function(){
                      Ext.getCmp('cmbTax').setDisabled(true);  
                       Ext.getCmp('cmbTransport').hide();
                       RefreshData();
+
+
+                     Ext.Ajax.request({
+                        url: 'TrnSalesSMSAuto.php',
+                        params :
+                        {
+                              invhcompcode  :Gincompcode,
+                              invhfincode   :GinFinid,
+                        },
+                    });                        
  
  //alert(finstartdate);
  //alert(finenddate);
@@ -5618,6 +5832,7 @@ Ext.onReady(function(){
                  callback:function()
                             {
  
+
  //alert(loadInvnodatastore.getAt(0).get('invno').slice(-4));
  //alert(loadInvnodatastore.getAt(0).get('invno').slice(0,4));
  //alert(loadInvnodatastore.getAt(0).get('invno').substring(0,4));

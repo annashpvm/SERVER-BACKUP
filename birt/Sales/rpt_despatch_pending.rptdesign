@@ -1573,8 +1573,13 @@
                 <structure>
                     <property name="name">stk_sr_no</property>
                     <text-property name="displayName">stk_sr_no</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["stk_sr_no"]</expression>
-                    <property name="dataType">decimal</property>
+                    <expression name="expression" type="javascript">var sr = dataSetRow["stk_sr_no"].toString();&#13;
+if (dataSetRow["stk_rettag"] == '')&#13;
+   sr&#13;
+else&#13;
+  sr + '  (R)'</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">diffdays</property>
@@ -1787,7 +1792,9 @@ else if (params["reelopt"].value == "B")&#13;
             <column id="26"/>
             <column id="27"/>
             <column id="28"/>
-            <column id="29"/>
+            <column id="29">
+                <property name="width">1.4in</property>
+            </column>
             <column id="30"/>
             <column id="31"/>
             <header>

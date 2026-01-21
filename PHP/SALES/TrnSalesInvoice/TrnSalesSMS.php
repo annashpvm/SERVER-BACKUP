@@ -3,6 +3,22 @@
 
   session_start();
   global $conn;  
+  
+  date_default_timezone_set('Asia/Kolkata');
+
+$hour = (int) date('H');
+$min  = (int) date('i');
+$currentMinutes = ($hour * 60) + $min;
+
+// 8:59 PM → 1259, 9:00 AM → 540
+
+
+
+if ($currentMinutes >= 1259 || $currentMinutes < 541) {
+    exit; // STOP SMS auto-send during restricted hours
+}
+/* ------------------------------------------------ */
+
 
   $invhcompcode = $_POST['invhcompcode'];
   $invhfincode  = $_POST['invhfincode'];

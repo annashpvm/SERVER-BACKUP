@@ -66,7 +66,7 @@
     $narration=str_replace("'","",$narration);
     $CNRemarks=str_replace("'","",$CNRemarks);
 
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
     if ($flagtype == "Add")
     {
     
@@ -751,7 +751,7 @@ if($resulta2)
       {
 	      if( $result1 &&  $result2 &&  $result3 &&  $cresulta2 && $resulta9   )
 		{
-		    mysqli_begin_transaction($conn);
+         mysqli_commit($conn);
 		    echo '({"success":"true","vouno":"'.$vouno.'"})';
 		}
 		else

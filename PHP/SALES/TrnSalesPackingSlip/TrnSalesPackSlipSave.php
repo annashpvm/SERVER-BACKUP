@@ -29,18 +29,20 @@ $truck = str_replace(" ","",$_POST['truck']);
 $truck = str_replace("  ","",$truck );
 $truck = str_replace("   ","",$truck);
 $truck = str_replace("-","",$truck);
-
-
-
-
-
-mysqli_query($conn, "BEGIN");
-
-
+global $conn;  
+mysqli_begin_transaction($conn);
 
 if ($savetype === "Add") {
 
-   $query1 = "select IFNULL(max(pckh_no),0)+1 as pckh_no from trnsal_packslip_header where pckh_fincode = $finid and pckh_comp_code='$compcode'";
+   // $query1 = "select IFNULL(max(pckh_no),0)+1 as pckh_no from trnsal_packslip_header where pckh_fincode = $finid and pckh_comp_code='$compcode'";
+   
+   $query1 = "select max(packno) pckh_no from (
+	select ifnull(max(pckh_no),0)+1 as packno from trnsal_packslip_header where pckh_fincode= $finid   and pckh_comp_code= $compcode
+	union all
+	select ifnull(max(pckt_no),0)+1 as packno from trnsal_packslip_trailer where pckt_fincode= $finid   and pckt_comp_code= $compcode
+	) a1 ";
+	
+
    $result1= mysqli_query($conn, $query1);
 
    $rec2 = mysqli_fetch_array($result1);
@@ -51,8 +53,6 @@ if ($savetype === "Add") {
 
     $query2= "insert into trnsal_packslip_header values 
 ('$compcode','$finid','$pckhno','$slipdate','$ordno','$orddate','$dano','$dadate','$party','$noofreels','$totwt','$invno','$slipdate','$status','$truck')";
-
-
     $result2=mysqli_query($conn, $query2);
   }
 
@@ -113,7 +113,7 @@ $result7=mysqli_query($conn, $query7);
 
      
 
-$query8=  "update trnsal_finish_stock set stk_destag = 'T', stk_slipno = '$pckhno' , stk_desdt = '$slipdate' where stk_sr_no ='$startno' and stk_finyear = '$fincode' and stk_comp_code = '$compcode' and stk_sono =  '$soentno'";
+$query8 =  "update trnsal_finish_stock set stk_destag = 'T', stk_slipno = '$pckhno' , stk_desdt = '$slipdate' where stk_sr_no ='$startno' and stk_finyear = '$fincode' and stk_comp_code = '$compcode' and stk_sono =  '$soentno'";
 $result8=mysqli_query($conn, $query8);           
 
   
@@ -132,14 +132,12 @@ if ($savetype === "Add") {
 	if ($result2 && $result7 && $result8 && $result9  && $result10 ) 
 //	if ($result2 ) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","slipno":"' . $pckhno . '"})';
 	} 
 		
 	else {
 	   mysqli_rollback($conn);
-
-
 	    echo '({"success":"false","slipno":"' . $pckhno . '"})';
 	}
  
@@ -149,26 +147,22 @@ else if ($savetype === "Edit") {
         if ($rowcnt > 0)
         {
 //		if ($result3 && $result4 && $result5 && $result6 && $result7 && $result8 && $result9 ) 
-		if ($result3 && $result4 && $result5 && $result6 && $result10 && $result11) 
-
-		{ 
-		mysqli_begin_transaction($conn);                        
+		if ($result3 && $result4 && $result5 &&  $result8  &&  $result6 && $result10 && $result11) 
+	 	{ 
+		mysqli_commit($conn); 
 		echo '({"success":"true","slipno":"'. $pckhno . '"})';
 		}
-		
 		else
 		{
-	    		mysqli_rollback($conn);
-
-            
-	    		echo '({"success":"false","slipno":"' . $pckhno . '"})';
+   		mysqli_rollback($conn);
+ 		echo '({"success":"false","slipno":"' . $pckhno . '"})';
 		} 
         }   
         else
         {
 		if ($result3 && $result4 && $result5 && $result6) 
 		{ 
-		   mysqli_begin_transaction($conn);
+			mysqli_commit($conn); 
 		    echo '({"success":"true","slipno":"' . $pckhno . '"})';
 		} 
 		

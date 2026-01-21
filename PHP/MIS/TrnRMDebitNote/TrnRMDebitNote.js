@@ -1018,12 +1018,30 @@ var LoadDebitNoteVoucherDetailDataStore = new Ext.data.Store({
         totalProperty: 'total',
         id: 'id'
       },[
-'qc_rm_compcode', 'qc_rm_fincode', 'qc_rm_entryno', 'qc_rm_entrydate', 'qc_rm_ticketdate', 'qc_rm_supcode', 'qc_rm_truck', 'qc_rm_slno', 'qc_rm_ticketno', 'qc_rm_ticketwt', 'qc_rm_itemcode', 'qc_rm_millboard', 'qc_rm_moisper_totalmaterial', 'qc_rm_moisforqty', 'qc_rm_moisper', 'qc_rm_moisqty', 'qc_rm_llessper', 'qc_rm_llessqty', 'qc_rm_rejectper', 'qc_rm_rejectqty', 'qc_rm_degradeqty', 'qc_rm_acceptqty', 'qc_rm_remarks', 'qc_rm_packtype', 'qc_rm_area', 'qc_rm_unloadingtime', 'qc_rm_grn_status', 'qc_rm_grnno', 'qc_rm_remarks2', 'qc_rm_itemtype', 'qc_rm_fsctype', 'qc_rm_billno', 'qc_rm_billdate', 'qc_rm_billqty', 'qc_rm_millqty', 'qc_rm_ded_qty1', 'qc_rm_ded_rate', 'qc_rm_degrade_rate', 'qc_rm_ded_qty', 'qc_rm_taxable', 'qc_rm_pur_ledger', 'qc_rm_cgst_per', 'qc_rm_cgst_value', 'qc_rm_sgst_per', 'qc_rm_sgst_value', 'qc_rm_igst_per', 'qc_rm_igst_value', 'qc_rm_debitvalue', 'qc_rm_dn_raised', 'qc_rm_debitnote_no', 'qc_rm_debitnote_date', 'qc_rm_itemmois', 'qc_rm_round_need', 'qc_rm_rounding', 'qc_rm_debitamount', 'qc_rm_billvalue', 'itmh_code', 'itmh_name', 'itmh_moisture_per', 'itmh_tare_per', 'itmh_convlossper', 'itmh_specification', 'itmh_type', 'itmh_ledcode', 'itmh_group', 'itmh_outthrough', 'itmh_prohiper', 'itmh_hsncode', 'itmh_cgstper', 'itmh_sgstper', 'itmh_igstper', 'itmh_cgstledcode', 'itmh_sgstledcode', 'itmh_igstledcode', 'sup_code', 'sup_name', 'sup_refname', 'sup_addr1', 'sup_addr2', 'sup_addr3', 'sup_city', 'sup_state', 'sup_cntry_code', 'sup_zip', 'sup_phone', 'sup_fax', 'sup_email', 'sup_web', 'sup_led_code', 'sup_grp_code', 'sup_type', 'sup_acc_group', 'sup_contact', 'sup_panno', 'sup_tds_type', 'sup_gstin', 'sup_gst_type', 'sup_tds_yn', 'sup_tcs_yn', 'sup_lock', 'createdby', 'createddate', 'seqno', 'wc_compcode', 'wc_fincode', 'wc_ticketno', 'wc_date', 'wc_time', 'wc_area_code', 'wc_sup_code', 'wc_item', 'wc_vehicleno', 'wc_emptywt', 'wc_loadwt', 'wc_netwt', 'wc_supplier', 'wc_partyloadwt', 'wc_partyemptywt', 'wc_partynetwt', 'wc_acceptedwt', 'wc_process', 'wt_type', 'wt_grn_process', 'wc_itemcode', 'tax_purcode', 'tax_purname', 'tax_cgstper', 'tax_sgstper', 'tax_igstper', 'tax_cgstledcode', 'tax_sgstledcode', 'tax_igstledcode', 'tax_cgstledger', 'tax_sgstledger', 'tax_igstledger', 'tax_gst', 'tax_purtype', 'tax_state','qc_rm_taxable','qc_rm_ded_rate','qc_rm_shortage','qc_rm_ratediff','qc_rm_valuediff'
+'qc_rm_compcode', 'qc_rm_fincode', 'qc_rm_entryno', 'qc_rm_entrydate', 'qc_rm_ticketdate', 'qc_rm_supcode', 'qc_rm_truck', 'qc_rm_slno', 'qc_rm_ticketno', 'qc_rm_ticketwt', 'qc_rm_itemcode', 'qc_rm_millboard', 'qc_rm_moisper_totalmaterial', 'qc_rm_moisforqty', 'qc_rm_moisper', 'qc_rm_moisqty', 'qc_rm_llessper', 'qc_rm_llessqty', 'qc_rm_rejectper', 'qc_rm_rejectqty', 'qc_rm_degradeqty', 'qc_rm_acceptqty', 'qc_rm_remarks', 'qc_rm_packtype', 'qc_rm_area', 'qc_rm_unloadingtime', 'qc_rm_grn_status', 'qc_rm_grnno', 'qc_rm_remarks2', 'qc_rm_itemtype', 'qc_rm_fsctype', 'qc_rm_billno', 'qc_rm_billdate', 'qc_rm_billqty', 'qc_rm_millqty', 'qc_rm_ded_qty1', 'qc_rm_ded_rate', 'qc_rm_degrade_rate', 'qc_rm_ded_qty', 'qc_rm_taxable', 'qc_rm_pur_ledger', 'qc_rm_cgst_per', 'qc_rm_cgst_value', 'qc_rm_sgst_per', 'qc_rm_sgst_value', 'qc_rm_igst_per', 'qc_rm_igst_value', 'qc_rm_debitvalue', 'qc_rm_dn_raised', 'qc_rm_debitnote_no', 'qc_rm_debitnote_date', 'qc_rm_itemmois', 'qc_rm_round_need', 'qc_rm_rounding', 'qc_rm_debitamount', 'qc_rm_billvalue', 'itmh_code', 'itmh_name', 'itmh_moisture_per', 'itmh_tare_per', 'itmh_convlossper', 'itmh_specification', 'itmh_type', 'itmh_ledcode', 'itmh_group', 'itmh_outthrough', 'itmh_prohiper', 'itmh_hsncode', 'itmh_cgstper', 'itmh_sgstper', 'itmh_igstper', 'itmh_cgstledcode', 'itmh_sgstledcode', 'itmh_igstledcode', 'cust_code', 'cust_name', 'cust_ref', 'sup_addr1', 'sup_addr2', 'sup_addr3', 'sup_city', 'sup_state', 'sup_cntry_code', 'sup_zip', 'sup_phone', 'sup_fax', 'sup_email', 'sup_web', 'sup_led_code', 'sup_grp_code', 'cust_type', 'sup_acc_group', 'sup_contact', 'sup_panno', 'sup_tds_type', 'sup_gstin', 'sup_gst_type', 'sup_tds_yn', 'sup_tcs_yn', 'sup_lock', 'createdby', 'createddate', 'seqno', 'wc_compcode', 'wc_fincode', 'wc_ticketno', 'wc_date', 'wc_time', 'wc_area_code', 'wc_cust_code', 'wc_item', 'wc_vehicleno', 'wc_emptywt', 'wc_loadwt', 'wc_netwt', 'wc_supplier', 'wc_partyloadwt', 'wc_partyemptywt', 'wc_partynetwt', 'wc_acceptedwt', 'wc_process', 'wt_type', 'wt_grn_process', 'wc_itemcode', 'tax_purcode', 'tax_purname', 'tax_cgstper', 'tax_sgstper', 'tax_igstper', 'tax_cgstledcode', 'tax_sgstledcode', 'tax_igstledcode', 'tax_cgstledger', 'tax_sgstledger', 'tax_igstledger', 'tax_gst', 'tax_purtype', 'tax_state','qc_rm_taxable','qc_rm_ded_rate','qc_rm_shortage','qc_rm_ratediff','qc_rm_valuediff'
 
       ]),
     });
 
-
+    var LoadDebitNoteAccSeqNODataStore = new Ext.data.Store({
+        id: 'LoadDebitNoteAccSeqNODataStore',
+  //      autoLoad : true,
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsRMDebitNote.php',     // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"LoadDebitNoteAccSeqNo"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },[
+             'accref_seqno'
+  
+        ]),
+      });
+  
 
 
  var loadSearchLedgerListDatastore = new Ext.data.Store({
@@ -1040,7 +1058,7 @@ var LoadDebitNoteVoucherDetailDataStore = new Ext.data.Store({
         totalProperty: 'total',
         id: 'id'
       },[
-          'led_code', 'led_name','qc_rm_supcode', 'sup_type' 
+          'led_code', 'led_name','qc_rm_supcode', 'cust_type' 
       ]),
     });
 
@@ -1109,7 +1127,7 @@ var LoadDebitNoteVoucherDetailDataStore = new Ext.data.Store({
         totalProperty: 'total',
         id: 'id'
       },[
-          'qc_rm_entrydate', 'qc_rm_ticketdate', 'qc_rm_supcode', 'qc_rm_truck', 'qc_rm_ticketno', 'qc_rm_ticketwt', 'qc_rm_itemcode', 'qc_rm_moisper', 'qc_rm_moisqty', 'qc_rm_llessper', 'qc_rm_llessqty', 'qc_rm_rejectper','qc_rm_moisfor',  'qc_rm_rejectqty', 'qc_rm_degradeqty', 'qc_rm_acceptqty', 'qc_rm_remarks','qc_rm_remarks2', 'qc_rm_packtype', 'itmh_name',  'sup_code','sup_refname','qc_rm_itemmois', 'sup_name','qc_rm_moisper_totalmaterial', 'qc_rm_moisforqty','qc_rm_millboard','qc_rm_billqty','qc_rm_millqty', 'sup_refname','qc_rm_slno','wc_area_code','wc_unloadingtime','area_name','qc_rm_area','qc_rm_unloadingtime','qc_rm_itemtype'
+          'qc_rm_entrydate', 'qc_rm_ticketdate', 'qc_rm_supcode', 'qc_rm_truck', 'qc_rm_ticketno', 'qc_rm_ticketwt', 'qc_rm_itemcode', 'qc_rm_moisper', 'qc_rm_moisqty', 'qc_rm_llessper', 'qc_rm_llessqty', 'qc_rm_rejectper','qc_rm_moisfor',  'qc_rm_rejectqty', 'qc_rm_degradeqty', 'qc_rm_acceptqty', 'qc_rm_remarks','qc_rm_remarks2', 'qc_rm_packtype', 'itmh_name',  'cust_code','cust_ref','qc_rm_itemmois', 'cust_name','qc_rm_moisper_totalmaterial', 'qc_rm_moisforqty','qc_rm_millboard','qc_rm_billqty','qc_rm_millqty', 'cust_ref','qc_rm_slno','wc_area_code','wc_unloadingtime','area_name','qc_rm_area','qc_rm_unloadingtime','qc_rm_itemtype'
 
       ]),
     });
@@ -1254,7 +1272,7 @@ var cmbDNNo = new Ext.form.ComboBox({
 			task:"LoadDebitNoteVoucherDetail",
 			fincode : ginFinid,
 			compcode: ginCompcode,
-                        vouno   : cmbDNNo.getRawValue(),
+            vouno   : cmbDNNo.getRawValue(),
 		},
 	        callback: function () {
 
@@ -1266,10 +1284,10 @@ var cmbDNNo = new Ext.form.ComboBox({
 
                         cmbQCEntNo.setRawValue(LoadDebitNoteVoucherDetailDataStore.getAt(0).get('qc_rm_entryno'));
                         cmbQCEntNo.setValue(LoadDebitNoteVoucherDetailDataStore.getAt(0).get('qc_rm_entryno'));
-                        txtSupplierName.setRawValue(LoadDebitNoteVoucherDetailDataStore.getAt(0).get('sup_refname'));
+                        txtSupplierName.setRawValue(LoadDebitNoteVoucherDetailDataStore.getAt(0).get('cust_ref'));
              		ledcode = LoadDebitNoteVoucherDetailDataStore.getAt(0).get('sup_led_code');
                 	supcode = LoadDebitNoteVoucherDetailDataStore.getAt(0).get('qc_rm_supcode');
-	         	suptype = LoadDebitNoteVoucherDetailDataStore.getAt(0).get('sup_type');
+	         	suptype = LoadDebitNoteVoucherDetailDataStore.getAt(0).get('cust_type');
                         
 			dtpVouDate.setRawValue(Ext.util.Format.date(LoadDebitNoteVoucherDetailDataStore.getAt(0).get('qc_rm_debitnote_date'),'d-m-Y'));
 
@@ -1368,6 +1386,27 @@ var cmbDNNo = new Ext.form.ComboBox({
 
 //            calculateValue();
  grid_tot_qty();  
+
+ LoadDebitNoteAccSeqNODataStore.removeAll();
+ LoadDebitNoteAccSeqNODataStore.load({
+        url: 'ClsRMDebitNote.php',
+        params:
+        {
+            task:"LoadDebitNoteAccSeqNo",
+            fincode : ginFinid,
+            compcode: ginCompcode,
+            vouno   : cmbDNNo.getRawValue(),
+        },
+            callback: function () {
+
+            var cnt = LoadDebitNoteAccSeqNODataStore.getCount();
+            if (cnt>0)
+            {
+                accseqno  = LoadDebitNoteAccSeqNODataStore.getAt(0).get('accref_seqno');
+                alert(accseqno);
+            }
+            }
+               }) ;        
 
 		      }    
 
@@ -1569,7 +1608,7 @@ function grid_chk_flxLedger()
 	if ((selrow != null)){
 		ledcode = selrow.get('led_code');
 		supcode = selrow.get('qc_rm_supcode');
-		suptype = selrow.get('sup_type');
+		suptype = selrow.get('cust_type');
 		txtSupplierName.setValue(selrow.get('led_name'));
 		flxLedger.hide();
                 cmbQCEntNo.focus();
@@ -1615,7 +1654,7 @@ function grid_chk_flxLedger()
 		{header: "Led Code", dataIndex: 'led_code',sortable:true,width:60,align:'left',hidden:true},   
 		{header: "", dataIndex: 'led_name',sortable:true,width:330,align:'left'},
 		{header: "", dataIndex: 'qc_rm_supcode',sortable:true,width:50,align:'left'},
-		{header: "", dataIndex: 'sup_type',sortable:true,width:50,align:'left'},
+		{header: "", dataIndex: 'cust_type',sortable:true,width:50,align:'left'},
 
         ],
         store:loadSearchLedgerListDatastore,

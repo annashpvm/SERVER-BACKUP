@@ -291,14 +291,19 @@ $sql = "select * from acc_dbcrnote_header a , acc_dbcrnote_trailer b , massal_cu
     }
 
 function getControlDebitNo() {
+
+    global $conn;
     $ginfinid= $_POST['ginfinid'];
     $gincompcode=$_POST['gincompcode'];
 
-if ($ginfinid < 24)
-$r = mysql_query("select concat('DNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
-else
-$r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 
+if ($ginfinid < 24)
+$sql  = "select concat('DNG',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+else
+$sql = "select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+
+
+$r = mysqli_query($conn, $sql);
     $nrow = mysqli_num_rows($r);
     while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
@@ -309,19 +314,21 @@ $r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrno
 
 
 function getControlDebitNo2() {
+    global $conn;
     $ginfinid= $_POST['ginfinid'];
     $gincompcode=$_POST['gincompcode'];
 
 if ($ginfinid < 24)
-$r = mysql_query("select concat('DNN',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+$sql = "select concat('DNN',ifnull(max(dbcr_no),0) + 1) as accref_vouno from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 else
-$r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+$sql = "select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 
 
 //$sql ="select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode'";
 
 //echo $sql;
 
+$r = mysqli_query($conn, $sql);
     $nrow = mysqli_num_rows($r);
     while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;
@@ -332,16 +339,17 @@ $r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrno
 
 
 function getControlDebitNoSales() {
+    global $conn;
     $ginfinid= $_POST['ginfinid'];
     $gincompcode=$_POST['gincompcode'];
 
-$r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'SDN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+$sql = "select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'SDN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 
 
 //$sql ="select ifnull(max(dbcr_no),0) + 1 as con_value from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode'";
 
 //echo $sql;
-
+$r = mysqli_query($conn, $sql);
     $nrow = mysqli_num_rows($r);
     while ($re = mysqli_fetch_array($r)) {
         $arr[] = $re;

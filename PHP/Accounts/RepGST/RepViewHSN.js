@@ -545,12 +545,16 @@ var filename = "SHVPM/Report/HSN_"+month+"_"+year+".json";
 
                    var invno = txtvouref.getValue();
 	           var p1 = "&compcode=" + encodeURIComponent(Gincompcode);
-		   var p2 = "&fincode=" + encodeURIComponent(GinFinid);
-	            var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
-                    var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+		      var p2 = "&fincode=" + encodeURIComponent(GinFinid);
+	          var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
+              var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
  	 	   var param = (p1 + p2 + p3 + p4);   
-		   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNAbstract.rptdesign&__format=pdf'+ param); 
-
+             if (printtype == "PDF") 
+		        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNAbstract.rptdesign&__format=pdf'+ param); 
+             else if (printtype == "XLS") 
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNAbstract.rptdesign&__format=XLSX' + param, '_blank');
+                        else
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNAbstract.rptdesign' + param, '_blank');
 
 
 
@@ -575,21 +579,22 @@ var filename = "SHVPM/Report/HSN_"+month+"_"+year+".json";
         listeners: {
             click: function(){
 
-	           var p1 = "&compcode=" + encodeURIComponent(Gincompcode);
+	       var p1 = "&compcode=" + encodeURIComponent(Gincompcode);
 		   var p2 = "&fincode=" + encodeURIComponent(GinFinid);
-                   var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
-                   var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-	           var p5 = "&hsn=" + encodeURIComponent(hsnhead);
-	           var p6 = "&voutype=" + encodeURIComponent(voutype);
+           var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
+           var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+	       var p5 = "&hsn=" + encodeURIComponent(hsnhead);
+	       var p6 = "&voutype=" + encodeURIComponent(voutype);
+	       var p7= "&taxper=" + encodeURIComponent(taxrate);
+           var p8= "&supplytype=" + encodeURIComponent(supplytype);
 
-
- 	 	   var param = (p1 + p2 + p3 + p4 + p5 + p6 );   
+ 	 	   var param = (p1 + p2 + p3 + p4 + p5 + p6 +p7+p8);   
                    if (printtype == "PDF") 
-                   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/.AccRepHSNDetailed.rptdesign&__format=pdf'+ param); 
+                   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNDetailed.rptdesign&__format=pdf'+ param); 
                    else if (printtype == "XLS") 
-                   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/.AccRepHSNDetailed.rptdesign&__format=xls'+ param); 
+                   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNDetailed.rptdesign&__format=xls'+ param); 
                    else
-                   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/.AccRepHSNDetailed.rptdesign'+ param); 
+                   window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepHSNDetailed.rptdesign'+ param); 
 
 
 
@@ -1366,7 +1371,7 @@ var flxHSNList = new Ext.grid.EditorGridPanel({
     store:loadHSNwiseSalesListDataStore,
     listeners:{	
 
-            'cellclick': function (flxHSNList, rowIndex, cellIndex, e) {
+            'cellDblclick': function (flxHSNList, rowIndex, cellIndex, e) {
 		var sm = flxHSNList.getSelectionModel();
 		var selrow = sm.getSelected();
 
@@ -1374,6 +1379,9 @@ var flxHSNList = new Ext.grid.EditorGridPanel({
 
             voutype = selrow.get('saltype')
             hsnhead = selrow.get('hsncode')
+            taxrate = selrow.get('taxrate')
+            supplytype = selrow.get('supplytype')
+
             tabOverall.setActiveTab(1);
 
             lblHSNDetail.setText("HSN/SAC Voucher List for : " + selrow.get('hsncode') + "  -  " +   selrow.get('descrip') );
@@ -1388,6 +1396,9 @@ var flxHSNList = new Ext.grid.EditorGridPanel({
                 enddate: Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
                 voutype  : voutype,
                 hsnno    : hsnhead,
+                taxrate  : taxrate,
+                supplytype  : supplytype,
+
 		},
 		scope:this,
 		callback:function()

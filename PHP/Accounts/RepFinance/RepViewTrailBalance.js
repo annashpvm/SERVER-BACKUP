@@ -3896,7 +3896,7 @@ alert(loadLedgerDetailsDatastore.getAt(j).get('partyledger'));
 			    width       : 450,
 			    height      : 480,
 			    x           : 830,
-			    y           : 10,
+			    y           : 100,
 			    border      : false,
 			    items : [flxMainSubGroup2]
 			},

@@ -102,6 +102,7 @@ $voutype = 'PIW';
 
 $areacode = 6;
 
+mysqli_begin_transaction($conn);      
 
 if ($gstFlaggrn === "Add") {
 
@@ -125,7 +126,7 @@ if ($gstFlaggrn === "Add") {
 	 $rec2 = mysqli_fetch_array($result2);
 	 $rech_no=$rec2['rech_no'];
 */
-	 mysqli_query($conn, "BEGIN");
+	 
  
 	 $query3= "call sprm_ins_receipt_header('$rech_seqno','$compcode','$finid','$rech_no','$supcode','$ordseqno','$crdays','$grndate','$areacode' ,'$truck', '$frtype', '$itemval','$sgstper','$sgstamt','$cgstper','$cgstamt','$igstper','$igstamt','$tcsper','$tcsamt', '$freight', '$otheramt','$roundoff','$totamt','$billno', '$billdate' ,'$billval','$usrcode','$entrydate','$gateentryno','$gatedate','$ginaccrefseq', '$roundneed', '0','$purledger','I','$paymode','N','N',0,0,'C' )";
 
@@ -318,7 +319,7 @@ $rowcntacc = $_REQUEST['cntacc'];
 if ($gstFlaggrn === "Add") {    
 	if($result3 && $result4 && $result5 &&  $result6  &&  $resulta1 &&  $resulta2 &&  $resulta3  )
 	{
-			mysqli_begin_transaction($conn);                        
+		mysqli_commit($conn);                         
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    
@@ -334,7 +335,7 @@ if ($gstFlaggrn === "Add") {
 if ($gstFlaggrn === "Edit") {   
 	if( $result11 && $result14 &&  $result4  &&$result6    &&  $resulta1 &&  $resulta2 &&  $resulta3  )
 	{
-		mysqli_begin_transaction($conn);                        
+		mysqli_commit($conn);                         
 		echo '({"success":"true","GRNNo":"'. $rech_no  . '"})';
 
 		    
@@ -352,7 +353,7 @@ if ($gstFlaggrn === "Confirm") {
 	{
 		$cfmacc = mysql_query("Update trnrm_receipt_header Set rech_acctflag='Y' Where rech_fincode = '$finid' and rech_compcode='$compcode' and rech_seqno = '$rech_seqno' ");
 		if ($cfmacc) {
-		mysqli_begin_transaction($conn);                        
+		mysqli_commit($conn);                           
 		echo '({"success":"true","GRNNo":"'. $rech_no  . '"})';
 		}
 		

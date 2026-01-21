@@ -735,6 +735,14 @@ var map = new Ext.KeyMap(document, [
 	                    }
                 },
 
+                {
+                    text: '<b>Freight Details / Correctiions</b>',
+                    group: 'theme',
+                    handler: function(){                        
+                        window.location.href=('http://10.0.0.251/SHVPM/SALES/TrnSalesInvoice/TrnSalesInvoiceFreightPartyCorrection.php');                        w                        
+	                    }
+                },
+                     
 /*
             	{
                     text: '<b>PACKING SLIP ENTRY</b>',

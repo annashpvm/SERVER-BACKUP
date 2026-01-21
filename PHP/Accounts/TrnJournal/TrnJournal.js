@@ -615,8 +615,8 @@ loadAdjustments();
         y: 580,
         id :'flxAdjustments',
         columns: [         
-            {header: "Vouno", dataIndex: 'accrefvouno',sortable:true,width:80,align:'left',hidden : true},
-            {header: "VounDate", dataIndex: 'accrefvoudate',sortable:true,width:80,align:'left',hidden : true},
+            {header: "Vouno", dataIndex: 'accrefvouno',sortable:true,width:80,align:'left',hidden : false},
+            {header: "VounDate", dataIndex: 'accrefvoudate',sortable:true,width:80,align:'left',hidden : false},
             {header: "Inv No", dataIndex: 'invno', sortable: true, width: 90, align: 'left'},
             {header: "Date", dataIndex: 'invdate',sortable:true,width:80,align:'left'},
             {header: "P.Terms", dataIndex: 'payterms', sortable: true, width: 80, align: 'center',hidden : true},
@@ -914,7 +914,7 @@ function itemSearch()
         totalProperty: 'total',
         id: 'id'
       },[
-          'cust_code', 'cust_name','cust_type'
+          'cust_code','cust_type','cust_ref'
       ]),
     });
 
@@ -966,7 +966,7 @@ function grid_chk_flxLedger()
 		ledtype    = selrow.get('cust_type');
 
 //				cmbAccountName.setValue(selrow.get('cust_code'));
-		txtAccountName.setValue(selrow.get('cust_name'));
+		txtAccountName.setValue(selrow.get('cust_ref'));
                 cmbType.focus() 
                 flxLedger.hide();   
 
@@ -992,7 +992,7 @@ function grid_chk_flxLedger()
         columns: [   
 //            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
 		{header: "Led Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
-		{header: "", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
+		{header: "", dataIndex: 'cust_ref',sortable:true,width:330,align:'left'},
 		{header: "", dataIndex: 'cust_type',sortable:true,width:330,align:'left'},
 
         ],
@@ -1086,10 +1086,7 @@ function add_btn_click()
                 var gstInsert = "true";
 
 
-                if (!dtpLedgerRefdate.getValue()) {
-                    dtpLedgerRefdate.setValue(dtpVouDate.getValue());
-                }
-            
+
  
                 if (txtAccountName.getValue()==0||txtAccountName.getRawValue()=="" || ledgercode == 0 ){
                     gstInsert = "false";
@@ -1140,17 +1137,20 @@ function add_btn_click()
 			var idx = flxDetail.getStore().indexOf(editrow);
             sel[idx].set('ledname' , txtAccountName.getRawValue());
 			sel[idx].set('type'    , cmbType.getRawValue());
-			sel[idx].set('dbamt'   , Number(txtDebit.getRawValue()));
-	 		sel[idx].set('cramt'   , Number(txtCredit.getRawValue()));
+//			sel[idx].set('dbamt'   , Number(txtDebit.getRawValue()));
+//	 		sel[idx].set('cramt'   , Number(txtCredit.getRawValue()));
+            sel[idx].set('dbamt', Ext.util.Format.number(Number(txtDebit.getRawValue() || 0), '0.00'));
+            sel[idx].set('cramt',Ext.util.Format.number(Number(txtCredit.getRawValue() || 0), '0.00'));
+        
             sel[idx].set('ledseq'  , ledgercode);
 			sel[idx].set('totamt'  , Number(txtDebit.getRawValue()) + Number(txtCredit.getRawValue()));
 			sel[idx].set('ledtype' , ledtype);
             sel[idx].set('narration' , txtNarration.getRawValue().toUpperCase());
-			sel[idx].set('refno'   , txtLedgerRefno.getRawValue());
+			sel[idx].set('refno'   , txtLedgerRefno.getRawValue().toUpperCase());
 	 		sel[idx].set('refdate' , Ext.util.Format.date(dtpLedgerRefdate.getValue(),"Y-m-d"));
             txtNarration.setValue('');
 
-            txtRefno.setRawValue(txtLedgerRefno.getRawValue());
+    
             dtpRefdate.setValue(dtpLedgerRefdate.getValue());
 
             
@@ -1292,9 +1292,15 @@ function add_btn_click()
                         new dgrecord({
                             ledname : txtAccountName.getRawValue(),   
                             type    : cmbType.getRawValue(),
-                            dbamt   : Number(txtDebit.getRawValue()),
-                            cramt   : Number(txtCredit.getRawValue()),
-	                        ledseq  : ledgercode,
+                            
+//                            dbamt   : Number(txtDebit.getRawValue()),
+//                            cramt   : Number(txtCredit.getRawValue()),
+                            
+                            dbamt : Ext.util.Format.number(Number(txtDebit.getValue() || 0), "0.00"),
+                            cramt : Ext.util.Format.number(Number(txtCredit.getValue() || 0), "0.00"),
+
+                            ledseq  :  ledgercode,
+
                             totamt  : totamt,
                             ledtype : ledtype,
                             narration : txtNarration.getRawValue().toUpperCase(),
@@ -1303,7 +1309,6 @@ function add_btn_click()
                         })
                     );
 
-                    txtRefno.setRawValue(txtLedgerRefno.getRawValue());
                     dtpRefdate.setValue(dtpLedgerRefdate.getValue());
 
                     if (Number(txtDebit.getValue())  > 0)
@@ -1381,7 +1386,7 @@ function add_btn_click()
              
                     txtNarration.setValue('');
                     txtAccountName.focus();
-                    txtRefno.setRawValue(txtLedgerRefno.getRawValue());
+
                     dtpRefdate.setValue(dtpLedgerRefdate.getValue());
 
 		            txtAccountName.setRawValue('');
@@ -1787,13 +1792,14 @@ function add_btn_click()
     });
    
 
-    var lblNarration = new Ext.form.Label({
-        fieldLabel  : 'Narration',
-        id          : 'lblNarration',
-        width       : 100,
-      labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-    });
-   
+
+
+var lblNarration = new Ext.form.Label({
+    id    : 'lblNarration',
+    width : 200,
+    html  : '<span style="font-size:14px;font-weight:bold;color:#fc9403;">Short Narration for Ledger</span>'
+});
+
 
     var lblRefNo = new Ext.form.Label({
         fieldLabel  : 'Ref No.',
@@ -1878,13 +1884,15 @@ var txtAccountName = new Ext.form.TextField({
             Ext.getCmp('txtDebit').focus(true, 1);
             txtCredit.disable();
             txtCredit.setValue("");
-	    txtDebit.setValue("");
+	        txtDebit.setValue("");
             dbcr = "P";	
         }else if (cmbType.getValue()==2){
             txtDebit.disable();
             txtCredit.enable();
+            var bal = Number(txtTotaldbamt.getRawValue()) - Number(txtTotalcramt.getRawValue());
+            txtCredit.setRawValue(Ext.util.Format.number(bal.toFixed(2),"0.00"));
             Ext.getCmp('txtCredit').focus(true, 1);
-	    txtCredit.setValue("");	
+//	        txtCredit.setValue("");	
             txtDebit.setValue("");
             dbcr = "R";
         }else{
@@ -1948,8 +1956,9 @@ flxDebitAdjustments.getEl().dom.style.opacity = 1; // optional visual cue
 
 
 
-    if (gstFlag == "Add")
-    {     
+  // if (gstFlag == "Add")
+//    {     
+
                 cmbAdjType.hide(); 
                 if (cmbAdjType.getValue() == "A")
                 { 
@@ -1979,7 +1988,7 @@ flxDebitAdjustments.getEl().dom.style.opacity = 1; // optional visual cue
 
 
      
-             }
+             //}
            }   
           },
                  blur: function(){
@@ -2015,7 +2024,10 @@ flxDebitAdjustments.getEl().dom.style.opacity = 1; // optional visual cue
           specialkey:function(f,e){
              if (e.getKey() == e.ENTER)
              {
-               Ext.getCmp('txtDebit').focus(true, 1);
+               if (cmbType.getValue() == 1)
+                   Ext.getCmp('txtDebit').focus(true, 1);
+                else
+                   Ext.getCmp('txtCredit').focus(true, 1);                  
              }
           },
 
@@ -2380,6 +2392,81 @@ function save_click()
 
 */
 
+
+/*
+ txtRefno.setValue('');
+
+ flxDetail.getSelectionModel().selectAll();
+ var selrows = flxDetail.getSelectionModel().getCount();
+ var sel = flxDetail.getSelectionModel().getSelections();
+ for (var i=0;i<selrows;i++){
+     var ref1   = (txtRefno.getValue() || '').toUpperCase();
+     var ledref = (sel[i].data.refno || '').toUpperCase();
+
+     if (Ext.isEmpty(ledref)) {
+        continue;
+    }
+    var newVal;
+     if (Ext.isEmpty(ref1)) {
+         newVal = ledref;
+     } else {
+         newVal = ref1 + ',' + ledref;
+     }
+
+     newVal = newVal.substring(0, 29);
+
+     txtRefno.setValue(newVal);     
+    }     
+
+*/
+
+txtRefno.setValue('');
+
+var refDateSet = false;
+
+flxDetail.getSelectionModel().selectAll();
+var sel = flxDetail.getSelectionModel().getSelections();
+
+for (var i = 0; i < sel.length; i++) {
+
+    /* ================= REF NO ================= */
+
+    var ref1   = (txtRefno.getValue() || '').toUpperCase();
+    var ledref = (sel[i].data.refno || '').toUpperCase();
+
+    if (!Ext.isEmpty(ledref)) {
+
+        var newRef;
+        if (Ext.isEmpty(ref1)) {
+            newRef = ledref;
+        } else {
+            newRef = ref1 + ',' + ledref;
+        }
+
+        txtRefno.setValue(newRef.substring(0, 29));
+    }
+
+
+    var refdate = sel[i].data.refdate;
+    var dt = Ext.isDate(refdate) ? refdate :
+         Date.parseDate(refdate, 'Y-m-d H:i:s') ||
+         Date.parseDate(refdate, 'Y-m-d') ||
+         Date.parseDate(refdate, 'd-m-Y') ||
+         Date.parseDate(refdate, 'd/m/Y');
+
+dtpRefdate.setValue(dt || dtpVouDate.getValue());
+
+
+
+}
+
+
+
+
+
+
+
+
                         var rcnt = flxDetail.getStore().getCount();
                         var fromdate;
                         var todate;
@@ -2603,8 +2690,8 @@ function edit_click()
         autoShow: true,
         stripeRows : true,
         scrollable: true,
-        height: 150,
-        width: 760,
+        height: 195,
+        width: 800,
         x: 20,
         y: 125,
         columns: [         
@@ -2612,8 +2699,8 @@ function edit_click()
             {header: "Type", dataIndex: 'type',sortable:true,width:50,align:'left'},
             {header: "Debit", dataIndex: 'dbamt',sortable:true,width:100,align:'right'},
             {header: "Credit", dataIndex: 'cramt',sortable:true,width:100,align:'right'},
-            {header: "Ledseqno", dataIndex: 'ledseq',sortable:true,width:60,align:'left',hidden:true},
-            {header: "totamt", dataIndex: 'totamt',sortable:true,width:80,align:'left',hidden:true},
+            {header: "Ledseqno", dataIndex: 'ledseq',sortable:true,width:60,align:'left',hidden:false},
+            {header: "totamt", dataIndex: 'totamt',sortable:true,width:80,align:'left',hidden:false},
             {header: "ledtype", dataIndex: 'ledtype',sortable:true,width:60,align:'left',hidden:true},
             {header: "Narration", dataIndex: 'narration', sortable: true, width: 300, align: 'left', hidden: false},
             {header: "Ref No.", dataIndex: 'refno', sortable: true, width: 100, align: 'left', hidden: false},     
@@ -3076,7 +3163,7 @@ function edit_click()
             {   xtype       : 'fieldset',
                 title       : '',
                 width       : 850,
-                height      : 330,
+                height      : 640,
                 x           : 10	,
                 y           : 65,
                 border      : true,
@@ -3198,17 +3285,17 @@ function edit_click()
                         width       : 100,
                         x           : 200,
                         y           : 60,
-                        defaultType : 'Label',
+                        defaultType : 'label',
                         border      : false,
                         items: [lblRefDate]
                     },
                     { 
                         xtype       : 'fieldset',
                         title       : '',
-                        width       : 100,
+                        width       : 350,
                         x           : 375,
                         y           : 60,
-                        defaultType : 'Label',
+                        defaultType : 'label',
                         border      : false,
                         items: [lblNarration]
                     },
@@ -3263,7 +3350,7 @@ function edit_click()
                         labelWidth  : 90,
                         width       : 300,
                         x           : 365,
-                        y           : 285,
+                        y           : 340,
                         defaultType : 'NumberField',
                         border      : false,
                         items: [txtTotaldbamt]
@@ -3274,30 +3361,21 @@ function edit_click()
                         labelWidth  : 80,
                         width       : 300,
                         x           : 570,
-                        y           : 285,
+                        y           : 340,
                         defaultType : 'NumberField',
                         border      : false,
                         items: [txtTotalcramt]
                     },
-                ]
-            },
-            {   xtype       : 'fieldset',
-                title       : '',
-                width       : 850,
-                height      : 110,
-                x           : 10,
-                y           : 402,
-                border      : true,
-                layout      : 'absolute',
-                style       : 'padding:0px',
-                items: [
+
+
+
                     { 
                         xtype       : 'fieldset',
                         title       : '',
                         labelWidth  : 70,
                         width       : 300,
-                        x           : 0,
-                        y           : 0,
+                        x           : 10,
+                        y           : 340,
                         defaultType : 'textfield',
                         border      : false,
                         items: [txtRefno]
@@ -3306,8 +3384,8 @@ function edit_click()
                         xtype       : 'fieldset',
                         title       : '',
                         width       : 190,
-                        x           : 310,
-                        y           : 0,
+                        x           : 190,
+                        y           : 340,
                         labelWidth  : 60,
                         border      : false,
                         items : [dtpRefdate]
@@ -3318,14 +3396,13 @@ function edit_click()
                         labelWidth  : 70,
                         width       : 775,
                         x           : 0,
-                        y           : 30,
+                        y           : 385,
                         defaultType : 'textfield',
                         border      : false,
                         items: [txtRemarks]
-                    },
-
+                    },                    
                 ]
-            },flxLedger,flxAdjustments,
+            },     flxLedger,flxAdjustments,
 
 
                     {
@@ -3591,9 +3668,12 @@ function RefreshGridData() {
 },
         listeners:
             {
-
+  
 
                 show:function(){
+
+                    txtRefno.hide();
+                    dtpRefdate.hide();
        
                     Ledgerdatastore.load({
                         url: '/SHVPM/Accounts/clsAccounts.php',

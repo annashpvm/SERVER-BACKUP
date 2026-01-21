@@ -42,7 +42,7 @@
 
    $amtmode = "D";
 
- $narration=str_replace("'","",$narration);
+   $narration=str_replace("'","",$narration);
 
    #Begin Transaction
    mysqli_begin_transaction($conn);
@@ -168,9 +168,9 @@
         for($i=0;$i<$rowcnt;$i++){
             $slno = $i+1;
             $ledseq = $griddet[$i]['ledseq'];
-            $dbamt = $griddet[$i]['dbamt'];
-            $cramt = $griddet[$i]['cramt'];
-            $totamt = $griddet[$i]['totamt'];
+            $dbamt = (float) $griddet[$i]['dbamt'];
+            $cramt = (float) $griddet[$i]['cramt'];
+            $totamt = (float) $griddet[$i]['totamt'];
             $ledtype = $griddet[$i]['ledtype'];
             $description = strtoupper($griddet[$i]['narration']);
             $ledrefno = $griddet[$i]['refno'];
@@ -185,6 +185,9 @@
               $amtmode = "C";
             }
             $adjamt=0;
+
+
+
             if($ledseq>0){
             #Insert AccTrail
                if ($ledtype != 'G')
@@ -269,14 +272,14 @@
 
             $adjresult1 = mysqli_query($conn, $adjquery1);
 
-	    $adjquery2 = "call acc_sp_trn_updacc_trail_seq_no('$accadjseqno','$invno','$adjamt','$ledgercode')";
+	    $adjquery2 = "call acc_sp_trn_updacc_trail_seq_no_New('$accadjseqno','$invno','$adjamt','$ledgercode','$drcr')";
 	    $adjresult2 = mysqli_query($conn, $adjquery2);
 
 //echo  $adjquery2;
 //echo "<br>";
 
 
-        $adjquery3 = "update acc_trail set	acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$newvouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
+        $adjquery3 = "update acc_trail set acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$newvouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
         $adjresult3 = mysqli_query($conn, $adjquery3);
 
 //echo  $adjquery3;
@@ -307,15 +310,19 @@
         }
         else        
         {
-                if($resulta2  && $resulta4 && ($inscnt == $rowcnt))
 
+                if($resulta2  && $resulta4 && ($inscnt == $rowcnt))
                 {
+
+        
                 mysqli_commit($conn);
                 echo '({"success":"true","vouno":"'.$vouno.'"})';
                 
                 }
                 else
                 {
+
+        
                 mysqli_rollback($conn);          
                 echo '({"success":"false","vouno":"'.$vouno.'"})';
                 }

@@ -41,6 +41,10 @@ mysqli_set_charset($conn, "utf8");
 	        getDebitNoteVoucherListAccounts();
 		break;
 
+		case "LoadDebitNoteAccSeqNo":
+	        getDebitNoteAccSeqNo();
+		break;
+
 
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
@@ -66,9 +70,9 @@ mysqli_set_charset($conn, "utf8");
 
 
         if ($ledname == '')
-	        $qry = "select * from (select  led_code,led_name,qc_rm_supcode,sup_type from trn_qc_rm_inspection,maspur_supplier_master, acc_ledger_master  where  sup_code = qc_rm_supcode and  sup_led_code = led_code group by led_code,led_name,qc_rm_supcode,sup_type) a1 order by led_name";
+	        $qry = "select * from (select  led_code,led_name,qc_rm_supcode,sup_type from trn_qc_rm_inspection,massal_customer, acc_ledger_master  where  cust_code = qc_rm_supcode and  sup_led_code = led_code group by led_code,led_name,qc_rm_supcode,sup_type) a1 order by led_name";
         else
-	        $qry = "select * from (select  led_code,led_name,qc_rm_supcode,sup_type from trn_qc_rm_inspection,maspur_supplier_master, acc_ledger_master  where  sup_code = qc_rm_supcode and  sup_led_code = led_code group by led_code,led_name,qc_rm_supcode,sup_type) a1 where replace(replace(led_name,' ','')  ,'.','') like '%$ledname%' order by led_name";
+	        $qry = "select * from (select  led_code,led_name,qc_rm_supcode,sup_type from trn_qc_rm_inspection,massal_customer, acc_ledger_master  where  cust_code = qc_rm_supcode and  sup_led_code = led_code group by led_code,led_name,qc_rm_supcode,sup_type) a1 where replace(replace(led_name,' ','')  ,'.','') like '%$ledname%' order by led_name";
 
         $r=mysqli_query($conn, $qry);
     $r = mysqli_query($conn, $sql);
@@ -153,7 +157,7 @@ else
 	$finid    = $_POST['finid'];
 	$entryno  = $_POST['entryno'];
 
-        $sql = "select * from trn_qc_rm_inspection , masrm_item_header,maspur_supplier_master ,trn_weight_card  where qc_rm_supcode = sup_code and qc_rm_itemcode = itmh_code and wc_compcode = qc_rm_compcode and qc_rm_fincode = wc_fincode and wc_ticketno = qc_rm_ticketno and  qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = $entryno  ";
+        $sql = "select * from trn_qc_rm_inspection , masrm_item_header,massal_customer ,trn_weight_card  where qc_rm_supcode = cust_code and qc_rm_itemcode = itmh_code and wc_compcode = qc_rm_compcode and qc_rm_fincode = wc_fincode and wc_ticketno = qc_rm_ticketno and  qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = $entryno  ";
 
 
     $r = mysqli_query($conn, $sql);
@@ -237,7 +241,7 @@ else
 	$finid    = $_POST['fincode'];
 	$vouno    = $_POST['vouno'];
 
-        $sql = "select * from trn_qc_rm_inspection , masrm_item_header,maspur_supplier_master ,trn_weight_card ,mas_RMFU_purchasetax  where tax_purcode = qc_rm_pur_ledger and  qc_rm_supcode = sup_code and qc_rm_itemcode = itmh_code and wc_compcode = qc_rm_compcode and qc_rm_fincode = wc_fincode and wc_ticketno = qc_rm_ticketno and  qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_dn_raised = 'Y' and  qc_rm_debitnote_no = '$vouno'";
+        $sql = "select * from trn_qc_rm_inspection , masrm_item_header,massal_customer ,trn_weight_card ,mas_RMFU_purchasetax  where tax_purcode = qc_rm_pur_ledger and  qc_rm_supcode = cust_code and qc_rm_itemcode = itmh_code and wc_compcode = qc_rm_compcode and qc_rm_fincode = wc_fincode and wc_ticketno = qc_rm_ticketno and  qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_dn_raised = 'Y' and  qc_rm_debitnote_no = '$vouno'";
 
 
     $r = mysqli_query($conn, $sql);
@@ -260,6 +264,26 @@ else
         $sql = "select dbcr_vouno from  acc_dbcrnote_header,trn_qc_rm_inspection where qc_rm_compcode = dbcr_comp_code and qc_rm_fincode = dbcr_finid and qc_rm_debitnote_no = dbcr_vouno and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_accseqno = 0 group by dbcr_vouno   order by dbcr_vouno asc";
 
 
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+
+    function getDebitNoteAccSeqNo()
+    {
+    global $conn;
+	$compcode = $_POST['compcode'];
+	$finid    = $_POST['fincode'];
+	$vouno    = $_POST['vouno'];
+
+    $sql = "select * from acc_ref where accref_comp_code = '$compcode'  and accref_finid = '$finid' and accref_vouno = '$vouno'"; 
     $r = mysqli_query($conn, $sql);
 
     $arr = [];

@@ -65,7 +65,7 @@
         $ledname = trim(str_replace(" ", "", $ledname)); 
         $ledname = trim(str_replace(".", "", $ledname)); 
 
-      $sql = "select * from massal_customer where  left(cust_name,2) != 'zz' and  replace(replace(cust_name,' ','')  ,'.','')  like '%$ledname%' order by cust_name";
+      $sql = "select * from massal_customer where  left(cust_name,2) != 'zz' and  replace(replace(cust_ref,' ','')  ,'.','')  like '%$ledname%' order by cust_name";
 
   $r = mysqli_query($conn, $sql);
     $arr = [];

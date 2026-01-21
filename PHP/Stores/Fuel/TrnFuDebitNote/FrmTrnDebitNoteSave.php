@@ -122,8 +122,7 @@ $qcentryno      = (int)$_REQUEST['qcentryno'];
 
 
 
-#Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);      
 
 
 
@@ -283,8 +282,8 @@ if ($savetype == 'Add')
 {
 	if ( $resulta6 && $resulta7  && $result2) 
 	{
-	  mysqli_begin_transaction($conn);
-	    echo '({"success":"true","vouno":"' . $vouno . '"})';
+    mysqli_commit($conn);    
+	  echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
 
@@ -296,12 +295,10 @@ else
 {
 	if ($result2 && $result4 && $result5) 
 	{
-	  mysqli_begin_transaction($conn);
+      mysqli_commit($conn);    
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
-
-
 	    echo '({"success":"false","vouno":"' . $vouno . '"})';
 	}
 }

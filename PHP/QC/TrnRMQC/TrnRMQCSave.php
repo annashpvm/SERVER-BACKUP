@@ -243,8 +243,10 @@ echo "<br>";
 
         } 
         else
+		{
+			
             $dnqty =  $acceptqty;
-
+		} 
 
 //$dnqty =  $dnqty / 1000;    
 
@@ -258,7 +260,10 @@ echo "<br>";
 // New Addion on 20/06/2025 - Start
         if ($rate  >   $dedrate && $dnqty != 0  )
         {
-            $taxable = round($ticketwt/1000 *  $dedrate,3);         
+			if ($itemtype == "F")
+                $taxable = round($ticketwt/1000 *  $dedrate,3);         
+			else
+			    $taxable = round($dnqty/1000 *  $dedrate,3);         
 
         }
  

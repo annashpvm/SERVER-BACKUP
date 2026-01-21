@@ -46,7 +46,6 @@ var UserId   = localStorage.getItem('ginuserid');
 
           change: function (obj, newValue) {
             console.log(newValue);
-            obj.setRawValue(newValue.toUpperCase());
             check_password();
           },
 
@@ -76,6 +75,27 @@ function Generate_Reelno()
 }
 
 
+
+
+var loadShiftdatastore = new Ext.data.Store({
+    id: 'loadShiftdatastore',
+    proxy: new Ext.data.HttpProxy({
+              url:'ClsTrnSalesFinishedGoods.php',    // File to connect to
+              method: 'POST'
+          }),
+          baseParams:{task:"loadShift"}, // this parameter asks for listing
+    reader: new Ext.data.JsonReader({
+                // we tell the datastore where to get his data from
+      root: 'results',
+      totalProperty: 'total',
+      id: 'id'
+    },[
+  'stk_shift'
+    ]),
+});
+
+
+
 var loadSONodatastore = new Ext.data.Store({
       id: 'loadSONodatastore',
       proxy: new Ext.data.HttpProxy({
@@ -92,6 +112,9 @@ var loadSONodatastore = new Ext.data.Store({
 	'ordh_sono','ordh_sodate'
       ]),
 });
+
+
+
 var loadFinEntryList = new Ext.data.Store({
       id: 'loadFinEntryList',
       autoLoad : true,
@@ -127,6 +150,38 @@ var loadFinEntryNoDetails = new Ext.data.Store({
 	'stk_ent_date','stk_var_code','stk_sr_no','stk_wt','stk_destag','var_name','var_grpcode','var_unit','var_size1','var_size2','var_tariffno',
 'var_desc','var_gsm','var_sheets','var_reams','godown_code', 'godown_name','cust_code','cust_ref','stk_sono','stk_yymm','stk_rollno'
       ]),
+});
+
+
+
+
+var loadRollNoDetails = new Ext.data.Store({
+    id: 'loadRollNoDetails',
+    autoLoad : true,
+    proxy: new Ext.data.HttpProxy({
+              url: 'ClsTrnSalesFinishedGoods.php',      // File to connect to
+              method: 'POST'
+          }),
+          baseParams:{task:"loadRollNos"}, // this parameter asks for listing
+    reader: new Ext.data.JsonReader({
+                // we tell the datastore where to get his data from
+      root: 'results',
+      totalProperty: 'total',
+      id: 'id'
+    },[
+'stk_rollno'
+    ]),
+});
+
+
+
+var txtOldShift = new Ext.form.NumberField({
+    fieldLabel  : 'Old Shift',
+    id          : 'txtOldShift',
+    name        : 'txtOldShift',
+    width       :  100,
+readOnly : true,
+    tabindex : 2
 });
 
 var txtEntryNo = new Ext.form.NumberField({
@@ -181,6 +236,47 @@ var dtpEntry = new Ext.form.DateField({
 
     });
 
+
+    function loadRollNos()
+    {
+
+        loadRollNoDetails.load({
+        url: 'ClsTrnSalesFinishedGoods.php',
+         params: {
+         task: 'loadRollNos',
+         finid: GinFinid,
+         compcode:Gincompcode,
+         rdate  :   Ext.util.Format.date(dtpStock.getValue(),"Y-m-d"),
+        },
+        callback:function()
+        {
+        }
+        });   
+//alert(loadFinEntryN
+
+    }
+
+
+    var dtpStock = new Ext.form.DateField({
+        fieldLabel: 'Entry Date',
+        id: 'dtpStock',
+        name: 'Date',
+        format: 'd-m-Y',
+
+        value: new Date(),
+       	enableKeyEvents: true,
+        listeners:{
+
+           blur:function(){
+              loadRollNos();
+           },
+           keyup:function(){
+            loadRollNos();
+            },
+
+        } 
+
+    });
 
 //
 var txtVariety = new Ext.form.NumberField({
@@ -427,6 +523,76 @@ var cmbSONO = new Ext.form.ComboBox({
          }
 	}
  
+});
+
+
+
+var cmbRollNo = new Ext.form.ComboBox({
+    fieldLabel      : 'Roll No.',
+    width           : 100, 	
+    displayField    : 'stk_rollno', 
+    valueField      : 'stk_rollno',
+   // hiddenName      : 'cust_code',
+    id              : 'cmbRollNo',
+    typeAhead       : true,
+    mode            : 'local',
+    store           : loadRollNoDetails,
+    forceSelection  : true,
+    triggerAction   : 'all',
+    selectOnFocus   : true,
+    editable        : true,
+tabIndex	: 0,
+    allowblank      : true ,
+labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+    listeners:{
+    select: function(){
+
+
+        loadShiftdatastore.load({
+            url: 'ClsTrnSalesFinishedGoods.php',
+             params: {
+             task   : 'loadShift',
+             finid  : GinFinid,
+             compcode:Gincompcode,
+             rdate  :   Ext.util.Format.date(dtpStock.getValue(),"Y-m-d"),
+             rollno : cmbRollNo.getValue(),
+            },
+            callback:function()
+            {
+                var cnt = loadShiftdatastore.getCount(); 
+                if (cnt > 0) {
+                   txtOldShift.setRawValue(loadShiftdatastore.getAt(0).get('stk_shift'));   
+                }   
+            }
+            });   
+
+
+     }
+}
+
+});
+
+
+var cmbShift = new Ext.form.ComboBox({
+    fieldLabel      : 'New Shift',
+    width           : 100, 	
+    store      : ['A','B','C'],
+    id              : 'cmbShift',
+    typeAhead       : true,
+    mode            : 'local',
+
+    forceSelection  : true,
+    triggerAction   : 'all',
+    selectOnFocus   : true,
+    editable        : true,
+    tabIndex	: 0,
+    allowblank      : true ,
+     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+    listeners:{
+    select: function(){
+     }
+}
+
 });
 
 var loadGodown = new Ext.data.Store({
@@ -799,6 +965,47 @@ function grid_tot(){
 }
 
 
+
+var btnChangeShift = new Ext.Button({
+    style   : 'text-align:center;',
+    text    : "Change Shift",
+    width   : 80,
+    height  : 40,
+    x       : 280,
+    y       : 340,
+    bodyStyle:{"background-color":"#ebebdf"},  
+     listeners:{
+         click: function(){              
+                                         
+            Ext.Ajax.request({
+                url: 'TrnSalesFinishedGoodsShiftChangeSave.php',
+                params:
+                {
+                    finid : GinFinid,
+                    compcode :Gincompcode,
+                    rdate  :   Ext.util.Format.date(dtpStock.getValue(),"Y-m-d"),
+                    rollno : cmbRollNo.getValue(),
+                    newshift : cmbShift.getValue(),
+
+                },
+                callback: function(options, success, response)
+                {
+                    var obj = Ext.decode(response.responseText);
+                    if (obj['success']==="true")
+                    {                       
+                     Ext.MessageBox.alert("Finished Goods Shift Changed -" + obj['msg']);
+                     }else
+                     {
+                        Ext.MessageBox.alert("Finished Goods Entry Not Completed! Pls Check!- " + obj['msg']);                                                  
+                     }
+                 }
+             });      //loop y end
+          }       //loop x start
+         } 
+       });   
+
+
+
 var btnSubmit = new Ext.Button({
     style   : 'text-align:center;',
     text    : "SUBMIT",
@@ -1151,6 +1358,75 @@ var TrnSalesFinishedGoodsPanel = new Ext.FormPanel({
 
 //PANEL1
         items: [
+
+
+            { xtype   : 'fieldset',
+                title   : '',
+                layout  : 'hbox',
+                border  : true,
+                height  : 500,
+                width   : 250,
+		style:{ border:'1px solid blue'},
+                layout  : 'absolute',
+                x       : 1070,
+                y       : 10,	
+                items:[
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 300,
+                        x           : 0,
+                        y           : 30,
+                        labelWidth  : 80,
+                        border      : false,
+                        items : [dtpStock]
+                    },
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 300,
+                        x           : 0,
+                        y           : 80,
+                        labelWidth  : 80,
+                        border      : false,
+                        items : [cmbRollNo]
+                    },
+
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 300,
+                        x           : 0,
+                        y           : 130,
+                        labelWidth  : 80,
+                        border      : false,
+                        items : [txtOldShift]
+                    },                        
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 300,
+                        x           : 0,
+                        y           : 180,
+                        labelWidth  : 80,
+                        border      : false,
+                        items : [cmbShift]
+                    },    
+                    
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 300,
+                        x           : 20,
+                        y           : 230,
+                        labelWidth  : 80,
+                        border      : false,
+                        items : [btnChangeShift]
+                    },                        
+
+                ]
+            },
+
                { xtype   : 'fieldset',
                 title   : '',
                 layout  : 'hbox',
@@ -1410,6 +1686,8 @@ var TrnSalesFinishedGoodsPanel = new Ext.FormPanel({
                             border      : false,
                             items : [txttotWt]
                          },
+
+
        
 
                       ] 
@@ -1418,6 +1696,10 @@ var TrnSalesFinishedGoodsPanel = new Ext.FormPanel({
      
                 ]                   
           }] ,
+
+
+
+          
     });
    
 
@@ -1439,7 +1721,7 @@ var TrnSalesFinishedGoodsPanel = new Ext.FormPanel({
     });
 var TrnSalesFinishedGoodsWindow = new Ext.Window({
 	height      : 600,
-        width       : 1100,
+        width       : 1350,
         y           : 35,
         title       : 'SALES - FINISHED GOODS ENTRY',
         items       : TrnSalesFinishedGoodsPanel,
@@ -1454,6 +1736,8 @@ var TrnSalesFinishedGoodsWindow = new Ext.Window({
 },
 	listeners:{
                 show:function(){
+
+
                         dtpEntry.setRawValue('31-03-2022');
 
                         txtYYMM.setValue(Ext.util.Format.date(dtpEntry.getValue(),"ym"));  

@@ -1256,7 +1256,7 @@ Ext.onReady(function(){
         columns:
         [
         {header: "S.No" ,       dataIndex: 'slno',sortable:true,width:60,align:'left'},
-        {header: "Led.Code",    dataIndex: 'ledcode',sortable:true,width:60,align:'left'},
+        {header: "Led.Code",    dataIndex: 'ledcode',sortable:true,width:60,align:'left',hidden :'true'},
         {header: "Ledger Name", dataIndex: 'ledname',sortable:true,width:400,align:'left'},
         {header: "Dedit",       dataIndex: 'debit',sortable:true,width:100,align:'right'},
         {header: "Credit",      dataIndex: 'credit',sortable:true,width:100,align:'right'},
@@ -1753,9 +1753,9 @@ Ext.onReady(function(){
               flxAccounts.getStore().getCount(),
               new dgrecord({
                   slno      : RowCnt1,
-              ledcode   : supcode,
-              ledname   : txtSupplierName.getRawValue(),
-              debit     : txtReturnValue.getRawValue(),
+                  ledcode   : supcode,
+                  ledname   : txtSupplierName.getRawValue(),
+                  debit     : txtReturnValue.getRawValue(),
                   credit    : "0",
                   billno    : txtBillNo.getRawValue(),
                   billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
@@ -1763,8 +1763,22 @@ Ext.onReady(function(){
                   }) 
             );
     
+
+            flxAccounts.getStore().insert(
+                flxAccounts.getStore().getCount(),
+                new dgrecord({
+                    slno      : RowCnt1,
+                    ledcode   : '4993',
+                    ledname   : 'CREDIT NOTE TO BE RECEIVED', 
+                    debit     : '0',
+                    credit    : txtReturnValue.getRawValue(),
+                    billno    : txtBillNo.getRawValue(),
+                    billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
+                    ledtype   : "G",
+                    }) 
+              );
     
-        
+  /*      
     //-- For INSURANCE
                 insamt = 0;
                 k =0;
@@ -2260,7 +2274,9 @@ Ext.onReady(function(){
                 diff =  txttotDebit.getRawValue()-txttotCredit.getRawValue(); 
                 var sel1 = flxAccounts.getSelectionModel().getSelections();           		
            //     sel1[1].set('debit',sel1[1].get('debit')-diff);
+*/
            grid_tot2();
+
     
     
     

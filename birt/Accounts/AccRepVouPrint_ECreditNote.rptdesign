@@ -59,6 +59,21 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="recptdate" id="746">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant"></value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
@@ -2171,6 +2186,22 @@ assetParam = wraptext(row["accref_narration"])</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">paymentdate</property>
+                    <expression name="expression" type="javascript">(params["recptdate"].value != null &amp;&amp; params["recptdate"].value != '') &#13;
+    ? "Payment Received on " &#13;
+    : ""</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">paymentdate2</property>
+                    <expression name="expression" type="javascript">(params["recptdate"].value != null &amp;&amp; params["recptdate"].value != '') &#13;
+    ?  params["recptdate"].value&#13;
+    : ""</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="23">
                 <property name="width">3.5in</property>
@@ -2522,7 +2553,7 @@ assetParam = wraptext(row["accref_narration"])</expression>
                             </column>
                             <column id="405"/>
                             <column id="406">
-                                <property name="width">1in</property>
+                                <property name="width">1.2in</property>
                             </column>
                             <row id="407">
                                 <property name="height">0.22916666666666666in</property>
@@ -2582,7 +2613,12 @@ assetParam = wraptext(row["accref_narration"])</expression>
                                         <property name="resultSetColumn">led_addr3</property>
                                     </data>
                                 </cell>
-                                <cell id="422"/>
+                                <cell id="422">
+                                    <data id="748">
+                                        <property name="fontSize">9pt</property>
+                                        <property name="resultSetColumn">paymentdate</property>
+                                    </data>
+                                </cell>
                             </row>
                             <row id="423">
                                 <property name="height">0.22916666666666666in</property>
@@ -2594,7 +2630,11 @@ assetParam = wraptext(row["accref_narration"])</expression>
                                         <property name="resultSetColumn">led_city</property>
                                     </data>
                                 </cell>
-                                <cell id="426"/>
+                                <cell id="426">
+                                    <data id="749">
+                                        <property name="resultSetColumn">paymentdate2</property>
+                                    </data>
+                                </cell>
                             </row>
                             <row id="614">
                                 <property name="height">0.22916666666666666in</property>

@@ -2073,6 +2073,27 @@ else&#13;
                     <expression name="expression" type="javascript">dataSetRow["repr_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">avg_diffdays</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>size_grp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">AVE</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["diffdays"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">avgdays</property>
+                    <expression name="expression" type="javascript">row["diffdays"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <property name="pageBreakInterval">0</property>
             <column id="26"/>
@@ -2093,6 +2114,7 @@ else&#13;
                     </structure>
                 </list-property>
             </column>
+            <column id="722"/>
             <column id="30"/>
             <column id="31"/>
             <header>
@@ -2117,6 +2139,10 @@ else&#13;
                     </cell>
                     <cell id="86"/>
                     <cell id="87"/>
+                    <cell id="705">
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
                     <cell id="88">
                         <property name="borderRightStyle">dotted</property>
                         <property name="borderRightWidth">1px</property>
@@ -2148,7 +2174,7 @@ else&#13;
                         </structure>
                     </list-property>
                     <cell id="77">
-                        <property name="colSpan">6</property>
+                        <property name="colSpan">7</property>
                         <property name="rowSpan">1</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -2170,7 +2196,7 @@ else&#13;
                         </structure>
                     </list-property>
                     <cell id="56">
-                        <property name="colSpan">6</property>
+                        <property name="colSpan">7</property>
                         <property name="rowSpan">1</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -2190,7 +2216,7 @@ else&#13;
                     <property name="verticalAlign">middle</property>
                     <property name="pageBreakInside">auto</property>
                     <cell id="540">
-                        <property name="colSpan">6</property>
+                        <property name="colSpan">7</property>
                         <property name="rowSpan">1</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
@@ -2243,9 +2269,16 @@ else&#13;
                         </label>
                     </cell>
                     <cell id="9"/>
+                    <cell id="709">
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
                     <cell id="10">
                         <property name="borderRightStyle">dotted</property>
                         <property name="borderRightWidth">1px</property>
+                        <label id="730">
+                            <text-property name="text">Age of Days</text-property>
+                        </label>
                     </cell>
                     <cell id="11">
                         <property name="borderLeftStyle">dotted</property>
@@ -2278,21 +2311,26 @@ else&#13;
                             </data>
                         </cell>
                         <cell id="682"/>
+                        <cell id="710"/>
                         <cell id="683"/>
                         <cell id="684"/>
                     </row>
                 </header>
                 <footer>
                     <row id="685">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">1px</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">1px</property>
                         <property name="verticalAlign">middle</property>
                         <property name="height">0.3958333333333333in</property>
                         <cell id="686">
                             <property name="colSpan">4</property>
                             <property name="rowSpan">1</property>
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
                             <data id="696">
                                 <property name="fontWeight">bold</property>
                                 <property name="paddingLeft">30pt</property>
@@ -2300,9 +2338,36 @@ else&#13;
                                 <property name="resultSetColumn">areatotal</property>
                             </data>
                         </cell>
-                        <cell id="690"/>
+                        <cell id="720">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
+                        <cell id="690">
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
+                        </cell>
                         <cell id="691">
                             <property name="fontWeight">bold</property>
+                            <property name="borderBottomStyle">dotted</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">dotted</property>
+                            <property name="borderTopWidth">1px</property>
                             <data id="695">
                                 <property name="paddingRight">5pt</property>
                                 <structure name="numberFormat">
@@ -2327,7 +2392,7 @@ else&#13;
                     <row id="564">
                         <property name="pageBreakInside">auto</property>
                         <cell id="565">
-                            <property name="colSpan">6</property>
+                            <property name="colSpan">7</property>
                             <property name="rowSpan">1</property>
                             <property name="fontWeight">bold</property>
                             <property name="borderLeftStyle">dotted</property>
@@ -2344,21 +2409,15 @@ else&#13;
                 <footer>
                     <row id="571">
                         <property name="fontWeight">bold</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">1px</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">1px</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">1px</property>
                         <property name="pageBreakInside">auto</property>
                         <cell id="572">
-                            <property name="colSpan">5</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
-                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomStyle">dotted</property>
                             <property name="borderBottomWidth">1px</property>
                             <property name="borderLeftStyle">dotted</property>
                             <property name="borderLeftWidth">1px</property>
-                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopStyle">dotted</property>
                             <property name="borderTopWidth">1px</property>
                             <property name="paddingLeft">10pt</property>
                             <data id="636">
@@ -2383,6 +2442,53 @@ else&#13;
                                 <property name="resultSetColumn">party_total</property>
                             </data>
                         </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="782">
+                <property name="groupName">diffdaysgrp</property>
+                <property name="sortDirection">desc</property>
+                <expression name="keyExpr" type="javascript">row["diffdays"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["diffdays"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="783">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="784">
+                            <data id="800">
+                                <property name="resultSetColumn">avgdays</property>
+                            </data>
+                        </cell>
+                        <cell id="785"/>
+                        <cell id="786"/>
+                        <cell id="787"/>
+                        <cell id="788"/>
+                        <cell id="789"/>
+                        <cell id="790"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="791">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="792"/>
+                        <cell id="793"/>
+                        <cell id="794"/>
+                        <cell id="795"/>
+                        <cell id="796"/>
+                        <cell id="797"/>
+                        <cell id="798"/>
                     </row>
                 </footer>
             </group>
@@ -2412,6 +2518,17 @@ else&#13;
                             <data id="628">
                                 <property name="fontWeight">normal</property>
                                 <property name="resultSetColumn">variety_detail</property>
+                            </data>
+                        </cell>
+                        <cell id="728">
+                            <property name="fontWeight">normal</property>
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="textAlign">center</property>
+                            <data id="723">
+                                <property name="resultSetColumn">diffdays</property>
                             </data>
                         </cell>
                         <cell id="586">
@@ -2489,6 +2606,13 @@ else&#13;
                                 <property name="resultSetColumn">nor</property>
                             </data>
                         </cell>
+                        <cell id="718">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="textAlign">right</property>
+                        </cell>
                         <cell id="592">
                             <property name="borderLeftStyle">dotted</property>
                             <property name="borderLeftWidth">1px</property>
@@ -2561,6 +2685,12 @@ else&#13;
                                 <property name="resultSetColumn">size</property>
                             </data>
                         </cell>
+                        <cell id="713">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
                         <cell id="601">
                             <property name="borderLeftStyle">dotted</property>
                             <property name="borderLeftWidth">1px</property>
@@ -2606,6 +2736,12 @@ else&#13;
                             <property name="borderRightWidth">1px</property>
                         </cell>
                         <cell id="607">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
+                        <cell id="717">
                             <property name="borderLeftStyle">dotted</property>
                             <property name="borderLeftWidth">1px</property>
                             <property name="borderRightStyle">dotted</property>
@@ -2669,6 +2805,12 @@ else&#13;
                             <property name="borderRightStyle">dotted</property>
                             <property name="borderRightWidth">1px</property>
                         </cell>
+                        <cell id="714">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
                         <cell id="617">
                             <property name="borderLeftStyle">dotted</property>
                             <property name="borderLeftWidth">1px</property>
@@ -2715,6 +2857,12 @@ else&#13;
                             <property name="borderRightWidth">1px</property>
                         </cell>
                         <cell id="623">
+                            <property name="borderLeftStyle">dotted</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">dotted</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
+                        <cell id="716">
                             <property name="borderLeftStyle">dotted</property>
                             <property name="borderLeftWidth">1px</property>
                             <property name="borderRightStyle">dotted</property>
@@ -2797,7 +2945,19 @@ else&#13;
                             <property name="resultSetColumn">stk_sr_no</property>
                         </data>
                     </cell>
+                    <cell id="715">
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
                     <cell id="17">
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="18">
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
                         <property name="borderRightStyle">dotted</property>
@@ -2811,12 +2971,6 @@ else&#13;
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">weight</property>
                         </data>
-                    </cell>
-                    <cell id="18">
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">1px</property>
-                        <property name="borderRightStyle">dotted</property>
-                        <property name="borderRightWidth">1px</property>
                     </cell>
                 </row>
             </detail>
@@ -2833,28 +2987,51 @@ else&#13;
                     <cell id="20">
                         <property name="colSpan">4</property>
                         <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
                         <property name="borderRightStyle">dotted</property>
                         <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
                         <label id="472">
                             <property name="fontSize">12pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">TOTAL DESPATCH PENDING </text-property>
                         </label>
                     </cell>
+                    <cell id="721">
+                        <property name="fontSize">12pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
                     <cell id="24">
                         <property name="fontSize">12pt</property>
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
                         <property name="borderRightStyle">dotted</property>
                         <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
                     </cell>
                     <cell id="25">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
                         <property name="borderLeftStyle">dotted</property>
                         <property name="borderLeftWidth">1px</property>
                         <property name="borderRightStyle">dotted</property>
                         <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
                         <data id="634">
                             <property name="fontWeight">bold</property>
                             <property name="paddingRight">5pt</property>

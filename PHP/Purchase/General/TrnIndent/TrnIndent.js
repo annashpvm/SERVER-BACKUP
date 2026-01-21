@@ -11,13 +11,14 @@
 
     var gstfinyear = localStorage.getItem('gstyear');
 
-   var finstartdate = localStorage.getItem('gfinstdate');
-   var finenddate = localStorage.getItem('gfineddate');
-var usertype = localStorage.getItem('ginuser');
-var UserName = localStorage.getItem('ginusername');
-var UserId   = localStorage.getItem('ginuserid');
+    var finstartdate = localStorage.getItem('gfinstdate');
+    var finenddate = localStorage.getItem('gfineddate');
+    var usertype = localStorage.getItem('ginuser');
+    var UserName = localStorage.getItem('ginusername');
+    var UserId   = localStorage.getItem('ginuserid');
 
 
+   addnaldays = 0; 
    var editrow = 0;
    var gridedit = "false";
    var viewopt = 0; 
@@ -125,13 +126,15 @@ var UserId   = localStorage.getItem('ginuserid');
     	           {
                       if (loadPassword.getAt(0).get('nos') > 0)
                       {
+
                           if(loadPassword.getAt(0).get('pw_password')== txtPassword.getRawValue())
                           {
-                              Ext.getCmp('save').setDisabled(false);   
+               
+                            Ext.getCmp('modify').show(); 
                           }
                           else     
                           {   
-                              Ext.getCmp('save').setDisabled(true);   
+                            Ext.getCmp('modify').hide(); 
                           }    
                       }
                       else
@@ -542,6 +545,7 @@ var loadequipmentDataStore = new Ext.data.Store({
                                    alert("Already PO raised for this Indent Number.. You can't Modify the Indent");
                                    Ext.getCmp('save').setDisabled(true); 
                                    txtPassword.show();  
+                                   
                                 }
                                 else
                                 {
@@ -730,12 +734,12 @@ var loadequipmentDataStore = new Ext.data.Store({
         var dtgrn = dtpDate.getValue();
         var diffdays = dt_today.getTime()-dtgrn.getTime();
 
-        Ext.getCmp('save').setDisabled(false);  
+ //       Ext.getCmp('save').setDisabled(false);  
 
         diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24)); 
 //alert(diffdays);
-        if (diffdays > 1)
-        {     
+        if (diffdays > addnaldays + 1)
+        { 
              alert("You are Not Allowed to Raise the INDENT in the date of " +  Ext.util.Format.date(dtgrn,"d-m-Y"));
              dtpDate.setRawValue(Ext.util.Format.date(dt_today,"d-m-Y"));
 
@@ -752,12 +756,12 @@ var loadequipmentDataStore = new Ext.data.Store({
 
     if(Ext.util.Format.date(dtpDate.getValue(),"Y-m-d") < Ext.util.Format.date(fromdate,"Y-m-d")){
             Ext.MessageBox.alert("Alert","Indent Date is not in current finance year. Please check");
-             Ext.getCmp('save').setDisabled(true);  
+            Ext.getCmp('save').setDisabled(true);  
     }
 
     else if(Ext.util.Format.date(dtpDate.getValue(),"Y-m-d") > Ext.util.Format.date(todate,"Y-m-d")){
             Ext.MessageBox.alert("Alert","Indent Date is not in current finance year. Please check");
-             Ext.getCmp('save').setDisabled(true);  
+            Ext.getCmp('save').setDisabled(true);  
     }
 
  }
@@ -1191,7 +1195,7 @@ var lblSpec = new Ext.form.Label({
         fieldLabel  : 'Std.Life Time',
         width       : 270,
         name        : 'txtStdLifeTime',
-        readOnly    : true,
+        readOnly    : false,
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
     	enableKeyEvents: true,
         listeners   :{
@@ -1205,30 +1209,14 @@ var lblSpec = new Ext.form.Label({
 
    });
 
-    var txtActualLifeTime = new Ext.form.TextField({
-        id          : 'txtActualLifeTime',
-        fieldLabel  : 'Act.Life Time',
-        width       : 270,
-        name        : 'txtActualLifeTime',
-        readOnly    : true,
-        labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
-    	enableKeyEvents: true,
-        listeners   :{
-        specialkey:function(f,e){
-             if (e.getKey() == e.ENTER)
-             {
-                  txtActualLifeTime.focus();
-             }
-         }, 
-       }  
-   });
+
 
       var txtActualLifeTime = new Ext.form.TextField({
         id          : 'txtActualLifeTime',
         fieldLabel  : 'Act.Life Time',
         width       : 270,
         name        : 'txtActualLifeTime',
-        readOnly    : true,
+        readOnly    : false,
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
     	enableKeyEvents: true,
         listeners   :{
@@ -1392,6 +1380,80 @@ function refresh(){
 
 
 
+var btnSave = new Ext.Button({
+    icon:'/WorkOrder/icons/download.gif',
+//       style   : 'text-align:center;',
+    width   : 60,
+    height  : 10, 
+    text    : "Save",
+    id    : "modify",
+    border: 1,
+      style: {
+          borderColor: 'blue',
+          borderStyle: 'solid',
+          fontSize  : '14px',
+
+      },
+    listeners:{
+    click: function(){    
+
+
+        var indData = flxDetail.getStore().getRange();                                        
+        var indupdData = new Array();
+         Ext.each(indData, function (record) {
+             indupdData.push(record.data);
+         });
+                                 
+        var spec = Ext.getCmp('txtspec').getValue();
+  
+        Ext.Ajax.request({
+          url: 'TrnIndentSaveModify.php',
+          params :
+           {
+              griddet	  : Ext.util.JSON.encode(indupdData),  
+              cnt       : indData.length,    
+              savetype  : gstFlag,                                
+              compcode  : Gincompcode,                                 
+              finid     : Ginfinid,
+              indno     : txtIndno.getValue(),
+              inddate   : Ext.util.Format.date(dtpDate.getValue(),"Y-m-d"),
+              entdate   : Ext.util.Format.date(new Date(),"Y-m-d"),
+              indtype   : indtype,
+              preparedby: txtindentby.getRawValue(),
+              approvedby: cmbapproval.getValue(),
+              dept      : cmbdept.getValue(),
+              purpose   : cmbPurpose.getRawValue(),
+              userid	  : userid,
+},
+            callback: function(options, success, response)
+            {
+              var obj = Ext.decode(response.responseText);
+               if (obj['success']==="true")
+  {                                
+                  Ext.MessageBox.alert("Indent Saved -" + obj['msg']);
+         
+                  IndentFormPanel.getForm().reset();
+                  flxDetail.getStore().removeAll();
+                  RefreshData();
+
+
+
+
+
+                }else
+  {
+Ext.MessageBox.alert("Indent Not Saved! Pls Check!- " + obj['msg']);                                                  
+                  }
+              }
+         });         
+
+
+    } 
+ }
+});
+
+
+
 var btnRefreshSection = new Ext.Button({
         icon:'/WorkOrder/icons/download.gif',
  //       style   : 'text-align:center;',
@@ -1546,7 +1608,11 @@ var btnAdd = new Ext.Button({
         	                Ext.Msg.alert('Indent','Select Item Name Again..');
         	                addok="false";
         	         }
-
+               	         else if (cmbapproval.getValue() == 0 || cmbapproval.getRawValue()==""  )
+        	         {
+        	                Ext.Msg.alert('Indent','Select Apporval BY.');
+        	                addok="false";
+        	         }
                          else 
                          {
 	
@@ -2010,7 +2076,7 @@ function RefreshData(){
 				        task: "loadIndNoList",
 				        finid: Ginfinid,
 				        compcode:Gincompcode,
-                                        dept    :dept,  
+                        dept    :dept,  
 
 				    }
         		     });
@@ -2224,7 +2290,19 @@ printtype = "PDF";
 
                     },
 
+                    { 
+                        
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 100,
+                        x           : 1200,
+                        y           : 0,
+                        border      : false,
+                        items: [btnSave]
 
+               },
+               
                     { 
                         xtype       : 'fieldset',
                         title       : '',
@@ -2542,7 +2620,8 @@ printtype = "PDF";
 
        //            Ext.getCmp('save').setDisabled(true); 
 
-
+       if (UserId == 1)
+           addnaldays = 1000;
 
        cmbIndno.hide();
         flxItem.hide();
@@ -2552,6 +2631,7 @@ printtype = "PDF";
                   var dt = dtpDate.getValue();
                   dtpduedate.setValue(dt.getDate()+20);
                   txtPassword.hide();
+                  Ext.getCmp('modify').hide(true); 
                                 gridedit = "false";  
 				loadindnodatastore.load({
                         	 url:'ClsIndent.php',

@@ -100,7 +100,13 @@ $nrow = mysqli_num_rows($r);
 
 
         $party     = $_POST['party'];
-        $sql = "select * from massal_customer where  left(cust_ref,2) != 'ZZ' and cust_ref like '%$party%' order by cust_ref";
+
+        $party = trim(str_replace(" ", "", $party)); 
+        $party = trim(str_replace(".", "", $party)); 
+        $party = trim(str_replace("-", "", $party)); 
+
+
+        $sql = "select * from massal_customer where  left(cust_ref,2) != 'ZZ' and replace(replace(replace(cust_ref,' ','')  ,'.',''),'-','') like '%$party%' order by cust_ref";
 
 
         

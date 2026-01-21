@@ -318,13 +318,14 @@ function getItemStock()
 
         $item = trim(str_replace(" ", "", $item)); 
         $item = trim(str_replace(".", "", $item));
+        $item = trim(str_replace("-", "", $item));
 
+        //if ($item == '')   
+           //$sql = "select * from maspur_item_header  order by item_name";
+        //else
+           //$sql = "select * from maspur_item_header h , maspur_item_trailer t   where item_comp_code = $compcode and item_fin_code = $finid  and h.item_code = t.item_code and item_stock > 0 and replace(replace(item_name,' ','')  ,'.','') like '%$item%' order by item_name";         
 
-        if ($item == '')   
-           $sql = "select * from maspur_item_header  order by item_name";
-        else
-           $sql = "select * from maspur_item_header h , maspur_item_trailer t   where item_comp_code = $compcode and item_fin_code = $finid  and h.item_code = t.item_code and item_stock > 0 and replace(replace(item_name,' ','')  ,'.','') like '%$item%' order by item_name";         
-
+           $sql = "select * from maspur_item_header where replace(replace(replace(item_name,' ','')  ,'.','')  ,'-','')  like '%$item%' order by item_name";         
 
     $r = mysqli_query($conn, $sql);
 

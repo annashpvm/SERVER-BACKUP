@@ -16663,13 +16663,13 @@ if (printtype == "PDF")
 
 
     var monthenddate = new Ext.form.DateField({
-	fieldLabel: 'To Date',
+	    fieldLabel: 'To Date',
         id: 'monthenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
+	    format: 'd-m-Y',
         value: new Date(),   
-	enableKeyEvents: true,
-	listeners:{
+	    enableKeyEvents: true,
+	    listeners:{
              specialkey:function(f,e){
              if (e.getKey() == e.ENTER)
              {
@@ -16684,11 +16684,23 @@ if (printtype == "PDF")
     });
 
     var monthstartdate2 = new Ext.form.DateField({
-	fieldLabel: 'From Date',
+	    fieldLabel: 'From Date',
         id: 'monthfirstdate2',
-	format: 'd-m-Y',
+	    format: 'd-m-Y',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-        value: new Date()   
+        value: new Date(),
+	    enableKeyEvents: true,
+	    listeners:{
+             specialkey:function(f,e){
+             if (e.getKey() == e.ENTER)
+             {
+                Process_Month_Ledger_Data();
+              }
+            },
+           blur:function(){
+            Process_Month_Ledger_Data();
+           },
+        }           
     });
 
 
@@ -16696,8 +16708,20 @@ if (printtype == "PDF")
 	fieldLabel: 'To Date',
         id: 'monthenddate2',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
-        value: new Date()   
+	    format: 'd-m-Y',
+        value: new Date()  ,
+	    enableKeyEvents: true,
+	    listeners:{
+             specialkey:function(f,e){
+             if (e.getKey() == e.ENTER)
+             {
+                Process_Month_Ledger_Data();
+              }
+            },
+           blur:function(){
+            Process_Month_Ledger_Data();
+           },
+        }        
     });
 
 /*
@@ -17762,7 +17786,7 @@ var flxMainSubGroup2 = new Ext.grid.EditorGridPanel({
     scrollbar: true,
     x:300,
     y:10,
-    height: 450,
+    height: 350,
     hidden:false,
     width: 650,
   //  id: 'my-grid-font', 
@@ -18034,15 +18058,15 @@ renderer: function (val, metaData, r){
         sm: new Ext.grid.RowSelectionModel(),
         autoShow: true,
         scrollable: true,
-	stripeRows: true,
-    id: 'my-grid-font', 
-style:{
+	    stripeRows: true,
+        id: 'my-grid-font', 
+        style:{
              color: 'DarkBlue' ,
              backgroundColor:'White'
 	     
         },
         columnLines: true,
-        height: 465,
+        height: 440,
         width: 1200,
         border:false,
         x: 10,
@@ -18713,7 +18737,8 @@ if (printtype == "PDF")
 		    var p2 ="&compcode="+encodeURIComponent(compcode);      
 		    var p3 = "&finid=" + encodeURIComponent(finid);
 
-	            var p4 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	    var p5 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+	        var p4 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate2.getValue(),"Y-m-  d"));	
+            var p5 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate2.getValue(),"Y-m-d"));
 		    var p6 = "&ledname="+encodeURIComponent(SubLedgerName);
        
        		    var p7 = "&ledtype="+encodeURIComponent(ledgertype);

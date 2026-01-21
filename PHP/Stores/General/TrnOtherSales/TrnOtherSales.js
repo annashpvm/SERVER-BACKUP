@@ -30,6 +30,95 @@ Ext.onReady(function(){
 var accseqno = 0;
 var roundoff ="Y";
 
+var txtAckNo = new Ext.form.TextField({
+    fieldLabel  : 'Ack No.',
+    id          : 'txtAckNo',
+    name        : 'txtAckNo',
+    width       :  400,
+//	readOnly : true,
+labelStyle	: "font-size:12px;font-weight:bold;",
+style      :"border-radius: 5px;", 
+});
+
+
+var txtIRNNo = new Ext.form.TextField({
+    fieldLabel  : 'IRN No.',
+    id          : 'txtIRNNo',
+    name        : 'txtIRNNo',
+    width       :  1000,
+
+//	readOnly : true,
+labelStyle	: "font-size:12px;font-weight:bold;",
+style      :"border-radius: 5px; ", 
+});
+
+var txtQRCode = new Ext.form.TextArea({
+    fieldLabel  : 'QR Code',
+    id          : 'txtQRCode',
+    name        : 'txtQRCode',
+    width       :  1000,
+    height      : 140,
+//	readOnly : true,
+labelStyle	: "font-size:12px;font-weight:bold;",
+style      :"border-radius: 5px;", 
+});
+
+
+
+var btnIRNUpdate = new Ext.Button({
+id      : 'btnIRNUpdate',
+style   : 'text-align:center;',
+text    : "ACK / IRN / QR CODE UPDATE",
+tooltip : 'IRN UPDATE',
+width   : 100,
+height  : 30,
+
+labelStyle : "font-size:12px;font-weight:bold;color:#b8309f",
+
+border: 1,
+style: {
+       borderColor: 'blue',
+       borderStyle: 'solid',
+
+},
+ tabindex : 1,
+listeners:{
+   click: function(){
+         if (txtSMSNo.getRawValue() == "")
+         {
+             alert("SMS Number is Empty.. ");
+         }           
+         else
+         {
+          Ext.Ajax.request({
+          url: 'TrnOSINV_IRN_ACK_Update.php',
+          params :
+          {
+
+            snhinvno     : txtSalesInvNo.getRawValue(),  
+            snhdocno     : docno,  
+            snhsaltype   : gststate,  
+            snhcompcode  : Gincompcode,
+            snhfincode   : GinFinid,            
+            invhIRN       : txtIRNNo.getRawValue(),  
+            invhACK       : txtAckNo.getRawValue(),  
+            invhqrcode    : txtQRCode.getRawValue(),                        	
+
+          },
+          callback: function(options, success, response)
+          {
+             Ext.MessageBox.alert("Invoice Payment Terms  -Updated "); 
+                     TrnSalesInvoicePanel.getForm().reset();
+                     RefreshData();
+
+          }
+                  }); 
+        }
+   }
+}
+});       
+
+
 var supcode =0;
  var EInvStatusDataStore = new Ext.data.Store({
       id: 'EInvStatusDataStore',
@@ -334,7 +423,8 @@ var LoadsaleinvnoDetailDatastore =  new Ext.data.Store({
 'os_acvou_no','os_acvou_date','salitem_code', 'salitem_name', 'salitem_uom', 'salitem_hsn',  'uom_code', 'uom_name', 'uom_short_name',
 'salitem_cgstper', 'salitem_sgstper','salitem_igstper','salitem_salesledcode_tn', 'salitem_salesledcode_os', 'salitem_cgstledcode', 'salitem_sgstledcode',  'salitem_igstledcode', 'tn_sal_ledger','os_sal_ledger', 'cgst_ledger', 'sgst_ledger', 'igst_ledger', 'os_seqno', 'os_rounding','cust_name','cust_gst_type',
  'U_TCSStatus','U_EWBStatus','E_inv_confirm','U_ReUpload','U_AckNo','U_EWayBillNo','os_acc_seqno','os_tcsper','os_tcsamt',
-'os_delivery_addr1', 'os_delivery_addr2', 'os_delivery_addr3', 'os_delivery_city', 'os_delivery_pin', 'os_delivery_gst','invh_ewaybillno'
+'os_delivery_addr1', 'os_delivery_addr2', 'os_delivery_addr3', 'os_delivery_city', 'os_delivery_pin', 'os_delivery_gst','invh_ewaybillno',
+'U_AckNo','U_QR','U_irnno'
  
 
 
@@ -1614,7 +1704,9 @@ var othexp_combo = new Ext.form.ComboBox({
 
 
 
-
+                                           txtAckNo.setValue(LoadsaleinvnoDetailDatastore.getAt(0).get('U_AckNo'));
+                                           txtIRNNo.setValue(LoadsaleinvnoDetailDatastore.getAt(0).get('U_irnno'));
+                                           txtQRCode.setValue(LoadsaleinvnoDetailDatastore.getAt(0).get('U_QR'));
 /*
                                          if (LoadsaleinvnoDetailDatastore.getAt(0).get('os_accupd') == "Y")
                                          {
@@ -1653,6 +1745,42 @@ var othexp_combo = new Ext.form.ComboBox({
                                 {
                                     Ext.getCmp('btnReupload').hide();
                                 }
+
+
+                                if (LoadsaleinvnoDetailDatastore.getAt(0).get('U_TCSStatus') == "S" &&  LoadsaleinvnoDetailDatastore.getAt(0).get('E_inv_confirm') == "Y" &&  LoadsaleinvnoDetailDatastore.getAt(0).get('U_AckNo') == ""  )
+                                    {
+                                         Ext.getCmp('txtAckNo').setDisabled(false);  
+                                         Ext.getCmp('btnIRNUpdate').setDisabled(false);  
+                                    } 
+                                    else
+                                    {
+                                         Ext.getCmp('txtAckNo').setDisabled(true);    
+                                         Ext.getCmp('btnIRNUpdate').setDisabled(true);
+                                    }  
+                          
+  
+                                    if (LoadsaleinvnoDetailDatastore.getAt(0).get('U_TCSStatus') == "S" &&  LoadsaleinvnoDetailDatastore.getAt(0).get('E_inv_confirm') == "Y" &&  LoadsaleinvnoDetailDatastore.getAt(0).get('U_irnno') == ""  )
+                                        {
+                                             Ext.getCmp('txtIRNNo').setDisabled(false);  
+                                             Ext.getCmp('btnIRNUpdate').setDisabled(false);  
+                                        } 
+                                        else
+                                        {
+                                             Ext.getCmp('txtIRNNo').setDisabled(true);    
+                                             Ext.getCmp('btnIRNUpdate').setDisabled(true);
+                                        }  
+         
+                                        if (LoadsaleinvnoDetailDatastore.getAt(0).get('U_TCSStatus') == "S" &&  LoadsaleinvnoDetailDatastore.getAt(0).get('E_inv_confirm') == "Y" &&  LoadsaleinvnoDetailDatastore.getAt(0).get('U_QR') == ""  )
+                                        {
+                                             Ext.getCmp('txtQRCode').setDisabled(false);  
+                                             Ext.getCmp('btnIRNUpdate').setDisabled(false);  
+                                        } 
+                                        else
+                                        {
+                                             Ext.getCmp('txtQRCode').setDisabled(true);    
+                                             Ext.getCmp('btnIRNUpdate').setDisabled(true);
+                                        
+                                         }                                    
 
 /*
 if (LoadsaleinvnoDetailDatastore.getAt(0).get('os_date') < '2023-12-01')
@@ -3316,6 +3444,60 @@ var tabOS = new Ext.TabPanel({
             },
 
 
+            {
+                xtype: 'panel',
+                title: 'ACK NO & IRN NO UPDATE ',bodyStyle:{"background-color":"#ebebdf"},
+                layout: 'absolute',
+             items: [
+
+                              {
+                                  xtype       : 'fieldset',
+                                  title       : '',
+                                  labelWidth  : 100,
+                                  width       : 1300,
+                                  x           : 10,
+                                  y           : 30,	
+                                  border      : false,
+                                  items: [txtAckNo] 
+                              },
+                              {
+                                  xtype       : 'fieldset',
+                                  title       : '',
+                                  labelWidth  : 100,
+                                  width       : 1300,
+                                  x           : 10,
+                                  y           : 60,	
+                                  border      : false,
+                                  items: [txtIRNNo] 
+                              },
+
+                              {
+                                  xtype       : 'fieldset',
+                                  title       : '',
+                                  labelWidth  : 100,
+                                  width       : 1300,
+                                  x           : 10,
+                                  y           : 90,	
+                                  border      : false,
+                                  items: [txtQRCode] 
+                              },
+
+
+                              {
+                                  xtype       : 'fieldset',
+                                  title       : '',
+                                  labelWidth  : 100,
+                                  width       : 400,
+                                  x           : 1100,
+                                  y           : 280,	
+                                  border      : false,
+                                  items: [btnIRNUpdate] 
+                              },
+
+
+                ]
+             }            
+
            
     ]
 
@@ -3467,11 +3649,11 @@ var myFormPanel = new Ext.form.FormPanel({
  						cnt          : finData.length,
 						griddetacc   : Ext.util.JSON.encode(poupdData),     
 						cntacc         : accData.length,
-                                                savetype     : gstFlag,
-	           				snhinvno     : txtSalesInvNo.getRawValue(),  
-                                             	snhdocno     : docno,  
-                                		snhsaltype   : gststate,  
-	           				snhcompcode  : Gincompcode,
+                        savetype     : gstFlag,
+          				snhinvno     : txtSalesInvNo.getRawValue(),  
+                      	snhdocno     : docno,  
+                   		snhsaltype   : gststate,  
+           				snhcompcode  : Gincompcode,
 						snhfincode   : GinFinid,
 						snhdate      : Ext.util.Format.date(dtsales.getValue(),"Y-m-d"),
 						//snhcustcode  : txtSupplier.getRawValue(),
@@ -3482,11 +3664,11 @@ var myFormPanel = new Ext.form.FormPanel({
 						snhremarks   : txtremark.getValue(),
 						ourref       : txtourref.getValue(),
 						partyref     : txtpartyref.getValue(),
-                                                acvouno      : acvouno,
-                                                seqno        : seqno,
-                                                invhtime     : Ext.util.Format.date(new Date(),"Y-m-d H:i"),
-					        ewaybillno   : '',  
-                                       		accseqno     : accseqno,
+                        acvouno      : acvouno,
+                        seqno        : seqno,
+                        invhtime     : Ext.util.Format.date(new Date(),"Y-m-d H:i"),
+					    ewaybillno   : '',  
+                        accseqno     : accseqno,
 						deliveryadd1 : txtAddr1.getRawValue() ,
 						deliveryadd2 : txtAddr2.getRawValue(),
 						deliveryadd3 : txtAddr3.getRawValue(),

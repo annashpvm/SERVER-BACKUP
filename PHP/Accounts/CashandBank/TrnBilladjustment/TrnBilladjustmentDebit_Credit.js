@@ -1040,6 +1040,7 @@ onEsc:function(){
         listeners:
             {
                 show:function(){
+                    alert("TESt");
 //  Ext.getCmp('save').setDisabled(true);  
                  RefreshData();
                 }

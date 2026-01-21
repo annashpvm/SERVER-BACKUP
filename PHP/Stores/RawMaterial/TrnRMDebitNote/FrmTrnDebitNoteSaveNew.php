@@ -126,8 +126,7 @@ $itemname  = substr(trim($_POST['itemname']),0,38);
 
 
 
-#Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);      
 
 
 
@@ -347,7 +346,7 @@ if ($savetype == 'Add')
 {
 	if ( $resulta2  && $resulta4 && $resulta6 && $resulta7  && $result2 ) 
 	{
-	  mysqli_begin_transaction($conn);
+    mysqli_commit($conn);  
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
@@ -360,7 +359,7 @@ else
 {
 	if (  $resulta2 && $resulta4  &&  $result2 && $result4 && $result5) 
 	{
-	  mysqli_begin_transaction($conn);
+    mysqli_commit($conn);  
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

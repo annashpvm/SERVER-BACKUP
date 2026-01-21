@@ -156,6 +156,25 @@ new Ext.Toolbar.SplitButton({
                 ]
                 }
                 }),
+
+
+                new Ext.Toolbar.SplitButton({
+                    text: '<b>ATTENDANCE</b>',
+                    width: 150,
+                   // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
+                    menu:{
+                        items:[
+                            {
+                                text: '<b>Attendance Upload from BioMetric Data</b>',
+                                group: 'theme',
+                                handler: function(){
+                                    window.location.href=('http://10.0.0.251/SHVPM/Payroll/BioMetricAttedance/FrmBioAttnDownload.php');
+                                }
+                            },
+                        ]
+                    }
+                })  ,     
+                                     
         new Ext.Toolbar.SplitButton({
         text: '<b>DATA ENTRY</b>',
         width: 150,

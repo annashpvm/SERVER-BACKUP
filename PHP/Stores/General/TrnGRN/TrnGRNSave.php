@@ -69,8 +69,7 @@ $minhtottransport = (float) $_POST['minhtottransport'];
 
 $grnstatus = $_POST['grnstatus'];
 
-
- mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 $userid = (int)$_POST['userid'];
 
@@ -460,7 +459,7 @@ else
 	else {
 	   if ($result2 &&  $result4 )
 	   {
-		   mysqli_query($conn, "COMMIT");                       
+	        mysqli_commit($conn);                      
 		    echo '({"success":"true","minno":"'.$minhminno.'"})';
 	   }
 	   else

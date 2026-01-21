@@ -77,6 +77,25 @@
 		getslipNetWt();
 		break;
 
+		case "loadFreightParty":
+			getFreightParty();
+			break;
+		case "loadSearchFrtPartylist":
+				getSearchFrtPartylist();
+				break;			
+
+		case "loadInvoiceNoList2":
+			getInvoiceNolist2();
+			break;
+		case "loadInvoiceNoDetails2":
+			getInvoiceNoDetails2();
+			break;				
+
+     	case "loadFreightPartyDetails":
+			 getFreightPartyDetails();
+				break;				
+
+				
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -157,8 +176,8 @@
 		$invno = $_POST['invno'];
 	
 		// Build query (you had two; I merged the more complete one)
-		$sql = "select * from trnsal_invoice_header a , massal_customer b where invh_party = cust_code and invh_fincode= $finid  and invh_comp_code= $compcode and invh_seqno = $invno";
-
+		// $sql = "select * from trnsal_invoice_header a , massal_customer b where invh_party = cust_code and invh_fincode= $finid  and invh_comp_code= $compcode and invh_seqno = $invno";
+		$sql = "select a.*,b.*,c.cust_name freightParty from trnsal_invoice_header a , massal_customer b ,  massal_customer c where a.invh_party = b.cust_code and a.invh_frtparty = c.cust_code  and a.invh_fincode= $finid  and a.invh_comp_code=  $compcode and a.invh_seqno  = $invno";
 	
 		// Execute query
 		$r = mysqli_query($conn, $sql);
@@ -605,4 +624,108 @@ function getslipNetWt()
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 	
+
+	function getFreightParty()
+    {
+		global $conn;  
+        $sql= "select * from massal_customer where cust_name like '%FREIGHT OUTWARD%'  OR cust_name LIKE '%TRANSPORT%'
+   OR cust_name LIKE '%LORRY%' order by cust_name; ";
+		$r = mysqli_query($conn, $sql);
+
+		$arr = [];
+		while ($re = mysqli_fetch_assoc($r)) {
+			$arr[] = $re;
+		}
+	
+		echo json_encode(["total" => count($arr), "results" => $arr]);		
+     }
+
+
+	 function getSearchFrtPartylist()
+	 {
+		global $conn;  
+ //        $sql = "select hsn_code,hsn_sno from mas_hsncode order by hsn_code");
+ 
+		 $party     = $_POST['party'];
+		 $party = trim(str_replace(" ", "", $party)); 
+		 $party = trim(str_replace(".", "", $party)); 
+		 $party = trim(str_replace("-", "", $party)); 
+ 
+ 
+
+   // $sql = "select * from  massal_customer where cust_acc_group = 62 and  left(cust_ref,2) != 'zz'  and replace(replace(replace(cust_ref,' ','')  ,'.',''),'-','')  like '%$party%'  order by cust_ref";
+
+   $sql = "select cust_ref , cust_code from (select * from  massal_customer where cust_acc_group = 62 and  left(cust_ref,2) != 'zz'  and replace(replace(replace(cust_ref,' ','')  ,'.',''),'-','')  like '%$party%'
+   union all
+   select *  from  massal_customer where cust_code = 0  
+) a1 order by cust_ref";
+
+   //echo $sql;
+	 $r = mysqli_query($conn, $sql);
+ 
+	 $arr = [];
+	 while ($re = mysqli_fetch_assoc($r)) {
+		 $arr[] = $re;
+	 }
+ 
+	 echo json_encode(["total" => count($arr), "results" => $arr]);
+	 }	 
+
+
+
+	 function getInvoiceNoList2()
+	 {
+	  
+		 global $conn;  
+ //   
+	 $finid = $_POST['finid'];
+	 $compcode = $_POST['compcode'];
+	 $gsttype = $_POST['gsttype'];
+ 
+	 $sql = "SELECT invh_invrefno, invh_seqno 
+			 FROM trnsal_invoice_header  where invh_fincode = '$finid' AND invh_comp_code = '$compcode' ORDER BY invh_no DESC";
+ 
+	 // Execute query
+	 $r = mysqli_query($conn, $sql);
+ 
+	 if (!$r) {
+		 // Debug message (you can log it instead)
+		 die("Query Error: " . mysqli_error($conn));
+	 }
+ 
+	 $arr = [];
+	 while ($re = mysqli_fetch_assoc($r)) {
+		 $arr[] = $re;
+	 }
+ 
+	 $nrow = mysqli_num_rows($r);
+ 
+	 // Encode JSON safely
+	 $jsonresult = json_encode($arr, JSON_UNESCAPED_UNICODE);
+	 echo '({"total":"' . $nrow . '","results":' . $jsonresult . '})';
+	 }
+ 
+
+
+	 function getFreightPartyDetails()
+	 {
+	 global $conn;  
+ 
+	 $finid     = $_POST['finid'];
+	 $compcode  = $_POST['compcode'];
+	 $frtpary   = $_POST['frtpary'];
+	 $fromdate  = $_POST['fromdate'];
+	 $todate    = $_POST['todate'];
+
+     $sql= "call spsal_rep_Freight($compcode, $finid ,'$fromdate' , '$todate' , $frtpary)";
+
+     $r = mysqli_query($conn, $sql);
+ 	 $arr = [];
+	 while ($re = mysqli_fetch_assoc($r)) {
+			 $arr[] = $re;
+	 }
+	 
+	 echo json_encode(["total" => count($arr), "results" => $arr]);
+	 }
+ 
 ?>

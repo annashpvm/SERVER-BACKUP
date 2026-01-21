@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="9">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="grpcode" id="410">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="grpname" id="427">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="allitems" id="444">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ds_grpsummary" id="5">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">finid</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">finid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">maingrpcode</property>
+                    <property name="paramName">grpcode</property>
+                    <property name="nativeName">maingrpcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">allitems</property>
+                    <property name="paramName">allitems</property>
+                    <property name="nativeName">allitems</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">subgrp_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">subgrp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">item_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">item_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">op_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">op_rate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">op_value</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">rec_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">rec_rate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">rec_val</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">iss_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">iss_rate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">iss_val</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">clo_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">clo_rate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">clo_val</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">subgrp_name</property>
+                    <property name="nativeName">subgrp_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">subgrp_code</property>
+                    <property name="nativeName">subgrp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">item_name</property>
+                    <property name="nativeName">item_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">item_code</property>
+                    <property name="nativeName">item_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">op_qty</property>
+                    <property name="nativeName">op_qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">op_rate</property>
+                    <property name="nativeName">op_rate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">op_value</property>
+                    <property name="nativeName">op_value</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">rec_qty</property>
+                    <property name="nativeName">rec_qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">rec_rate</property>
+                    <property name="nativeName">rec_rate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">rec_val</property>
+                    <property name="nativeName">rec_val</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">iss_qty</property>
+                    <property name="nativeName">iss_qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">iss_rate</property>
+                    <property name="nativeName">iss_rate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">iss_val</property>
+                    <property name="nativeName">iss_val</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">clo_qty</property>
+                    <property name="nativeName">clo_qty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">clo_rate</property>
+                    <property name="nativeName">clo_rate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">clo_val</property>
+                    <property name="nativeName">clo_val</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spst_rep_stores_stock_SUBgroupsummary(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>allitems</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="509">
+            <property name="dataSet">ds_grpsummary</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">item_name</property>
+                    <text-property name="displayName">item_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["item_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">op_qty</property>
+                    <text-property name="displayName">op_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["op_qty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">op_rate</property>
+                    <text-property name="displayName">op_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["op_rate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">op_value</property>
+                    <text-property name="displayName">op_value</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["op_value"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">rec_qty</property>
+                    <text-property name="displayName">rec_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["rec_qty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">rec_rate</property>
+                    <text-property name="displayName">rec_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["rec_rate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">rec_val</property>
+                    <text-property name="displayName">rec_val</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["rec_val"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">iss_qty</property>
+                    <text-property name="displayName">iss_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["iss_qty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">iss_rate</property>
+                    <text-property name="displayName">iss_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["iss_rate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">iss_val</property>
+                    <text-property name="displayName">iss_val</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["iss_val"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">clo_qty</property>
+                    <text-property name="displayName">clo_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["clo_qty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">clo_rate</property>
+                    <text-property name="displayName">clo_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["clo_rate"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">clo_val</property>
+                    <text-property name="displayName">clo_val</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["clo_val"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <column id="552"/>
+            <column id="553"/>
+            <column id="554"/>
+            <column id="555"/>
+            <column id="556"/>
+            <column id="557"/>
+            <column id="558"/>
+            <column id="559"/>
+            <column id="560"/>
+            <column id="561"/>
+            <column id="562"/>
+            <column id="563"/>
+            <column id="564"/>
+            <header>
+                <row id="510">
+                    <cell id="511">
+                        <label id="565">
+                            <text-property name="text">item_name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="512">
+                        <label id="567">
+                            <text-property name="text">op_qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="513">
+                        <label id="569">
+                            <text-property name="text">op_rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="514">
+                        <label id="571">
+                            <text-property name="text">op_value</text-property>
+                        </label>
+                    </cell>
+                    <cell id="515">
+                        <label id="573">
+                            <text-property name="text">rec_qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="516">
+                        <label id="575">
+                            <text-property name="text">rec_rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="517">
+                        <label id="577">
+                            <text-property name="text">rec_val</text-property>
+                        </label>
+                    </cell>
+                    <cell id="518">
+                        <label id="579">
+                            <text-property name="text">iss_qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="519">
+                        <label id="581">
+                            <text-property name="text">iss_rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="520">
+                        <label id="583">
+                            <text-property name="text">iss_val</text-property>
+                        </label>
+                    </cell>
+                    <cell id="521">
+                        <label id="585">
+                            <text-property name="text">clo_qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="522">
+                        <label id="587">
+                            <text-property name="text">clo_rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="523">
+                        <label id="589">
+                            <text-property name="text">clo_val</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="524">
+                    <cell id="525">
+                        <data id="566">
+                            <property name="resultSetColumn">item_name</property>
+                        </data>
+                    </cell>
+                    <cell id="526">
+                        <data id="568">
+                            <property name="resultSetColumn">op_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="527">
+                        <data id="570">
+                            <property name="resultSetColumn">op_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="528">
+                        <data id="572">
+                            <property name="resultSetColumn">op_value</property>
+                        </data>
+                    </cell>
+                    <cell id="529">
+                        <data id="574">
+                            <property name="resultSetColumn">rec_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="530">
+                        <data id="576">
+                            <property name="resultSetColumn">rec_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="531">
+                        <data id="578">
+                            <property name="resultSetColumn">rec_val</property>
+                        </data>
+                    </cell>
+                    <cell id="532">
+                        <data id="580">
+                            <property name="resultSetColumn">iss_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="533">
+                        <data id="582">
+                            <property name="resultSetColumn">iss_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="534">
+                        <data id="584">
+                            <property name="resultSetColumn">iss_val</property>
+                        </data>
+                    </cell>
+                    <cell id="535">
+                        <data id="586">
+                            <property name="resultSetColumn">clo_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="536">
+                        <data id="588">
+                            <property name="resultSetColumn">clo_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="537">
+                        <data id="590">
+                            <property name="resultSetColumn">clo_val</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="538">
+                    <cell id="539"/>
+                    <cell id="540"/>
+                    <cell id="541"/>
+                    <cell id="542"/>
+                    <cell id="543"/>
+                    <cell id="544"/>
+                    <cell id="545"/>
+                    <cell id="546"/>
+                    <cell id="547"/>
+                    <cell id="548"/>
+                    <cell id="549"/>
+                    <cell id="550"/>
+                    <cell id="551"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

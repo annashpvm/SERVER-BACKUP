@@ -7020,7 +7020,7 @@ var tabAccounts = new Ext.TabPanel({
         listeners: {
             show: function () {
    
-                //alert(GinNewDays);
+          //      alert(GinNewDays);
          //       Ext.getCmp('optPayType').hide(true);
                  Ext.getCmp('saveOld').setDisabled(true);
                 //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');

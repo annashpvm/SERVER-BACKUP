@@ -22,7 +22,7 @@ $dcrremarks   = $_POST['dcrremarks'];
 $inwardno     = $_POST['inwardno'];
 $inwarddt     = $_POST['inwarddt'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);      
 
 
 if ($savetype == "Add")
@@ -91,7 +91,7 @@ if ($savetype == "Add")
 {
 	if( $result4 && $result5   )
 	{
-	   mysqli_query($conn, "COMMIT");                       
+		mysqli_commit($conn);                           
 	    echo '({"success":"true","recptno":"'.$dcrno.'"})';
 	}
 	else
@@ -106,7 +106,7 @@ else
 {
 	if( $result6 && $result4 && $result5 )
 	{
-	   mysqli_query($conn, "COMMIT");                       
+			mysqli_commit($conn);                           
 	    echo '({"success":"true","recptno":"'.$dcrno.'"})';
 	}
 	else

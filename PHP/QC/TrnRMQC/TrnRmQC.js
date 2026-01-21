@@ -623,22 +623,31 @@ var txtBillWT = new Ext.form.NumberField({
         width       :  80,        
         labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
         allowBlank  :  false,
-	tabindex : 1,
-        readOnly : true,
-	enableKeyEvents: true, 
-	listeners:{
+	    tabindex : 1,
+        readOnly : false,
+	    enableKeyEvents: true, 
+	    listeners:{
+            keyup:function()  
+            {
+                var billWt   = parseFloat(txtBillWT.getValue()) || 0;
+                var acceptWt = parseFloat(txtMillWT.getValue()) || 0;
+    
+                var shortage = billWt - acceptWt;
+    
+                txtShortageWT.setValue(shortage);
+            } 
         }      
 
     });
 
 var txtMillWT = new Ext.form.NumberField({
-        fieldLabel  : 'MILL WT',
+        fieldLabel  : 'ACCEPT WT',
         id          : 'txtMillWT',
         name        : 'txtMillWT',
         width       :  80,        
         labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
         allowBlank  :  false,
-	tabindex : 1,
+	    tabindex : 1,
         readOnly : true,
 	enableKeyEvents: true, 
 	listeners:{
@@ -2541,8 +2550,12 @@ var flxTicket = new Ext.grid.EditorGridPanel({
 		     url: '/SHVPM/QC/ClsQC.php',
 		     params: {
 		            task: 'checkQCTicketNumber',
-			    wbdate   : Ext.util.Format.date(dtTicketDate.getValue(),"Y-m-d"),
-		            ticketno : selrow.get('wc_ticketno'),                },
+			        wbdate   : Ext.util.Format.date(dtTicketDate.getValue(),"Y-m-d"),
+		            ticketno : selrow.get('wc_ticketno'),     
+				    compcode : Gincompcode,
+				    finid    : GinFinid,                    
+                    },
+
 		    callback:function()
 		    {
                        var cnt=loadQCTicketNoCheckDatastore.getCount();
@@ -2553,10 +2566,13 @@ var flxTicket = new Ext.grid.EditorGridPanel({
 				txtTicketWt.setValue(selrow.get('wc_acceptedwt'));
 		//		txtAcceptWt.setValue(selrow.get('wc_acceptedwt'));
 				txtBillWT.setValue(selrow.get('wc_partynetwt'));
-				txtMillWT.setValue(selrow.get('wc_netwt'));
+//				txtMillWT.setValue(selrow.get('wc_netwt'));
+                txtMillWT.setValue(selrow.get('wc_acceptedwt'));
 				var weightype = selrow.get('wt_type');
 				TickWt =  selrow.get('wc_acceptedwt');
 				itemtype = 'F';
+
+
 
 //				if (Number(txtBillWT.getValue()) > Number(txtMillWT.getValue()) && weightype == 'M' )
 
@@ -2613,7 +2629,7 @@ var flxTicket = new Ext.grid.EditorGridPanel({
 				txtTicketWt.setValue(selrow.get('wc_acceptedwt'));
 		//		txtAcceptWt.setValue(selrow.get('wc_acceptedwt'));
 				txtBillWT.setValue(selrow.get('wc_partynetwt'));
-				txtMillWT.setValue(selrow.get('wc_netwt'));
+				txtMillWT.setValue(selrow.get('wc_acceptedwt'));
 				var weightype = selrow.get('wt_type');
 				TickWt =  selrow.get('wc_acceptedwt');
 				itemtype = 'F';
@@ -2914,8 +2930,8 @@ var cmbTruckNo = new Ext.form.ComboBox({
 				    compcode : Gincompcode,
 				    finid    : GinFinid,
 				    wbdate   : Ext.util.Format.date(dtTicketDate.getValue(),"Y-m-d"),
-                                    truckno  : cmbTruckNo.getValue(),
-                                    gstFlag  : gstFlag,
+                    truckno  : cmbTruckNo.getValue(),
+                    gstFlag  : gstFlag,
 			},
 			callback:function()
 			{
@@ -3398,7 +3414,7 @@ var cmbTruckNo = new Ext.form.ComboBox({
 				{ 
                                 	xtype       : 'fieldset',
                                 	title       : '',
-                                	labelWidth  : 80,
+                                	labelWidth  : 90,
                                 	width       : 500,
                                 	x           : 550,
                                 	y           : 50,
@@ -3410,7 +3426,7 @@ var cmbTruckNo = new Ext.form.ComboBox({
 				{ 
                                 	xtype       : 'fieldset',
                                 	title       : '',
-                                	labelWidth  : 80,
+                                	labelWidth  : 90,
                                 	width       : 500,
                                 	x           : 550,
                                 	y           : 75,
@@ -3421,7 +3437,7 @@ var cmbTruckNo = new Ext.form.ComboBox({
 								{ 
                                 	xtype       : 'fieldset',
                                 	title       : '',
-                                	labelWidth  : 80,
+                                	labelWidth  : 90,
                                 	width       : 500,
                                 	x           : 550,
                                 	y           : 100,

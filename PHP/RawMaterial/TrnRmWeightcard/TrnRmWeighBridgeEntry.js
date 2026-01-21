@@ -841,7 +841,7 @@ labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
         allowBlank  :  false,
        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
 	tabindex : 1,
-        readOnly : true,
+        //readOnly : true,
     });
 
 
@@ -951,7 +951,7 @@ var txtEmptyWeight = new Ext.form.NumberField({
         Ext.getCmp('areabox').setVisible(false);
         Ext.getCmp('save').setDisabled(true);
 
-               Ext.getCmp('txtItemName').setReadOnly(true);
+            //   Ext.getCmp('txtItemName').setReadOnly(true);
 
     flxParty.hide();
         optWT="Mill";
@@ -1550,6 +1550,7 @@ RefreshData();
 				}
 				 });
 */
+
 			loadsupplierdatastore.removeAll();
 			loadsupplierdatastore.load({
                         	 url:'ClsRmWtCard.php',
