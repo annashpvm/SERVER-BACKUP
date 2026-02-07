@@ -7,14 +7,11 @@
 	$finid = $_REQUEST['finid'];
 	$compcode = $_REQUEST['compcode'];
 	$vouno = '';
-	mysqli_query($conn, "BEGIN");
-
+	mysqli_begin_transaction($conn);
 
 
 	for($i=0;$i< $rowcnt  ;$i++){
-
-
-            $seqno   = $griddet[$i]['accref_seqno'];
+        $seqno   = $griddet[$i]['accref_seqno'];
 	    $recdate =  substr($griddet[$i]['rec_date'],0,10);
 //echo $recdate ;
 //echo "<br>";
@@ -22,14 +19,15 @@
             {
 //	        $query1  = "insert into acc_bank_reconciliation values ( $seqno ,'$recdate') ";
 	        $query1  = "update acc_ref set accref_recon_date = '$recdate' where  accref_seqno  = $seqno";
-                $result1 = mysqli_query($conn, $query1);
+            $result1 = mysqli_query($conn, $query1);
 //echo $query1 ;
 //echo "<br>";
             }
 	}  
 	if( $result1)
 	{
-	mysqli_begin_transaction($conn);
+
+	mysqli_commit($conn);
 	echo '({"success":"true","vouno":"'.$vouno.'"})';
 	}
 	else

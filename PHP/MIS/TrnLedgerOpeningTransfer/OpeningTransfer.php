@@ -10,7 +10,8 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysqli_query($conn, "BEGIN");
+
+    mysqli_begin_transaction($conn);
 
 //    $query1= "select * from acc_ledger_master where led_status <> 'N'";
     $query1= "select * from massal_customer";
@@ -206,14 +207,12 @@ mysql_free_result($result12);
 
      if ($resultupd)
      {
-          mysqli_begin_transaction($conn);
+          mysqli_commit($conn); 
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else
      {
          mysqli_rollback($conn);
-
-
          echo '({"success":"false","msg":"' . $compcode . '"})';
      }
      

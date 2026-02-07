@@ -5581,6 +5581,7 @@ onEsc:function(){
 },
 	listeners:{
                show:function(){
+alert("TEst");
                       RefreshData();	   	
 	   	}
 

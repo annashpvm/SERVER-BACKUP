@@ -6,6 +6,8 @@ $griddet = json_decode($_REQUEST['griddet'],true);
 $rowcnt = $_POST['cnt'];
 
 $inscnt = 0;
+
+mysqli_begin_transaction($conn);
 for ($i=0;$i<$rowcnt;$i++)
 {
 
@@ -22,13 +24,11 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($result1 ) 
 {
-    mysqli_begin_transaction($conn);
+	mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $custname . '"})';
 } 
 else {
     mysqli_rollback($conn);
-
-
     echo '({"success":"false","msg":"' . $custname . '"})';
 }
 

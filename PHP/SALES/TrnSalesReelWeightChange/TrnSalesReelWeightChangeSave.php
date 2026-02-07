@@ -41,7 +41,7 @@ if ($newRollNo == 0)
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
    $query1 = "select IFNULL(max(ent_no),0)+1 as entno from trnsal_reelweight_change where  comp_code ='$compcode' and fin_code ='$finid'";
@@ -84,15 +84,13 @@ if ($newreelno > 0)
 
 	if($result2 && $result3)
 	{
-	 mysqli_query($conn, "COMMIT");                       
+     mysqli_query($conn, "COMMIT");                       
 	  echo '({"success":"true","entno":"'.$entno.'"})';
 	}
 	else
-        {
+   {
 		echo '({"success":"false","entno":"'.$entno.'"})';
 		mysqli_rollback($conn);
-
-            
 		    
 	} 
 

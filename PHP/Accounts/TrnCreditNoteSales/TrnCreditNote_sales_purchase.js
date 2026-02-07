@@ -42,6 +42,7 @@ var invwt    =  0;
 var invvalue =  0;
 var tobeadjust1  =  0;
 var tobeadjust2  =  0;
+var tobeadjust3  =  0;
 var totaladjusted = 0;
 var crdays = 0;
 
@@ -316,14 +317,17 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 
         var totadj = 0;
         var actual_adjusted = 0;  
+        var newpendingAmt = 0;
 
         flxCredit.getSelectionModel().selectAll();
         var selrows = flxCredit.getSelectionModel().getCount();
         var sel = flxCredit.getSelectionModel().getSelections();
 
 
-//alert(tobeadjust1);
-//alert(tobeadjust2);
+
+        
+//alert(tobeadjust1); // less CD AMOUNT
+//alert(tobeadjust2); // PENDING AMOUNT 
 //alert(invcdamount);
         var countchk = 0;
         for (var i = 0; i < selrows; i++) {
@@ -334,8 +338,8 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 		    vouno    =  sel[i].data.accref_vouno;
 		    voudate  =  sel[i].data.accref_voudate;
 
-            voudate2 = new Date(voudate);
-            invdate2 = new Date(invdate);
+            var voudate2 = new Date(voudate);
+            var invdate2 = new Date(invdate);
             
             //alert(voudate);
             //alert(invdate);
@@ -350,20 +354,33 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
                         cdeligibledays = diffdays;
 
 
-                  if (diffdays < 8)
+                  if (diffdays < 10)
                   {   
+
+
+//      alert(tobeadjust1); // less CD AMOUNT              
 		     if ((Number(sel[i].data.pendingamt)-Number(sel[i].data.adjamt)) >= tobeadjust1 )
 		     {
+
                           actual_adjusted = tobeadjust1;
                           var t1 = Number(sel[i].data.adjamt);
 		                  sel[i].set('adjamt', Ext.util.Format.number(Number(tobeadjust1)+Number(t1), '0.00') );
                           totaladjusted =  Number(totaladjusted) + Number(tobeadjust1);
 		                  tobeadjust1 = 0;
                           tobeadjust2 = Number(tobeadjust2)-Number(t1);
+/*
+                          if (invno == "TN/3798/25-26")                    
+                            {
+                            alert(t1);
+                            alert(totaladjusted);
+                            alert(totaladjust2);
+                            }      
+                            */                       
     //                      alert(tobeadjust2);
 		     } 
 		     else
 		     {
+ 
                           actual_adjusted = Number(sel[i].data.pendingamt)-Number(sel[i].data.adjamt);  
                           totadj =  sel[i].data.pendingamt - sel[i].data.adjamt;
 		                  sel[i].set('adjamt', sel[i].data.pendingamt);
@@ -371,58 +388,62 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 		                  tobeadjust1 = Number(tobeadjust1)- Number(totadj);
                           tobeadjust1 = Ext.util.Format.number(tobeadjust1, '0.00');
                           tobeadjust2 = Number(tobeadjust2)-Number(totadj);
+
+/*
+                          if (invno == "TN/3798/25-26")                    
+                            {
+                              
+                            alert(actual_adjusted);
+                            alert(totaladjusted);
+                            alert(tobeadjust1);
+                            }   
+                            */
+                            
+                            
      //                     alert(tobeadjust2);
+
+          
 		      }
                    } 
                    else
                   {   
-                    /*
-                     if (countchk == 0)
-                     {
-                        tobeadjust2 = Number(tobeadjust1)-Number(invcdamount);
-                        invcdamount = 0;
-                        countchk =0;
-//alert(tobeadjust2);
-                     } 
- */
 		     if ((Number(sel[i].data.pendingamt)-Number(sel[i].data.adjamt)) >= tobeadjust2 )
 		     {
-                          actual_adjusted = tobeadjust2;
-                          var t1 = Number(sel[i].data.adjamt);
-		          sel[i].set('adjamt', Ext.util.Format.number(Number(tobeadjust2)+Number(t1), '0.00') );
-                          totaladjusted =  Number(totaladjusted) + Number(tobeadjust2);
-		          tobeadjust2 = 0;
+                    actual_adjusted = tobeadjust2;
+                    var t1 = Number(sel[i].data.adjamt);
+		            sel[i].set('adjamt', Ext.util.Format.number(Number(tobeadjust2)+Number(t1), '0.00') );
+                    totaladjusted =  Number(totaladjusted) + Number(tobeadjust2);
+		            tobeadjust2 = 0;
 		     } 
 		     else
 		     {
-                          actual_adjusted = Number(sel[i].data.pendingamt)-Number(sel[i].data.adjamt);  
-                          totadj =  sel[i].data.pendingamt - sel[i].data.adjamt;
-		          sel[i].set('adjamt', sel[i].data.pendingamt);
-                          totaladjusted =  Number(totaladjusted) + Number(totadj);
-		          tobeadjust2 = Number(tobeadjust2)- Number(totadj);
-                          tobeadjust2 = Ext.util.Format.number(tobeadjust2, '0.00');
+                    actual_adjusted = Number(sel[i].data.pendingamt)-Number(sel[i].data.adjamt);  
+                    totadj =  sel[i].data.pendingamt - sel[i].data.adjamt;
+		            sel[i].set('adjamt', sel[i].data.pendingamt);
+                    totaladjusted =  Number(totaladjusted) + Number(totadj);
+		            tobeadjust2 = Number(tobeadjust2)- Number(totadj);
+                    tobeadjust2 = Ext.util.Format.number(tobeadjust2, '0.00');
 		      }
-                   } 
+            } 
  
 
-	             flxAdjustments.getStore().insert(
-	                 flxAdjustments.getStore().getCount(),
-	                 new dgrecord({
+	         flxAdjustments.getStore().insert(
+	             flxAdjustments.getStore().getCount(),
+	             new dgrecord({
 			     mainseqno   : seqno,               
-                             maindocno   : invno, 
-	                     maindocdate : invdate,
-	                     invqty      :  Ext.util.Format.number(invwt, '0.000'), 
-                             adjvouno    : vouno, 
-	                     adjvoudate  : voudate,
+                 maindocno   : invno, 
+	             maindocdate : invdate,
+	             invqty      :  Ext.util.Format.number(invwt, '0.000'), 
+                 adjvouno    : vouno, 
+	             adjvoudate  : voudate,
 			     adjseqno    : sel[i].data.accref_seqno,  
-	                     adjinvno    : sel[i].data.acctrail_inv_no, 
-	                     adjinvdate	 : sel[i].data.acctrail_inv_date,  
-                             adjamt      : Ext.util.Format.number(actual_adjusted, '0.00'), 
-                             payterms    : crdays, 
-                             adjdays     : diffdays, 
-
-	                  })
-	              );
+	             adjinvno    : sel[i].data.acctrail_inv_no, 
+	             adjinvdate	 : sel[i].data.acctrail_inv_date,  
+                 adjamt      : Ext.util.Format.number(actual_adjusted, '0.00'), 
+                 payterms    : crdays, 
+                 adjdays     : diffdays, 
+                 })
+           );
 
 
 
@@ -486,31 +507,20 @@ function chk_adjustments()
 
 		    pendamt =  Number(debit[db].data.pendingamt);
 
-                    invcdamount =  Number(debit[db].data.cdamt1);
-                    cdeligibledays = 0;
+            invcdamount =  Number(debit[db].data.cdamt1);
+            cdeligibledays = 0;
 		    totaladjusted = 0;
 
 		    add_adjustments();
 
                     debit[db].set('adjamt', Ext.util.Format.number(Number(totaladjusted), '0.00') );
 
-//                    var amt1 =  parseFloat(tobeadjust3.toFixed(0)); 
-//                    var amt2 =  parseFloat(totaladjusted.toFixed(0)); 
-
                     var amt1 = parseFloat((Number(tobeadjust3) || 0).toFixed(0));
                     var amt2 = parseFloat((Number(totaladjusted) || 0).toFixed(0));
-//                    if (Number(amt1) > Number(amt2) || Number(cdeligibledays) > 7 )
-                    if ((Number(amt1) - Number(amt2)) > 1 || Number(cdeligibledays) > 10)                        
+
+                    if ((Number(amt1) - Number(amt2)) > 3 || Number(cdeligibledays) > 10)                        
                     {
-/*                        
-                        if (invno == "TN/2761/25-26")
-                            {    
-                               alert(invno);
-                               alert(amt1);
-                               alert(amt2);
-                               alert(Number(amt1) - Number(amt2));
-                            }   
-*/
+                     
                         debit[db].set('cdvalue1',0 );
                         debit[db].set('cdcgst1',0 );
                         debit[db].set('cdsgst1',0 );
@@ -890,6 +900,7 @@ function LedgerSearch()
         });
 }
 
+
 function load_data()
 {
             flxDebit.getStore().removeAll();
@@ -932,41 +943,39 @@ function load_data()
 	              flxDebit.getStore().insert(
 	                 flxDebit.getStore().getCount(),
 	                 new dgrecord({
-			     accref_seqno      : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_seqno'),               
-                             acctrail_inv_no   : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_no'), 
-	                     acctrail_inv_date : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_date'),
-			     invdate           : loadAdjustmentsPendingsDatastore.getAt(j).get('invdate'),  
-                             invqty            : loadAdjustmentsPendingsDatastore.getAt(j).get('invqty'),   
-	                     acctrail_inv_value: loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_value'), 
-	                     pendingamt	       : loadAdjustmentsPendingsDatastore.getAt(j).get('balance'), 
-                             cdvalue1          : Ext.util.Format.number(cdvalue,'0.00'),
-                             cdcgst1           : Ext.util.Format.number(cdsgst,'0.00'),
-                             cdsgst1           : Ext.util.Format.number(cdsgst,'0.00'),
-                             cdamt1            : Ext.util.Format.number(cdamount,'0.00'),
-
-                             balamt            : Ext.util.Format.number(balanceamt,'0.00'),
-                             adjamt            : 0,
-
-	                     payterms          : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_crdays'),    
+			                accref_seqno      : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_seqno'),               
+                            acctrail_inv_no   : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_no'), 
+	                        acctrail_inv_date : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_date'),
+			                invdate           : loadAdjustmentsPendingsDatastore.getAt(j).get('invdate'),  
+                            invqty            : loadAdjustmentsPendingsDatastore.getAt(j).get('invqty'),   
+	                        acctrail_inv_value: loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_value'), 
+	                        pendingamt	       : loadAdjustmentsPendingsDatastore.getAt(j).get('balance'), 
+                            cdvalue1          : Ext.util.Format.number(cdvalue,'0.00'),
+                            cdcgst1           : Ext.util.Format.number(cdsgst,'0.00'),
+                            cdsgst1           : Ext.util.Format.number(cdsgst,'0.00'),
+                            cdamt1            : Ext.util.Format.number(cdamount,'0.00'),
+                            balamt            : Ext.util.Format.number(balanceamt,'0.00'),
+                            adjamt            : 0,
+                            payterms          : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_crdays'),    
 
 	                  })
 	              );
                       }
                       else
                       {   
-	              flxCredit.getStore().insert(
-	                 flxCredit.getStore().getCount(),
-	                 new dgrecord({
-			     accref_seqno      : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_seqno'),               
-                             accref_vouno   : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_vouno'), 
-	                     accref_voudate : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_voudate'),
-			     voudate           : loadAdjustmentsPendingsDatastore.getAt(j).get('voudate'),  
-                             acctrail_inv_no   : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_no'), 
-	                     acctrail_inv_date : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_date'),
-			     invdate           : loadAdjustmentsPendingsDatastore.getAt(j).get('invdate'),  
-	                     acctrail_inv_value: loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_value'), 
-	                     pendingamt	       : loadAdjustmentsPendingsDatastore.getAt(j).get('balance'), 
-                             adjamt            : 0,
+	                   flxCredit.getStore().insert(
+	                   flxCredit.getStore().getCount(),
+	                   new dgrecord({
+			                accref_seqno      : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_seqno'),               
+                            accref_vouno   : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_vouno'), 
+	                        accref_voudate : loadAdjustmentsPendingsDatastore.getAt(j).get('accref_voudate'),
+			                voudate           : loadAdjustmentsPendingsDatastore.getAt(j).get('voudate'),  
+                            acctrail_inv_no   : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_no'), 
+	                        acctrail_inv_date : loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_date'),
+			                invdate           : loadAdjustmentsPendingsDatastore.getAt(j).get('invdate'),  
+	                        acctrail_inv_value: loadAdjustmentsPendingsDatastore.getAt(j).get('acctrail_inv_value'), 
+	                        pendingamt	       : loadAdjustmentsPendingsDatastore.getAt(j).get('balance'), 
+                            adjamt            : 0,
 	                  })
 	              );
                       }
@@ -981,6 +990,7 @@ CalcTotalDebitCredit();
 
 
 }
+
 function grid_chk_flxLedger()
 {
 	var sm = flxLedger.getSelectionModel();
@@ -1729,15 +1739,22 @@ listeners: {
             allok = 1;
             } 
             if (Number(sel[i].data.cdamt1) > Number(sel[i].data.pendingamt) ) 
-                {
+            {
                 alert ("CASH DISCOUNT Amount is greater than Pending Amount for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
                 allok = 1;
-                } 
-                if (Number(sel[i].data.balamt)  < 0  ) 
-                    {
-                    alert ("Error in BALANCE Amount  for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
+            } 
+            if (Number(sel[i].data.balamt)  < 0  ) 
+            {
+                alert ("Error in BALANCE Amount  for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
+                allok = 1;
+            } 
+            if (Number(sel[i].data.cdamt1) > 0 &&  Number(sel[i].data.adjamt) >  Number(sel[i].data.balamt)  ) 
+            {
+                    alert ("Adjustment Amount is greater than Balance Amount for the Inv. No : " + sel[i].data.acctrail_inv_no + " Please check" );
                     allok = 1;
-                    } 
+            } 
+
+
 
         }
 
@@ -1748,23 +1765,23 @@ listeners: {
 
 
    		var gstSave;
-                var remarks;
-                gstSave="true";
+        var remarks;
+        gstSave="true";
 		if (flxDebit.getStore().getCount()==0)
 	        {
 	            Ext.Msg.alert('Adjustment','Grid should not be empty');
 	            gstSave="false";
-                } 
+            } 
 		if (flxCredit.getStore().getCount()==0)
 	        {
 	            Ext.Msg.alert('Adjustment','Grid should not be empty');
 	            gstSave="false";
-                } 
+            } 
 		if (flxAdjustments.getStore().getCount()==0)
 	        {
 	            Ext.Msg.alert('Adjustment','Grid should not be empty');
 	            gstSave="false";
-                } 
+            } 
                 if (Number(txtTotalAdjusted.getValue())== 0)
 	        {
 	            Ext.Msg.alert('Adjustment','No Documents are Adjusted..  Check again ');
@@ -1794,10 +1811,10 @@ listeners: {
                     msg: 'Do You Want To Save...',
                     fn: function(btn)
 			{
-                    if (btn === 'yes')
+            if (btn === 'yes')
 			{
-                        if (gstSave === "true")
-                        {   
+                if (gstSave === "true")
+                {   
 		            var DebitData = flxDebit.getStore().getRange();                                        
 		            var DebitupdData = new Array();
 		            Ext.each(DebitData, function (record) {
@@ -1816,77 +1833,77 @@ listeners: {
 		                AdjustupdData.push(record.data);
 		            });
 
-			    var CreditNoteData = flxAccounts.getStore().getRange();
-			    var CreditNoteupdData = new Array();
-			    Ext.each(CreditNoteData, function (record) {
-		       	        CreditNoteupdData.push(record.data);
-			    });
+                    var CreditNoteData = flxAccounts.getStore().getRange();
+                    var CreditNoteupdData = new Array();
+                    Ext.each(CreditNoteData, function (record) {
+                            CreditNoteupdData.push(record.data);
+                    });
 
 
-			    var InvData = flxInvDetails.getStore().getRange();
-			    var InvDataupdData = new Array();
-			    Ext.each(InvData, function (record) {
-		       	        InvDataupdData.push(record.data);
-			    });
+                    var InvData = flxInvDetails.getStore().getRange();
+                    var InvDataupdData = new Array();
+                    Ext.each(InvData, function (record) {
+                            InvDataupdData.push(record.data);
+                    });
 
-	
-                            Ext.Ajax.request({
-                           url: 'TrnBilladjustmentDebit_Credit_Save.php',
-                            params :
-                            {
-                             	griddet_debit  : Ext.util.JSON.encode(DebitupdData),                          
-				cnt_debit      : DebitData.length,
+        
+                    Ext.Ajax.request({
+                    url: 'TrnBilladjustmentDebit_Credit_Save.php',
+                    params :
+                    {
+                    griddet_debit  : Ext.util.JSON.encode(DebitupdData),                          
+                    cnt_debit      : DebitData.length,
 
-                             	griddet_credit : Ext.util.JSON.encode(CreditupdData),                          
-				cnt_credit     : CreditData.length,
+                    griddet_credit : Ext.util.JSON.encode(CreditupdData),                          
+                    cnt_credit     : CreditData.length,
 
-                             	griddet_adjust : Ext.util.JSON.encode(AdjustupdData),                          
-				cnt_adjust     : AdjustData.length,
+                    griddet_adjust : Ext.util.JSON.encode(AdjustupdData),                          
+                    cnt_adjust     : AdjustData.length,
 
-                             	griddet_CreditNote : Ext.util.JSON.encode(CreditNoteupdData),                          
-				cnt_creditnote     : CreditNoteData.length,
+                    griddet_CreditNote : Ext.util.JSON.encode(CreditNoteupdData),                          
+                    cnt_creditnote     : CreditNoteData.length,
 
-                             	griddet_invoice    : Ext.util.JSON.encode(InvDataupdData),                          
-				cnt_inv            : InvData.length,
-    
-                                usercode : GinUserid,
-				compcode       : GinCompcode,
-                                finid	       : GinFinid,
-				ledcode	       : ledgercode,
-                     //           crnoteseqno    : crnoteseqno,
-                                cnvouno        : txtCNNo.getValue(),  
-		                cndate         : Ext.util.Format.date(dtpCNDate.getValue(), "Y-m-d"),
-		                adjdate        : Ext.util.Format.date(dtpDate.getValue(), "Y-m-d"),
+                    griddet_invoice    : Ext.util.JSON.encode(InvDataupdData),                          
+                    cnt_inv            : InvData.length,
 
-
-
-		                CNRemarks      : txtCNRemarks.getRawValue(),  
-
-                                cdvalue        : Number(txtCDValue.getValue()),     
-                                cdcgst         : Number(txtCGST.getValue()),     
-                                cdsgst         : Number(txtCGST.getValue()),     
-                                cdamount       : Number(txtCDAmount.getValue()),   
-                                cdround        : Number(txtRound.getValue()),     
-                                cdqty          : txtTotInvQty.getValue().toFixed(3),   
+                    usercode : GinUserid,
+                    compcode       : GinCompcode,
+                    finid	       : GinFinid,
+                    ledcode	       : ledgercode,
+                    //           crnoteseqno    : crnoteseqno,
+                    cnvouno        : txtCNNo.getValue(),  
+                    cndate         : Ext.util.Format.date(dtpCNDate.getValue(), "Y-m-d"),
+                    adjdate        : Ext.util.Format.date(dtpDate.getValue(), "Y-m-d"),
 
 
 
+                    CNRemarks      : txtCNRemarks.getRawValue(),  
 
-                            },
-                            callback: function(options, success, response)
-                              {
-                                var obj = Ext.decode(response.responseText);
-                                 if (obj['success']==="true")
-					{                                
-                                    Ext.MessageBox.alert("Credit Note Saved. " +  obj['vouno'] );
-                                    RefreshData();
-                                  }else
-				  {
-                     	Ext.MessageBox.alert("Credit note  Not Saved! Pls Check!");                                                  
-                                    }
-                                }
-                           });
-                     }
+                    cdvalue        : Number(txtCDValue.getValue()),     
+                    cdcgst         : Number(txtCGST.getValue()),     
+                    cdsgst         : Number(txtCGST.getValue()),     
+                    cdamount       : Number(txtCDAmount.getValue()),   
+                    cdround        : Number(txtRound.getValue()),     
+                    cdqty          : txtTotInvQty.getValue().toFixed(3),   
+
+
+
+
+                    },
+                    callback: function(options, success, response)
+                    {
+                        var obj = Ext.decode(response.responseText);
+                        if (obj['success']==="true")
+                        {                                
+                            Ext.MessageBox.alert("Credit Note Saved. " +  obj['vouno'] );
+                            RefreshData();
+                        }else
+                        {
+                            Ext.MessageBox.alert("Credit note  Not Saved! Pls Check!");                                                  
+                        }
+                    }
+                });
+           }
                    }  
                  }
             })
@@ -2133,10 +2150,10 @@ onEsc:function(){
         {
 
                 show:function(){
-//  Ext.getCmp('save').setDisabled(true); 
+  Ext.getCmp('save').setDisabled(false); 
 
 
-                 RefreshData();
+RefreshData();
                 }
             }
     });

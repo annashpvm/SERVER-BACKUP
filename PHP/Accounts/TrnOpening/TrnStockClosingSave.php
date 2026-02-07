@@ -9,7 +9,7 @@ $clodate   = $_POST['clodate'];
 
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 $reccount = 0;
 
 
@@ -44,7 +44,8 @@ else
 }
       if (($result))
       {
-          mysqli_begin_transaction($conn);
+
+          mysqli_commit($conn);
           Echo '{success:true,results:1,
              rows:[{"ledger":"1"}]}';
       }

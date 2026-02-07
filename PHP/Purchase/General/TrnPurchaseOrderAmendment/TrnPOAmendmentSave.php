@@ -60,7 +60,7 @@
     if ($phdsupcode  != $phdnewsupplier &&  $phdnewsupplier > 0 )
          $phdsupcode  = $phdnewsupplier;
         
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
 
 
 
@@ -170,7 +170,7 @@ $result4=mysqli_query($conn, $query4);
 if($result2 && $result3 && $result4 && $result5)
 
        {
-           mysqli_query($conn, "COMMIT");                       
+           mysqli_commit($conn);                         
             echo '({"success":"true","pono":"'.$pono.'"})';
         }
         else

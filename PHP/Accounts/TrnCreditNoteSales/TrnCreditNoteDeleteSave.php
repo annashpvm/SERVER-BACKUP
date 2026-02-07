@@ -13,7 +13,7 @@ $dncrseqno = $_POST['dncrseqno'];
 $vouno = $_POST['vouno'];
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
    $query1  = "delete  from acc_dbcrnote_header  where dbcr_seqno = $dncrseqno and dbcr_comp_code = $compcode and dbcr_finid = $finid and dbcr_vouno = '$vouno' ";
 
@@ -44,15 +44,13 @@ $result6  = mysqli_query($conn, $query6);
         
    if ( $result1 && $result2 && $result3 && $result4 && $result5 && $result6 )
    {
-           mysqli_query($conn, "COMMIT");                       
-            echo '({"success":"true","msg":"'.$vouno.'"})';
+      mysqli_commit($conn);                     
+      echo '({"success":"true","msg":"'.$vouno.'"})';
    }
    else
    {
-            mysqli_rollback($conn);
-
-            
-            echo '({"success":"false","msg":"'.$vouno.'"})';
+      mysqli_rollback($conn);
+      echo '({"success":"false","msg":"'.$vouno.'"})';
    }  
        
  

@@ -49,7 +49,7 @@ $cdqty     = (float) $_POST['cdqty'];
 
 $reason = '';
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 for ($i = 0; $i < $rowDebit; $i++) {
@@ -410,8 +410,8 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 
-		$query3 = "insert into acc_adjustments (ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values ('$ginrefslno','$compcode','$finid',
-	'$invseqno','$invno','$invdate','$ref_docseqno','$vouno', '$vouno','$voudate','$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'$adjvoudate','D');";
+		$query3 = "insert into acc_adjustments (
+        ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values (        '$ginrefslno','$compcode','$finid',	'$invseqno','$invno','$invdate','$ref_docseqno','$vouno', '$invno','$invdate','$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'$adjvoudate','D');";
 
 		$result3 = mysqli_query($conn, $query3);
 
@@ -422,7 +422,7 @@ for ($i = 0; $i < $rowAdjust; $i++) {
      }
 
 if ( $result1 && $result2 && $result3 &&  $result4 && $resulta2 && $resulta3 && $resulta4 && $resulta6 && $resulta7 && $resulta8 && $resulta9 ) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
     mysqli_rollback($conn);

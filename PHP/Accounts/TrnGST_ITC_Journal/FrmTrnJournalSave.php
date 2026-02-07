@@ -31,7 +31,7 @@
    $amtmode = "D";
 
    #Begin Transaction
-   mysqli_query($conn, "BEGIN");
+   mysqli_begin_transaction($conn);
 
    if ($flagtype == "Add")
    {
@@ -136,7 +136,7 @@
         if($resulta2 && ($inscnt == $rowcnt))
 
         {
-            mysqli_begin_transaction($conn);
+            mysqli_commit($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
             
         }
@@ -154,7 +154,7 @@
         if($result1 &&  $result2 &&  $result3 &&  $resulta2 && ($inscnt == $rowcnt))
 
         {
-            mysqli_begin_transaction($conn);
+            mysqli_commit($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
             
         }

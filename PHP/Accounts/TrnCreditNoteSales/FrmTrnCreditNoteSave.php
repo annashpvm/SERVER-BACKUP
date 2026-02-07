@@ -79,7 +79,7 @@ $cdreason   = $_POST['cdreason'];
 
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == 'Add')
 {
@@ -361,7 +361,7 @@ if ($savetype == 'Add')
 {
 	if ($resulta2 && $resulta3 && $resulta4 && $resulta7 && $resulta6) 
 	{
-	  mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
@@ -374,7 +374,8 @@ else
 {
 	if ($result1  && $result2 && $result3 && $result4 && $result5) 
 	{
-	  mysqli_begin_transaction($conn);
+	  mysqli_commit($conn);
+    
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

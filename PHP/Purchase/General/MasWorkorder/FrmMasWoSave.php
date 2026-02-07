@@ -4,7 +4,7 @@ session_start();
 
  $purpose=strtoupper($_POST['purpose']);
  $woname=strtoupper($_POST['woname']);
-
+ mysqli_begin_transaction($conn);
 $query = "select ifnull(max(wo_no),0)+1 as wo_no from mas_workorder";
 $result = mysqli_query($conn, $query);
 $rec = mysqli_fetch_array($result);
@@ -27,7 +27,7 @@ if($cnt==0)
 }
 
   if ($result1 && $cnt==0) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $wo_no . '"})';
 } 
   else if ($cnt>0) {

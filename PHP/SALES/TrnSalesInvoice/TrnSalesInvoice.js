@@ -1143,7 +1143,7 @@ Ext.onReady(function(){
     // 8:59 PM = 20*60 + 59 = 1259
     // 9:00 AM = 9*60 = 540
     var disableFrom = 20 * 60 + 59; // 1259
-    var disableTill = 9 * 60+1;       // 540
+    var disableTill = 10 * 60+1;       // 540
 
 //    var disableFrom = 16 * 60 + 10; // 1259
     //var disableTill = 16 * 60 + 20 ;       // 540
@@ -3345,13 +3345,13 @@ function PartySearch()
                                  }
  
  //alert(loadInvoicedetailsDataStore.getAt(0).get('U_EWayBillNo'));
-                                 if (loadInvoicedetailsDataStore.getAt(0).get('U_TCSStatus') == "S" &&  loadInvoicedetailsDataStore.getAt(0).get('E_inv_confirm') == "Y" &&  loadInvoicedetailsDataStore.getAt(0).get('U_AckNo') == "" &&  loadInvoicedetailsDataStore.getAt(0).get('U_EWayBillNo') == ""  )
+                                 if (loadInvoicedetailsDataStore.getAt(0).get('U_TCSStatus') == "S" &&  loadInvoicedetailsDataStore.getAt(0).get('E_inv_confirm') == "Y" &&  loadInvoicedetailsDataStore.getAt(0).get('U_AckNo') == "" &&  (loadInvoicedetailsDataStore.getAt(0).get('U_EWayBillNo') == ""   || loadInvoicedetailsDataStore.getAt(0).get('invh_ewaybillno') == "" ) )
                                  {
  
                                  Ext.getCmp('btnEwayUpdate').show();
                                  }
  //                                if (loadInvoicedetailsDataStore.getAt(0).get('U_TCSStatus') == "S" &&  loadInvoicedetailsDataStore.getAt(0).get('E_inv_confirm') == "Y" &&  loadInvoicedetailsDataStore.getAt(0).get('U_EWBStatus') == "E" &&  loadInvoicedetailsDataStore.getAt(0).get('U_EWayBillNo') == ""  )
-                                 if (loadInvoicedetailsDataStore.getAt(0).get('U_TCSStatus') == "S" &&  loadInvoicedetailsDataStore.getAt(0).get('E_inv_confirm') == "Y" &&  loadInvoicedetailsDataStore.getAt(0).get('U_EWayBillNo').trim() == ""  )
+                                 if (loadInvoicedetailsDataStore.getAt(0).get('U_TCSStatus') == "S" &&  loadInvoicedetailsDataStore.getAt(0).get('E_inv_confirm') == "Y" &&  (loadInvoicedetailsDataStore.getAt(0).get('U_EWayBillNo').trim() == ""   || loadInvoicedetailsDataStore.getAt(0).get('invh_ewaybillno') == "" )   )
                                  {
  
                                  Ext.getCmp('btnEwayUpdate').show();

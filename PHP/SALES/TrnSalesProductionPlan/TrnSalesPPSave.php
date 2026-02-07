@@ -31,6 +31,7 @@ $remarks3    = $_POST['remarks3'];
 $remarks4    = $_POST['remarks4'];
 $remarks5    = $_POST['remarks5'];
 
+mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") {
 
@@ -143,7 +144,7 @@ $result5=mysqli_query($conn, $query5);
 
 if ($result1  && $result2  && $result3  && $result4 ) {
 
-   mysqli_begin_transaction($conn);
+	mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $maadvno . '"})';
 	
 }else {

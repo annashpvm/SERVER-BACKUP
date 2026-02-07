@@ -7,7 +7,8 @@ session_start();
  $rate=$_POST['rate'];
  $hsncode=$_POST['hsncode'];
 
- //echo"$GroupName";
+  mysqli_begin_transaction($conn);
+
 $query = "select ifnull(max(item_code),0)+1 as item_code from mas_item_master";
 $result = mysqli_query($conn, $query);
 $rec = mysqli_fetch_array($result);
@@ -25,7 +26,7 @@ if($cnt==0)
 }
 
   if ($result1 && $cnt==0) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $itemname . '"})';
 } 
 else if ($cnt>0) {

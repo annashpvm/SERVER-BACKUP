@@ -1477,7 +1477,7 @@ $sql = "select curbal_obdbamt, curbal_obcramt from acc_current_balance where cur
 	$tablename = $_POST['tablename'];
 	$sp        = $_POST['sp'];
 
-        $sql = "call spacc_rep_ledger_column_report($compcode ,$finid,'$startdate','$enddate','$ledcode','$tablename','$sp')";     
+   //     $sql = "call spacc_rep_ledger_column_report($compcode ,$finid,'$startdate','$enddate','$ledcode','$tablename','$sp')";     
 
 //echo $sql;
 //echo "<br>";

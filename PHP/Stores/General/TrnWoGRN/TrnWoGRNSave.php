@@ -48,7 +48,7 @@ $cancelflag = $_POST['cancelflag'];
 
 
 
- mysqli_query($conn, "BEGIN");
+ mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") {
 
@@ -115,7 +115,7 @@ $cancelflag = 0;
 
 if($result3 && $result4 )
 {
-           mysqli_query($conn, "COMMIT");                       
+           mysqli_commit($conn);                       
             echo '({"success":"true","wogrn":"'.$woghno.'"})';
         }
         else

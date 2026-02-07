@@ -1,5 +1,5 @@
 <?php
-require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php";
+require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 session_start();
 
 
@@ -20,7 +20,7 @@ $result1=mysqli_query($conn, $query1);
 
 if ($result1)
 {
-   mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	

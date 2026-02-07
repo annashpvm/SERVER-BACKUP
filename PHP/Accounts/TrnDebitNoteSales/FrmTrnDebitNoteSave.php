@@ -76,7 +76,7 @@ $cdreason   = $_POST['cdreason'];
 $voutype = 'SDN';
     $itemname  = substr(trim($_POST['itemname']),0,38);
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == 'Add')
 {
@@ -329,7 +329,7 @@ if ($savetype == 'Add')
 {
 	if ($resulta2 && $resulta3 && $resulta4 && $resulta6 && $resulta7) 
 	{
-	  mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 
 	} else {
@@ -343,7 +343,7 @@ else
 {
 	if ($result1  && $result2 && $result3 && $result4 ) 
 	{
-	  mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

@@ -54,6 +54,37 @@ Ext.onReady(function(){
 
 
 
+   var txtPass = new Ext.form.TextField({
+    fieldLabel  : 'Password',
+    id          : 'txtPass',
+    name        : 'txtPass',
+    inputType: 'password',
+    width       :  150,
+    border      : false,
+ labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    style      :"border-radius: 5px;textTransform: uppercase; ", 
+enableKeyEvents: true,
+listeners:{
+      specialkey:function(f,e){
+         if (e.getKey() == e.ENTER)
+         {
+        if (txtPass.getValue() == "")
+           alert("Enter Password ...");
+        else if (txtPass.getValue() != "admin@123")
+              {
+                    alert("Password Error Please check..."); 
+                    Ext.getCmp('delete').setDisabled(true);
+              }      
+               else
+               {
+                    Ext.getCmp('delete').setDisabled(false);
+               }    
+         }
+      }
+    }
+});
+
+
    var optRounding = new Ext.form.FieldSet({
     xtype: 'fieldset',
     title: 'Rounding',
@@ -1403,7 +1434,7 @@ var cmbDNNo = new Ext.form.ComboBox({
             if (cnt>0)
             {
                 accseqno  = LoadDebitNoteAccSeqNODataStore.getAt(0).get('accref_seqno');
-                alert(accseqno);
+//                alert(accseqno);
             }
             }
                }) ;        
@@ -1856,7 +1887,7 @@ function flxaccupdation() {
 	    DebitNoteFormPanel.getForm().reset();
 	    flxAccounts.getStore().removeAll();
 	    flxDetail.getStore().removeAll();
-
+        Ext.getCmp('delete').setDisabled(true);
           cmbQtyYN.setValue('N');
           gstFlag = "Edit";
 
@@ -2279,7 +2310,7 @@ function save_click()
                                         title: 'Debit Note',
                                         icon: Ext.Msg.QUESTION,
                                         buttons: Ext.MessageBox.YESNO,
-                                        msg: 'Save This Record?',
+                                        msg: 'Delete This Record?',
                                         fn: function (btn) {
                                             if (btn === 'yes') {
                                                var accData = flxAccounts.getStore().getRange();
@@ -2565,7 +2596,18 @@ function edit_click()
 
 
                 ]
+            },                    {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 130,
+                width: 300,
+                x: 1000,
+                y: 10,
+                defaultType: 'textfield',
+                border: false,
+                items: [txtPass]
             },
+
             {
                 xtype: 'fieldset',
                 title: '',

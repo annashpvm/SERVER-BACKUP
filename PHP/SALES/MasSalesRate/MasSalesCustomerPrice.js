@@ -141,7 +141,8 @@ Ext.onReady(function(){
         {header: "QUALITY", dataIndex:'quality', width:120,align:'center',sortable:false, menuDisabled: true},
         {header: "QUALITY", dataIndex:'qlycode', width:120,align:'center',sortable:false, menuDisabled: true},
         {header: "PB Rate", dataIndex:'pbrate', width:120,align:'center',sortable:false, menuDisabled: true},
- 
+        {header: "PT", dataIndex:'pt', width:80,align:'center',sortable:false, menuDisabled: true},
+        {header: "GD", dataIndex:'gd', width:80,align:'center',sortable:false, menuDisabled: true},
  /*
         {header: "18-120GSM", dataIndex:'bf18_120', width:80,align:'center',sortable:false, menuDisabled: true},
         {header: "18-100GSM", dataIndex:'bf18_100', width:80,align:'center',sortable:false, menuDisabled: true},
@@ -257,6 +258,12 @@ Ext.onReady(function(){
                                  cmbPBShade.setValue(selrow.get('shade'));
                                    cmbvarietylist.setValue(selrow.get('qlycode'));
                                    txtPBRate.setValue(selrow.get('pbrate'));
+
+
+                                   
+                                   txtPT.setValue(selrow.get('pt'));
+                                   txtGD.setValue(selrow.get('gd'));                                   
+
  
  
                  /*
@@ -386,7 +393,8 @@ Ext.onReady(function(){
                                  brbf28 = selrow.get('br28bf');
                                  brbf30 = selrow.get('br30bf');
          
- 
+                                 txtPT.setValue(selrow.get('pt'));
+                                 txtGD.setValue(selrow.get('gd'));
  
                  var record = flxDetail.getSelectionModel().getSelected();
                  var models = flxDetail.getStore().getRange();
@@ -441,8 +449,7 @@ Ext.onReady(function(){
  
              var dataadd="true";
   
- 
- 
+
  
          if(cmbProductType.getRawValue()=="" || cmbProductType.getValue()==0)
          {
@@ -553,7 +560,8 @@ Ext.onReady(function(){
  
      sel[idx].set('othshade' , Number(txtothershades.getValue()));
      sel[idx].set('sheet' , Number(txtSheetRate.getValue()));
- 
+     sel[idx].set('pt' , Number(txtPT.getValue()));
+     sel[idx].set('gd' , Number(txtGD.getValue()));
                    flxDetail.getStore().removeAll();
                    var selrows = flxDetail.getSelectionModel().getCount();
                        var sel = flxDetail.getSelectionModel().getSelections();
@@ -693,8 +701,12 @@ Ext.onReady(function(){
                 ar4rate     : Number(txtIncRate4.getValue()),
  
  
-                            othshade    : Number(txtothershades.getValue()),
-                            sheet       : Number(txtSheetRate.getValue()),
+                othshade    : Number(txtothershades.getValue()),
+                sheet       : Number(txtSheetRate.getValue()),
+
+                pt          : Number(txtPT.getValue()),
+                gd          : Number(txtGD.getValue()),
+
                          }) 
                      );
  
@@ -1333,14 +1345,14 @@ Ext.onReady(function(){
      });
  
     var txtPT = new Ext.form.NumberField({
-         fieldLabel  : 'Payment Terms',
+         fieldLabel  : 'Pay.Terms',
          id          : 'txtPT',
          name        : 'txtPT',
          width       :  50,
          Value       : 30, 
          labelStyle : "font-size:14px;font-weight:bold;color:#0080gg",
          style : "font-size:12px;font-weight:bold",
-         readOnly : true,
+  //CA       readOnly : true,
          tabindex : 2,
      enableKeyEvents: true,
      listeners:{
@@ -1350,12 +1362,12 @@ Ext.onReady(function(){
  
  
     var txtGD = new Ext.form.NumberField({
-         fieldLabel  : 'Grace Days',
+         fieldLabel  : 'Gr.Days',
          id          : 'txtGD',
          name        : 'txtGD',
          width       :  50,
          Value       : 30, 
-         readOnly : true,
+         //readOnly : true,
          labelStyle : "font-size:14px;font-weight:bold;color:#0080gg",
          style : "font-size:12px;font-weight:bold",
          tabindex : 2,
@@ -2619,6 +2631,9 @@ Ext.onReady(function(){
                         quality   : loadeditApprovalNo.getAt(j).get('var_desc'), 
                         qlycode   : Number(loadeditApprovalNo.getAt(j).get('rate_pb_variety')), 
                         pbrate    : Number(loadeditApprovalNo.getAt(j).get('rate_pb_rate')), 
+
+                        pt   : Number(loadeditApprovalNo.getAt(j).get('rate_price_terms')), 
+                        gd     : Number(loadeditApprovalNo.getAt(j).get('rate_grace_days')),                         
  
                               }) 
                              );
@@ -2721,7 +2736,7 @@ Ext.onReady(function(){
  
  var cmbProductType = new Ext.form.ComboBox({
          fieldLabel      : 'Product Type ',
-         width           : 250,
+         width           : 210,
          displayField    : 'vargrp_type_name', 
          valueField      : 'vargrp_type_code',
          hiddenName      : 'vargrp_type_code',
@@ -2795,7 +2810,7 @@ Ext.onReady(function(){
        ]),
      });
  
- 
+ /*
  var cmbShade = new Ext.form.ComboBox({
          fieldLabel      : 'SHADE ',
          width           : 100,
@@ -2817,7 +2832,8 @@ Ext.onReady(function(){
          listeners: {
              select: function () 
                  {
-                 if (cmbShade.getRawValue() == 'GREY-BRD')
+           
+                 if (cmbShade.getRawValue() == 'GREY-BRD' || cmbShade.getRawValue() == 'BB'  )
                  {
              txtIncRate1.setValue("0");
              txtIncRate2.setValue("0");
@@ -2865,11 +2881,11 @@ Ext.onReady(function(){
                  }
          }
  });
- 
+ */
  
  var cmbPBShade = new Ext.form.ComboBox({
          fieldLabel      : 'SHADE ',
-         width           : 100,
+         width           : 80,
          displayField    : 'shade_shortname', 
          valueField      : 'shade_code',
          id              : 'cmbPBShade',
@@ -2896,7 +2912,7 @@ Ext.onReady(function(){
  
  var cmbShade = new Ext.form.ComboBox({
          fieldLabel      : 'SHADE ',
-         width           : 100,
+         width           : 90,
          displayField    : 'shade_shortname', 
          valueField      : 'shade_code',
          id              : 'cmbShade',
@@ -2915,7 +2931,7 @@ Ext.onReady(function(){
          listeners: {
              select: function () 
                  {
-                 if (cmbShade.getRawValue() == 'GREY-BRD')
+                 if (cmbShade.getRawValue() == 'GREY-BRD' || cmbShade.getRawValue() == 'BB'   || cmbShade.getRawValue() == 'CB'  )
                  {
              txtIncRate1.setValue("0");
              txtIncRate2.setValue("0");
@@ -3017,7 +3033,7 @@ Ext.onReady(function(){
          else
          {  
  
-            if (sel[0].data.bf14.toString().length > 0 && sel[0].data.bf14.toString().length < 5  )
+            if (Number(sel[0].data.bf14) !== 0 && sel[0].data.bf14.toString().length > 0 && sel[0].data.bf14.toString().length < 5    )
              alert("Error in Rate for BF14...");
          }
  
@@ -3026,7 +3042,7 @@ Ext.onReady(function(){
             sel[1].set('bf16', Number(sel[0].data.bf16));
          else
          {  
-            if (sel[0].data.bf16.toString().length > 0 && sel[0].data.bf16.toString().length < 5  )
+            if (Number(sel[0].data.bf16) !== 0 && sel[0].data.bf16.toString().length > 0 && sel[0].data.bf16.toString().length < 5  )
              alert("Error in Rate for BF16...");
          }
  
@@ -3034,7 +3050,7 @@ Ext.onReady(function(){
             sel[1].set('bf18', Number(sel[0].data.bf18));
          else
          {  
-            if ( sel[0].data.bf18.toString().length > 0 && sel[0].data.bf18.toString().length < 5  )
+            if ( Number(sel[0].data.bf18) !== 0 && sel[0].data.bf18.toString().length > 0 && sel[0].data.bf18.toString().length < 5  )
              alert("Error in Rate for BF18...");
          }
  
@@ -3042,7 +3058,7 @@ Ext.onReady(function(){
             sel[1].set('bf20', Number(sel[0].data.bf20));
          else
          {  
-            if (sel[0].data.bf20.toString().length > 0 && sel[0].data.bf20.toString().length < 5  )
+            if (Number(sel[0].data.bf24) !== 0 && sel[0].data.bf20.toString().length > 0 && sel[0].data.bf20.toString().length < 5  )
              alert("Error in Rate for BF20...");
          }
  
@@ -3051,7 +3067,7 @@ Ext.onReady(function(){
              sel[1].set('bf22', Number(sel[0].data.bf22));
          else
          {  
-            if (sel[0].data.bf22.toString().length > 0 && sel[0].data.bf22.toString().length < 5  )
+            if (Number(sel[0].data.bf22) !== 0 && sel[0].data.bf22.toString().length > 0 && sel[0].data.bf22.toString().length < 5  )
              alert("Error in Rate for BF22...");
          }
  
@@ -3059,7 +3075,7 @@ Ext.onReady(function(){
             sel[1].set('bf24', Number(sel[0].data.bf24));
          else
          {  
-            if (sel[0].data.bf24.toString().length > 0 && sel[0].data.bf24.toString().length < 5  )
+            if (Number(sel[0].data.bf24) !== 0 && sel[0].data.bf24.toString().length > 0 && sel[0].data.bf24.toString().length < 5  )
              alert("Error in Rate for BF24...");
          }
  
@@ -3067,7 +3083,7 @@ Ext.onReady(function(){
             sel[1].set('bf26', Number(sel[0].data.bf26));
          else
          {  
-            if (sel[0].data.bf26.toString().length > 0 && sel[0].data.bf26.toString().length < 5 )
+            if (Number(sel[0].data.bf26) !== 0 &&  sel[0].data.bf26.toString().length > 0 && sel[0].data.bf26.toString().length < 5 )
              alert("Error in Rate for BF26...");
          }
  
@@ -3075,7 +3091,7 @@ Ext.onReady(function(){
              sel[1].set('bf28', Number(sel[0].data.bf28)); 
          else
          {  
-            if (sel[0].data.bf28.toString().length > 0 && sel[0].data.bf28.toString().length < 5  )
+            if ( Number(sel[0].data.bf28) !== 0 &&  sel[0].data.bf28.toString().length > 0 && sel[0].data.bf28.toString().length < 5  )
              alert("Error in Rate for BF28...");
          }
  
@@ -3083,7 +3099,7 @@ Ext.onReady(function(){
             sel[1].set('bf30', Number(sel[0].data.bf30));
       else
            {  
-            if (sel[0].data.bf30.toString().length > 0 && sel[0].data.bf30.toString().length < 5   )
+            if (Number(sel[0].data.bf30) !== 0 &&  sel[0].data.bf30.toString().length > 0 && sel[0].data.bf30.toString().length < 5   )
              alert("Error in Rate for BF30...");
          }
  
@@ -3364,24 +3380,39 @@ Ext.onReady(function(){
                             title       : '',
                             labelWidth  : 80,
                             width       : 250,
-                            x           : 400,
+                            x           : 370,
                             y           : 0,
                             border      : false,
                             items: [cmbShade]
                     },
-                       { 
-                         
-                              xtype       : 'fieldset',
-                              title       : '',
-                              labelWidth  : 80,
-                              width       : 420,
-                              x           : 600,
-                              y           : 0,
-                              border      : false,      
-          
-                              items: [txtGSTper]
-                       },
+
  
+
+                    { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 80,
+                        width       : 500,
+                        x           : 580,
+                        y           : 0,
+                        border      : false,
+                        items: [txtPT]
+                },	
+
+
+                  { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 80,
+                        width       : 500,
+                        x           : 740,
+                        y           : 0,
+                        border      : false,
+                        items: [txtGD]
+                },	
+
+
+
              { xtype   : 'fieldset',
                   title       : ' BF RATE',
                   id          : 'bfrate',
@@ -3468,7 +3499,7 @@ Ext.onReady(function(){
                  title   : 'ADDITIONAL PRICE INCREASE FOR ',
                   width       : 378,
                   height      : 210,
-                  x           : 900,
+                  x           : 930,
                   y           : 0,
                   border      : true,
                   layout      : 'absolute',
@@ -4090,7 +4121,7 @@ Ext.onReady(function(){
                              width       : 300,
                              x           : 550,
                              y           : 0,
-                             labelWidth  : 80,
+                             labelWidth  : 100,
                              border      : false,
                              items : [dtpWEF]
     
@@ -4118,28 +4149,19 @@ Ext.onReady(function(){
                             items: [txtCustomer]
                     },	
  
-                      { 
-                            xtype       : 'fieldset',
-                            title       : '',
-                            labelWidth  : 120,
-                            width       : 600,
-                            x           : 830,
-                            y           : 00,
-                            border      : false,
-                            items: [txtPT]
-                    },	
- 
- 
-                      { 
-                            xtype       : 'fieldset',
-                            title       : '',
-                            labelWidth  : 100,
-                            width       : 600,
-                            x           : 1020,
-                            y           : 0,
-                            border      : false,
-                            items: [txtGD]
-                    },	
+                    { 
+                         
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 100,
+                        width       : 420,
+                        x           : 550,
+                        y           : 30,
+                        border      : false,      
+    
+                        items: [txtGSTper]
+                 },
+
  
                      {
                  xtype       : 'fieldset',

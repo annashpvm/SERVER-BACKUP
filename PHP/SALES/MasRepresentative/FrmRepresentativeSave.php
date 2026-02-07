@@ -13,7 +13,7 @@ $reprgroup  = $_POST['reprgroup'];
 $repractive = $_POST['repractive'];
 
 
-
+mysqli_begin_transaction($conn);
 
 if ($savetype === "Add")
 {
@@ -35,7 +35,7 @@ if ($savetype === "Add")
 	}
 
 	  if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $reprname . '"})';
 	} 
 	  else if ($cnt>0) {
@@ -60,7 +60,7 @@ if ($savetype === "Add")
 
 	  $result1 = mysqli_query($conn, $query1);
 	  if ($result1 ) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $reprname . '"})';
 	  } 
 	

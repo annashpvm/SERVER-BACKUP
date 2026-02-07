@@ -20,8 +20,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
     $vouno = $_POST['vouno'];
 
     $today = date("Y-m-d H:i:s");  
-
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
 
             $queryins= "insert into acc_correction_ref select * from acc_ref where accref_seqno='$accref_seqno'";
             $resultins= mysqli_query($conn, $queryins);
@@ -164,7 +163,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
             if($result  && $result1 && $result2   )
 
             {
-                mysqli_begin_transaction($conn);
+                mysqli_commit($conn);
                 echo '({"success":"true","msg":"'.$accref_vouno.'"})';
 	       
             }else{
@@ -180,7 +179,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
             if($result  && $result1)
 
             {
-                mysqli_begin_transaction($conn);
+                mysqli_commit($conn);
                 echo '({"success":"true","msg":"'.$accref_vouno.'"})';
 	       
             }else{

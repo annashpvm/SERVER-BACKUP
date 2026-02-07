@@ -14,7 +14,7 @@ for ($i=0;$i<$rowcnt;$i++)
 	$custname = $griddet[$i]['cust_ref'];
 	$odmsg   = $griddet[$i]['cust_overdue_msg'];
 
-
+	mysqli_begin_transaction($conn);
 	$query1 = "update massal_customer set cust_overdue_msg = '$odmsg' where  cust_code = $custcode";
 	$result1=mysqli_query($conn, $query1);            
   
@@ -24,7 +24,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($result1 ) 
 {
-    mysqli_begin_transaction($conn);
+	mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $custname . '"})';
 } 
 else {

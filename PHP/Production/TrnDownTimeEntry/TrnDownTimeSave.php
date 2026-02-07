@@ -23,6 +23,8 @@ $prdhrunmins    = 0;
 $rowcnt_downtime  = $_POST['cntdowntime'];
 $griddet_downtime = json_decode($_POST['griddet_downtime'],true);
 
+mysqli_begin_transaction($conn);
+
 //$rowcnt_roll  = $_POST['cntRoll'];
 //$griddet_roll = json_decode($_POST['griddet_roll'],true);
 
@@ -106,16 +108,14 @@ if ($downtype === "SHIFT")
 // echo $query2;   
 
 if ($result1 && $result2)  {
-	   mysqli_begin_transaction($conn);
-	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
+	mysqli_commit($conn); 
+	echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
-	} 
+} 
 	
 	else {
 	    mysqli_rollback($conn);
-
-
-	   echo '({"success":"false","msg":"' . $prdhseqno . '"})';
+	    echo '({"success":"false","msg":"' . $prdhseqno . '"})';
 
 	}
 

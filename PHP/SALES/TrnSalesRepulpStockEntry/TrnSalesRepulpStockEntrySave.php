@@ -14,7 +14,7 @@ $entdate     = $_POST['entdate'];
 $saveflag =$_REQUEST['saveflag'];
 
 
- mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);  
 
 if ($saveflag == "Add") {
 	 $query1  = "select IFNULL(max(r_entno),0)+1 as entno from trnsal_repulp where  r_compcode ='$compcode' and r_finyear ='$fincode'";
@@ -63,7 +63,7 @@ for ($i=0;$i<$rowcnt;$i++)
   
 if($result2 && $result3)
 {
-mysqli_begin_transaction($conn);                        
+mysqli_commit($conn);                      
 echo '({"success":"true","msg":"'.$entno.'"})';
 }
 else

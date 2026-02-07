@@ -9,7 +9,7 @@ $Dealeradd2  = strtoupper($_POST['Dealeradd2']);
 $Dealeradd3  = strtoupper($_POST['Dealeradd3']);
 $Dealerpin   = $_POST['Dealerpin'];
 
-
+mysqli_begin_transaction($conn);
 
 if ($savetype === "Add")
 {
@@ -31,7 +31,7 @@ if ($savetype === "Add")
 	}
 
 	  if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $Dealername . '"})';
 	} 
 	  else if ($cnt>0) {
@@ -53,7 +53,7 @@ if ($savetype === "Add")
 	  $query1="update mas_dealer set dealer_name = '$Dealername', dealer_add1 = '$Dealeradd1' , dealer_add2  = '$Dealeradd2', dealer_add3 = '$Dealeradd3',  dealer_pin   = '$Dealerpin' where dealer_code =$Dealercode";
 	  $result1 = mysqli_query($conn, $query1);
 	  if ($result1 ) {
-	    mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $Dealername . '"})';
 	  } 
 	

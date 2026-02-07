@@ -15,7 +15,7 @@ $invhslipdt   = $_POST['invhslipdt'];
 $accseqno     = $_POST['accseqno'];
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 $query1   = "delete from acc_trail where acctrail_accref_seqno = '$accseqno'";
@@ -45,7 +45,7 @@ $result6  = mysqli_query($conn, $query6);
 if ($result11 && $result12 && $result13 && $result4 && $result5 && $result6)
 
 {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);  
     echo '({"success":"true","msg":"' . $invhrefno . '"})';
 } 
 	

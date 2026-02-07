@@ -57,7 +57,7 @@ $wohfrtparty1  = $_POST['wohfrtparty1'];
 $wohfrtparty2  = $_POST['wohfrtparty2'];
 $cancelflag = $_POST['cancelflag'];
  
- mysqli_query($conn, "BEGIN");
+ mysqli_begin_transaction($conn);
 if ($savetype == "Add") {
  $query1 = "select IFNULL(max(woh_no),0)+1 as woh_no from trnpur_workorder_header where woh_fin_code = $wohfincode and woh_comp_code=$wohcompcode";
  $result1 = mysqli_query($conn, $query1);
@@ -161,17 +161,14 @@ echo $query4;
       
 if($result3 && $result4 )
 {
-           mysqli_query($conn, "COMMIT");                       
-            echo '({"success":"true","wono":"'.$wohno.'"})';
-        }
-        else
-        {
-            mysqli_rollback($conn);
-
-            
-          
-	    echo '({"success":"false","wono":"' . $wohno . '"})';
-        }   
+    mysqli_commit($conn);                        
+    echo '({"success":"true","wono":"'.$wohno.'"})';
+}
+else
+{
+    mysqli_rollback($conn);
+    echo '({"success":"false","wono":"' . $wohno . '"})';
+}   
         
 
        

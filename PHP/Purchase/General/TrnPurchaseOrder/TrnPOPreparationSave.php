@@ -52,7 +52,7 @@ $roundneed        =  $_POST['roundneed'];
 
 
 
- mysqli_query($conn, "BEGIN");
+ mysqli_begin_transaction($conn);
 
 $cnt =0;
 
@@ -178,7 +178,7 @@ $result4=mysqli_query($conn, $query4);
 if($result3 && $result4 && $result5 )
 
        {
-           mysqli_query($conn, "COMMIT");                       
+           mysqli_commit($conn);                         
             echo '({"success":"true","pono":"'.$pono.'"})';
         }
         else

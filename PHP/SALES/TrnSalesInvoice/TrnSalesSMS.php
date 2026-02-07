@@ -14,7 +14,7 @@ $currentMinutes = ($hour * 60) + $min;
 
 
 
-if ($currentMinutes >= 1259 || $currentMinutes < 541) {
+if ($currentMinutes >= 1259 || $currentMinutes < 601) {
     exit; // STOP SMS auto-send during restricted hours
 }
 /* ------------------------------------------------ */

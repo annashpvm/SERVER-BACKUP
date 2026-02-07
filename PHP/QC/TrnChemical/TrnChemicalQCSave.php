@@ -21,7 +21,8 @@
 	$itemcode  = $_REQUEST['itemcode'];
 	$billqty   = $_REQUEST['billqty'];
 	$actqty    = $_REQUEST['actqty'];
-	mysqli_query($conn, "BEGIN");
+
+	mysqli_begin_transaction($conn);
 
 
 
@@ -78,7 +79,7 @@
 
 if( $result2  )
 {
-	mysqli_begin_transaction($conn);                        
+	mysqli_commit($conn);                       
 	echo '({"success":"true","EntryNo":"' . $cdentryno . '"})';
 
 	    

@@ -25,8 +25,7 @@
 	$findTicketNo    = $_REQUEST['findTicketNo'];
     $today = date("Y-m-d H:i:s"); 
 
-
-	mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 	$reccount = 0;
 
@@ -315,7 +314,7 @@ if ($gstFlag === "Add" && $reccount > 0 ) {
 
 elseif ($result1 && $result2 && $result3 )
 {
-	mysqli_begin_transaction($conn);                        
+	mysqli_commit($conn);                     
 	echo '({"success":"true","EntryNo":"' . $rmentryno . '"})';
 
 	    

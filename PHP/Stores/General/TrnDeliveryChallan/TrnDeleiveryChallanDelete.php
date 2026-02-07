@@ -26,7 +26,7 @@ $dchparty = $_POST['dchparty'];
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
  $query1 = "delete from trnpur_deliverychallan_trailer where dct_fincode = $dchfincode and dct_comp_code=$dchcompcode and dct_no = $dchno and dct_type = '$dchtype'";
@@ -47,7 +47,7 @@ mysqli_query($conn, "BEGIN");
 
 if($result1 && $result2)
 {
-           mysqli_query($conn, "COMMIT");                       
+    mysqli_commit($conn);                         
             echo '({"success":"true","dcno":"'.$dchno.'"})';
 }
     else

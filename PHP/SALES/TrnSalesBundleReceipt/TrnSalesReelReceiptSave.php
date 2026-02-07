@@ -21,7 +21,8 @@ $dcno   = $_POST['dcno'];
 $dcdate = $_POST['dcdate'];
 
 
-mysqli_query($conn, "BEGIN");
+
+mysqli_begin_transaction($conn);
 
 
 if ($savetype === "Add") {
@@ -97,7 +98,7 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3 && $result4 ) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","receiptno":"' . $receiptno . '"})';
 	} 
 		
@@ -115,7 +116,7 @@ if ($savetype === "Add") {
 
 	if ( $result11 && $result12) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","receiptno":"' . $receiptno . '"})';
 	} 
 		
@@ -130,7 +131,7 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3 && $result4 && $result11 && $result12) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","receiptno":"' . $receiptno . '"})';
 	} 
 		

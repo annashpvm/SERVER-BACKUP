@@ -25,7 +25,7 @@ $truck= $_POST['truck'];
 $freight= (float) $_POST['freight'];
 $tax= (float) $_POST['tax'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -122,7 +122,7 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3  && $result4 && $resultControlInsert) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","dnno":"' . $dnno . '"})';
 	} 
 		
@@ -151,7 +151,7 @@ else
 
 	if ( $result5 && $result6 && $resultControlDelete ) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","dnno":"' . $dnno . '"})';
 	} 
 		
@@ -166,7 +166,7 @@ else
        { 
 	if ($result2 && $result3  && $result4  &&  $result5 && $result6 && $resultControlDelete) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","dnno":"' . $dnno . '"})';
 	} 
 		

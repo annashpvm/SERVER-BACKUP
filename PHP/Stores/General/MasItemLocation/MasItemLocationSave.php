@@ -8,7 +8,7 @@ session_start();
  $locname = strtoupper($_POST['locname']);
  $loccode = $_POST['loccode'];
 
-
+ mysqli_begin_transaction($conn);
 if ($savetype === "Add")
 {
 	$query = "select ifnull(max(loc_code),0)+1 as loc_code from maspur_location";
@@ -34,7 +34,7 @@ if ($savetype === "Add")
 
 	}
 	if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $locname . '"})';
 	} 
 	else if($cnt>0) {
@@ -54,7 +54,7 @@ else
 	  $query1="update maspur_location  set loc_name = upper('$locname') where  loc_code = '$loccode'";
 	  $result1 = mysqli_query($conn, $query1);
 	if ($result1) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $locname . '"})';
 	} 
         else {

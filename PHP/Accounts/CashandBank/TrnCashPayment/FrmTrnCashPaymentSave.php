@@ -38,7 +38,7 @@ $payterms = 0;
     $narration  = substr(trim($_POST['narration']),0,498);
  $narration=str_replace("'","",$narration);
 
-mysqli_query($conn, "BEGIN");
+ mysqli_begin_transaction($conn);
 
  
 if ($flagtype == "Add")
@@ -260,7 +260,7 @@ if ($flagtype == "Add")
 {
 	if ($cresulta2 &&  $resulta9)  
 	{
-	    mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
@@ -273,7 +273,7 @@ else
 {
 if ( $result1 &&  $result2 &&  $result3 && $cresulta2 &&  $resulta9)  
 	{
-	    mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

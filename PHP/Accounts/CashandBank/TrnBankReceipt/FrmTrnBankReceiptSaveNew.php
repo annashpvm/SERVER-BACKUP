@@ -66,7 +66,7 @@
     $narration=str_replace("'","",$narration);
     $CNRemarks=str_replace("'","",$CNRemarks);
 
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
     if ($flagtype == "Add")
     {
     
@@ -734,7 +734,7 @@ if ( $CreditValue  > 0) {
       $vouno = $vouno.' And Credit Note Number '.$vouno2;
       if($resulta2 &&  $resulta3 && $resulta4 && $resulta9 && $result10 && $resulta2CN && $resulta3CN && $resulta4CN  && $resulta6 && $resulta7 && $resulta8 && $result10)
       {
-        mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
         echo '({"success":"true","vouno":"'.$vouno.'"})'; 
       }
       else
@@ -749,7 +749,7 @@ else
 {
     if( $resulta2 && $resulta4 && $resulta9 )
     {
-      mysqli_begin_transaction($conn);
+      mysqli_commit($conn);
       echo '({"success":"true","vouno":"'.$vouno.'"})'; 
     }
     else

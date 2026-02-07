@@ -7,7 +7,10 @@ session_start();
  $subgrpname  = strtoupper($_POST['subgrpname']);
  $purgrpcode  = $_POST['purgrpcode'];
  $maingrpcode = $_POST['grpcode'];
-if ($savetype === "Add")
+
+ mysqli_begin_transaction($conn);
+i
+f ($savetype === "Add")
 {
 	$query = "select ifnull(max(subgrp_code),0)+1 as subgrp_code from maspur_subgroup";
 	$result = mysqli_query($conn, $query);
@@ -25,7 +28,7 @@ if ($savetype === "Add")
 	  $result1 = mysqli_query($conn, $query1);
 	}
 	if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $subgrpname . '"})';
 	} 
 	else if($cnt>0) {
@@ -45,7 +48,7 @@ else
 	  $query1="update maspur_subgroup set subgrp_name = upper('$subgrpname'),subgrp_grpcode = '$maingrpcode' where subgrp_code = '$purgrpcode'";
 	  $result1 = mysqli_query($conn, $query1);
 	if ($result1) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $groupname . '"})';
 	} 
         else {

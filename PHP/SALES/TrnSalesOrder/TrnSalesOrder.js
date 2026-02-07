@@ -4480,6 +4480,7 @@ var btnClose = new Ext.Button({
     listeners:{
         click: function(){  
           Ext.getCmp('godown').hide();
+
 	  txtGodownStk.setRawValue(txtGodownQty.getValue()); 
 	  txtGodownReels.setRawValue(txtGodownNos.getValue());
           txtNoofReels.focus();
@@ -4549,7 +4550,7 @@ function priceConfirm()
            if (no_of_days == 30) 
            {      
 
-                if (custcode == 346)
+                if (custcode == 346)  // SIVAKASI PERFECT PACK PVT LTD-SIVAKASI
                 {      
                 txtCashDiscMT_7Days_30dayPT.setValue('0');
 		txtCashDiscMT_7Days_45dayPT.setValue('0');
@@ -4590,7 +4591,7 @@ function priceConfirm()
            if (no_of_days == 45) 
            {      
  
-                if (custcode == 346)
+                if (custcode == 346) // SIVAKASI PERFECT PACK PVT LTD-SIVAKASI
                 {      
                 txtCashDiscMT_7Days_30dayPT.setValue('0');
 		txtCashDiscMT_7Days_45dayPT.setValue('0');
@@ -4628,7 +4629,7 @@ function priceConfirm()
            if (no_of_days == 60) 
            {  
 
-                if (custcode == 346)
+                if (custcode == 346) // SIVAKASI PERFECT PACK PVT LTD-SIVAKASI
                 {      
                 txtCashDiscMT_7Days_30dayPT.setValue('0');
 		txtCashDiscMT_7Days_45dayPT.setValue('0');
@@ -4666,7 +4667,7 @@ function priceConfirm()
            if (no_of_days == 75) 
            {   
 
-                if (custcode == 346)
+                if (custcode == 346) // SIVAKASI PERFECT PACK PVT LTD-SIVAKASI
                 {      
                 txtCashDiscMT_7Days_30dayPT.setValue('0');
 		txtCashDiscMT_7Days_45dayPT.setValue('0');
@@ -4700,7 +4701,10 @@ function priceConfirm()
         var ptmt60 = 1000;
         var ptmt75 = 500;
 
-        if (Number(txtGraceDays.getValue()) == 30 || Number(txtGraceDays.getValue()) == 60)
+
+        
+//      Modified on 27/01/2026 for SRI HARI GANESH COLOUR TECH - SIVKASI
+        if ((Number(txtGraceDays.getValue()) == 30 || Number(txtGraceDays.getValue()) == 60) && custcode == 352)
         {
             ptmt7 -=  1000;
             ptmt30 -=  1000;
@@ -4708,6 +4712,7 @@ function priceConfirm()
             ptmt60 =  0;
             ptmt75 =  0;
         }    
+
                     
 
 
@@ -4721,7 +4726,7 @@ function priceConfirm()
            if (no_of_days == 90) 
            {   
 
-                if (custcode == 346)
+                if (custcode == 346) // SIVAKASI PERFECT PACK PVT LTD-SIVAKASI
                 {      
                 txtCashDiscMT_7Days_30dayPT.setValue('0');
 		txtCashDiscMT_7Days_45dayPT.setValue('0');
@@ -4754,7 +4759,8 @@ function priceConfirm()
         var ptmt60 = 1000;
         var ptmt75 = 500;
 
-        if (Number(txtGraceDays.getValue()) == 30 ||  Number(txtGraceDays.getValue()) == 60)
+        // for SRI HARI GANESH COLOUR TECH
+        if ((Number(txtGraceDays.getValue()) == 30 || Number(txtGraceDays.getValue()) == 60) && custcode == 352)            
         {
             ptmt7 -=  1000;
             ptmt30 -=  1000;

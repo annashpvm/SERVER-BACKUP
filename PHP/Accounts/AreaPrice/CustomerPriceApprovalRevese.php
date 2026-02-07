@@ -8,7 +8,7 @@ $compcode   = $_POST['compcode'];
 $usercode   = (int) $_POST['usercode']; 
 $product    = (int) $_POST['product']; 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 $query1="update massal_rate set rate_approved = 'N' , rate_verified = $usercode  where rate_comp_code= $compcode and rate_fincode = $finid   and rate_code = $apprno and rate_vartype = $product"; 
@@ -20,7 +20,7 @@ $result1 = mysqli_query($conn, $query1);
 
 
   if ($result1) {
-   mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $apprno . '"})';
   }else {
     mysqli_rollback($conn);

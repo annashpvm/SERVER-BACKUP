@@ -14,7 +14,7 @@ var tbgeneral = new Ext.Toolbar();
 
 new Ext.Toolbar.SplitButton({
         text: '<b>TEST</b>',
-        width: 150,
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -247,7 +247,7 @@ new Ext.Toolbar.SplitButton({
 
 new Ext.Toolbar.SplitButton({
         text: '<b>MASTERS</b>',
-        width: 150,
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -277,8 +277,8 @@ new Ext.Toolbar.SplitButton({
 }),
 
 new Ext.Toolbar.SplitButton({
-        text: '<b>DATA IMPORT FROM TALLY </b>',
-        width: 150,
+        text: '<b>IMPORT </b>',
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -398,7 +398,7 @@ new Ext.Toolbar.SplitButton({
 
 new Ext.Toolbar.SplitButton({
         text: '<b>MS ACCESS</b>',
-        width: 150,
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -431,7 +431,7 @@ new Ext.Toolbar.SplitButton({
        }),
 new Ext.Toolbar.SplitButton({
         text: '<b> SALES / PRODUCTIONS </b>',
-        width: 150,
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -473,7 +473,7 @@ new Ext.Toolbar.SplitButton({
 
        new Ext.Toolbar.SplitButton({
         text: '<b> ACCOUNTS </b>',
-        width: 150,
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -502,7 +502,7 @@ new Ext.Toolbar.SplitButton({
 
 new Ext.Toolbar.SplitButton({
         text: '<b>RAWMATERIAL  </b>',
-        width: 150,
+        //width: 150,
  //       iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -531,7 +531,7 @@ new Ext.Toolbar.SplitButton({
 
 new Ext.Toolbar.SplitButton({
         text: '<b>FUEL  </b>',
-        width: 150,
+        //width: 150,
    //     iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -561,7 +561,7 @@ new Ext.Toolbar.SplitButton({
 
 new Ext.Toolbar.SplitButton({
         text: '<b> YEAR OPENING TRANSFER </b>',
-        width: 150,
+        //width: 150,
        // iconCls: 'bmenu',style: 'background-color: DEC5C0;',
         menu:{
             items:[
@@ -626,7 +626,7 @@ new Ext.Toolbar.SplitButton({
 
    new Ext.Toolbar.SplitButton({
         text: '<b>LOGOUT</b>',
-        width: 150,
+        //width: 150,
         style: 'background-color: DEC5C0;',
         handler: function () {
             window.location.href=('http://www.google.com');

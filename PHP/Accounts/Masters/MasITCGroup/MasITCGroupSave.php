@@ -12,6 +12,8 @@ session_start();
  $rowcnt    = $_REQUEST['cnt'];
 
 $cnt= 0;
+mysqli_begin_transaction($conn);
+
 if ($savetype === "Add")
 {
 	$query = "select ifnull(max(itc_code),0)+1 as itccode from acc_gstitc_group";
@@ -56,7 +58,7 @@ if ($savetype === "Add" && $cnt > 0)
     }  
 else
 if ($result1) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $grpname . '"})';
 } 
 else {

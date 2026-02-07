@@ -89,7 +89,7 @@ $today = date("Y-m-d H:i:s");
 
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == 'Edit')
 {
@@ -215,15 +215,10 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 
 }
 
-
-
-
-
-
-
 	if ($resulta1 && $resulta2 && $resulta3 && $resulta4   ) 
 	{
-	  mysqli_begin_transaction($conn);
+
+    mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

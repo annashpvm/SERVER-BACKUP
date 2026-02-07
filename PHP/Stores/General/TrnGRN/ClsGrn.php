@@ -65,7 +65,15 @@
 		findGSTDetails();
 		break;
 
+		case "LoadGSTLedgerName":
+            getGSTLedgerName();
+            break;
 
+
+        case "LoadGSTLedgerName2":
+            getGSTLedgerName2();
+            break;
+            
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -513,4 +521,60 @@ function getPurGroup()
 
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
+
+    function getGSTLedgerName()
+    {
+
+
+        global $conn; 
+        $gsttype  = $_POST['gsttype'];
+        $gstper   = $_POST['gstper'];
+
+        $sql = "select * from massal_customer where cust_name like 'INPUT%$gsttype%$gstper%'";
+
+        //echo $sql;
+        $r = mysqli_query($conn, $sql);
+        $arr = [];
+        while ($re = mysqli_fetch_assoc($r)) {
+          $arr[] = $re;
+        }
+        echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+    
+
+    function getGSTLedgerName2()
+    {
+        global $conn; 
+    
+        $ledcode = $_POST['ledcode'];
+    
+        // safety + trim
+        $ledcode = mysqli_real_escape_string($conn, $ledcode);
+    
+        $sql = "
+            SELECT TRIM(cust_name) AS cust_name
+            FROM massal_customer
+            WHERE cust_code = '$ledcode'
+            LIMIT 1
+        ";
+    
+        $r = mysqli_query($conn, $sql);
+    
+        if ($row = mysqli_fetch_assoc($r)) {
+            echo json_encode([
+                "success" => true,
+                "ledgername" => $row['cust_name']
+            ]);
+        } else {
+            echo json_encode([
+                "success" => false,
+                "ledgername" => ""
+            ]);
+        }
+    
+        exit;
+    }
+        
 ?>

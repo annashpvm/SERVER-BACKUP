@@ -9,13 +9,15 @@ $snhfincode   = $_POST['snhfincode'];
 $snhdate      = $_POST['snhdate'];
 $accseqno     = $_POST['accseqno'];
 
-mysqli_query($conn, "BEGIN");
+global $conn; 
+mysqli_begin_transaction($conn);
 
-   $query1  = "update trn_other_sales set os_rate = 0, os_qty = 0, os_value = 0, os_others= 0, os_taxable= 0, os_cgstper= 0, os_cgst= 0, os_sgstper= 0, os_sgst= 0, os_igstper= 0, os_igst= 0, os_rounding= 0, os_netamt = 0 , os_cancel ='Y' and os_acc_seqno = 0  where os_fincode = '$snhfincode' and os_compcode='$snhcompcode' and os_invno = '$snhinvno'";
-
-
+   $query1  = "update trn_other_sales set os_custcode = 2601 ,  os_rate = 0, os_qty = 0, os_value = 0, os_others= 0, os_taxable= 0, os_cgstper= 0, os_cgst= 0, os_sgstper= 0, os_sgst= 0, os_igstper= 0, os_igst= 0, os_rounding= 0, os_netamt = 0 , os_cancel ='Y' , os_acc_seqno = 0  where os_fincode = '$snhfincode' and os_compcode='$snhcompcode' and os_invno = '$snhinvno'";
    $result1 = mysqli_query($conn, $query1);
 
+
+ //echo $query1;
+ //echo "<br>";
 
 	$querya1 = "delete from acc_trail  where acctrail_accref_seqno = '$accseqno'";
         $resulta1 = mysqli_query($conn, $querya1);
@@ -34,9 +36,9 @@ mysqli_query($conn, "BEGIN");
 
   
         
-   if ( $result2 )
+   if ( $result1 && $resulta1 && $resulta2 && $resulta3 )
    {
-           mysqli_query($conn, "COMMIT");                       
+        mysqli_commit($conn);                     
             echo '({"success":"true","saleno":"'.$snhinvno.'"})';
    }
    else

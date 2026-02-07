@@ -41,7 +41,7 @@ $amenddate         = $_POST['amenddate'];
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 //Insert the PO tailer Tables
@@ -110,14 +110,12 @@ $wefdate      = $amendgriddet[$i]['wef'];
 
 if( $result3 )
 {
-           mysqli_query($conn, "COMMIT");                       
-            echo '({"success":"true","pono":"'.$po_no.'"})';
+	mysqli_commit($conn); 	                       
+    echo '({"success":"true","pono":"'.$po_no.'"})';
 }
 else
 {
-            mysqli_rollback($conn);
-
-                     
+        mysqli_rollback($conn);
 	    echo '({"success":"false","pono":"' .$po_no. '"})';
   }    
         

@@ -456,6 +456,38 @@ else   &#13;
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">sum_delivery_rate</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["deliveryrate"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">recordcount</property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">COUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["var_desc"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">delivery_ratio</property>
+                    <text-property name="displayName">delivery_ratio</text-property>
+                    <expression name="expression" type="javascript">if (row["sum_delivery_rate"]  >0 &amp;&amp; row["recordcount"] > 0)&#13;
+    row["sum_delivery_rate"] / row["recordcount"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="445">
                 <property name="width">0.8in</property>
@@ -1492,6 +1524,7 @@ true</expression>
             </detail>
             <footer>
                 <row id="331">
+                    <property name="fontWeight">bold</property>
                     <cell id="444">
                         <property name="fontSize">8pt</property>
                         <property name="borderBottomStyle">dotted</property>
@@ -1535,6 +1568,15 @@ true</expression>
                         <property name="borderRightWidth">1px</property>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
+                        <data id="520">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">recordcount</property>
+                        </data>
                     </cell>
                     <cell id="335">
                         <property name="fontSize">8pt</property>
@@ -1546,6 +1588,15 @@ true</expression>
                         <property name="borderRightWidth">1px</property>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
+                        <data id="519">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_delivery_rate</property>
+                        </data>
                     </cell>
                     <cell id="336">
                         <property name="fontSize">8pt</property>
@@ -1579,6 +1630,9 @@ true</expression>
                         <property name="borderRightWidth">1px</property>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
+                        <label id="521">
+                            <text-property name="text">DELIVERY RATIO</text-property>
+                        </label>
                     </cell>
                     <cell id="339">
                         <property name="fontSize">8pt</property>
@@ -1656,6 +1710,14 @@ true</expression>
                         <property name="borderRightWidth">1px</property>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
+                        <data id="523">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">delivery_ratio</property>
+                        </data>
                     </cell>
                 </row>
             </footer>

@@ -26,7 +26,7 @@ $oldsize   = $_POST['oldsize'];
 
 $cnt1 = 0;
 
- mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ( $weight > 0)
 {
@@ -95,11 +95,11 @@ if ( $weight > 0)
        
 
 	if ($result2 && $result3  && $result4  &&  $cnt1 ==0 )  {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $reelno . '"})';
      	} 
 	else if ($result2)  {
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $reelno . '"})';
      	} 
         else if ($cnt1 > 0) {

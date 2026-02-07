@@ -149,7 +149,7 @@ function  callvounolist()
         fieldLabel: 'Voucher Type',
         width: 100,
    //     store: loadVoucherTypeListDataStore,
-        store: ['BKR','BKP','CHR','CHP','GJV','DNG','DNN'],
+        store: ['BKR','BKP','CHR','CHP','GJV','DNG','DNN','CNG'],
         displayField: 'accref_vou_type',
         valueField: 'accref_vou_type',
         hiddenName: 'accref_vou_type',

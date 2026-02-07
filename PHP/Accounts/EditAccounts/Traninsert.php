@@ -18,10 +18,11 @@ $acctranledcode=0;
 $query = "INSERT into acc_tran values('$acctranaccrefseqno', '$acctranserialno', '$acctranledcode', '0.00', '0.00', '0.00', '$type','')";
 //echo $query;
 
-$result = mysqli_query($conn, $query);
+mysqli_begin_transaction($conn);
 
 if ($result) {
-    mysqli_begin_transaction($conn);
+
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $acctranaccrefseqno . '"})';
        //echo '({"success":"true"})';
 } else {

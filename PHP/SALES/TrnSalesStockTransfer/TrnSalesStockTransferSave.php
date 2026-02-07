@@ -9,8 +9,7 @@ $finid    = $_POST['fincode'];
 $entno    = $_POST['entno'];
 $entdate  = $_POST['entdate'];
 
-mysqli_query($conn, "BEGIN");
-
+mysqli_begin_transaction($conn);
 
 
 if ($savetype === "Add") {
@@ -84,15 +83,13 @@ where ordt_comp_code = '$compcode'  and ordt_sono =  $oldsono and ordt_var_code 
 
 	if ($result1  && $result2 && $result3 ) 
 	{ 
-	   mysqli_begin_transaction($conn);
-	    echo '({"success":"true","entno":"' . $entno . '"})';
+	   mysqli_commit($conn); 
+	   echo '({"success":"true","entno":"' . $entno . '"})';
 	} 
 		
 	else {
-	   mysqli_rollback($conn);
-
-
-	    echo '({"success":"false","entno":"' . $entno . '"})';
+ 	   mysqli_rollback($conn);
+      echo '({"success":"false","entno":"' . $entno . '"})';
 	}
 
    

@@ -17,6 +17,7 @@ session_start();
  $wttype       = $_POST['wttype'];
  $itemcode     =  (int)$_POST['itemcode'];
 
+ mysqli_begin_transaction($conn);
 
 $query2="update trn_weight_card set wc_sup_code =  $supplier ,  wc_partyloadwt = $partyloadwt  , wc_partyemptywt =  $partyemptywt, wc_partynetwt = $partynetwt, wc_acceptedwt =  $Acceptedwt , wt_type =  '$wttype' where wc_compcode = $compcode and wc_fincode =  $finid and  wc_ticketno=  $ticketno";
 
@@ -27,7 +28,7 @@ $result2 = mysqli_query($conn, $query2);
 
 
 if ($result2) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
     mysqli_rollback($conn);

@@ -7,7 +7,7 @@ session_start();
  $servicename=strtoupper($_POST['servicename']);
  $servicecode = $_POST['servicecode'];
 
-
+ mysqli_begin_transaction($conn);
 if ($savetype === "Add")
 {
 	$query = "select ifnull(max(tds_service_type_code),0)+1 as tds_service_type_code from mas_tds_servicetype";
@@ -26,7 +26,7 @@ if ($savetype === "Add")
 	  $result1 = mysqli_query($conn, $query1);
 	}
 	if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $servicename . '"})';
 	} 
 	else if($cnt>0) {
@@ -46,7 +46,7 @@ else
 	  $query1="update mas_tds_servicetype  set tds_service_type_name = upper('$servicename') where  tds_service_type_code = '$servicecode'";
 	  $result1 = mysqli_query($conn, $query1);
 	if ($result1) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $servicename . '"})';
 	} 
         else {

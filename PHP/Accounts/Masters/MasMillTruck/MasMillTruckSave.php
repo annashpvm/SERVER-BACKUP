@@ -16,7 +16,7 @@ $truck_no = str_replace("   ","",$truck_no);
 $truck_no = str_replace("-","",$truck_no);
 
 
-
+mysqli_begin_transaction($conn);
 if ($savetype === "Add")
 {
 	$query = "select ifnull(max(truck_code),0)+1 as truck_code from mas_mill_truck";
@@ -35,7 +35,7 @@ if ($savetype === "Add")
 	  $result1 = mysqli_query($conn, $query1);
 	}
 	if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $truck_no . '"})';
 	} 
 	else if($cnt>0) {

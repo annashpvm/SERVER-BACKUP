@@ -11,7 +11,7 @@ $repcode  = $_POST['repcode'];
 $repmonth = $_POST['repmonth'];           
 $repyear  = $_POST['repyear'];           
 
-
+mysqli_begin_transaction($conn);
 for ($i=0;$i<$rowcnt;$i++)
 {
 	$custcode  = (int)$griddet[$i]['cust_code'];
@@ -31,7 +31,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($result1) {
 
-   mysqli_begin_transaction($conn);
+	mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $maadvno . '"})';
 	
 }else {

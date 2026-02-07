@@ -10,7 +10,7 @@ $databasesub = "shvpmb";
 $username = "root";
 $password = "P@ssw0rD";
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 try{
    $pdoMain = new PDO('mysql:host=10.0.0.251;dbname=shvpm','root','P@ssw0rD');
@@ -171,7 +171,7 @@ $deletecount = 0;
 
 
 if ( $insertcount > 0  ) {
-    mysqli_begin_transaction($conn);
+  mysqli_commit($conn); 
 
 } else {
     mysqli_rollback($conn);

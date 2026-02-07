@@ -11,7 +11,7 @@ $ordhackdate= $_POST['ordhackdate'];
 $ordhparty= $_POST['ordhparty'];
 $userid= $_POST['userid'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
@@ -36,7 +36,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 
 if ($result1 &&  $result2)  {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $ordhackno . '"})';
 	 
 } 

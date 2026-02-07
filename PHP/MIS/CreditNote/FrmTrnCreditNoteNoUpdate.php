@@ -11,14 +11,15 @@ $vouno       = $_REQUEST['vouno'];
 $accseqno    = $_REQUEST['accseqno'];
 $dncrseqno   = $_REQUEST['dncrseqno'];
 $newcnno     = $_REQUEST['newcnno'];
+$voudate     = $_REQUEST['voudate'];
 
 $cnno = substr($_REQUEST['newcnno'], 4, 4);
 
-
+//echo $cnno;
 #Begin Transaction
 mysqli_begin_transaction($conn);
 
-if ($newcnno != '')
+if ($cnno != '')
 {
 
         $query1 = "update acc_dbcrnote_header set  dbcr_no = '$cnno' , dbcr_vouno = '$newcnno'  , invh_invrefno = '$newcnno' where dbcr_vouno = '$vouno' and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid'";
@@ -35,11 +36,26 @@ if ($newcnno != '')
 //echo $query2;
 //echo "<br>";
 //echo $query3;
+}
+else
+{
+  $query1 = "update acc_dbcrnote_header set  dbcr_date = '$voudate '  where dbcr_vouno = '$vouno' and dbcr_comp_code = '$compcode' and dbcr_finid = '$finid'";
+  $result1 = mysqli_query($conn, $query1);
+
+  $query2 = "update acc_ref set accref_voudate = '$voudate'  where accref_seqno ='$accseqno' and accref_comp_code='$compcode' and accref_finid ='$finid' and accref_vouno = '$vouno'";
+  $result2 = mysqli_query($conn, $query2);
+
+
+  $query3 = "update acc_adjustments set ref_docdate = '$voudate' where ref_docseqno  = '$accseqno'   and ref_compcode = '$compcode' and ref_finid = '$finid' and ref_docno = '$vouno'";
+  $result3 = mysqli_query($conn, $query3);
+
 
 }
+
 if ($result1  && $result2) 
 {
   mysqli_commit($conn);
+ 
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
     mysqli_rollback($conn);

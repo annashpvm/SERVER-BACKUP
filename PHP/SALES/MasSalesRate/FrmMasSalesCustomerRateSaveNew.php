@@ -77,8 +77,7 @@ $bf30bit      = 0;
 $bf32bit      = 0;
 $cust_extrarate    = (float) $_POST['custextrarate'];  
 
-mysqli_query($conn, "BEGIN");
-
+mysqli_begin_transaction($conn);
 
 
 $bitreelinch  = (float) $_POST['bitreelinch'];  
@@ -246,6 +245,8 @@ for ($i=0;$i<$rowcnt;$i++)
 	$pb_qly      = (int) $griddet[$i]['qlycode'];
 	$pb_rate     = (float) $griddet[$i]['pbrate'];
 
+	$pt          = (int) $griddet[$i]['pt'];
+	$gd          = (int) $griddet[$i]['gd'];
 
 $query2="insert into massal_rate
 (
@@ -269,11 +270,11 @@ rate_cashdisc_days,rate_payterm_30days_cdamt, rate_payterm_60days_cdamt1, rate_p
 '$bf32_120','$bf32_100','$bf32_90','$bf32_80','$bf32_70','$bf32_60','$bf32_50',
 '$bf34_120','$bf34_100','$bf34_90','$bf34_80','$bf34_70','$bf34_60','$bf34_50',
 '$cashdiscper', '$cashdiscdays',$cdamt1,$cdamt2,$cdamt3,'$GSTper',
- 'N','N',$userid,'$shade','$priceterm','$PTGD',$fr12bf ,$br12bf,$pb_qly,$pb_rate,$cust_extrarate,$bitreelinch,$bitreelCM )"; 
+ 'N','N',$userid,'$shade','$pt','$gd',$fr12bf ,$br12bf,$pb_qly,$pb_rate,$cust_extrarate,$bitreelinch,$bitreelCM )"; 
 
 
 
-//echo  $query1;
+//echo  $query2;
 //echo "<br>";
 $result2 = mysqli_query($conn, $query2);
 }
@@ -282,7 +283,8 @@ $result2 = mysqli_query($conn, $query2);
 if ($savetype == "Add") {
 
      if ( $result2) {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
+
 	    echo '({"success":"true","msg":"' . $varsubgrp . '"})';
 	} 
 	  else if ($cnt>0) {
@@ -302,7 +304,7 @@ else
 {
 
      if ($result1 && $result2) {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $varsubgrp . '"})';
 	} 
 	  else if ($cnt>0) {

@@ -9,7 +9,7 @@ $finid    = $_POST['fincode'];
 $entno    = $_POST['entno'];
 $entdate  = $_POST['entdate'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -82,7 +82,7 @@ where ordt_comp_code = '$compcode'  and ordt_sono =  $sono and ordt_var_code = $
 
 	if ($result2 && $result3 && $result4 && $result5 ) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	   mysqli_commit($conn); 
 	    echo '({"success":"true","entno":"' . $entno . '"})';
 	} 
 		

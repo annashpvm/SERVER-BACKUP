@@ -19,6 +19,8 @@ $hsncode=$_POST['hsncode'];
 
  //echo"$GroupName";
 
+ 
+mysqli_begin_transaction($conn);
 if ($savetype == "Add")
 {
 	$query = "select ifnull(max(itmh_code),0)+1 as itemseq from masrm_item_header";
@@ -49,7 +51,7 @@ if ($savetype == "Add")
 {
 	if ($result1 && $cnt==0) 
 	{
-	    mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $itemname . '"})';
 	} 
 	else if ($cnt>0)
@@ -71,7 +73,8 @@ else
 {
 	if ($result1) 
 	{
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
+
 	    echo '({"success":"true","msg":"' . $itemname . '"})';
 	} 
 	else

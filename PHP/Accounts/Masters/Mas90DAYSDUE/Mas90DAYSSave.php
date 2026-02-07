@@ -15,8 +15,7 @@ session_start();
 $data = '';
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
-
+mysqli_begin_transaction($conn);
 
 
 if ($savetype == "Add") {
@@ -35,7 +34,7 @@ $result1 = mysqli_query($conn, $query1);
 
       if ($result1)
       {
-          mysqli_begin_transaction($conn);
+          mysqli_commit($conn);
           echo '({"success":"true","msg":"' . $entryno  . '"})';
       }
      else

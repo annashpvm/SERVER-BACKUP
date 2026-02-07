@@ -6,7 +6,8 @@ session_start();
  $savetype = $_POST['savetype'];
  $groupname=strtoupper($_POST['groupname']);
  $accgrpcode = $_POST['accgrpcode'];
-
+ 
+ mysqli_begin_transaction($conn);
 
 if ($savetype === "Add")
 {
@@ -26,18 +27,14 @@ if ($savetype === "Add")
 	  $result1 = mysqli_query($conn, $query1);
 	}
 	if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $groupname . '"})';
 	} 
 	else if($cnt>0) {
 	    mysqli_rollback($conn);
-
-
 	    echo '({"success":"false","cnt":"' . $cnt . '"})';
 	} else {
 	    mysqli_rollback($conn);
-
-
 	    echo '({"success":"false","msg":"' . $groupname . '"})';
 	}
 }
@@ -46,7 +43,7 @@ else
 	  $query1="update acc_group_master  set grp_name = upper('$groupname') where  grp_code = '$accgrpcode'";
 	  $result1 = mysqli_query($conn, $query1);
 	if ($result1) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $groupname . '"})';
 	} 
         else {

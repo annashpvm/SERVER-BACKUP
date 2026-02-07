@@ -81,7 +81,7 @@ if ($loadwttype == 2 && $loadwt >0)
 
 //$query2="update trn_weighbridge_entry set t_wb_vehicle =  '$vehicleno',  t_wb_party =  '$supplier' , t_wb_item = '$itemname', t_wb_1st_weight = '$Iwt', t_wb_2nd_weight = '$IIwt' , t_wb_net_weight = $netwt where t_wb_year = $finid  and t_wb_compcode = $compcode  and t_wb_ticketno = '$ticketno' and t_wb_upd ='N'";
 
-
+mysqli_begin_transaction($conn);
 
 $query2="update trn_weight_card set wc_vehicleno =  '$vehicleno' where wc_compcode = $compcode and wc_fincode = $finid and wc_ticketno = '$ticketno'";
 // echo $query2;
@@ -109,7 +109,7 @@ $result3 = mysqli_query($conn, $query3);
 }
 
 if ($result2) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);  
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
     mysqli_rollback($conn);

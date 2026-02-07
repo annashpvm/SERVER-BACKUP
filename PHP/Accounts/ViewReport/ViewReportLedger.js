@@ -4326,16 +4326,44 @@ if (printtype == "PDF")
     var monthstartdate = new Ext.form.DateField({
 	fieldLabel: 'From Date',
         id: 'monthstartdate',
-	format: 'd-m-Y',
+	    format: 'd-m-Y',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-        value: new Date()   
+        value: new Date(),
+        listeners: {
+            blur: function () 
+            {
+                Process_Month_Ledger_Data();
+            },
+            change: function ()  
+            {
+                Process_Month_Ledger_Data();
+            },
+            keyup: function ()  
+            {
+                Process_Month_Ledger_Data();
+            },
+        }
     });
     var monthenddate = new Ext.form.DateField({
 	fieldLabel: 'To Date',
         id: 'monthenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
-        value: new Date()   
+	    format: 'd-m-Y',
+        value: new Date(),   
+        listeners: {
+            blur: function () 
+            {
+                Process_Month_Ledger_Data();
+            },
+            change: function ()  
+            {
+                Process_Month_Ledger_Data();
+            },
+            keyup: function ()  
+            {
+                Process_Month_Ledger_Data();
+            },
+        }
     });
 
     var monthstartdate2 = new Ext.form.DateField({

@@ -32,6 +32,8 @@ $prdhsteam        = $_POST['prdhsteam'];
 //$griddet_roll = json_decode($_POST['griddet_roll'],true);
 
 
+mysqli_begin_transaction($conn);
+
 if ($savetype === "Add")
 {
 
@@ -39,9 +41,7 @@ if ($savetype === "Add")
 	 $result1 = mysqli_query($conn, $query1);
 	 $rec1    = mysqli_fetch_array($result1);
 	 $prdhseqno=$rec1['prodseqno'];
-
-         mysqli_query($conn, "BEGIN");
-
+         
 
 	 if ($prdhseqno > 0 )
 	 { 
@@ -62,7 +62,7 @@ else
 
 //	 $query3= "call spprod_upd_header ('$prdhseqno','$prdhcompcode','$prdhfincode', '$prdhdate', '$prdhshift','$prdhspvrcode', '$prdhoperator', '$prdhppno', '$prdhavlmins', '$prdhrunmins','$prdhdownmins','$prdhprodn','$prdhopenpulp', '$prdhclosepulp', '$prdhopenbroke', '$prdhclosebroke', '$prdhpower','$prdhsteam')";
  
-$query3= "call spprod_upd_header ('$prdhseqno','$prdhcompcode','$prdhfincode', '$prdhdate', '$prdhshift','$prdhspvrcode', '$prdhoperator', '$prdhppno', '$prdhavlmins', '$prdhrunmins','$prdhdownmins','$prdhprodn','$prdhopenpulp', '$prdhclosepulp', '$prdhopenbroke', '$prdhclosebroke', '$prdhpower','$prdhsteam')";
+     $query3= "call spprod_upd_header ('$prdhseqno','$prdhcompcode','$prdhfincode', '$prdhdate', '$prdhshift','$prdhspvrcode', '$prdhoperator', '$prdhppno', '$prdhavlmins', '$prdhrunmins','$prdhdownmins','$prdhprodn','$prdhopenpulp', '$prdhclosepulp', '$prdhopenbroke', '$prdhclosebroke', '$prdhpower','$prdhsteam')";
  
 	  $result3=mysqli_query($conn, $query3);
 	}
@@ -122,7 +122,7 @@ $query5= "call spprod_ins_downtime ('$prdhseqno','$prdhcompcode', '$prdhfincode'
 
 if ($savetype == "Add") {
 	if ($result3  )  {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn);     
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 
@@ -138,7 +138,7 @@ if ($savetype == "Add") {
 else
  {
 	if ($result3) {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn);     
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 

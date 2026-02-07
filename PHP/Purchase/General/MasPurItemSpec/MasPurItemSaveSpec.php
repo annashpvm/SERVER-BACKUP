@@ -28,13 +28,14 @@ session_start();
  $spec9=str_replace("'","",$spec9);
  $spec10=str_replace("'","",$spec10);
 
+ mysqli_begin_transaction($conn);
 
   $query1="Update maspur_item_header set item_spec1 = '$spec1',item_spec2 = '$spec2',item_spec3 = '$spec3',item_spec4 = '$spec4',item_spec5 = '$spec5',item_spec6 = '$spec6',item_spec7 = '$spec7',item_spec8 = '$spec8',item_spec9 = '$spec9',item_spec10 = '$spec10'  where item_code = '$item_code'"; 
   $result1 = mysqli_query($conn, $query1);
 
 
   if ($result1 ) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $item_name . '"})';
 } 
  else {

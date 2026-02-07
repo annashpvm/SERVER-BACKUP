@@ -364,72 +364,7 @@ var map = new Ext.KeyMap(document, [
          
 
     }),
-/*
-    new Ext.Toolbar.SplitButton({
-        id:'btnCBtrans',text: '<b>CASH / BANK ENTRY</b>',
-        width: 130,style: 'background-color: DEC5C0;',
-        iconCls: 'bmenu',
-        menu:{
-            items:[  
-                {
-                    text: '<b>Cash Transactions</b>',
-                    menu:{
-                        items:[
-                            {
-                                text: '<b>Cash Receipts </b>',
-                                group: 'theme',
-                                handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnCashReceipt/FrmTrnCashReceipt.php');
-                                }
-                            },
-                            {
-                                text: '<b>Cash Payments </b>',
-                                group: 'theme',
-                                handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnCashPayment/FrmTrnCashPayment.php');
-                                }
-                            },
-
-                      
-
-
-                        ]
-                    }
-                },
-                {
-                    text: '<b>Bank Transactions</b>',
-                    menu:{
-                        items:[
-
-                            {
-                                text: '<b>Bank Receipts </b>',
-                                group: 'theme',
-                                handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceipt.php');
-                                }
-                            },  
-                            {
-                                text: '<b>Bank Payments</b>',
-                                group: 'theme',
-                                handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankPayment/FrmTrnBankPayment.php');
-                                }
-                            },
-                            {
-                                text: '<b>Bank Reconciliation </b>',
-                                group: 'theme',
-                                handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReconciliation/FrmTrnBankReconciliation.php');
-                                }
-                            },
-
-                        ]
-                    }
-                },
-            ]
-        }
-    }),     
-*/               
+                 
     new Ext.Toolbar.SplitButton({
         id:'btntrans',text: '<b>DATA ENTRIES</b>',
         width: 130,style: 'background-color: DEC5C0;',
@@ -466,8 +401,17 @@ var map = new Ext.KeyMap(document, [
                     menu:{
                         items:[
 
+                            
                             {
                                 text: '<b>Bank Receipts</b>',
+                                group: 'theme',
+                                handler: function(){
+                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceipt.php');
+                                }
+                            },  
+
+                            {
+                                text: '<b>Bank Receipts - Old</b>',
                                 group: 'theme',
                                 handler: function(){
                                     window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceiptNew.php');
@@ -494,7 +438,7 @@ var map = new Ext.KeyMap(document, [
                                 text: '<b>Bank Receipts - Old Method </b>',
                                 group: 'theme',
                                 handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceipt.php');
+                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceiptOldMethod.php');
                                 }
                             },  
                         ]
@@ -714,6 +658,15 @@ var map = new Ext.KeyMap(document, [
                 }
             },
 
+            {
+                text: '<b>Test-2 </b>',
+                group: 'theme',
+                handler: function(){
+                    window.location.href=('/SHVPM/Accounts/Test/AutoGrid.php');
+//                   window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankPayment/FrmTrnBankPaymentNew.php');
+                        
+                }
+            },
 
 
            ]       

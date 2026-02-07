@@ -6,7 +6,7 @@ session_start();
 $custcode    = $_POST['party'];
 $distance    = $_POST['roaddist'];
 
-
+mysqli_begin_transaction($conn);
  $query1 = "update massal_customer set cust_distance = $distance where cust_code = '$custcode'"; 
 
 $result1=mysqli_query($conn, $query1);            
@@ -20,7 +20,7 @@ $result1=mysqli_query($conn, $query1);
 
 if ($result1)
 {
-   mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $custcode . '"})';
 } 
 	

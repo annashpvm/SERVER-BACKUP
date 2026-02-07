@@ -10,7 +10,7 @@ $compcode = $_REQUEST['compcode'];
 $vouno    = $_REQUEST['vouno'];
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($vouno != '')
 {
@@ -22,7 +22,7 @@ if ($vouno != '')
 }
 if ($result1) 
 {
-  mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
     echo '({"success":"true","vouno":"' . $vouno . '"})';
 } else {
     mysqli_rollback($conn);

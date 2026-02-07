@@ -32,7 +32,7 @@ $po_seqno          = $_POST['poseqno'];
 $po_no             = $_POST['pono'];
 $potax             = $_POST['potax'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") {
 	 $query1 = "select IFNULL(max(ordh_seqno),0)+1 as po_seqno from trnrm_order_header";
@@ -90,19 +90,13 @@ if ($po_ordqty >0)
      
 if( $result3 && $result4 )
 {
-           mysqli_query($conn, "COMMIT");                       
-            echo '({"success":"true","pono":"'.$po_no.'"})';
-        }
-        else
-        {
-            mysqli_rollback($conn);
-
-            
-          
-	    echo '({"success":"false","pono":"' .$po_no. '"})';
-        }   
-        
-
-       
+    mysqli_commit($conn);	
+    echo '({"success":"true","pono":"'.$po_no.'"})';
+}
+else
+{
+    mysqli_rollback($conn);
+    echo '({"success":"false","pono":"' .$po_no. '"})';
+}   
  
 ?>

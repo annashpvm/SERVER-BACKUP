@@ -17,6 +17,7 @@ $taxtype        = (int)$_POST['taxtype'];
 $taxseq         = (int)$_POST['taxcode'];
 
 
+mysqli_begin_transaction($conn);
 if ($savetype == "Add")
 {
     $query  = "select ifnull(max(tax_code),0)+1 as taxseq from massal_tax";
@@ -40,7 +41,7 @@ if ($savetype == "Add")
     }
 
     if ($result1 && $cnt==0) {
-    mysqli_begin_transaction($conn);
+      mysqli_commit($conn);
       echo '({"success":"true","msg":"' . $taxname . '"})';
   } 
     else if ($cnt>0) {
@@ -63,7 +64,7 @@ else
   $result1 = mysqli_query($conn, $query1);
    
   if ($result1) {
-    mysqli_begin_transaction($conn);
+      mysqli_commit($conn);
       echo '({"success":"true","msg":"' . $taxname . '"})';
   } 
   else {

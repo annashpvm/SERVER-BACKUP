@@ -9,7 +9,7 @@ $compcode  = $_POST['compcode'];
 $fincode   = $_POST['fincode'];
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -48,16 +48,14 @@ for ($i=0;$i<$rowcnt;$i++)
 
       if (($result ))
       {
-          mysqli_begin_transaction($conn);
-          Echo '{success:true,results:1,
-             rows:[{"ledger":"$led_code"}]}';
+        mysqli_commit($conn);
+        Echo '{success:true,results:1,
+        rows:[{"ledger":"$led_code"}]}';
       }
      else
      {
          mysqli_rollback($conn);
-
-
-           Echo '{success:false,results:1,
-             rows:[{"ledger":"$led_code"}]}';
+         Echo '{success:false,results:1,
+         rows:[{"ledger":"$led_code"}]}';
      }
 ?>

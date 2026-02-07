@@ -40,7 +40,7 @@ $dgst=   strtoupper(trim($_POST['dgst']));
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -178,7 +178,7 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3  && $result4  ) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","dcno":"' . $dcno . '"})';
 	} 
 		
@@ -197,7 +197,7 @@ else
      { 
 	if ( $result5 && $result6) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","dcno":"' . $dcno . '"})';
 	} 
 		
@@ -212,7 +212,7 @@ else
        { 
 	if ($result2 && $result3  && $result4  &&  $result5 && $result6 && $result7) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","dcno":"' . $dcno . '"})';
 	} 
 		

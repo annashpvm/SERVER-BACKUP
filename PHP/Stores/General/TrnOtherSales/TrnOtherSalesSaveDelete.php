@@ -9,7 +9,8 @@ $snhfincode   = $_POST['snhfincode'];
 $snhdate      = $_POST['snhdate'];
 $accseqno     = $_POST['accseqno'];
 
-mysqli_query($conn, "BEGIN");
+global $conn; 
+mysqli_begin_transaction($conn);
 
    $query1  = "delete from trn_other_sales where os_fincode = '$snhfincode' and os_compcode='$snhcompcode' and os_invno = '$snhinvno'";
 
@@ -38,7 +39,7 @@ mysqli_query($conn, "BEGIN");
         
    if ( $result1 &&  $resulta1 &&  $resulta2 &&  $resulta3 )
    {
-           mysqli_query($conn, "COMMIT");                       
+            mysqli_commit($conn);                          
             echo '({"success":"true","saleno":"'.$snhinvno.'"})';
    }
    else

@@ -13,7 +13,8 @@
 
     $today = date("Y-m-d H:i:s"); 
 
-	mysqli_query($conn, "BEGIN");
+	mysqli_begin_transaction($conn);
+
         if ($gstFlag === "Edit") {
 
 			$query1     = "select qc_rm_ticketno from trn_qc_rm_inspection where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' and qc_rm_entryno = $rmentryno";
@@ -41,7 +42,7 @@
 	
 if($result3 )
 {
-	mysqli_begin_transaction($conn);                        
+	mysqli_commit($conn);                    
 	echo '({"success":"true","EntryNo":"' . $rmentryno . '"})';
     
 }

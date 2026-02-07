@@ -7,6 +7,7 @@ $rowcnt  = $_POST['cnt'];
 
 $ind_comp_code = $_POST['ind_comp_code'];
 
+mysqli_begin_transaction($conn);
 for ($i=0;$i<$rowcnt;$i++)
 {
      $sno = $i + 1;
@@ -23,7 +24,8 @@ for ($i=0;$i<$rowcnt;$i++)
  
   if ($result1) 
 {
-    mysqli_begin_transaction($conn);
+
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $Indent . '"})';
 } 
 else {

@@ -9,7 +9,7 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
 
     $query1= "select       
 itmh_type,itmh_name,itemcode,sum(opstk) as opstk,sum(opval) as opval,
@@ -79,7 +79,7 @@ select salh_compcode as compcode, salt_itemcode as itemcode, 0 as opstk,0 as opv
 
      if ($result2)
      {
-          mysqli_begin_transaction($conn);
+          mysqli_commit($conn);
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else

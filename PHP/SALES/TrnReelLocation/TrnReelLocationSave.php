@@ -10,7 +10,7 @@ $reelno     = $_POST['reelno'];
 $location   = substr(trim($_POST['location']),0,9);
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 $query1  = "update trnsal_finish_stock set stk_location = '$location'  where  stk_comp_code =  '$compcode' and  stk_sr_no ='$reelno' and stk_destag = ''"; 
@@ -20,7 +20,7 @@ $result1 = mysqli_query($conn, $query1);
 
 	if($result1)
 	{
-	 mysqli_query($conn, "COMMIT");                       
+		mysqli_commit($conn);                      
 	  echo '({"success":"true","entno":"'.$reelno.'"})';
 	}
 	else

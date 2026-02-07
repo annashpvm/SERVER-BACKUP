@@ -25,7 +25,8 @@ $date= date_format($date,"Y/m/d H:i:s");
 
 
 
-  mysqli_query($conn, "BEGIN");
+
+mysqli_begin_transaction($conn);
 
     $queryMas   = "select * from maspur_item_header ";
     $resultMas = mysqli_query($conn, $queryMas);
@@ -161,16 +162,12 @@ and item_fin_code = $nextfinid  and item_code =  $itemcode");
 
 	if( $cnnt > 0 )
 	{
-	 mysqli_query($conn, "COMMIT");                       
-	  echo '({"success":"true"})';
+       mysqli_commit($conn);                      
+	   echo '({"success":"true"})';
 	}
 	else
-	       {
-mysqli_rollback($conn);
-
-       
+    {
+        mysqli_rollback($conn);
 		echo '({"success":"false"})';
-		     
-		    
-		} 
+    } 
 ?>

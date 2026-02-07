@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Bank Receipt Entry</title>
+    <title>Bank Receipt Entry - NEW</title>
      <link rel="stylesheet" type="text/css" href="/ext-3.4.1/resources/css/ext-all.css"></>
      <link rel="stylesheet" type="text/css" href="/SHVPM/Accounts/styles.css" />
     <script type="text/javascript" src="/ext-3.4.1/adapter/ext/ext-base.js"></script>

@@ -29,7 +29,7 @@ $originalsize= $_POST['originalsize'];
 $finishedsize= $_POST['finishedsize'];
 
 $truck=   strtoupper(trim($_POST['truck']));
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 if ($savetype === "Add") {
@@ -106,7 +106,7 @@ if ($savetype === "Add") {
 
 	if ($result2 && $result3 ) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
@@ -125,7 +125,7 @@ else
      { 
 	if ( $result5 && $result6) 
 	{ 
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		
@@ -140,7 +140,7 @@ else
        { 
 	if ($result2 && $result3  &&   $result5 && $result6) 
 	{ 
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","dcno":"' . $receiptno . '"})';
 	} 
 		

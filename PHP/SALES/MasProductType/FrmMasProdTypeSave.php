@@ -9,6 +9,8 @@ $qhsn     = $_POST['qhsn'];
 $tnledcode = (int) $_POST['tnledcode'];
 $osledcode = (int) $_POST['osledcode'];
 $sezledcode = (int) $_POST['sezledcode'];
+
+mysqli_begin_transaction($conn);
 if ($savetype === "Add")
 {
 
@@ -29,7 +31,7 @@ if ($savetype === "Add")
 	}
 
 	  if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $quality . '"})';
 	} 
 	  else if ($cnt>0) {
@@ -51,7 +53,7 @@ if ($savetype === "Add")
 	  $query1="update masprd_type set vargrp_type_name ='$quality',vargrp_type_short_code = left('$qcode',4), vargrp_type_hsncode ='$qhsn' ,tn_sales_ledcode = $tnledcode , os_sales_ledcode = $osledcode where vargrp_type_code =$qlycode";
 	  $result1 = mysqli_query($conn, $query1);
 	  if ($result1 ) {
-	    mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $quality . '"})';
 	  } 
 	

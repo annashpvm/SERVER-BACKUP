@@ -66,6 +66,21 @@ $minhtottcs = (float) $_POST['minhtottcs'];
 
 $minhtottransport = (float) $_POST['minhtottransport'];
 
+$minhFrtAmt  = (float) $_POST['minhFrtAmt'];
+$minhCGSTPer = (float) $_POST['minhCGSTPer'];
+$minhSGSTPer = (float) $_POST['minhSGSTPer'];
+$minhIGSTPer = (float) $_POST['minhIGSTPer'];
+$minhCGSTAmt = (float) $_POST['minhCGSTAmt'];
+$minhSGSTAmt = (float) $_POST['minhSGSTAmt'];
+$minhIGSTAmt = (float) $_POST['minhIGSTAmt'];
+
+
+$frtledcode     = (int) $_POST['frtledcode'];
+$frtCGSTledcode = (int) $_POST['frtCGSTledcode'];
+$frtSGSTledcode = (int) $_POST['frtSGSTledcode'];
+$frtIGSTledcode = (int) $_POST['frtIGSTledcode'];
+
+
 
 $grnstatus = $_POST['grnstatus'];
 
@@ -106,10 +121,10 @@ if ($savetype == "Add") {
      $cnt =$rec1['nos'];
 
 
-
+	 
 
  $query3= "insert into  trnpur_min_header values(
-'$minhcompcode','$minhfincode','$minhtype', '$minhminno' ,'$minhmindate', '$minhsupcode', '$minhbillno', '$minhbilldate', '$minhgrossvalue', '$minhroundoff','$roundneed', '$minhvalue', '$minhcarrier','$minhremarks', '$minhentdate','$minhcreditdays', '$minhgeno', '$minhgedate', '$minhlrno', '$minhlrdate', '$minhvouno', 'Y', '$ginaccrefseq' ,'$minhmindate','$tcsauto','$minhcgstpm','$minhsgstpm','$minhigstpm','$minhtottcs','$minhtottransport','$grnstatus', '$userid',0,'$minhentdate')";
+'$minhcompcode','$minhfincode','$minhtype', '$minhminno' ,'$minhmindate', '$minhsupcode', '$minhbillno', '$minhbilldate', '$minhgrossvalue', '$minhroundoff','$roundneed', '$minhvalue', '$minhcarrier','$minhremarks', '$minhentdate','$minhcreditdays', '$minhgeno', '$minhgedate', '$minhlrno', '$minhlrdate', '$minhvouno', 'Y', '$ginaccrefseq' ,'$minhmindate','$tcsauto','$minhcgstpm','$minhsgstpm','$minhigstpm','$minhtottcs','$minhtottransport','$grnstatus', '$userid',0,'$minhentdate','$minhFrtAmt','$minhCGSTPer','$minhSGSTPer','$minhIGSTPer','$minhCGSTAmt','$minhSGSTAmt','$minhIGSTAmt','$frtledcode',	 '$frtCGSTledcode',	 '$frtSGSTledcode' ,	 '$frtIGSTledcode')";
 
 
 
@@ -151,7 +166,7 @@ else
 	$ginaccrefseq=$rec1['con_value'];
     }
 
-    $query2="call sppur_upd_minheader('$minhcompcode','$minhminno','$minhmindate','$minhfincode','$minhbillno','$minhbilldate' ,'$minhgrossvalue', '$minhroundoff','$roundneed','$minhvalue','$minhcarrier','$minhremarks','$minhcreditdays','$minhgeno','$minhgedate','$minhlrno','$minhlrdate','$tcsauto','$minhcgstpm','$minhsgstpm','$minhigstpm','$minhtottcs','$grnstatus','$ginaccrefseq','$minhtottransport', '$userid','$minhentdate','$minhtype' )";
+    $query2="call sppur_upd_minheader('$minhcompcode','$minhminno','$minhmindate','$minhfincode','$minhbillno','$minhbilldate' ,'$minhgrossvalue', '$minhroundoff','$roundneed','$minhvalue','$minhcarrier','$minhremarks','$minhcreditdays','$minhgeno','$minhgedate','$minhlrno','$minhlrdate','$tcsauto','$minhcgstpm','$minhsgstpm','$minhigstpm','$minhtottcs','$grnstatus','$ginaccrefseq','$minhtottransport', '$userid','$minhentdate','$minhtype','$minhFrtAmt','$minhCGSTPer','$minhSGSTPer','$minhIGSTPer','$minhCGSTAmt','$minhSGSTAmt','$minhIGSTAmt', '$frtledcode',	 '$frtCGSTledcode',	 '$frtSGSTledcode' ,	 '$frtIGSTledcode')";
 
 //echo $query2;
 //echo "<br>";
@@ -409,7 +424,7 @@ if ($grnstatus == "C")
 	   if ( $result3 && $result4 &&  $result13 &&  $result14  && $resulta1  && $resulta2  && $resulta3  && $cnt == 0)
 	//   if ($result3)
 	   {
-		   mysqli_query($conn, "COMMIT");                       
+		    mysqli_commit($conn);                       
 		    echo '({"success":"true","minno":"'.$minhminno.'"})';
 	   }
 	   else
@@ -425,7 +440,7 @@ if ($grnstatus == "C")
 	else {
 	   if ($result2 &&  $result4  && $resulta1  && $resulta2  && $resulta3)
 	   {
-		   mysqli_query($conn, "COMMIT");                       
+		mysqli_commit($conn);                     
 		    echo '({"success":"true","minno":"'.$minhminno.'"})';
 	   }
 	   else
@@ -443,7 +458,7 @@ else
 	   if ( $result3 && $result4 &&  $result13 &&  $result14  && $cnt == 0)
 	//   if ($result3)
 	   {
-		   mysqli_query($conn, "COMMIT");                       
+		mysqli_commit($conn);                     
 		    echo '({"success":"true","minno":"'.$minhminno.'"})';
 	   }
 	   else

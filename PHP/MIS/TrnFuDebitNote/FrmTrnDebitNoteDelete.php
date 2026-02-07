@@ -18,7 +18,7 @@ $finid   = $_REQUEST['finid'];
 
 #Begin Transaction
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -49,7 +49,7 @@ mysqli_query($conn, "BEGIN");
 //echo "<br>";
 	if ( $result1 && $result2  && $result3) 
 	{
-	  mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

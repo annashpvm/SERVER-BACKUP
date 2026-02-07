@@ -13,7 +13,7 @@ $dncrseqno = $_POST['dncrseqno'];
 $vouno = $_POST['vouno'];
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
    $query1  = "update  acc_dbcrnote_header set dbcr_value = 0  where dbcr_seqno = $dncrseqno and dbcr_comp_code = $compcode and dbcr_finid = $finid";
 
@@ -41,7 +41,7 @@ $result5  = mysqli_query($conn, $query5);
         
    if ( $result1 && $result2 && $result3 && $result4 && $result5 )
    {
-           mysqli_query($conn, "COMMIT");                       
+            mysqli_commit($conn);                   
             echo '({"success":"true","msg":"'.$vouno.'"})';
    }
    else

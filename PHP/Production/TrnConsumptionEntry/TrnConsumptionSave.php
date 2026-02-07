@@ -11,8 +11,7 @@ $issfincode  = $_POST['issfincode'];
 $issdate     = $_POST['issdate'];
 $isshno      = $_POST['isshno'];
 
-
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") 
 {
@@ -70,7 +69,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if($result1)
 {
-  	mysqli_begin_transaction($conn);                        
+	  mysqli_commit($conn);                   
   	echo '({"success":"true","IssNo":"'. $isshno . '"})';
 }
 else

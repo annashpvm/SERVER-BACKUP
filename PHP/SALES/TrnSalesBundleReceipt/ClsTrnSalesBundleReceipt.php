@@ -286,7 +286,7 @@ function getSONOList()
 	$fincode = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
 	$custcode = $_POST['custcode'];
-        $sql = "select ordh_sono from trnsal_order_header a, trnsal_order_trailer b,massal_customer c, massal_variety d where  a.ordh_party = c.cust_code and a.ordh_party = $custcode and a.ordh_sono = b.ordt_sono and a.ordh_fincode = b.ordt_fincode and  a.ordh_comp_code = b.ordt_comp_code and b.ordt_var_code = d.var_code and a.ordh_fincode <= $fincode  and a.ordh_comp_code = $compcode and var_unit = 2  group by ordh_sono";
+        $sql = "select ordh_sono from trnsal_order_header a, trnsal_order_trailer b,massal_customer c, massal_variety d where  a.ordh_party = c.cust_code and a.ordh_party = $custcode and a.ordh_sono = b.ordt_sono and a.ordh_fincode = b.ordt_fincode and  a.ordh_comp_code = b.ordt_comp_code and b.ordt_var_code = d.var_code and a.ordh_fincode <= $fincode  and a.ordh_comp_code = $compcode and var_unit = 2 and ordt_clo_stat = '' group by ordh_sono";
 
 
     $r = mysqli_query($conn, $sql);

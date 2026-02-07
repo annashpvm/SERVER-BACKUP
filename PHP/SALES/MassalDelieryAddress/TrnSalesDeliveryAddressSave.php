@@ -13,7 +13,7 @@ $ordhdeliverycity= strtoupper($_POST['ordhdeliverycity']);
 $ordhdeliverypin=  $_POST['ordhdeliverypin'];
 $ordhdeliverygst=  strtoupper($_POST['ordhdeliverygst']);
 $statecode=  $_POST['statecode'];
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 
 
@@ -36,7 +36,7 @@ delivery_add1 = '$ordhdeliveryadd1' , delivery_add2 = '$ordhdeliveryadd2', deliv
 }
 
 	if ($result2 )  {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $ordhpartyName . '"})';
 		 
 	} 

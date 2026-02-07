@@ -19,6 +19,10 @@ $removeddate   = $_POST['removeddate'];
 $removedshift  = $_POST['removedshift'];
 $prodgarantee  = $_POST['prodgarantee'];
 $prodyield     = $_POST['prodyield'];
+
+
+mysqli_begin_transaction($conn);
+
 if ($savetype === "Add")
 {
 	$query   = "select ifnull(max(fw_seqno),0)+1 as fw_seqno from trn_dayprod_feltwire where fw_compcode= $compcode";
@@ -45,7 +49,7 @@ else
 	  $result1 = mysqli_query($conn, $query1);
 
 	  if ($result1 ) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 	
 	    echo '({"success":"true","msg":"' . $wireno . '"})';
 	} 
          else {

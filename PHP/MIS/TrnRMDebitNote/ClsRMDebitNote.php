@@ -217,12 +217,22 @@ else
 	$compcode = $_POST['compcode'];
 	$finid    = $_POST['fincode'];
         $gsttype =$_POST['gsttype'];
+/*          
         if ($gsttype == 'G')
         $sql = "select max(dbcr_vouno) as vouno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNG' and  dbcr_vouno in (select qc_rm_debitnote_no  from trn_qc_rm_inspection where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' )";
         else
         $sql = "select max(dbcr_vouno) as vouno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNN' and  dbcr_vouno in (select qc_rm_debitnote_no  from trn_qc_rm_inspection where qc_rm_compcode = '$compcode' and qc_rm_fincode = '$finid' )";
+*/
+        if ($gsttype == 'G')
+        $sql = "select max(dbcr_vouno) as vouno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNG' and dbcr_no in (
+select max(dbcr_no) as maxno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNG' )";
+        else
+        $sql = "select max(dbcr_vouno) as vouno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNN' and dbcr_no in (
+            select max(dbcr_no) as maxno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNN' )";
+            
 
 
+//    echo $sql;
     $r = mysqli_query($conn, $sql);
 
     $arr = [];

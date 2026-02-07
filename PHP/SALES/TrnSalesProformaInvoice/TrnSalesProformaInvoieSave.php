@@ -48,7 +48,7 @@ $invhdelivery_gst  = trim(strtoupper($_POST['invhdelivery_gst']));
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 if ($savetype == "Add") {
 
@@ -100,7 +100,7 @@ $invhroff,$invhnetamt,'$invhdelivery_add1','$invhdelivery_add2','$invhdelivery_a
 if ($result2 )
 //if ($result1)
 {
-   mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","msg":"' . $invhno . '"})';
 } 
 	

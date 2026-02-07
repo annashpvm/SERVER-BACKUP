@@ -736,7 +736,7 @@ if($resulta2)
     {
 	      if($cresulta2 && $resulta9  )
 		{
-		    mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
 		    echo '({"success":"true","vouno":"'.$vouno.'"})';
 		}
 		else

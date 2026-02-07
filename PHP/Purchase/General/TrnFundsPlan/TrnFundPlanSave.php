@@ -8,7 +8,7 @@ $savetype   = $_POST['savetype'];
 $stdate    = $_POST['stdate'];
 $eddate    = $_POST['eddate'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);  
 
 $query1   = "select count(*) as nos from  trn_funds_plan where fp_date between '$stdate' and '$eddate'";
 $result1  = mysqli_query($conn, $query1);
@@ -61,7 +61,7 @@ $fp ='';
 
 if($result1) 
 {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);          
     echo '({"success":"true","msg":"' . $fp. '"})';
 } 
 else {

@@ -17,6 +17,8 @@ $sheets     = (int) $_POST['sheets'];
 
 $gsm=0;
 
+mysqli_begin_transaction($conn);
+
 if ($savetype == "New")
 {
 	$query = "select ifnull(max(var_code),0)+1 as itemseq from massal_variety";
@@ -45,7 +47,7 @@ else
 
 
   if ($result1 && $cnt==0) {
-   mysqli_begin_transaction($conn);
+	mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $sizecode . '"})';
 } 
   else if ($cnt>0) {

@@ -19,7 +19,7 @@ $oldrollno   = (int)$_POST['oldrollno'];
 $oldyymm     = (int)$_POST['oldyymm'];
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
    $query1 = "select IFNULL(max(ent_no),0)+1 as entno from trnsal_salvage where  comp_code ='$compcode' and fin_code ='$finid'";
    $result1= mysqli_query($conn, $query1);
@@ -60,15 +60,13 @@ $result3 = mysqli_query($conn, $query3);
 
 if($result1 && $result2 && $result3)
 {
- mysqli_query($conn, "COMMIT");                       
+  mysqli_rollback($conn);                   
   echo '({"success":"true","entno":"'.$entno.'"})';
 }
 else
 {
 	echo '({"success":"false","entno":"'.$entno.'"})';
 	mysqli_rollback($conn);
-
-            
 	    
 } 
 

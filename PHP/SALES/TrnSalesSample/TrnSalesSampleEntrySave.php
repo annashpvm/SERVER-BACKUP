@@ -17,7 +17,7 @@ $truck       = $_POST['truck'];
 $saveflag =$_REQUEST['saveflag'];
 
 
- mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);  
 
 if ($saveflag == "Add") {
 	 $query1  = "select IFNULL(max(rs_entno),0)+1 as entno from trnsal_sample where  rs_compcode ='$compcode' and rs_finyear ='$fincode'";
@@ -65,8 +65,8 @@ for ($i=0;$i<$rowcnt;$i++)
 
   
 if($result2 && $result3)
-{
-mysqli_begin_transaction($conn);                        
+ {
+	mysqli_commit($conn);                       
 echo '({"success":"true","msg":"'.$entno.'"})';
 }
 else

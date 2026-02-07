@@ -13,6 +13,8 @@ $rowcnt   = $_POST['cnt'];
 //$compcode = $_POST['compcode'];
 //$finid = $_POST['finid'];
 
+mysqli_begin_transaction($conn);
+
 if ($savetype == "Add") {
  $query2 = "select IFNULL(max(da_no),0)+1 as da_no from trnsal_desp_advice where da_fincode = $finid and da_comp_code='$compcode'";
  $result2= mysqli_query($conn, $query2);
@@ -58,7 +60,7 @@ $result1=mysqli_query($conn, $query1);
  
 if ($savetype == "Add") {
 	if ($result1 ) {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","dano":"' . $dano . '"})';
 	} 
 	
@@ -72,7 +74,7 @@ if ($savetype == "Add") {
 else
 {
 	if ($result1  && $result2  ) {
-	   mysqli_begin_transaction($conn);
+	    mysqli_commit($conn); 
 	    echo '({"success":"true","dano":"' . $dano . '"})';
 	} 
 	

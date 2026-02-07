@@ -7,6 +7,7 @@ session_start();
  $areaname =strtoupper($_POST['areaname']);
  $areacode = $_POST['areacode'];
 
+ mysqli_begin_transaction($conn);
 
 if ($savetype === "Add")
 {
@@ -29,7 +30,7 @@ if ($savetype === "Add")
 
 	}
 	if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $areaname . '"})';
 	} 
 	else if($cnt>0) {
@@ -49,7 +50,7 @@ else
 	  $query1="update massal_areaRate_group  set rate_areaname = upper('$areaname') where  rate_areacode = '$areacode'";
 	  $result1 = mysqli_query($conn, $query1);
 	if ($result1) {
-	    mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $areaname . '"})';
 	} 
         else {

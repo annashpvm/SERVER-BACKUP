@@ -21,7 +21,8 @@ $ledcode = $_REQUEST['ledcode'];
 
 
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
+
 
 
 for ($i = 0; $i < $rowDebit; $i++) {
@@ -103,7 +104,7 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 if ( $result1 && $result2 && $result3 ) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","vouno":"' . $ginrefslno . '"})';
 } else {
     mysqli_rollback($conn);

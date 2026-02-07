@@ -267,7 +267,7 @@ if ($flagtype == "Add")
 {
 	if ($cresulta2 && ($inscnt == $rowcnt) && $resulta9 ) {
 
-	    mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);
@@ -281,7 +281,8 @@ else
 
 	if ( $result1 &&  $result2 &&  $result3 &&  $cresulta2 && ($inscnt == $rowcnt) && $resulta9) {
 
-	    mysqli_begin_transaction($conn);
+
+        mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
 	} else {
 	    mysqli_rollback($conn);

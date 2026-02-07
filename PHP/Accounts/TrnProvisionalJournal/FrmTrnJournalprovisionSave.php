@@ -22,7 +22,7 @@
         $conval=$rec2['vou_no'];
         $vouno='PJV'.$conval;
 
-        mysqli_query($conn, "BEGIN");
+        mysqli_begin_transaction($conn);
 
         $querya2 = "insert into accrefprovision values('$ginaccrefseq','$vouno','$compcode','$finid','$voudate','$narration')";
         $resulta2 = mysqli_query($conn, $querya2);
@@ -47,7 +47,8 @@
         
         if($resulta2 && ($inscnt == $rowcnt))
         {
-            mysqli_begin_transaction($conn);
+            
+            mysqli_commit($conn);
             echo '({"success":"true","vouno":"'.$vouno.'"})';
         }
         else

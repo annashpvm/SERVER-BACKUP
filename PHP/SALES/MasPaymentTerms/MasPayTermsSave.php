@@ -4,7 +4,7 @@ session_start();
 
 $griddet = json_decode($_REQUEST['griddet'],true);
 $rowcnt = $_POST['cnt'];
-
+mysqli_begin_transaction($conn);
 $inscnt = 0;
 for ($i=0;$i<$rowcnt;$i++)
 {
@@ -23,7 +23,7 @@ for ($i=0;$i<$rowcnt;$i++)
 
 if ($result1 ) 
 {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $custname . '"})';
 } 
 else {

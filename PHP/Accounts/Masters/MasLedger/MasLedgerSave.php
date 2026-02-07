@@ -16,7 +16,7 @@ session_start();
 
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 
 $query1="select ifnull(max(curbal_seqno),0)+1 as curbal_seqno from acc_current_balance";
 $result1=mysqli_query($conn, $query1);
@@ -99,7 +99,7 @@ else
 
       if (($result ))
       {
-          mysqli_begin_transaction($conn);
+		  mysqli_commit($conn);
           echo '({"success":"true","msg":"' . $ledgername . '"})';
       }
      else

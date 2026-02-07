@@ -8,7 +8,7 @@ $shadeshortname  = strtoupper($_POST['shadeshortname']);
 $scode      = strtoupper($_POST['scode']);
 
 
-
+mysqli_begin_transaction($conn);
 if ($savetype === "Add")
 {
 
@@ -29,7 +29,7 @@ if ($savetype === "Add")
 	}
 
 	  if ($result1 && $cnt==0) {
-	    mysqli_begin_transaction($conn);
+	    mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $shadefullname . '"})';
 	} 
 	  else if ($cnt>0) {
@@ -51,7 +51,7 @@ if ($savetype === "Add")
 	  $query1="update massal_shade set shade_fullname ='$shadefullname',shade_shortname ='$shadeshortname',shade_shortcode = left('$scode',2)  where shade_code =$shadecode";
 	  $result1 = mysqli_query($conn, $query1);
 	  if ($result1 ) {
-	    mysqli_begin_transaction($conn);
+		mysqli_commit($conn);
 	    echo '({"success":"true","msg":"' . $shadefullname . '"})';
 	  } 
 	

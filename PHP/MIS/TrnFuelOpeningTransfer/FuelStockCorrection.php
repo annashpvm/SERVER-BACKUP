@@ -9,7 +9,7 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
 
     $query1= "
 
@@ -170,7 +170,7 @@ d.itmt_fincode = $finid
 
      if ($result2)
      {
-          mysqli_begin_transaction($conn);
+        mysqli_commit($conn);
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else

@@ -9,7 +9,7 @@ $compcode  = $_POST['compcode'];
 $fincode   = $_POST['fincode'];
 
 #Begin Transaction
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
 $reccount = 0;
 
 
@@ -46,9 +46,9 @@ else
 
       if (($result))
       {
-          mysqli_begin_transaction($conn);
+          mysqli_commit($conn);
           Echo '{success:true,results:1,
-             rows:[{"ledger":"$ledgercode"}]}';
+           rows:[{"ledger":"$ledgercode"}]}';
       }
      else
      {

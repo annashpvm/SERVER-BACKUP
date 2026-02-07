@@ -2,6 +2,8 @@
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
 session_start();
+
+mysqli_begin_transaction($conn);
 $griddet        = json_decode($_POST['griddet'],true);
 $prdhseqno      = $_POST['prdhseqno'];  
 $rowcnt         = $_POST['cnt'];
@@ -41,7 +43,7 @@ $prdhshift      = $_POST['prdhshift'];
 
 
 	if ($result1)  {
-	   mysqli_begin_transaction($conn);
+		mysqli_commit($conn); 
 	    echo '({"success":"true","msg":"' . $prdhseqno . '"})';
 		 
 	} 

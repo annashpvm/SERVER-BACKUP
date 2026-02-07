@@ -23,6 +23,7 @@ $finid   = substr($finyear,2,2);
 	$query3  = "insert into control_details  values (90,'$finid','Delivery Note',1)";
 	$result3 = mysqli_query($conn, $query3);
 
+//shvpmtrn_weighbridge_entry	
 //echo $query1;
 //echo "<br>";
 

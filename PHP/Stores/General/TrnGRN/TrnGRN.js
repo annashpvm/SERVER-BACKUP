@@ -30,7 +30,9 @@ Ext.onReady(function(){
     
       var  purtype = "P"
        var grntype = 'P';
-    
+
+       
+       var gststate = '';
        var mtype = 'P';
     
     // GinFinid = 21;
@@ -42,7 +44,17 @@ Ext.onReady(function(){
     var pitemname = '';
     
     var rejectqty = 0;
-    
+
+    var frtledname = '';
+    var frtCGSTledname = '';
+    var frtSGSTledname = '';
+    var frtIGSTledname = '';
+
+    var frtledcode = '';
+    var frtCGSTledcode = 0;
+    var frtSGSTledcode = 0;
+    var frtIGSTledcode = 0;
+
     new Ext.KeyMap( Ext.getBody(), [{
                 key: "s",
                 ctrl:true,
@@ -90,12 +102,132 @@ Ext.onReady(function(){
             id          : 'txtNewGRNNo',
             name        : 'txtNewGRNNo',
             width       :  100,
-    labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+            labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
             style       :  {textTransform: "uppercase"},
             allowBlank  :  false,
-        tabindex : 1
-        });
+            tabindex : 1
+    });
+
+
     
+    var Load_GST_LedgerName_Datasore = new Ext.data.Store({
+        id: 'Load_GST_LedgerName_Datasore',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsGrn.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task: "LoadGSTLedgerName"}, // this parameter asks for listing
+              reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },['cust_code','cust_name'])
+    });
+    
+    
+    
+    var Load_GST_LedgerName_Datasore2 = new Ext.data.Store({
+        id: 'Load_GST_LedgerName_Datasore2',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsGrn.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task: "LoadGSTLedgerName2"}, // this parameter asks for listing
+              reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },['cust_name'])
+    });
+    
+    
+    function findGSTledgerName2(ledcode, callback) {
+
+        if (!ledcode) {
+            callback('');
+            return;
+        }
+    
+        Ext.Ajax.request({
+            url: 'ClsGrn.php',
+            method: 'POST',
+            params: {
+                task: 'LoadGSTLedgerName2',
+                ledcode: ledcode
+            },
+            success: function (response) {
+    
+                var data = Ext.decode(response.responseText);
+    
+                if (data.success) {
+                    callback(data.ledgername || '');
+                } else {
+                    callback('');
+                }
+            },
+            failure: function () {
+                callback('');
+            }
+        });
+    }
+    
+    
+
+
+    function findGSTledgerName()
+    {
+
+        var gstper = 0;
+        if (gststate == 'IGST')
+            gstper = txtFRTIGSTPer.getValue();
+        else
+            gstper = txtFRTCGSTPer.getValue();        
+
+   
+        Load_GST_LedgerName_Datasore.removeAll(); 
+        Load_GST_LedgerName_Datasore.load({
+           url: 'ClsGrn.php',
+           params:
+           {
+              task:"LoadGSTLedgerName",
+              gsttype : gststate,
+              gstper  : gstper,
+           },  
+           callback: function () 
+           {
+            var cnt = Load_GST_LedgerName_Datasore.getCount();
+            if (cnt >0 && gststate == 'IGST')
+            {   
+                frtIGSTledcode = Load_GST_LedgerName_Datasore.getAt(0).get('cust_code');
+                frtIGSTledname = Load_GST_LedgerName_Datasore.getAt(0).get('cust_name');
+                frtledcode = 5176;
+                frtledname = 'FREIGHT INWARD  IGST-18%';
+            }    
+            if (cnt >0 && gststate == 'CGST')
+            {    
+                frtCGSTledcode = Load_GST_LedgerName_Datasore.getAt(0).get('cust_code'); 
+                frtCGSTledname = Load_GST_LedgerName_Datasore.getAt(0).get('cust_name'); 
+                frtledcode = 5088;
+                frtledname = 'FREIGHT INWARD GST -18%';
+
+            }    
+            if (cnt >0 && gststate == 'SGST')
+            {    
+                frtSGSTledcode = Load_GST_LedgerName_Datasore.getAt(0).get('cust_code');
+                frtSGSTledname = Load_GST_LedgerName_Datasore.getAt(0).get('cust_name') 
+                frtledcode = 5088;
+                frtledname = 'FREIGHT INWARD GST -18%';
+            }
+            flxaccupdation();
+            }
+        });
+
+    }
+
+
+
     
        function check_password()
        {
@@ -204,6 +336,7 @@ Ext.onReady(function(){
     
        }   
     
+
     
        var txtPassword3 = new Ext.form.TextField({
             fieldLabel  : 'PassWord',
@@ -1171,7 +1304,7 @@ Ext.onReady(function(){
     
     
                                  Ext.getCmp('save').setDisabled(true);
-                                 Ext.getCmp('save2').setDisabled(true);
+         //                        Ext.getCmp('save2').setDisabled(true);
                                flxDetail.getSelectionModel().selectAll();
                                                    var minDeta = flxDetail.getStore().getRange();                                
                                      var minupData = new Array();
@@ -1201,17 +1334,15 @@ Ext.onReady(function(){
                             {       
     
                             griddet: Ext.util.JSON.encode(minupData),                                      
-                                            cnt:minDeta.length,
-                         griddetacc      : Ext.util.JSON.encode(accupdData),                          
-                    cntacc		: accData.length,
-    
-    
-                                                    savetype       : gstFlag,
-                                                    grnflag        : grnflag,   
-               
-                                                    minhcompcode   : Gincompcode,
-                                                    minhminno      : txtGRNNo.getRawValue(),
-                                       minhmindate    : Ext.util.Format.date(dtpgrn.getValue(),"Y-m-d"),	
+                            cnt:minDeta.length,
+                            griddetacc      : Ext.util.JSON.encode(accupdData),                          
+                            cntacc		: accData.length,
+                            savetype       : gstFlag,
+                            grnflag        : grnflag,   
+
+                            minhcompcode   : Gincompcode,
+                            minhminno      : txtGRNNo.getRawValue(),
+                            minhmindate    : Ext.util.Format.date(dtpgrn.getValue(),"Y-m-d"),	
                             minhfincode    : GinFinid,
                             minhtype       : mintype,
                             minhsupcode    : supcode,
@@ -1235,25 +1366,42 @@ Ext.onReady(function(){
                             minhlrno       : txtlrnumber.getValue(),
                             minhlrdate     : Ext.util.Format.date(LRdate.getValue(),"Y-m-d"),
                             minhaccupd     : 'N',
-                                                    tcsauto        : TCSCalc,      
-                                             minhcgstpm     : txtCGSTPM.getValue(),
-                                             minhsgstpm     : txtSGSTPM.getValue(),
-                                             minhigstpm     : txtIGSTPM.getValue(),
-                                             minhtottcs     : txttottcs.getValue(),     
-                                             minhtottransport : txtTotTransport.getValue(),     
-                                                    tcsauto        : TCSCalc,      
-                                                    grnstatus      : grn_status,     
-                                                    roundneed      : roundoff,
-                                                    accseqno       : accseqno,
-                                                    userid         : UserId,   
+                            tcsauto        : TCSCalc,      
+                            minhcgstpm     : txtCGSTPM.getValue(),
+                            minhsgstpm     : txtSGSTPM.getValue(),
+                            minhigstpm     : txtIGSTPM.getValue(),
+                            minhtottcs     : txttottcs.getValue(),     
+                            minhtottransport : txtTotTransport.getValue(),     
+                            tcsauto        : TCSCalc,      
+                            grnstatus      : grn_status,     
+                            roundneed      : roundoff,
+                            accseqno       : accseqno,
+                            userid         : UserId,   
+
+
+                            minhFrtAmt     : txtCommonFRTAmt.getValue(),
+                            minhCGSTPer    : txtFRTCGSTPer.getValue(),
+                            minhSGSTPer    : txtFRTSGSTPer.getValue(),
+                            minhIGSTPer    : txtFRTIGSTPer.getValue(),  
+                            minhCGSTAmt    : txtFRTCGSTAmt.getValue(),
+                            minhSGSTAmt    : txtFRTSGSTAmt.getValue(),
+                            minhIGSTAmt    : txtFRTIGSTAmt.getValue(),  
+
+                            frtledcode     : frtledcode,  
+                            frtCGSTledcode : frtCGSTledcode,
+                            frtSGSTledcode : frtSGSTledcode,
+                            frtIGSTledcode : frtIGSTledcode,  
+
+
+                            
         //						minhseqno : '0'
-                                                },
-                                                callback: function(options, success, response)
-                                                    {
-    
-    
-                                                     var obj = Ext.decode(response.responseText);
-                                                     var grndisp = "Goods Receipt Note - Saved - No."; 
+                            },
+                            callback: function(options, success, response)
+                            {
+
+
+                                    var obj = Ext.decode(response.responseText);
+                                    var grndisp = "Goods Receipt Note - Saved - No."; 
                             if (obj['success']==="true")
                             {                                
                                                         Ext.MessageBox.alert( grndisp + obj['minno']);
@@ -1269,7 +1417,7 @@ Ext.onReady(function(){
      Ext.MessageBox.alert("GRN Not Save! Pls Check!-" + obj['minno']); 
     
                                          Ext.getCmp('save').setDisabled(false);
-                                 Ext.getCmp('save2').setDisabled(true);                                                
+              //                   Ext.getCmp('save2').setDisabled(true);                                                
                                         }
                                     }
                      //-- loop Z end           
@@ -1336,7 +1484,7 @@ Ext.onReady(function(){
         columns:
         [
         {header: "S.No" ,       dataIndex: 'slno',sortable:true,width:60,align:'center'},
-        {header: "Led.Code",    dataIndex: 'ledcode',sortable:true,width:60,align:'left',hidden:true},
+        {header: "Led.Code",    dataIndex: 'ledcode',sortable:true,width:60,align:'left',hidden:false},
         {header: "Ledger Name", dataIndex: 'ledname',sortable:true,width:360,align:'left'},
         {header: "Dedit",       dataIndex: 'debit',sortable:true,width:100,align:'right'},
         {header: "Credit",      dataIndex: 'credit',sortable:true,width:100,align:'right'},
@@ -1382,6 +1530,7 @@ Ext.onReady(function(){
                 'font-size': '14px','font-weight':'bold'
             },
        });
+/*       
     
      var btnsave = new Ext.Button({
                     text: 'Save',
@@ -1404,6 +1553,7 @@ Ext.onReady(function(){
                     }
     });   
     
+*/    
      var gstFlag = "Add";
     
      var partycode = 0;
@@ -1564,7 +1714,9 @@ Ext.onReady(function(){
     'grp_cst_code', 'grp_imp_code', 'grp_cen_ledger_code', 'grp_freight_code', 'minh_minno', 'minh_type', 'minh_bill_no', 
     'minh_bill_date', 'minh_remarks', 'minh_carrier', 'mint_cr_status', 'minh_acct_status', 'minh_credit_days', 'cust_taxtag', 'grp_educess_code', 'minh_geno',
     'minh_gedate', 'minh_lrno', 'minh_lrdate', 'minh_accupd','mint_rebate', 'mint_machine','mint_tcs_per','mint_tcs_amt','mint_accept_qty','mint_otherspm', 'mint_purgroup','cust_name','minh_roundneeded','cust_ref','tax_cgstper', 'tax_sgstper', 'tax_igstper', 'tax_cgst_ledcode', 'tax_sgst_ledcode', 'tax_igst_ledcode', 'tax_cgst_ledname', 'tax_sgst_ledname', 'tax_igst_ledname','led_name', 'tax_gst','sup_led_code','minh_acc_seqno','cust_state','minh_cgst_pm','minh_sgst_pm','minh_igst_pm','minh_tot_tcs','minh_round_off',
-    'mint_insurance','acctrail_adj_value','mint_recdqty_bill','mint_item_unit','minh_grn_status','mint_item_spec','mint_transport','mint_value_pm','mint_rebate2'
+    'mint_insurance','acctrail_adj_value','mint_recdqty_bill','mint_item_unit','minh_grn_status','mint_item_spec','mint_transport','mint_value_pm','mint_rebate2',
+    'minh_freight_amount', 'minh_frt_cgstper', 'minh_frt_sgstper','minh_frt_igstper', 'minh_frt_cgstamt', 'minh_frt_sgstamt', 'minh_frt_igstamt',
+    'minh_frt_ledger', 'minh_frt_cgstledger', 'minh_frt_sgstledger', 'minh_frt_igstledger'
     
     
     
@@ -1889,12 +2041,27 @@ Ext.onReady(function(){
     });
     
     
+    var lblFrtPer = new Ext.form.Label({
+        fieldLabel  : '%',
+        id          : 'lblFrtPer',
+        width       : 60,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#fc03db",
+    });
+
+    var lblFrtAmt = new Ext.form.Label({
+        fieldLabel  : 'Amt',
+        id          : 'lblFrtAmt',
+        width       : 60,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#fc03db",
+    });
+            
+        
+
     function grid_tot2(){
             var dr = 0;
             var cr = 0;
-    
-    //alert("Annadurai");
-        var Row= flxAccounts.getStore().getCount();
+
+            var Row= flxAccounts.getStore().getCount();
     
     
             //flxAccounts.getSelectionModel().selectAll();
@@ -1918,8 +2085,8 @@ Ext.onReady(function(){
     
     var remarks = '';
     function grid_tot(){
-        var value = 0;
-        var value2 = 0;
+            var value = 0;
+            var value2 = 0;
             var disc =0;
             var pf  =0;
             var cgst =0;
@@ -1940,6 +2107,7 @@ Ext.onReady(function(){
             var ins =0;
             var transport =0;
     
+//alert("TEst") ;           
             txtgrossval.setValue(0);
             txttotdisc.setValue(0);
             txtTotPF.setValue(0);
@@ -2011,8 +2179,13 @@ Ext.onReady(function(){
     
             }
     
+            frt += Number(txtCommonFRTAmt.getValue());
+            cgst += Number(txtFRTCGSTAmt.getValue());
+            sgst += Number(txtFRTSGSTAmt.getValue());
+            igst += Number(txtFRTIGSTAmt.getValue());
             value2 = Number(value2) - Number(disc);  
     
+
              txtRemarks.setValue(remarks) ;
        
            // landing = value - disc + pf + frt + others + qcdev + inward + taxfrt + taxfrtgst + inward+ taxfrt + taxfrtgst ;
@@ -2020,38 +2193,35 @@ Ext.onReady(function(){
     
     //Modified on 20/06/2024
     
-            landing = value - disc + pf + frt + others + otherpm - rebate - rebate2 + ins + tcs;
+            landing = value - disc + pf + frt + others + otherpm - rebate - rebate2 + ins + tcs 
     
             landing = value2;
     
     //alert(value2);
     
     //        totvalue = Ext.util.Format.number(Math.round(value - disc + pf + frt + cgst + sgst + igst + others + otherpm) ,'0.00');
-    
-    //alert(roundoff);
-    
+
     
             if (roundoff == "M")   
             {
                if (gstFlag == "Edit")
                {    
-    //alert(grnrounding);
-         //      txtroundoff.setValue(grnrounding);
-               totvalue = value - disc + pf + frt + cgst + sgst + igst + others + otherpm - rebate   - rebate2 + Number(txtroundoff.getValue()) + ins + tcs + transport;
-                }
+                totvalue = value - disc + pf + frt + cgst + sgst + igst + others + otherpm - rebate   - rebate2 + Number(txtroundoff.getValue()) + ins + tcs + transport  ;
+                
+               }
                 else
                 {
-               totvalue = value - disc + pf + frt + cgst + sgst + igst + others + otherpm - rebate  - rebate2 + Number(txtroundoff.getValue()) + ins + tcs  + transport;
+               totvalue = value - disc + pf + frt + cgst + sgst + igst + others + otherpm - rebate  - rebate2 + Number(txtroundoff.getValue()) + ins + tcs  + transport ;
     
                 }      
     
             }  
             else
             {
-               totvalue = value - disc + pf + frt + cgst + sgst + igst + others + otherpm - rebate  - rebate2 + ins + tcs+ transport;
+               totvalue = value - disc + pf + frt + cgst + sgst + igst + others + otherpm - rebate  - rebate2 + ins + tcs+ transport ;
             }
     
-    
+         
             txttotcgst.setValue(cgst.toFixed(2));
             txttotsgst.setValue(sgst.toFixed(2));
             txttotigst.setValue(igst.toFixed(2));
@@ -2147,7 +2317,13 @@ Ext.onReady(function(){
            var net = 0;
            var taxable = 0;
     
-    
+
+
+
+            txtFRTCGSTAmt.setRawValue(Ext.util.Format.number(Number(txtCommonFRTAmt.getValue()) *  Number(txtFRTCGSTPer.getRawValue())/100,'0.00'));
+            txtFRTSGSTAmt.setRawValue(Ext.util.Format.number(Number(txtCommonFRTAmt.getValue()) *  Number(txtFRTSGSTPer.getRawValue())/100,'0.00'));
+            txtFRTIGSTAmt.setRawValue(Ext.util.Format.number(Number(txtCommonFRTAmt.getValue()) *  Number(txtFRTIGSTPer.getRawValue())/100,'0.00'));
+
            value = Number(txtunitrate.getRawValue()) * Number(txtinvqty.getRawValue()) ; 
            value2 = Number(txtunitrate.getRawValue()) * Number(txtinvqty.getRawValue()) ; 
     
@@ -2386,7 +2562,61 @@ Ext.onReady(function(){
     
     
                                  supstate = GRNdetailsLoadDataStore.getAt(0).get('cust_state'); 
-    
+
+
+
+                                 
+
+                                 txtCommonFRTAmt.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_freight_amount'));
+                                 txtFRTCGSTPer.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_frt_cgstper'));
+                                 txtFRTSGSTPer.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_frt_sgstper'));
+                                 txtFRTIGSTPer.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_frt_igstper'));  
+                                 txtFRTCGSTAmt.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_frt_cgstamt'));
+                                 txtFRTSGSTAmt.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_frt_sgstamt'));
+                                 txtFRTIGSTAmt.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_frt_igstamt'));  
+                                 
+
+
+                                 frtCGSTledcode = GRNdetailsLoadDataStore.getAt(0).get('minh_frt_cgstledger'); 
+                                 frtSGSTledcode = GRNdetailsLoadDataStore.getAt(0).get('minh_frt_sgstledger'); 
+                                 frtIGSTledcode = GRNdetailsLoadDataStore.getAt(0).get('minh_frt_igstledger');  
+                                 
+
+                                 findGSTledgerName2(
+                                    GRNdetailsLoadDataStore.getAt(0).get('minh_frt_cgstledger'),
+                                    function (name) {
+                                
+                                        frtCGSTledname = name;
+                                
+                                        console.log('CGST:', frtCGSTledname);
+                                
+                                     }
+                                );
+
+                                 
+
+                                findGSTledgerName2(
+                                    GRNdetailsLoadDataStore.getAt(0).get('minh_frt_sgstledger'),
+                                    function (name) {
+                                
+                                        frtSGSTledname = name;
+                                
+                                        console.log('SGST:', frtSGSTledname);
+                                
+                                     }
+                                );                                
+                                findGSTledgerName2(
+                                    GRNdetailsLoadDataStore.getAt(0).get('minh_frt_igstledger'),
+                                    function (name) {
+                                
+                                        frtIGSTledname = name;
+                                
+                                        console.log('IGST:', frtIGSTledname);
+                                
+                                     }
+                                );                                
+                                                                
+                                
     
                             if ( supstate == 24)
                                    statecode = "T";
@@ -2456,7 +2686,7 @@ Ext.onReady(function(){
                                  cmbgateentryno.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_geno'));
                                  gentrydate.setRawValue(Ext.util.Format.date(GRNdetailsLoadDataStore.getAt(0).get('minh_gedate'),"d-m-Y"));
                                  txtPayTerms.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_credit_days'));
-                         myFormPanel.getForm().findField('txtBillNo').setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_bill_no'));
+                                 myFormPanel.getForm().findField('txtBillNo').setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_bill_no'));
     
                                  cmbPONO.setValue(GRNdetailsLoadDataStore.getAt(0).get('mint_ind_fincode'));  
                                  cmbPONO.setRawValue(GRNdetailsLoadDataStore.getAt(0).get('mint_pono'));  
@@ -2476,7 +2706,7 @@ Ext.onReady(function(){
                                grnrounding = GRNdetailsLoadDataStore.getAt(0).get('minh_round_off');  
     
                                  for(var j=0; j<cnt; j++)
-                         { 
+                                { 
     
         
                                    var sno1               = GRNdetailsLoadDataStore.getAt(j).get('mint_slno');
@@ -2484,24 +2714,24 @@ Ext.onReady(function(){
                                    var podate1            = GRNdetailsLoadDataStore.getAt(j).get('mint_podate');
                                    var itemname1          = GRNdetailsLoadDataStore.getAt(j).get('item_name');
                                    var uom1               = GRNdetailsLoadDataStore.getAt(j).get('uom_short_name');
-                       var pobalqty1          = GRNdetailsLoadDataStore.getAt(j).get('mint_inv_qty'); 
+                                   var pobalqty1          = GRNdetailsLoadDataStore.getAt(j).get('mint_inv_qty'); 
                                    var mintinvqty1        = GRNdetailsLoadDataStore.getAt(j).get('mint_inv_qty');
-                       var mintrcvdqty1       = GRNdetailsLoadDataStore.getAt(j).get('mint_rcvd_qty');
-                               var mintacceptqty1     = GRNdetailsLoadDataStore.getAt(j).get('mint_accept_qty');
+                                   var mintrcvdqty1       = GRNdetailsLoadDataStore.getAt(j).get('mint_rcvd_qty');
+                                   var mintacceptqty1     = GRNdetailsLoadDataStore.getAt(j).get('mint_accept_qty');
                                    var mintunitrate1      = GRNdetailsLoadDataStore.getAt(j).get('mint_unit_rate');
                                    var mintdiscount1      = GRNdetailsLoadDataStore.getAt(j).get('mint_discount');
                                    var mintdisamt1        = GRNdetailsLoadDataStore.getAt(j).get('mint_disamt');
-                            var mintpfper1         = GRNdetailsLoadDataStore.getAt(j).get('mint_pack_per');
-                        var mintpfamt1         = GRNdetailsLoadDataStore.getAt(j).get('mint_pfamt');
+                                   var mintpfper1         = GRNdetailsLoadDataStore.getAt(j).get('mint_pack_per');
+                                   var mintpfamt1         = GRNdetailsLoadDataStore.getAt(j).get('mint_pfamt');
                                    var mintothers1        = GRNdetailsLoadDataStore.getAt(j).get('mint_others');  
                                    var mintcgstper1       = GRNdetailsLoadDataStore.getAt(j).get('mint_cgst_per');
                                    var mintsgstper1       = GRNdetailsLoadDataStore.getAt(j).get('mint_sgst_per');
                                    var mintigstper1       = GRNdetailsLoadDataStore.getAt(j).get('mint_igst_per');
                                    var mintsgstamt1       = GRNdetailsLoadDataStore.getAt(j).get('mint_sgst_amt');
-                       var mintcgstamt1       = GRNdetailsLoadDataStore.getAt(j).get('mint_cgst_amt');
+                                   var mintcgstamt1       = GRNdetailsLoadDataStore.getAt(j).get('mint_cgst_amt');
                                    var mintigstamt1       = GRNdetailsLoadDataStore.getAt(j).get('mint_igst_amt');
-                           var mintfreight1       = GRNdetailsLoadDataStore.getAt(j).get('mint_freight');
-                           var mintqcreq1         = GRNdetailsLoadDataStore.getAt(j).get('mint_qc_status');
+                                   var mintfreight1       = GRNdetailsLoadDataStore.getAt(j).get('mint_freight');
+                                   var mintqcreq1         = GRNdetailsLoadDataStore.getAt(j).get('mint_qc_status');
     
     
                                    var mintotherspm      =  GRNdetailsLoadDataStore.getAt(j).get('mint_otherspm');  
@@ -2539,38 +2769,36 @@ Ext.onReady(function(){
                                          pobalqty          : pobalqty1, 
                                          mintinvqty        : mintinvqty1,
                                          mintacceptqty     : mintacceptqty1,
-                             mintunitrate      : mintunitrate1,
-                             mintdiscount      : mintdiscount1,
+                                         mintunitrate      : mintunitrate1,
+                                         mintdiscount      : mintdiscount1,
                                          mintdisamt        : mintdisamt1,
-                             mintpfper         : mintpfper1,
+                                         mintpfper         : mintpfper1,
                                          mintpfamt         : mintpfamt1,
                                          mintothers        : mintothers1,
                                          mintcgstper       : mintcgstper1,
                                          mintsgstper       : mintsgstper1,
-                             mintigstper       : mintigstper1,
-                             mintsgstamt       : mintsgstamt1,
-                             mintcgstamt       : mintcgstamt1,
-                             mintigstamt       : mintigstamt1,
-                             mintfreight       : mintfreight1,
-                                 mintqcreq         :'Y',
-    
+                                         mintigstper       : mintigstper1,
+                                         mintsgstamt       : mintsgstamt1,
+                                         mintcgstamt       : mintcgstamt1,
+                                         mintigstamt       : mintigstamt1,
+                                         mintfreight       : mintfreight1,
+                                         mintqcreq         :'Y',    
                                          mintotherpm       : mintotherspm,
                                          mintcrstatus      : mintcrstatus1,
                                          mintvalue         : mintvalue1,
                                          vatstatus         : 'N',
-                                       cgstled           : 0,
+                                         cgstled           : 0,
                                          sgstled           : 0, 
-                             igstled           : 0,
-    
+                                         igstled           : 0,
                                          mintitemcode      : mintitemcode1,//  itemcode,
                                          mintgrpcode       : mintgrpcode1,
                                          ledcode           :'0',
                                          mintindentno      : mintindentno1,
                                          mintfincode       : mintfincode1,
                                          stock:'0',	
-                             tot:'0',
-                             totqty:'0',
-                                      itc:'N',
+                                         tot:'0',
+                                         totqty:'0',
+                                         itc:'N',
                                          oldgrnqty         : mintacceptqty1,
                                          oldgrnval         : mintvalue1,
                                          minttcsper        : GRNdetailsLoadDataStore.getAt(j).get('mint_tcs_per'),
@@ -2600,7 +2828,7 @@ Ext.onReady(function(){
                                        })
     
                                     );
-    //	             	        grid_tot();
+    	             	        grid_tot();
     
                                   
     
@@ -2629,13 +2857,13 @@ Ext.onReady(function(){
                                  {
                                  alert("Amount Already Adjusted.  You can't Modify..")
                                  Ext.getCmp('save').setDisabled(true);
-                                 Ext.getCmp('save2').setDisabled(true);
+//                                 Ext.getCmp('save2').setDisabled(true);
     
                              
                                  }
                                  else {
                                          Ext.getCmp('save').setDisabled(false);
-                                 Ext.getCmp('save2').setDisabled(true);
+     //                            Ext.getCmp('save2').setDisabled(true);
     
                                  }
     
@@ -2643,7 +2871,7 @@ Ext.onReady(function(){
                                  {
                                  alert("Qty Return in the GRN.  You can't Modify..")
                                  Ext.getCmp('save').setDisabled(true);
-                                 Ext.getCmp('save2').setDisabled(true);
+   //                              Ext.getCmp('save2').setDisabled(true);
     
                                  }   
                                  editdatecheck();
@@ -2694,10 +2922,9 @@ Ext.onReady(function(){
               flxAccounts.getStore().getCount(),
               new dgrecord({
                   slno      : RowCnt1,
-              ledcode   : partyledcode,
-              ledname   : txtSupplierName.getRawValue(),
-              debit     : "0",
-    //              credit    : txtGRNValue.getValue(),
+                  ledcode   : partyledcode,
+                  ledname   : txtSupplierName.getRawValue(),
+                  debit     : "0",
                   credit    :  Ext.util.Format.number(txtGRNValue.getValue(),'0.00'),
                   billno    : txtBillNo.getRawValue(),
                   billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
@@ -2780,22 +3007,7 @@ Ext.onReady(function(){
     
       //          flxAccounts.getSelectionModel().selectAll();
     
-    /*
-                var selrows = flxAccounts.getSelectionModel().getCount();
-    
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-    
-    
-    
-                    if (Number(sel1[j].data.ledcode) == purlcode )
-                    {    
-                       dbamt =  puramt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', Ext.util.Format.number(dbamt,"0.00"));
-                       k =1;
-                    }
-                }
-    */
+
     
             var selrows = flxAccounts.getStore().getCount();
             for (var i1 = 0; i1 < selrows; i1++) {
@@ -2838,19 +3050,7 @@ Ext.onReady(function(){
                 k =0;
     
         //        flxAccounts.getSelectionModel().selectAll();
-    
-    /*
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.ledcode) == cgstled )
-                    {    
-                       dbamt =  cgstamt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', dbamt);
-                       k =1;
-                    }
-                }
-    */
+
     
             var selrows = flxAccounts.getStore().getCount();
             for (var i1 = 0; i1 < selrows; i1++) {
@@ -2890,19 +3090,7 @@ Ext.onReady(function(){
     //-- For SGST Ledger
                 dbamt = 0;
                 k =0;
-    /*
-    //            flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.ledcode) == sgstlcode )
-                    {    
-                       dbamt =  sgstamt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', dbamt);
-                       k =1;
-                    }
-                }
-    */
+
             var selrows = flxAccounts.getStore().getCount();
             for (var i1 = 0; i1 < selrows; i1++) {
     
@@ -2938,19 +3126,7 @@ Ext.onReady(function(){
     //-- For IGST Ledger
                 dbamt = 0;
                 k =0;
-    /*
-    //            flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.ledcode) == igstlcode )
-                    {    
-                       dbamt =  igstamt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', dbamt);
-                       k =1;
-                    }
-                }
-    */
+
             var selrows = flxAccounts.getStore().getCount();
             for (var i1 = 0; i1 < selrows; i1++) {
     
@@ -2983,115 +3159,7 @@ Ext.onReady(function(){
                             );
                 } 
     //--end
-    /*
-    //-- For Inward Ledger - Debit
-                dbamt = 0;
-                k =0;
     
-     //           flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.ledcode) == 1607 )
-                    {    
-                       dbamt =  inamt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', Ext.util.Format.number(dbamt,"0.00"));
-                       k =1;
-                    }
-                }
-                if (k==0 && inamt >0) {
-                        var RowCnt1 = flxAccounts.getStore().getCount() + 1;
-                        flxAccounts.getStore().insert(
-                            flxAccounts.getStore().getCount(),
-                            new dgrecord({
-                      slno      : RowCnt1,
-                      ledcode   : '1607',
-                      ledname   : 'INWARD MATERIAL HANDLING CHARGES',
-    //			      debit     : inamt,
-                          debit     : Ext.util.Format.number(inamt,'0.00'),
-                  billno    : txtBillNo.getRawValue(),
-                  billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),       
-                      credit    : "0",
-                                  ledtype   : "G",
-    
-                            }) 
-                            );
-                } 
-    //--end
-    
-    
-    //-- For Freight Ledger - Debit
-                dbamt = 0;
-                k =0;
-    
-    if (supstate == 24)
-    { 
-          //      flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.frtamt) > 0 )
-                    {    
-                       dbamt =  frtamt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', dbamt);
-                       k =1;
-                    }
-                }
-                if (k==0 && frtamt >0) {
-                        var RowCnt1 = flxAccounts.getStore().getCount() + 1;
-                        flxAccounts.getStore().insert(
-                            flxAccounts.getStore().getCount(),
-                            new dgrecord({
-                      slno      : RowCnt1,
-                      ledcode   : '2020',
-                      ledname   : 'FREIGHT INWARD -GST',
-    
-        //		      debit     : frtamt,
-                          debit     : Ext.util.Format.number(frtamt,'0.00'),
-    
-                  billno    : txtBillNo.getRawValue(),
-                  billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),      
-                      credit    : "0",
-                                  ledtype   : "G",
-    
-                            }) 
-                            );
-                } 
-    }
-    else
-    { 
-          //      flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.frtamt) > 0)
-                    {    
-                       dbamt =  frtamt + Number(sel1[j].data.debit);
-                       sel1[j].set('debit', dbamt);
-                       k =1;
-                    }
-                }
-                if (k==0 && frtamt >0) {
-                        var RowCnt1 = flxAccounts.getStore().getCount() + 1;
-                        flxAccounts.getStore().insert(
-                            flxAccounts.getStore().getCount(),
-                            new dgrecord({
-                      slno      : RowCnt1,
-                      ledcode   : '2522',
-                      ledname   : 'FREIGHT INWARD - IGST',
-                          debit     : Ext.util.Format.number(frtamt,'0.00'),
-    
-                  billno    : txtBillNo.getRawValue(),
-                  billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),      
-                      credit    : "0",
-                                  ledtype   : "G",
-    
-                            }) 
-                            );
-                } 
-    }
-    */
-    //--end
     
     //-- For Other Charges
                 dbamt = 0;
@@ -3129,41 +3197,6 @@ Ext.onReady(function(){
     //--end
     
     
-    
-    
-    
-    /*
-    //-- For Freight Ledger - Credit
-                dbamt = 0;
-                k =0;
-    
-                flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.ledcode) ==  frtlcode)
-                    {    
-                       dbamt =  frtamt + Number(sel1[j].data.credit);
-                       sel1[j].set('credit', dbamt);
-                       k =1;
-                    }
-                }
-                if (k==0 && frtamt >0) {
-                        var RowCnt1 = flxAccounts.getStore().getCount() + 1;
-                        flxAccounts.getStore().insert(
-                            flxAccounts.getStore().getCount(),
-                            new dgrecord({
-                      slno      : RowCnt1,
-                      ledcode   : frtlcode,
-                      ledname   :  frtlname,
-                      debit     : "0",
-                      credit    : frtamt,
-                            }) 
-                            );
-                } 
-    //--end
-    
-    */
     //-- For Inward Ledger - Credit
                 dbamt = 0;
                 k =0;
@@ -3199,37 +3232,7 @@ Ext.onReady(function(){
     //--end
     
     
-    //-- For REBATE AND DISCOUNT - Credit
-    /*
-    k =0;
     
-    //          flxAccounts.getSelectionModel().selectAll();
-    
-              if ( Number(txtTotRebate1.getValue()) >0) {
-                      var RowCnt1 = flxAccounts.getStore().getCount() + 1;
-                      flxAccounts.getStore().insert(
-                          flxAccounts.getStore().getCount(),
-                          new dgrecord({
-                    slno      : RowCnt1,
-                    ledcode   : '1856',
-                    ledname   : 'REBATE AND DISCOUNT',
-    
-    //			      debit     : rebate,
-                        debit     : Ext.util.Format.number(txtTotRebate1.getValue(),'0.00'),
-    
-    
-                billno    : txtBillNo.getRawValue(),
-                billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),      
-                    credit    : "0",
-                                ledtype   : "G",
-    
-                          }) 
-                          );
-              } 
-    //--end
-    
-    */
-    //-- For REBATE AND DISCOUNT RECEIVED - Debit
     
     k =0;
     
@@ -3261,51 +3264,6 @@ Ext.onReady(function(){
     
     
     
-    /*
-               frtpartylcode =  Number(sel[i].data.frtparty); 
-                frtlcode      =  Number(sel[i].data.frtglledcode); 
-    
-                cgstlname     =  sel[i].data.cgstledname; 
-                sgstlname     =  sel[i].data.sgstledname; 
-                igstlname     =  sel[i].data.igstledname; 
-                frtpartylname =  sel[i].data.frtledname;
-    
-    
-    //-- For Freight Party A/C - Credit
-                dbamt = 0;
-                k =0;
-    
-                flxAccounts.getSelectionModel().selectAll();
-                var selrows = flxAccounts.getSelectionModel().getCount();
-                var sel1 = flxAccounts.getSelectionModel().getSelections();
-                for(var j=0;j<selrows;j++){
-                    if (Number(sel1[j].data.ledcode) == frtpartylcode )
-                    {    
-                       dbamt =  inamt + Number(sel1[j].data.credit);
-                       sel1[j].set('credit', dbamt);
-                       k =1;
-                    }
-                }
-                if (k==0 && frtamt >0) {
-                        var RowCnt1 = flxAccounts.getStore().getCount() + 1;
-                        flxAccounts.getStore().insert(
-                            flxAccounts.getStore().getCount(),
-                            new dgrecord({
-                      slno      : RowCnt1,
-                      ledcode   : frtpartylcode,
-                      ledname   : frtpartylname,
-                      debit     : "0",
-                      credit    : frtamt,
-                                  billno    : txtBillNo.getRawValue(),
-                                  billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
-                                  ledtype   : "P",
-    
-                            }) 
-                            );
-                } 
-    //--end
-    */
-     
     
     
      
@@ -3366,19 +3324,55 @@ Ext.onReady(function(){
                         flxAccounts.getStore().insert(
                             flxAccounts.getStore().getCount(),
                             new dgrecord({
-                      slno      : RowCnt1,
-                      ledcode   : 5088,
-                      ledname   : 'FREIGHT INWARD GST -18%',
-        //		      debit     : txtTotPF.getValue(),
-                      debit     : Ext.util.Format.number(txttotfreight1.getValue(),'0.00'),
-                       billno    : txtBillNo.getRawValue(),
-                      billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
-                      credit    : "0",
-                                  ledtype   : "G",
-                            }) 
-                            );
-                }
+                            slno      : RowCnt1,
+                            ledcode   : 5088,
+                            ledname   : 'FREIGHT INWARD GST -18%',
+                            debit     : Ext.util.Format.number(txttotfreight1.getValue() ,'0.00'),
+                            billno    : txtBillNo.getRawValue(),
+                            billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
+                            credit    : "0",
+                            ledtype   : "G",
+                        }) 
+                     );
+                  }
     
+
+                if ( Number(txtFRTCGSTAmt.getValue()) >0) {
+                    var RowCnt1 = flxAccounts.getStore().getCount() + 1;
+                    flxAccounts.getStore().insert(
+                        flxAccounts.getStore().getCount(),
+                        new dgrecord({
+                  slno      : RowCnt1,
+                  ledcode   : frtCGSTledcode,
+                  ledname   : frtCGSTledname ,
+
+                  debit     : Ext.util.Format.number(txtFRTCGSTAmt.getValue(),'0.00'),
+                   billno    : txtBillNo.getRawValue(),
+                  billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
+                  credit    : "0",
+                              ledtype   : "G",
+                        }) 
+                        );
+            } 
+              
+
+            if ( Number(txtFRTSGSTAmt.getValue()) >0) {
+                var RowCnt1 = flxAccounts.getStore().getCount() + 1;
+                flxAccounts.getStore().insert(
+                    flxAccounts.getStore().getCount(),
+                    new dgrecord({
+              slno      : RowCnt1,
+              ledcode   : frtSGSTledcode,
+              ledname   : frtSGSTledname ,
+
+              debit     : Ext.util.Format.number(txtFRTSGSTAmt.getValue(),'0.00'),
+               billno    : txtBillNo.getRawValue(),
+              billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
+              credit    : "0",
+                          ledtype   : "G",
+                    }) 
+                    );
+        }             
                   if ( Number(txtTotTransport.getValue()) >0) {
                         var RowCnt1 = flxAccounts.getStore().getCount() + 1;
                         flxAccounts.getStore().insert(
@@ -3418,7 +3412,8 @@ Ext.onReady(function(){
                             );
                 } 
     
-                  if ( Number(txttotfreight1.getValue()) >0) {
+                if ( Number(txttotfreight1.getValue()) + Number(txtCommonFRTAmt.getValue()) >0) {
+                         
                         var RowCnt1 = flxAccounts.getStore().getCount() + 1;
                         flxAccounts.getStore().insert(
                             flxAccounts.getStore().getCount(),
@@ -3436,7 +3431,26 @@ Ext.onReady(function(){
                             );
                 } 
     
+              
+                if ( Number(txtFRTIGSTAmt.getValue()) >0) {
+                    var RowCnt1 = flxAccounts.getStore().getCount() + 1;
+                    flxAccounts.getStore().insert(
+                        flxAccounts.getStore().getCount(),
+                        new dgrecord({
+                  slno      : RowCnt1,
+                  ledcode   : frtIGSTledcode,
+                  ledname   : frtIGSTledname ,
+
+                  debit     : Ext.util.Format.number(txtFRTIGSTAmt.getValue(),'0.00'),
+                   billno    : txtBillNo.getRawValue(),
+                  billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),                
+                  credit    : "0",
+                              ledtype   : "G",
+                        }) 
+                        );
+            } 
     
+
                   if ( Number(txtTotTransport.getValue()) >0) {
                         var RowCnt1 = flxAccounts.getStore().getCount() + 1;
                         flxAccounts.getStore().insert(
@@ -4028,6 +4042,8 @@ Ext.onReady(function(){
     
     
        }); 
+
+       
          var txtCGSTPer = new Ext.form.NumberField({
             fieldLabel  : '',
             id          : 'txtCGSTPer',
@@ -4038,13 +4054,178 @@ Ext.onReady(function(){
             listeners:{
               change:function(){
                   calculateItemValue();
+
               },
               keyup:function(){
-              calculateItemValue();
+                 calculateItemValue();
+
              }
             } 
        }); 
+
+
+       var txtFRTCGSTPer = new Ext.form.NumberField({
+        fieldLabel  : 'CGST',
+        id          : 'txtFRTCGSTPer',
+        width       : 40,
+        name        : 'txtFRTCGSTPer',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        listeners:{
+          change:function(){
+              gststate = "CGST";
+              findGSTledgerName();
+              calculateItemValue();
+              grid_tot();
+          },
+          keyup:function(){
+            
+
+            gststate = "CGST";
+            findGSTledgerName();
+          calculateItemValue();
+          grid_tot();
+         }
+        } 
+     }); 
+          
+     var txtFRTSGSTPer = new Ext.form.NumberField({
+        fieldLabel  : 'SGST',
+        id          : 'txtFRTSGSTPer',
+        width       : 40,
+        name        : 'txtFRTSGSTPer',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        listeners:{
+          change:function(){
+
+
+              gststate = "SGST";
+              findGSTledgerName();
+              calculateItemValue();
+              grid_tot();
+          },
+          keyup:function(){
+            gststate = "SGST";
+            findGSTledgerName();
+          calculateItemValue();
+          grid_tot();
+         }
+        } 
+     });      
+
+               
+     var txtFRTIGSTPer = new Ext.form.NumberField({
+        fieldLabel  : 'IGST',
+        id          : 'txtFRTIGSTPer',
+        width       : 40,
+        name        : 'txtFRTIGSTPer',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        listeners:{
+          change:function(){
+            gststate = "IGST";
+            findGSTledgerName();
+              calculateItemValue();
+          },
+          keyup:function(){
+            gststate = "IGST";
+            findGSTledgerName();
+
+          calculateItemValue();
+         }
+        } 
+     });      
        
+
+     var txtCommonFRTAmt = new Ext.form.NumberField({
+        fieldLabel  : 'FREIGHT',
+        id          : 'txtCommonFRTAmt',
+        width       : 70,
+        name        : 'txtCommonFRTAmt',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        listeners:{
+          change:function(){
+              calculateItemValue();
+              grid_tot();
+              flxaccupdation();
+          },
+          keyup:function(){
+            grid_tot();
+          calculateItemValue();
+          flxaccupdation();
+         }
+        } 
+     }); 
+          
+
+     var txtFRTCGSTAmt = new Ext.form.NumberField({
+        fieldLabel  : '',
+        id          : 'txtFRTCGSTAmt',
+        width       : 55,
+        name        : 'txtFRTCGSTAmt',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        readOnly    : true,
+        listeners:{
+          change:function(){
+              calculateItemValue();
+              grid_tot();
+          },
+          keyup:function(){
+          calculateItemValue();
+          grid_tot();
+
+         }
+        } 
+     }); 
+          
+     var txtFRTSGSTAmt = new Ext.form.NumberField({
+        fieldLabel  : '',
+        id          : 'txtFRTSGSTAmt',
+        width       : 55,
+        name        : 'txtFRTSGSTAmt',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        readOnly    : true,
+        listeners:{
+          change:function(){
+              calculateItemValue();
+              grid_tot();
+          },
+          keyup:function(){
+          calculateItemValue();
+          grid_tot();
+
+         }
+        } 
+     }); 
+
+     var txtFRTIGSTAmt = new Ext.form.NumberField({
+        fieldLabel  : '',
+        id          : 'txtFRTIGSTAmt',
+        width       : 55,
+        name        : 'txtFRTIGSTAmt',
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+        enableKeyEvents: true,
+        readOnly    : true,
+        listeners:{
+          change:function(){
+              calculateItemValue();
+              grid_tot();
+
+          },
+          keyup:function(){
+          calculateItemValue();
+          grid_tot();
+
+         }
+        } 
+     }); 
+               
+               
+
          var txtTCSPer = new Ext.form.NumberField({
             fieldLabel  : '',
             id          : 'txtTCSPer',
@@ -4389,7 +4570,7 @@ Ext.onReady(function(){
          var txtCGSTPM = new Ext.form.NumberField({
             fieldLabel  : '+/-',
             id          : 'txtCGSTPM',
-            width       : 75,
+            width       : 50,
             maxvalue    : 2.00,
             name        : 'txtCGSTPM',
             labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
@@ -4430,7 +4611,7 @@ Ext.onReady(function(){
          var txtSGSTPM = new Ext.form.NumberField({
             fieldLabel  : '+/-',
             id          : 'txtSGSTPM',
-            width       : 75,
+            width       : 50,
             name        : 'txtSGSTPM',
             decimalPrecision: 2,
             labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
@@ -4447,7 +4628,7 @@ Ext.onReady(function(){
          var txtIGSTPM = new Ext.form.NumberField({
             fieldLabel  : '+/-',
             id          : 'txtIGSTPM',
-            width       : 75,
+            width       : 50,
             name        : 'txtIGSTPM',
              decimalPrecision: 2,
             labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
@@ -5053,7 +5234,7 @@ Ext.onReady(function(){
     
         fieldLabel: '',
         layout : 'hbox',
-        width: 140,
+        width: 120,
         height:127,
         defaultType : 'textfield',
         x:740,
@@ -5850,7 +6031,7 @@ Ext.onReady(function(){
                  else
                  {    
                  Ext.getCmp('save').setDisabled(true);         
-                 Ext.getCmp('save2').setDisabled(true);             
+ //                Ext.getCmp('save2').setDisabled(true);             
                  } 
     
             }
@@ -5893,7 +6074,7 @@ Ext.onReady(function(){
                  else
                  {    
                  Ext.getCmp('save').setDisabled(true);         
-                 Ext.getCmp('save2').setDisabled(true);             
+ //                Ext.getCmp('save2').setDisabled(true);             
                  } 
     
             }
@@ -6136,7 +6317,7 @@ Ext.onReady(function(){
             gstFlag = "Add";
             identflag="P";
              Ext.getCmp('save').setDisabled(false);
-             Ext.getCmp('save2').setDisabled(false);
+    //         Ext.getCmp('save2').setDisabled(false);
     
         txtpoindyr.setValue(GinFinid);
     //	txtpoindyr.setRawValue(GinFinid);
@@ -6202,6 +6383,16 @@ Ext.onReady(function(){
             cmbPONO.setValue('');
             txtInsurance.setValue('');
             txtStockQty.setValue('');
+
+
+            txtCommonFRTAmt.setValue('');
+            txtFRTCGSTPer.setValue('');
+            txtFRTSGSTPer.setValue('');
+            txtFRTIGSTPer.setValue('');  
+            txtFRTCGSTAmt.setValue('');
+            txtFRTIGSTAmt.setValue('');  
+            
+            
         txtpoindyr.setValue(GinFinid);
     
             txtroundoff.setValue('');
@@ -6830,8 +7021,8 @@ Ext.onReady(function(){
             {dataIndex:'itc', header: "ITC",width: 0,align: 'center',sortable: true,hidden:true},
             {dataIndex:'oldgrnqty', header: "OLD.GRNQTY",width: 50,align: 'center',sortable: true},
              {dataIndex:'oldgrnval', header: "OLD.GRNVAL",width: 50,align: 'center',sortable: true} ,
-                    {header: "Pur.GrpName", dataIndex: 'purgrpname',sortable:true,width:100,align:'left',hidden:true},
-                    {header: "Pur.Grpcode", dataIndex: 'purgrpcode',sortable:true,width:100,align:'left',hidden:true},
+                    {header: "Pur.GrpName", dataIndex: 'purgrpname',sortable:true,width:100,align:'left',hidden:false},
+                    {header: "Pur.Grpcode", dataIndex: 'purgrpcode',sortable:true,width:100,align:'left',hidden:false},
             {dataIndex:'cgstledname', header: "CGST LEDNAME",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'sgstledname', header: "SGST LEDNAME",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'igstledname', header: "IGST LEDNAME",width: 60,align: 'center',sortable: true,hidden:true},
@@ -8167,7 +8358,7 @@ Ext.onReady(function(){
                         ],
                         },
     
-     
+     /*
     
                          {
                         xtype: 'fieldset',
@@ -8228,7 +8419,7 @@ Ext.onReady(function(){
     //                      txtclrfreight1,txtinward,txtfreightparty,cmbrcm
                         ]
                         },
-    
+    */
                         flxDetail,
                     flxItem,flxItemSearch,
     
@@ -8341,20 +8532,155 @@ Ext.onReady(function(){
                      },
     
     
+                     {
+                        xtype: 'fieldset',
+                        title: 'FREIGHT DETAILS',
+                        border: true	,
+                        height: 180	,
+                        width: 185,
+                        labelWidth:40,
+                        x:0 ,  
+                        y:95 ,
+                        layout      : 'absolute',
+                        items: [
+
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:70,
+                                x:0 ,  
+                                y:5 ,
+                                items: [txtCommonFRTAmt]
+                            },  
+    
+                            {
+                                xtype       : 'fieldset',
+                                title       : '',
+                                width       : 120,
+                                x           : 47,
+                                y           : 32,
+                                defaultType : 'Label',
+                                border      : false,
+                                items: [lblFrtPer]
+                            },
+    
+                            {
+                                xtype       : 'fieldset',
+                                title       : '',
+                                width       : 120,
+                                x           : 98,
+                                y           : 32,
+                                defaultType : 'Label',
+                                border      : false,
+                                items: [lblFrtAmt]
+                            },
+                                                                
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:40,
+                                x:0 ,  
+                                y:50 ,
+                                items: [txtFRTCGSTPer]
+                            },  
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:1,
+                                x:90 ,  
+                                y:50 ,
+                                items: [txtFRTCGSTAmt]
+                            },                              
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:40,
+                                x:0 ,  
+                                y:80 ,
+                                items: [txtFRTSGSTPer]
+                            },    
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:1,
+                                x:90 ,  
+                                y:80 ,
+                                items: [txtFRTSGSTAmt]
+                            },                               
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:40,
+                                x:0 ,  
+                                y:110 ,
+                                items: [txtFRTIGSTPer]
+                            },    
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false,
+                                width: 300,
+                                labelWidth:1,
+                                x:90 ,  
+                                y:110 ,
+                                items: [txtFRTIGSTAmt]
+                            },                                                                                   
+                            /*
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false	,
+                                height: 80	,
+                                width: 150,
+                                labelWidth:40,
+                                x:0 ,  
+                                y:75 ,
+                                items: [txtFRTSGSTPer]
+                            }    ,
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                border: false	,
+                                height: 80	,
+                                width: 150,
+                                labelWidth:40,
+                                x:0 ,  
+                                y:90 ,
+                                items: [txtFRTIGSTPer]
+                            }    ,
+                                    */                    
+
+                        ]
+                    },
+
                        {
                         xtype: 'fieldset',
                         title: '',
                         border: true,
                         height: 180	,
-                        width: 1225,
+                        width: 1100,
                         labelWidth:90,
-                        x:0 ,  
+                        x:200 ,  
                         y:95 ,
                         items: [
                         txtTotInsurance,txtgrossval,txttotdisc,txtTotPF,txttotfreight1,txttotothval
                         ]
                      },
-    
+
+                     
+
     
                        {
                         xtype: 'fieldset',
@@ -8362,22 +8688,22 @@ Ext.onReady(function(){
                         border: false	,
                         height: 80	,
                         width: 150,
-                        labelWidth:50,
-                        x:190 ,  
+                        labelWidth:40,
+                        x:380 ,  
                         y:119 ,
                         items: [
                         txtTotValuePM
                         ]
                      },
     
-     {
+                      {
                         xtype: 'fieldset',
                         title: '',
                         border: false,
                         height: 180,
                         width: 855,
                         labelWidth:90,
-                        x:350 ,  
+                        x:500 ,  
                         y:95 ,
                         items: [
                        txttotcgst,txttotsgst,txttotigst,txttottcs,txtTotOthersPM,txtTotTransport
@@ -8391,9 +8717,9 @@ Ext.onReady(function(){
                         title: '',
                         border: false,
                         height: 150,
-                        width: 855,
+                        width: 350,
                         labelWidth:25,
-                        x:525 ,  
+                        x:680 ,  
                         y:95 ,
                         items: [
                         txtCGSTPM,txtSGSTPM,txtIGSTPM
@@ -8424,7 +8750,7 @@ Ext.onReady(function(){
                         border: false,
                         width: 300,
                         labelWidth:120,
-                        x:680 ,  
+                        x:780 ,  
                         y:90 ,
                         items: [txtTotRebate1]
                     },
@@ -8435,7 +8761,7 @@ Ext.onReady(function(){
                         border: false,
                         width: 300,
                         labelWidth:120,
-                        x:920 ,  
+                        x:1050 ,  
                         y:90 ,
                         items: [txtTotRebate2]
                     },
@@ -8448,7 +8774,7 @@ Ext.onReady(function(){
                         height: 150,
                         width: 855,
                         labelWidth:120,
-                        x:680 ,  
+                        x:780 ,  
                         y:120 ,
                         items: [
                        txtroundoff,txtlandvalue,txtGRNValue
@@ -8460,9 +8786,9 @@ Ext.onReady(function(){
                         title: '',
                         border: false,
                         height: 150,
-                        width: 855,
+                        width: 770,
                         labelWidth:120,
-                        x:905 ,  
+                        x:1000 ,  
                         y:120 ,
                         items: [optTCSCalc]
                      },
@@ -8471,14 +8797,15 @@ Ext.onReady(function(){
                         title: '',
                         border: false,
                         height: 150,
-                        width: 200,
+                        width: 180,
                         labelWidth:1,
-                        x:1050 ,  
+                        x:1150 ,  
                         y:120 ,
                         items: [
                        optRounding
                         ]
                      },
+/*                     
                        {
                         xtype: 'fieldset',
                         title: '',
@@ -8490,7 +8817,7 @@ Ext.onReady(function(){
                         y:200 ,
                         items: [btnsave]
                      },
-    
+    */
     
                      {
                         xtype: 'fieldset',
@@ -8837,7 +9164,7 @@ Ext.onReady(function(){
                                                 Ext.getCmp('myFormPanel').setTitle('Goods Receipt Note - for PAPER MACHINE');
     */
                                               Ext.getCmp('myFormPanel').setTitle('Goods Receipt Note-for STORES');
-                                            Ext.getCmp('frtexp').setVisible(false);
+       //                                     Ext.getCmp('frtexp').setVisible(false);
     
     
                         LoadSupplierDatastore.load({
@@ -8847,6 +9174,8 @@ Ext.onReady(function(){
                         },
                         callback:function()
                         {
+
+    
     /*
     //				Ext.getCmp('dtpgrn').focus(false, 0);	
     
@@ -8897,7 +9226,7 @@ Ext.onReady(function(){
     
     
     
-    
+
                     }
                       });
     

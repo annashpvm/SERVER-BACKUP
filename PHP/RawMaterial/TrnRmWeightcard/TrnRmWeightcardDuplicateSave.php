@@ -37,6 +37,8 @@ session_start();
  $Acceptedwt2   = $_POST['Acceptedwt2'];
  $wttype2       = $_POST['wttype2'];
 
+ mysqli_begin_transaction($conn);
+
 //$query2="call sp_upd_weightcard ('$compcode','$finid','$ticketno','$supplier','$area',UPPER('$vehicleno'), $partyloadwt, $partyemptywt, $partynetwt, $Acceptedwt, '$wttype', $itemcode)";
 
 $query2 = " insert into trn_weight_card (
@@ -54,7 +56,7 @@ $result2 = mysqli_query($conn, $query2);
 //$result3 = mysqli_query($conn, $query3);
 
 if ($result2 ) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn); 
     echo '({"success":"true","wtno":"' . $ticketno . '"})';
 } else {
     mysqli_rollback($conn);

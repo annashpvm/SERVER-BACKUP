@@ -19,6 +19,10 @@ Ext.onReady(function () {
 
 
 
+    var changeDate = 0;
+    var changeNumber = 0;
+    
+
     var recptdate = '';
     
    var cnslno = 0;
@@ -448,7 +452,8 @@ var cmbQuality = new Ext.form.ComboBox({
 			            vouno     : cmbCNNo.getRawValue(),
                         accseqno  : accseqno,
                         dncrseqno : dncrseqno,
-                        newcnno  : txtNewCNNo.getRawValue(),    
+                        newcnno   : txtNewCNNo.getRawValue(),    
+                        voudate   : Ext.util.Format.date(dtpVouDate.getValue(), "Y-m-d"),  
 	  
 					},
 				        callback: function(options, success, response)
@@ -456,7 +461,7 @@ var cmbQuality = new Ext.form.ComboBox({
 		                            var obj = Ext.decode(response.responseText);
                   			    if (obj['success']==="true")
 				            {                                
-				                Ext.MessageBox.alert("CREDIT NOTE Number Changed -" + obj['msg']);
+				                Ext.MessageBox.alert("CREDIT NOTE Number/Date Changed -" + obj['msg']);
                                                 CreditNoteFormPanel.getForm().reset();
 						flxDetail.getStore().removeAll();
 						RefreshData();
@@ -2210,7 +2215,7 @@ function add_btn_click()
 
     var btnChangeCreditNoteNo = new Ext.Button({
         style: 'text-align:center;',
-        text: "CHANGE CREDIT NOTE NUMBER",
+        text: "CHANGE CREDIT NOTE NUMBER/DATE",
         width: 10,
         x: 1000,
         y: 440,
@@ -2230,7 +2235,6 @@ function add_btn_click()
 
     });
 
-    
  var loadSearchLedgerListDatastore = new Ext.data.Store({
       id: 'loadSearchLedgerListDatastore',
 //      autoLoad : true,
@@ -4080,7 +4084,7 @@ btnAdd, btnChangeCreditNoteNo,
                 width: 280,
         
                 x: 1050,
-                y:  410,
+                y:  380,
                 defaultType: 'textfield',
                 border: false,
                 items: [txtDELPass]
@@ -4149,7 +4153,7 @@ btnAdd, btnChangeCreditNoteNo,
 		                       id          : 'EInv',
 		                       title       : 'E - INVOICE - CREDIT NOTE',
 		                       width       : 250,
-		                       height      : 400,
+		                       height      : 300,
 		                       x           : 1050,
 		                       y           : 10,
 		                       border      : true,
