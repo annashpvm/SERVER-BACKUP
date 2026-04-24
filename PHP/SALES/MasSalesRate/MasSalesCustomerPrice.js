@@ -252,7 +252,7 @@ Ext.onReady(function(){
                                     cmbShade.show();                                 
  
  
-                                 if (selrow.get('prodcode') == 14)
+                                 if (selrow.get('prodcode') == 14 || selrow.get('prodcode') == 19)
                                  {
  
                                  cmbPBShade.setValue(selrow.get('shade'));
@@ -862,7 +862,7 @@ Ext.onReady(function(){
  ,'area_code','area_name','vargrp_type_code','vargrp_type_name','vargrp_type_short_code','vargrp_type_hsncode',
  'tn_sales_ledcode','os_sales_ledcode','sez_sales_ledcode','cust_ref','cust_code','rate_shade','rate_price_terms',
  'rate_bf12','rate_bf12_bit','rate_grace_days','var_groupcode','var_desc','rate_pb_rate','rate_pb_variety','rate_rate_difference',
- 'rate_bitreel_inch','rate_bitreel_cm'
+ 'rate_bitreel_inch','rate_bitreel_cm' 
  
  
  
@@ -1599,6 +1599,8 @@ Ext.onReady(function(){
                         bf34_70   : Number(loadeditApprovalNo.getAt(j).get('rate_bf34gsm70')), 
                         bf34_60   : Number(loadeditApprovalNo.getAt(j).get('rate_bf34gsm60')), 
                         bf34_50   : Number(loadeditApprovalNo.getAt(j).get('rate_bf34gsm50')), 
+                        pt   : Number(loadeditApprovalNo.getAt(j).get('rate_price_terms')), 
+                        gd     : Number(loadeditApprovalNo.getAt(j).get('rate_grace_days')),                           
  
                               }) 
                              );
@@ -2005,7 +2007,7 @@ Ext.onReady(function(){
          id          : 'txtothershades',
          name        : 'txtothershades',
          width       :  70,
-         value       : 1000,
+         value       : 1500,
          labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
      style: {
              'color':'#ff00ff',readOnly:true,'text-align': 'right',

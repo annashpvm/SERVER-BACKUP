@@ -927,6 +927,7 @@ function EnterLoginNew()
 
 		show:function(){
 
+   
 			UserDataStore.load({
 			url:'clsuser.php',
 				params:{
@@ -955,8 +956,8 @@ Ext.getCmp('txtLoginName').focus(false, 200);
   
     txtComp.setValue("1");
     txtComp.setRawValue("SRI HARI VENKATESWARA PAPER MILLS (P) LTD");
-    txtfinyear.setValue("25");
-    txtfinyear.setRawValue("2025-2026");
+    txtfinyear.setValue("26");
+    txtfinyear.setRawValue("2026-2027");
 
 //    txtPasswd.setRawValue("sal");
 //    txtPasswd.setValue("sal");
@@ -964,8 +965,8 @@ Ext.getCmp('txtLoginName').focus(false, 200);
 
     var gstcompcode=1;
     var gstcompname="SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
-    var finid=25;
-    var gstFinyear="2025-2026";
+    var finid=26;
+    var gstFinyear="2026-2027";
  			
     LOGFormWindow.show();
 

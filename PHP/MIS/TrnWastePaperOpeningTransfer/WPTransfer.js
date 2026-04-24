@@ -243,6 +243,24 @@ Ext.onReady(function(){
 
 ]
 });
+
+
+
+function getNextFinYear(currentYear) {
+   if (!currentYear) return '';
+
+   var parts = currentYear.split('-'); // ["2025", "2026"]
+
+   if (parts.length !== 2) return '';
+
+   var start = parseInt(parts[0], 10);
+   var end   = parseInt(parts[1], 10);
+
+   return (start + 1) + '-' + (end + 1);
+}
+
+
+
  var StoresOpeningTransferWindow = new Ext.Window({
 	height      : 350,
         width       : 400,
@@ -259,17 +277,13 @@ Ext.onReady(function(){
 
  	listeners:{
                show:function(){
-              // RefreshData();
-                 txtClosingYear.setRawValue(GinFinYear);
-                 if (GinFinid == 22)
-                    txtOpeningYear.setRawValue('2023-2024');
-                 else    
-                    if (GinFinid == 23)
-                        txtOpeningYear.setRawValue('2024-2025');
-                 else    
-                    if (GinFinid == 24)
-                        txtOpeningYear.setRawValue('2025-2026');
 
+                  txtClosingYear.setRawValue(GinFinYear);
+                  //                 Ext.getCmp('CreateFinYear').setDisabled(true);
+                  
+                  //                 txtOpeningYear.setRawValue(GinFinYear);
+                                   var nextYear = getNextFinYear(GinFinYear);
+                                   txtOpeningYear.setRawValue(nextYear);     
 
            }
              }

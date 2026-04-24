@@ -28,6 +28,8 @@ $qcinsno     = (int)$_POST['qcinsno'];
 $gindbcrseq  = (int)$_POST['dnseqno'];
 
 
+mysqli_begin_transaction($conn);  
+
         $query1 = "update trnrm_receipt_header set rech_billno = '$newbillno' , rech_billdate = '$NewBillDt'  where rech_compcode = $compcode and rech_fincode = $finid  and rech_no = '$rech_no'";
         $result1=mysqli_query($conn, $query1);
 
@@ -71,7 +73,7 @@ if ($gindbcrseq >0 )
 
 	if($result1 && $result2 && $result3 && $resultQC1)
 	{
-			mysqli_begin_transaction($conn);                        
+		mysqli_commit($conn);                      
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    

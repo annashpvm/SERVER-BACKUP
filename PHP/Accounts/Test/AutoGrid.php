@@ -8,7 +8,7 @@
 <script type="text/javascript" src="/ext-3.4.1/examples/ux/MultiSelect.js"></script>
 <script type="text/javascript" src="/ext-3.4.1/examples/ux/ItemSelector.js"></script>
 <script type="text/javascript" src="/SHVPM/Accounts/AccountsMenus.js"></script>
-<script type="text/javascript" src="TrnAutoGrid.js"></script>
+<script type="text/javascript" src="treegrid.js"></script>
 
 <style>
 .total-cell {

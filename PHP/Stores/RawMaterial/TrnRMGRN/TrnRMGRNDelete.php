@@ -78,6 +78,7 @@ $voutype = 'PWP';
 
 $paymodetype ='';
 
+mysqli_begin_transaction($conn);  
 
 
 // QC 
@@ -169,7 +170,8 @@ $paymodetype ='';
 
 	if($result1 && $result2 && $result3 &&  $result5  &&  $resulta1 &&  $resulta2 &&  $resulta3 )
 	{
-			mysqli_begin_transaction($conn);                        
+			
+			mysqli_commit($conn);                            
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    

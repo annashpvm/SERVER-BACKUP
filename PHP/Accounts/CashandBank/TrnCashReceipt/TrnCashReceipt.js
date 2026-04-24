@@ -19,6 +19,29 @@ Ext.onReady(function () {
    var  invfin = localStorage.getItem('invfin');
 
    
+   var blinking = true;
+
+   var blinkState = true;
+
+   setInterval(function () {
+       var el = Ext.get('lblBlink');
+   
+       if (el) {
+           if (blinkState) {
+               el.setStyle('color', 'transparent');  // hide text smoothly
+           } else {
+               el.setStyle('color', 'blue');         // show text
+           }
+           blinkState = !blinkState;
+       }
+   }, 1500); 
+
+
+    var lblBlink = new Ext.form.Label({
+        id: 'lblBlink',
+        text: 'Press ENTER key for Confirm the Receipt Amount.',
+        style: 'white-space:nowrap;font-weight:bold;color:blue;font-size:10px;'
+    });
 
 
     var gstrcpttype;
@@ -86,6 +109,8 @@ new Ext.KeyMap( Ext.getBody(), [{
 
 function add_btn_click()
 {
+
+
                 flxDetail.getStore().removeAll();
                 flxAdjustDetails.getStore().removeAll();
 
@@ -584,6 +609,11 @@ var txtAccountName = new Ext.form.TextField({
     });
 
 
+    function clearTime(dt) {
+        return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    }
+    
+
 
   function NewDateCheck()
   {
@@ -606,9 +636,28 @@ var txtAccountName = new Ext.form.TextField({
 
         }
 
-    if(Ext.util.Format.date(dtpVouDate.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
-            Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
-    }
+
+        var finStart = new Date(finstdate);
+        var finEnd   = new Date(finenddate);
+
+        dt_voucher    = clearTime(dt_voucher);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (dt_voucher < finStart || dt_voucher > finEnd)
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+//                dtpVouDate.setValue(dt_today);
+                dtpVouDate.focus();
+                return;
+            }
+
+
+
 
  }
 
@@ -634,19 +683,31 @@ var txtAccountName = new Ext.form.TextField({
  }
 
 
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
 
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
 
     var dtpVouDate= new Ext.form.DateField({
         fieldLabel: '',
         id: 'dtpVouDate',
         name: '',
         format: 'd-m-Y',
-        value: new Date(),
+        value:  defaultDate,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ", 
        	enableKeyEvents: true,
         listeners:{
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },            
 	  specialkey:function(f,e){
+        
 	     if (e.getKey() == e.ENTER)
 	     {
 	         txtAccountName.focus(); 
@@ -1161,6 +1222,29 @@ txtCredit.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
  labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
     });
 
+    
+    var txtRecAmt = new Ext.form.NumberField({
+        fieldLabel: 'Receipt Amount',
+        id: 'txtRecAmt',
+        width: 80,
+        name: 'RecAmt',
+        enableKeyEvents: true,
+	style: {
+		    'color':'#900C3F ',readOnly:true,'text-align': 'right',
+		    'style': 'Helvetica',
+		    'font-size': '14px','font-weight':'bold'
+		},
+        listeners:{
+             specialkey:function(f,e){
+             if (e.getKey() == e.ENTER)
+             {
+    //              btnAdd.focus();
+                add_btn_click();
+
+             }
+          }
+     }
+    });
     var txtCredit = new Ext.form.NumberField({
         fieldLabel: '',
         id: 'txtCredit',
@@ -1175,12 +1259,15 @@ txtCredit.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
 		},
 
         listeners:{
+            
              specialkey:function(f,e){
              if (e.getKey() == e.ENTER)
              {
                   add_btn_click();
              }
-          }
+          },
+
+
         }
     });
 
@@ -1317,7 +1404,7 @@ txtCredit.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
     var txtRefNo = new Ext.form.TextField({
         fieldLabel: 'Ref No',
         id: 'txtRefNo',
-        width: 80,
+        width: 200,
         name: 'RefNo',
         style: {textTransform: "uppercase"},
 	autoCreate:{tag:'input',type:'text',size:'20',autocomplete:'off',maxlength:'29'},
@@ -1352,28 +1439,6 @@ txtCredit.setRawValue(LoadVouNoDetailsdatastore.getAt(0).get('acctran_cramt'));
         }
     });
 
-    var txtRecAmt = new Ext.form.NumberField({
-        fieldLabel: 'Receipt Amount',
-        id: 'txtRecAmt',
-        width: 80,
-        name: 'RecAmt',
-        enableKeyEvents: true,
-	style: {
-		    'color':'#900C3F ',readOnly:true,'text-align': 'right',
-		    'style': 'Helvetica',
-		    'font-size': '14px','font-weight':'bold'
-		},
-        listeners:{
-             specialkey:function(f,e){
-             if (e.getKey() == e.ENTER)
-             {
-    //              btnAdd.focus();
-                add_btn_click();
-
-             }
-          }
-     }
-    });
 
     var txtBankName = new Ext.form.TextField({
         fieldLabel: 'Bank Name',
@@ -2003,7 +2068,19 @@ else {
                                 y: 17,
                                 border: false,
                                 items: [txtCredit]
-                            }, // btnAdd, // btnRemove,
+                            }, 
+                            {
+                                xtype: 'fieldset',
+                                title: '',
+                                labelWidth: 1,
+                                width: 450,
+                                x: 600,
+                                y: 17,
+                                border: false,
+                                items: [lblBlink]
+                            },                             
+                            
+                            // btnAdd, // btnRemove,
                             {
                                 xtype: 'fieldset',
                                 title: '',
@@ -2032,7 +2109,7 @@ else {
                                 xtype: 'fieldset',
                                 title: '',
                                 labelWidth: 80,
-                                width: 250,
+                                width: 350,
                                 x: 0,
                                 y: 80,
                                 border: false,
@@ -2043,7 +2120,7 @@ else {
                                 title: '',
                                 labelWidth: 80,
                                 width: 215,
-                                x: 250,
+                                x: 300,
                                 y: 80,
                                 border: false,
                                 items: [dtpRefDate]

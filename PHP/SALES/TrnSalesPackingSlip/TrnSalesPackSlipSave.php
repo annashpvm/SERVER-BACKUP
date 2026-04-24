@@ -82,7 +82,7 @@ $result4=mysqli_query($conn, $query4);
 
    $query11 = "update trnsal_order_trailer,  trnsal_packslip_trailer  set ordt_inv_wt =  ordt_inv_wt - (pckt_wt/1000)   where  ordt_var_code = pckt_size  and pckt_comp_code = ordt_comp_code and pckt_sono = ordt_sono  and pckt_no = '$slipno' and pckt_fincode = '$finid'    and pckt_comp_code = '$compcode'" ;
 
-   $query11 = "update trnsal_order_trailer  a ,(select pckt_sono,pckt_size,sum(pckt_wt)/1000 as iwt from  trnsal_packslip_trailer  where pckt_comp_code = '$compcode' and pckt_fincode = '$finid'  and pckt_no = '$slipno' group by  pckt_sono,pckt_size)  b set ordt_inv_wt = ordt_inv_wt - iwt where ordt_sono = pckt_sono and ordt_var_code = pckt_size and ordt_comp_code = '$compcode' and ordt_fincode = '$finid' ";
+   $query11 = "update trnsal_order_trailer  a ,(select pckt_sono,pckt_size,sum(pckt_wt)/1000 as iwt from  trnsal_packslip_trailer  where pckt_comp_code = '$compcode' and pckt_fincode = '$finid'  and pckt_no = '$slipno' group by  pckt_sono,pckt_size)  b set ordt_inv_wt = ordt_inv_wt - iwt where ordt_sono = pckt_sono and ordt_var_code = pckt_size and ordt_comp_code = '$compcode' and ordt_fincode <= '$finid' ";
  
 
    $result11= mysqli_query($conn, $query11);
@@ -121,7 +121,7 @@ $query9= "update trnsal_desp_advice set da_desptag = 'T' , da_slipqty = da_slipq
 
 $result9=mysqli_query($conn, $query9);      
 
-$query10= "update trnsal_order_trailer set ordt_inv_wt =  ordt_inv_wt + ($weight/1000)  where ordt_comp_code = $compcode and ordt_fincode = $fincode   and ordt_sono = $soentno  and ordt_var_code = $itemcode";
+$query10= "update trnsal_order_trailer set ordt_inv_wt =  ordt_inv_wt + ($weight/1000)  where ordt_comp_code = $compcode and ordt_fincode <= $fincode   and ordt_sono = $soentno  and ordt_var_code = $itemcode";
 $result10=mysqli_query($conn, $query10); 
 }
 

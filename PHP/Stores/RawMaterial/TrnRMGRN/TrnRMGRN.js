@@ -519,6 +519,38 @@ var lblDebitNote = new Ext.form.Label({
         }
     }); 
 
+
+    var txtPassword4 = new Ext.form.TextField({
+        fieldLabel  : 'Supplier Change PassWord',
+        id          : 'txtPassword4',
+        name        : 'txtPassword4',
+        inputType   : 'password',
+        fieldStyle  : 'text-transform:uppercase',
+        width       :  80,
+ //	readOnly    : true,
+    	labelStyle  : "font-size:12px;font-weight:bold;",
+    	style       :"border-radius: 5px;",
+ 	enableKeyEvents: true,
+        listeners   :{
+
+          change: function (obj, newValue) {
+//            console.log(newValue);
+//            obj.setRawValue(newValue.toUpperCase());
+            check_password4();
+          },
+
+
+           blur:function(){
+              check_password4();
+           },
+           keyup:function(){
+              check_password4();
+           },
+        }
+    }); 
+
+        
+
 var billnochk = "";
 
 function BillNoChecking()
@@ -1644,7 +1676,23 @@ var loadOtherDebitDatasore = new Ext.data.Store({
   ])
 })
 
-
+var loadNewSupplierDatasore = new Ext.data.Store({
+    id: 'loadNewSupplierDatasore',
+    autoLoad:true,
+    proxy: new Ext.data.HttpProxy({
+              url: 'ClsRMGrn.php',      // File to connect to
+              method: 'POST'
+          }),
+          baseParams:{task: "loadNewsupplier"}, // this parameter asks for listing
+    reader: new Ext.data.JsonReader({
+                // we tell the datastore where to get his data from
+      root: 'results',
+      totalProperty: 'total',
+      id: 'id'
+    },['cust_code','cust_name'
+    ])
+  })
+  
 
 var loadPurchaseGroupDatasore = new Ext.data.Store({
   id: 'loadPurchaseGroupDatasore',
@@ -1685,6 +1733,31 @@ var cmbOtherDebitLedger = new Ext.form.ComboBox({
         select: function () 
         { 
            flxaccupdation();
+        }
+    }
+});    
+
+
+var cmbNewSupplier = new Ext.form.ComboBox({
+    fieldLabel      : 'New Supplier Name',
+    width           : 350,
+    displayField    : 'cust_name',
+    valueField      : 'cust_code',
+    id              : 'cmbNewSupplier',
+    typeAhead       : false,
+    mode            : 'local',
+    store           : loadNewSupplierDatasore,    
+    labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    forceSelection  : true,
+    triggerAction   : 'all',
+    selectOnFocus   : true,
+    editable        : true,
+    allowblank      : false,
+    enableKeyEvents: true, 
+    listeners:{
+        select: function () 
+        { 
+          
         }
     }
 });    
@@ -2207,6 +2280,132 @@ var value1 = 0;
 var costrate = 0;
 
 
+var btnSupplierChange = new Ext.Button({
+    style   : 'text-align:center;',
+    id       : 'btnSupplierChange',
+    text    : "Change Supplier",
+    width   : 120,
+    height  : 30,
+          border: 1,
+          style: {
+              borderColor: 'blue',
+              borderStyle: 'solid',
+
+          },
+    bodyStyle:{"background-color":"#ebebdf"},
+    listeners:{
+        click: function(){   
+
+
+//            alert(dnaccseqno);
+//            alert(dnseqno);
+
+          if (cmbGRNNo.getRawValue()== "" || cmbGRNNo.getValue()==0)
+            {
+                Ext.Msg.alert('GRN','Select GRN Number');
+                gstSave="false";
+            }  
+
+ 
+            else if ( cmbQCEntNo.getValue()==0)
+            {
+                Ext.Msg.alert('GRN','Select QC Entry NO,');
+   
+                gstSave="false";
+            }     
+
+            else if ( cmbNewSupplier.getValue()==0)
+                {
+                    Ext.Msg.alert('GRN','Select Supplier Name,');
+       
+                    gstSave="false";
+                }     
+    
+            else if ( txttotgrnval.getValue()==0)
+            {
+                Ext.Msg.alert('GRN', 'GRN VALUE IS EMPTY..,');
+
+                gstSave="false";
+            } 
+
+            else if (accseqno == "0")
+            {
+                Ext.Msg.alert('GRN','Select GRN Number,');
+                cmbPONO.focus();
+                gstSave="false";
+            }                  
+
+            else
+            {
+            Ext.Msg.show({
+		    title: 'Confirmation',
+		    icon: Ext.Msg.QUESTION,
+		    buttons: Ext.MessageBox.YESNO,
+		    msg: 'KINDLY COFIRM. Do You Want To CHANGE THE SUPPLIER NAME IN THE  GRN ...',
+		    fn: function(btn)
+			{
+		    if (btn === 'yes')
+			{
+		  
+			    var grnData = flxGRNDetail.getStore().getRange();                                        
+			    var grnupdData = new Array();
+			    Ext.each(grnData, function (record) {
+				grnupdData.push(record.data);
+			    });
+                        }          
+
+			    Ext.Ajax.request({
+			    url: 'TrnRMSupplierChange.php',
+			    params :
+			     {
+			     	griddet: Ext.util.JSON.encode(grnupdData),
+				cnt:grnData.length,
+
+		
+
+				gstFlaggrn : gstFlag,                                 
+				compcode:GinCompcode,
+				finid:GinFinid,
+				seqno  : seqno,
+				grnno  : txtGRNNo.getValue(),
+                edgrnno : txtGRNNo.getRawValue(),
+				ordseqno : poseqno,
+				accseqno : accseqno,
+                dnaccseqno : dnaccseqno,
+                dnseqno    : dnseqno ,
+                qcinsno    : cmbQCEntNo.getValue(),
+                newsupcode : cmbNewSupplier.getValue(), 
+                oldsupcode : supcode,
+                                          
+				},
+			      callback: function(options, success, response)
+			      {
+				var obj = Ext.decode(response.responseText);
+				 if (obj['success']==="true")
+					{                                
+				    Ext.MessageBox.alert("Supplier Name Changed for the GRN No.-" + obj['GRNNo']);
+		//                                    TrnGrnformpanel.getForm().reset();
+				    flxGRNDetail.getStore().removeAll();
+
+
+				    RefreshData();
+		//				    TrnGrnformpanel.getForm().reset();
+				  }else
+					{
+			Ext.MessageBox.alert("SUPPLIER NOT CHANGED! Pls Check!- " + obj['GRNNo']);                                                  
+				    }
+				}
+
+			   }); 
+                        } 
+                 }); 
+             }
+          }   
+    } 
+});
+
+
+
 var btnGRNNoChange = new Ext.Button({
     style   : 'text-align:center;',
     id       : 'btnGRNNoChange',
@@ -2315,6 +2514,20 @@ var btnGRNNoChange = new Ext.Button({
           }   
     } 
 });
+
+
+function check_password4()
+{
+   if (txtPassword4.getRawValue() == "admin@123")
+   {
+      btnSupplierChange.show();
+   }
+   else
+   {
+      btnSupplierChange.hide();
+   }    
+
+}   
 
    function check_password3()
    {
@@ -4367,7 +4580,7 @@ chkratediff = 0
                         accseqno= loadgrndetaildatastore.getAt(0).get('rech_acc_seqno');
                         dnaccseqno = loadgrndetaildatastore.getAt(0).get('rech_dnaccseqno');
                         dnseqno = loadgrndetaildatastore.getAt(0).get('rech_dnseqno');
-
+;
                         cmbQCEntNo.setValue(loadgrndetaildatastore.getAt(0).get('rech_qc_ins_no'));
 
 
@@ -4388,6 +4601,8 @@ chkratediff = 0
                 	txtDNVouNo.setValue(loadgrndetaildatastore.getAt(0).get('rech_dnno'));
 			dtpDNDate.setValue(Ext.util.Format.date(loadgrndetaildatastore.getAt(0).get('rech_dndate'),'d-m-Y'));
 
+    //        alert(dnaccseqno);
+   //         alert(dnseqno);
 
 
                         if (loadgrndetaildatastore.getAt(0).get('rech_roundneeded') == "Y")
@@ -6518,6 +6733,7 @@ var txtDiffValue = new Ext.form.NumberField({
         }  
 });
 
+
 var txtCGSTPer = new Ext.form.TextField({
         fieldLabel  : 'CGST% & Val',
         id          : 'txtCGSTPer',
@@ -7474,6 +7690,7 @@ function RefreshData(){
         btnDelete.hide();
         btnGRNNoChange.hide();
         btnBillNoChange.hide();
+        btnSupplierChange.hide();
 
         gstFlag ="Add";
         flxGRNDetail.getStore().removeAll();
@@ -7939,6 +8156,7 @@ var tabgrn = new Ext.TabPanel({
                                     	border      : false,
                                 	items: [txtDiffValue]
                             },
+                            
                               { 
                                 	xtype       : 'fieldset',
                                 	title       : '',
@@ -8484,6 +8702,56 @@ var tabgrn = new Ext.TabPanel({
 
                     ]
                   },
+
+                  {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: true,
+                    height: 250,
+                    width: 670,
+                    labelWidth:90,
+                    x:600 ,  
+                    y:95 ,
+                    items: [
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            labelWidth: 170,
+                            width: 600,
+                            x: 10,
+                            y: 10,
+                            defaultType: 'textfield',
+                            border: false,
+                            items: [cmbNewSupplier]
+                        },                         
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            labelWidth: 170,
+                            width: 400,
+                            x: 10,
+                            y: 50,
+                            defaultType: 'textfield',
+                            border: false,
+                            items: [txtPassword4]
+                        },          
+                        
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            labelWidth: 100,
+                            width: 300,
+                            x: 380,
+                            y: 70,
+                            defaultType: 'textfield',
+                            border: false,
+                            items: [btnSupplierChange]
+                        }, 
+                                    
+                    ]
+                },   
+    
+    
             ]
          }                  
 ],
@@ -8786,6 +9054,8 @@ var tabgrn = new Ext.TabPanel({
 	listeners:{
                show:function(){
                    RefreshData();
+
+
 
 
 /*

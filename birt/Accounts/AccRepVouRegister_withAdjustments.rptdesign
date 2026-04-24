@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">fixed layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="comp" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fmdate" id="452">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="tdate" id="453">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="voutype" id="454">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="withvouno" id="636">
+            <property name="valueType">static</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
+        <scalar-parameter name="withnarration" id="637">
+            <property name="valueType">static</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
+        <scalar-parameter name="withadjustments" id="638">
+            <property name="valueType">static</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="vouprint" id="5">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">comp</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-6</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">voutype</property>
+                    <property name="paramName">voutype</property>
+                    <property name="nativeName">voutype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fmdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">tdate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">accref_seqno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">accref_vouno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">accref_voudate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">accref_vou_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">accref_payref_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">accref_paymode</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">accref_narration</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">ledgername</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">cust_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">acctran_serialno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">acctran_dbamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">acctran_cramt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">adjvouno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">adjinvno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">adjinvdate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">adjamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">accref_seqno</property>
+                    <property name="nativeName">accref_seqno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">accref_vouno</property>
+                    <property name="nativeName">accref_vouno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">accref_voudate</property>
+                    <property name="nativeName">accref_voudate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">accref_vou_type</property>
+                    <property name="nativeName">accref_vou_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">accref_payref_no</property>
+                    <property name="nativeName">accref_payref_no</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">accref_paymode</property>
+                    <property name="nativeName">accref_paymode</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">accref_narration</property>
+                    <property name="nativeName">accref_narration</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">ledgername</property>
+                    <property name="nativeName">ledgername</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">cust_type</property>
+                    <property name="nativeName">cust_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">acctran_serialno</property>
+                    <property name="nativeName">acctran_serialno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">acctran_dbamt</property>
+                    <property name="nativeName">acctran_dbamt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">acctran_cramt</property>
+                    <property name="nativeName">acctran_cramt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">adjvouno</property>
+                    <property name="nativeName">adjvouno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">adjinvno</property>
+                    <property name="nativeName">adjinvno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">adjinvdate</property>
+                    <property name="nativeName">adjinvdate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call accsp_voucher_register_withAdjustments(?,?,?,?)} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="leftMargin">0.5in</property>
+            <property name="rightMargin">0.25in</property>
+            <property name="headerHeight">0.2in</property>
+            <property name="footerHeight">0.2in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="455">
+            <property name="dataSet">vouprint</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">accref_voudate</property>
+                    <text-property name="displayName">accref_voudate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_voudate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_vouno</property>
+                    <text-property name="displayName">accref_vouno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_vouno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ledgername</property>
+                    <text-property name="displayName">ledgername</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ledgername"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_dbamt</property>
+                    <text-property name="displayName">acctran_dbamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_dbamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_cramt</property>
+                    <text-property name="displayName">acctran_cramt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_cramt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_serialno</property>
+                    <text-property name="displayName">acctran_serialno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_serialno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_payref_no</property>
+                    <text-property name="displayName">accref_payref_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_payref_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">refno</property>
+                    <expression name="expression" type="javascript">var mode = dataSetRow["accref_paymode"] == null ? "" : dataSetRow["accref_paymode"];&#13;
+var ref  = dataSetRow["accref_payref_no"] == null ? "" : dataSetRow["accref_payref_no"];&#13;
+&#13;
+(&#13;
+ ['REC','PAY','CHR','CHP','BKR','BKP'].indexOf(params["voutype"].value) >= 0&#13;
+)&#13;
+?&#13;
+(mode + (ref == "" ? "" : " " + ref))&#13;
+:&#13;
+(&#13;
+    (ref != "" &amp;&amp;&#13;
+     dataSetRow["accref_vouno"] != null &amp;&amp;&#13;
+     dataSetRow["cust_type"] != null &amp;&amp;&#13;
+     ref.toString().replace(/^\s+|\s+$/g,"") != &#13;
+     dataSetRow["accref_vouno"].toString().replace(/^\s+|\s+$/g,"") &amp;&amp;&#13;
+     dataSetRow["cust_type"].toString().replace(/^\s+|\s+$/g,"") != "G"&#13;
+    )&#13;
+    ? ref&#13;
+    : ""&#13;
+)</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_type</property>
+                    <text-property name="displayName">cust_type</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_type"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">adjinvno</property>
+                    <text-property name="displayName">adjinvno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["adjinvno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">adjinvdate</property>
+                    <text-property name="displayName">adjinvdate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["adjinvdate"]</expression>
+                    <property name="dataType">date</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">adjamt</property>
+                    <text-property name="displayName">adjamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["adjamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_narration</property>
+                    <text-property name="displayName">accref_narration</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_narration"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">rundate</property>
+                    <expression name="expression" type="javascript">Formatter.format(BirtDateTime.today(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_debit</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["debit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_credit</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["credit"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <text-property name="displayName">heading</text-property>
+                    <expression name="expression" type="javascript">var vt = params["voutype"].value;&#13;
+&#13;
+/* EXP / GJV */&#13;
+if (vt == "EXP")&#13;
+"EXPENSES REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else if (vt == "GJV")&#13;
+"JOURNAL REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+/* BANK (specific first) */&#13;
+else if (vt.indexOf("BKP") >= 0 &amp;&amp; vt.indexOf(",") == -1)&#13;
+"BANK PAYMENT REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else if (vt.indexOf("BKR") >= 0 &amp;&amp; vt.indexOf(",") == -1)&#13;
+"BANK RECEIPT REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+/* GROUP TYPES */&#13;
+else if (vt == "PAY" || vt.indexOf("BKP") >= 0 || vt.indexOf("CHP") >= 0 || vt.indexOf("CIP") >= 0)&#13;
+"PAYMENT REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else if (vt == "REC" || vt.indexOf("BKR") >= 0 || vt.indexOf("CHR") >= 0 || vt.indexOf("CIR") >= 0)&#13;
+"RECEIPT REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+/* NOTES */&#13;
+else if (vt == "DNOTE" || vt.indexOf("DNG") >= 0 || vt.indexOf("DNN") >= 0 || vt.indexOf("SDN") >= 0)&#13;
+"DEBIT NOTE REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else if (vt == "CNOTE" || vt.indexOf("CNG") >= 0 || vt.indexOf("CNN") >= 0)&#13;
+"CREDIT NOTE REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+/* OTHERS */&#13;
+else if (vt == "GSI")&#13;
+"SALES REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else if (vt == "OSI")&#13;
+"OTHER SALES REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else if (vt == "PUR")&#13;
+"ALL PURCHASES REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+&#13;
+else&#13;
+"REGISTER " + BirtStr.concat("From ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy")," To ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">debit_total</property>
+                    <expression name="expression" type="javascript">Total.sum(row["acctran_dbamt"])</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">debit</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>slnogrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">MAX</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_dbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">credit</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>slnogrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">MAX</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_cramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_paymode</property>
+                    <text-property name="displayName">accref_paymode</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_paymode"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">newrefno</property>
+                    <expression name="expression" type="javascript">row["accref_paymode"] + " " + row["accref_payref_no"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="pageBreakInterval">0</property>
+            <column id="474">
+                <property name="width">0.01in</property>
+            </column>
+            <column id="475">
+                <property name="suppressDuplicates">false</property>
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">params["withvouno"].value == false</expression>
+                    </structure>
+                </list-property>
+                <property name="width">1in</property>
+            </column>
+            <column id="476">
+                <property name="width">3.2in</property>
+            </column>
+            <column id="563">
+                <property name="width">1.5in</property>
+            </column>
+            <column id="477"/>
+            <column id="478"/>
+            <header>
+                <row id="501">
+                    <cell id="502">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">9pt</property>
+                        <label id="625">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD</text-property>
+                        </label>
+                    </cell>
+                    <cell id="551">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="505">
+                        <property name="fontSize">9pt</property>
+                        <label id="626">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Page No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="506">
+                        <property name="fontSize">9pt</property>
+                        <auto-text id="536">
+                            <property name="fontWeight">normal</property>
+                            <property name="color">black</property>
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="495">
+                    <cell id="496">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <property name="fontSize">9pt</property>
+                        <property name="textAlign">left</property>
+                        <data id="632">
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="499">
+                        <property name="fontSize">9pt</property>
+                        <label id="535">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="500">
+                        <property name="fontSize">9pt</property>
+                        <data id="627">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">rundate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="456">
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="457">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="458">
+                        <property name="fontSize">9pt</property>
+                        <label id="481">
+                            <text-property name="text">Vou.No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="459">
+                        <property name="fontSize">9pt</property>
+                        <label id="483">
+                            <text-property name="text">Ledger Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="554">
+                        <property name="fontSize">9pt</property>
+                        <label id="606">
+                            <text-property name="text">Reference No.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="460">
+                        <property name="fontSize">9pt</property>
+                        <label id="485">
+                            <text-property name="text">Debit</text-property>
+                        </label>
+                    </cell>
+                    <cell id="461">
+                        <property name="fontSize">9pt</property>
+                        <label id="487">
+                            <text-property name="text">Credit</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="507">
+                <property name="groupName">dategrp</property>
+                <expression name="keyExpr" type="javascript">row["accref_voudate"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["accref_voudate"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="508">
+                        <cell id="509">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
+                            <property name="fontSize">9pt</property>
+                            <data id="520">
+                                <property name="fontSize">12pt</property>
+                                <property name="fontWeight">bold</property>
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">dd/MM/yyyy</property>
+                                </structure>
+                                <property name="resultSetColumn">accref_voudate</property>
+                            </data>
+                        </cell>
+                        <cell id="555">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="512">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="513">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="514">
+                        <cell id="515">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="516">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="517">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="561">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="518">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="519">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="521">
+                <property name="groupName">vounogrp</property>
+                <expression name="keyExpr" type="javascript">row["accref_vouno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["accref_vouno"] </expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="522">
+                        <property name="height">0.125in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="523">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="525">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="556">
+                            <property name="fontSize">9pt</property>
+                            <data id="566">
+                                <property name="fontSize">8pt</property>
+                                <property name="fontStyle">italic</property>
+                                <property name="resultSetColumn">refno</property>
+                            </data>
+                        </cell>
+                        <cell id="526">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="527">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="528">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">params["withnarration"].value == false</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="529">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="530">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="531">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="fontSize">9pt</property>
+                            <data id="624">
+                                <property name="fontSize">8pt</property>
+                                <property name="fontStyle">italic</property>
+                                <property name="resultSetColumn">accref_narration</property>
+                            </data>
+                        </cell>
+                        <cell id="532">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="533">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                    </row>
+                    <row id="639">
+                        <property name="height">0.08333333333333333in</property>
+                        <cell id="640">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="641">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="642">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="643">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="644">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="645">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="607">
+                <property name="groupName">slnogrp</property>
+                <expression name="keyExpr" type="javascript">row["acctran_serialno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["acctran_serialno"]</expression>
+                </structure>
+                <property name="repeatHeader">false</property>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="608">
+                        <property name="height">0.16666666666666666in</property>
+                        <cell id="609">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="610">
+                            <property name="fontSize">9pt</property>
+                            <data id="534">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">Total.runningCount(1, "vounogrp") > 1</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">accref_vouno</property>
+                            </data>
+                        </cell>
+                        <cell id="611">
+                            <property name="fontSize">9pt</property>
+                            <data id="484">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">ne</property>
+                                        <property name="fontWeight">bold</property>
+                                        <expression name="testExpr" type="javascript">row["cust_type"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"G"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">ledgername</property>
+                            </data>
+                        </cell>
+                        <cell id="612">
+                            <property name="fontSize">9pt</property>
+                            <property name="textAlign">center</property>
+                            <data id="653">
+                                <property name="fontStyle">italic</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["cust_type"] == "G")&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">newrefno</property>
+                            </data>
+                        </cell>
+                        <cell id="613">
+                            <property name="fontSize">9pt</property>
+                            <data id="486">
+                                <property name="fontSize">8pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if(row["acctran_dbamt"] == 0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">acctran_dbamt</property>
+                            </data>
+                        </cell>
+                        <cell id="614">
+                            <property name="fontSize">9pt</property>
+                            <data id="488">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if(row["acctran_cramt"] == 0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">acctran_cramt</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="615">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="616">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="617">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="618">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="619">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="620">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                        <cell id="621">
+                            <property name="fontSize">9pt</property>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="593">
+                    <property name="height">0.1875in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">params["withadjustments"] == false || row["adjamt"] == 0</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="594">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="595">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="596">
+                        <property name="fontSize">9pt</property>
+                        <grid id="581">
+                            <column id="582">
+                                <property name="width">1.4in</property>
+                            </column>
+                            <column id="583"/>
+                            <column id="584">
+                                <property name="width">0.8in</property>
+                            </column>
+                            <row id="585">
+                                <cell id="586">
+                                    <data id="589">
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">adjinvno</property>
+                                    </data>
+                                </cell>
+                                <cell id="587">
+                                    <data id="590">
+                                        <structure name="dateTimeFormat">
+                                            <property name="category">Custom</property>
+                                            <property name="pattern">dd/MM/yyyy</property>
+                                        </structure>
+                                        <property name="resultSetColumn">adjinvdate</property>
+                                    </data>
+                                </cell>
+                                <cell id="588">
+                                    <data id="591">
+                                        <structure name="numberFormat">
+                                            <property name="category">Fixed</property>
+                                            <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                        </structure>
+                                        <property name="textAlign">right</property>
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr" type="javascript">if (row["adjamt"] == 0)&#13;
+true</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">adjamt</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="597">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="598">
+                        <property name="fontSize">9pt</property>
+                        <data id="634">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">debit</property>
+                        </data>
+                    </cell>
+                    <cell id="599">
+                        <property name="fontSize">9pt</property>
+                        <data id="635">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">credit</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="468">
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="469">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="470">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="471">
+                        <property name="fontSize">9pt</property>
+                        <label id="630">
+                            <text-property name="text">TOTAL</text-property>
+                        </label>
+                    </cell>
+                    <cell id="562">
+                        <property name="fontSize">9pt</property>
+                    </cell>
+                    <cell id="472">
+                        <property name="fontSize">9pt</property>
+                        <data id="628">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_debit</property>
+                        </data>
+                    </cell>
+                    <cell id="473">
+                        <property name="fontSize">9pt</property>
+                        <data id="629">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_credit</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

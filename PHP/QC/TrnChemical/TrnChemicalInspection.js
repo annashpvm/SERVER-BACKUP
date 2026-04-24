@@ -224,6 +224,37 @@ var loadGRNItemDetailsDataStore = new Ext.data.Store({
     });
 
 
+    var txtPOYear = new Ext.form.NumberField({
+        fieldLabel  : 'PO YEAR',
+        id          : 'txtPOYear',
+        name        : 'txtPOYear',
+        width       :  50,        
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+        allowBlank  :  false,
+	tabindex : 1,
+
+style: {
+            'color':'#873e72',readOnly:true,'text-align': 'left',
+            'style': 'Helvetica',
+            'font-size': '16px','font-weight':'bold'
+        },
+	enableKeyEvents: true, 
+	listeners:{
+        change:function(){
+            loadPODetails();
+         },
+         blur:function(){
+            loadPODetails();
+         },
+         keyup:function(){
+            loadPODetails();
+          }
+
+        }      
+
+    });
+
+
 var txtQCEntNo = new Ext.form.NumberField({
         fieldLabel  : 'QC Entry No.',
         id          : 'txtQCEntNo',
@@ -865,6 +896,31 @@ labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
     }
     
 });
+
+function loadPODetails()
+{
+    loadGRNItemListDataStore.removeAll();
+    loadGRNDataStore.removeAll();
+    loadPODataStore.removeAll();
+    loadPODataStore.load({
+      url: '/SHVPM/QC/ClsQC.php',
+      params:
+      {
+          task     :"loadPONOlist",
+          vendor   : supcode,
+          compcode : Gincompcode,
+          finid    : txtPOYear.getValue(), 
+      },
+      callback: function(){
+
+         var cnt=loadPODataStore.getCount();
+         PurNo = loadPODataStore.getAt(0).get('phd_pono');
+         cmbPONO.setValue(PurNo);
+         Load_AllGRNs();
+
+      }
+   });
+}
 function grid_chk_flxLedger()
 {
 	var sm = flxLedger.getSelectionModel();
@@ -880,37 +936,7 @@ function grid_chk_flxLedger()
 
 		 PurNo = '';
 		 MinNo = '';
-
-              loadGRNItemListDataStore.removeAll();
-              loadGRNDataStore.removeAll();
-              loadPODataStore.removeAll();
-              loadPODataStore.load({
-                url: '/SHVPM/QC/ClsQC.php',
-                params:
-                {
-                    task     :"loadPONOlist",
-                    vendor   : supcode,
-                    compcode : Gincompcode,
-                    finid    : GinFinid 
-                },
-                callback: function(){
-
-                   var cnt=loadPODataStore.getCount();
-                   PurNo = loadPODataStore.getAt(0).get('phd_pono');
-                   cmbPONO.setValue(PurNo);
-                   Load_AllGRNs();
-
-                }
-             });
-
-
-
-
-
-
-
-
-
+         loadPODetails();
 	}
 
 }
@@ -1325,6 +1351,17 @@ var txtSupplierName = new Ext.form.TextField({
                                     	border      : false,
                                 	items: [txtSupplierName]
                             },
+
+                            { 
+                                xtype       : 'fieldset',
+                                title       : '',
+                                labelWidth  : 70,
+                                width       : 600,
+                                x           : 560,
+                                y           : 5,
+                                    border      : false,
+                                items: [txtPOYear]
+                        },                            
                             { 
                                 	xtype       : 'fieldset',
                                 	title       : '',
@@ -1507,7 +1544,7 @@ var txtSupplierName = new Ext.form.TextField({
 	height      : 600,
         width       : 1350,
         y           : 35,
-        title       : 'WASTE PAPER QC INSPECTION ENTRY',
+        title       : 'CHEMICAL QC INSPECTION ENTRY',
         items       : QCPanel,
         layout      : 'fit',
         closable    : true,bodyStyle:{"background-color":"#E9EEDD"},
@@ -1521,7 +1558,7 @@ var txtSupplierName = new Ext.form.TextField({
 	listeners:{
 
                show:function(){
-     
+                   txtPOYear.setValue(GinFinid);
                    RefreshData();
 		}
         } 

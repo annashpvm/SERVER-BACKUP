@@ -18,6 +18,7 @@
     <property name="units">in</property>
     <method name="onPageEnd"><![CDATA["Continued"]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <parameters>
@@ -57,6 +58,17 @@
         <scalar-parameter name="finid" id="9">
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="hideDrCr" id="785">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -1268,8 +1280,11 @@ true</expression>
                         <list-property name="visibility">
                             <structure>
                                 <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">if (row["sum_grp4_dr"] ==  0 || row["sum_grp4_cr"] == 0)&#13;
-true</expression>
+                                <expression name="valueExpr" type="javascript">//if (row["sum_grp4_dr"] ==  0 || row["sum_grp4_cr"] == 0)&#13;
+&#13;
+(params["hideDrCr"].value == "Y" &amp;&amp; (row["subgrp"] == 51 || row["subgrp"] == 24))&#13;
+|| ((row["sum_grp4_dr"] == 0 || row["sum_grp4_dr"] == null) &#13;
+    || (row["sum_grp4_cr"] == 0 || row["sum_grp4_cr"] == null))</expression>
                             </structure>
                         </list-property>
                         <cell id="754">
@@ -1339,8 +1354,8 @@ true</expression>
                         <list-property name="visibility">
                             <structure>
                                 <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">if (row["subgrouplevel3"] == "PROFIT &amp; LOSS")&#13;
-true</expression>
+                                <expression name="valueExpr" type="javascript">row["led_name"] == "PROFIT &amp; LOSS A/C" &#13;
+|| (params["hideDrCr"].value == "Y" &amp;&amp; (row["subgrp"] == 51 || row["subgrp"] == 24))</expression>
                             </structure>
                         </list-property>
                         <cell id="526"/>
@@ -1505,8 +1520,8 @@ true</expression>
                     <list-property name="visibility">
                         <structure>
                             <property name="format">all</property>
-                            <expression name="valueExpr" type="javascript">if (row["led_name"] == "PROFIT &amp; LOSS A/C")&#13;
-true</expression>
+                            <expression name="valueExpr" type="javascript">row["led_name"] == "PROFIT &amp; LOSS A/C" &#13;
+|| (params["hideDrCr"].value == "Y" &amp;&amp; (row["subgrp"] == 51 || row["subgrp"] == 24))</expression>
                         </structure>
                     </list-property>
                     <cell id="20"/>

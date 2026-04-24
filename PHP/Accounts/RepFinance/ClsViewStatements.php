@@ -186,6 +186,11 @@ mysqli_set_charset($conn, "utf8");
                 getLedgerMonthwise();
 		break;
 
+		case "loadClosingValue":
+			getClosingValue();
+			break;
+	
+
                default:
                	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	    break;
@@ -238,6 +243,7 @@ mysqli_set_charset($conn, "utf8");
 
 
         $sql ="call accspreptrialbalanceclosing_View_Maingroup($finid ,$compcode, '$startdate', '$enddate','$finfirstdate')";
+		//echo $sql;
 
 
 		$r = mysqli_query($conn, $sql);
@@ -264,7 +270,7 @@ mysqli_set_charset($conn, "utf8");
 	$finfirstdate = $_POST['finfirstdate'];
         $sql ="call accspreptrialbalanceclosing_View_SubMaingroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$finfirstdate' )";
 
-
+//echo $sql;
 		$r = mysqli_query($conn, $sql);
 		$arr = [];
 	$nrow = mysqli_num_rows($r);
@@ -1554,6 +1560,26 @@ select 'stock' stock , 0 opamt, clostk_value cloamt    from acc_closing_stock  w
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
+
+	function getClosingValue()
+    {
+        global $conn;
+       	$compcode = $_POST['compcode'];
+       	$fincode = $_POST['fincode'];
+        $enddate = $_POST['enddate'];  
+
+
+     $sql = "SELECT * FROM acc_closing_stock t WHERE t.clostk_value = (SELECT clostk_value FROM acc_closing_stock s WHERE s.clostk_compcode = '$compcode' AND s.clostk_fincode = '$fincode' AND s.clostk_date <=  '$enddate' ORDER BY s.clostk_date DESC  LIMIT 1);";
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
 	
 ?>
 

@@ -316,8 +316,30 @@ $rowcntacc = $_REQUEST['cntacc'];
         }
 }
 
+
+
+$invcount = 0;
+$refcount = 0;
+$trancount = 0;
+$trailcount = 0;
+
+$query = "SELECT  (SELECT COUNT(*) FROM trnrm_receipt_header WHERE rech_acc_seqno = '$ginaccrefseq') AS invcount,
+ (SELECT COUNT(*) FROM acc_ref WHERE accref_seqno = '$ginaccrefseq' and accref_vouno = '$rech_no') AS refcount,
+ (SELECT COUNT(*) FROM acc_tran WHERE acctran_accref_seqno = '$ginaccrefseq') AS trancount,
+ (SELECT COUNT(*) FROM acc_trail WHERE acctrail_accref_seqno = '$ginaccrefseq') AS trailcount";
+
+$result = mysqli_query($conn, $query);
+
+$row = mysqli_fetch_assoc($result);
+
+$invcount   = intval($row['invcount']);
+$refcount   = intval($row['refcount']);
+$trancount  = intval($row['trancount']);
+$trailcount = intval($row['trailcount']);
+
+
 if ($gstFlaggrn === "Add") {    
-	if($result3 && $result4 && $result5 &&  $result6  &&  $resulta1 &&  $resulta2 &&  $resulta3  )
+	if($result3 && $result4 && $result5 &&  $result6  &&  $resulta1 &&  $resulta2 &&  $resulta3   && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0 )
 	{
 		mysqli_commit($conn);                         
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
@@ -333,7 +355,7 @@ if ($gstFlaggrn === "Add") {
 	}   
 }
 if ($gstFlaggrn === "Edit") {   
-	if( $result11 && $result14 &&  $result4  &&$result6    &&  $resulta1 &&  $resulta2 &&  $resulta3  )
+	if( $result11 && $result14 &&  $result4  &&$result6    &&  $resulta1 &&  $resulta2 &&  $resulta3   && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0 )
 	{
 		mysqli_commit($conn);                         
 		echo '({"success":"true","GRNNo":"'. $rech_no  . '"})';

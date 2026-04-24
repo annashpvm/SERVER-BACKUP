@@ -626,7 +626,7 @@ var flxVouNoDetail = new Ext.grid.EditorGridPanel({
         {header: "Seq.No" , dataIndex: 'accref_seqno',sortable:false,width:80,align:'left', menuDisabled: true,hidden:true},
         {header: "Vou Date" , dataIndex: 'accref_voudate',sortable:false,width:100,align:'left', menuDisabled: true},
 
-        {header: "Vou No" , dataIndex: 'accref_vouno',sortable:false,width:80,align:'center',
+        {header: "Vou No" , dataIndex: 'accref_vouno',sortable:false,width:130,align:'center',
 },
         {header: "Ref/Inv No" , dataIndex: 'accref_payref_no',sortable:false,width:130,align:'left', menuDisabled: true},
         {header: "Ref/Inv Date" , dataIndex: 'accref_payref_date',sortable:false,width:100,align:'left', menuDisabled: true},

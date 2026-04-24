@@ -2991,6 +2991,56 @@ alert(OD_payterms);
         }
     });
 
+    var btnRepPartyBillwise_WithGST = new Ext.Button({
+        style: 'text-align:center;',
+        text: "Rep-Party-Debit Balance(With GST) ",
+        width: 60, id: 'btnRepPartyBillwise',
+
+	border: 1,
+	style: {
+	borderColor: 'blue',
+	borderStyle: 'solid',
+
+	},
+        listeners: {
+            click: function () {
+
+
+          if (RepresentativeCode !=0)
+          { 
+            var p1 ="&compcode="+encodeURIComponent(compcode);      
+            var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	   
+            var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+            var p4 = "&ledcode="+encodeURIComponent(0);
+            var p5 = "&repcode="+encodeURIComponent(RepresentativeCode);
+            var p6 = "&overdue="+encodeURIComponent(OVERDUE);
+            var p7 = "&payterms="+encodeURIComponent(OD_payterms);
+            var param = (p1+p2+p3+p4+p5+p6+p7) ;
+
+		    if (printtype == "PDF") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_SelectiveRep_ARBillwise_OutstandingBills_withGST.rptdesign&__format=pdf&' + param, '_blank');
+		    else if (printtype == "XLS") 
+{
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_SelectiveRep_ARBillwise_OutstandingBills_withGST.rptdesign&__format=XLSX&' + param, '_blank');
+
+
+}
+		    else
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_SelectiveRep_ARBillwise_OutstandingBills_withGST.rptdesign' + param, '_blank');
+
+            }
+            else
+            {
+                     alert("Select Representative ...");
+            }  
+
+            }
+
+        }
+    });
+
+
+
     var btnRepPartyBillwise_with_precentage_Abstract = new Ext.Button({
         style: 'text-align:center;',
         text: "Debit Balance(% Abstract)",
@@ -4042,7 +4092,7 @@ alert(OD_payterms);
 		},
 		{
 		    xtype       : 'fieldset',
-		    x           : 650,
+		    x           : 600,
 		    y           : 510,
 		    border      : false,
 		    width       : 220,
@@ -4051,7 +4101,7 @@ alert(OD_payterms);
 		},
 		{
 		    xtype       : 'fieldset',
-		    x           : 800,
+		    x           : 750,
 		    y           : 510,
 		    border      : false,
 		    width       : 220,
@@ -4061,12 +4111,21 @@ alert(OD_payterms);
 
 		{
 		    xtype       : 'fieldset',
-		    x           : 970,
+		    x           : 920,
 		    y           : 510,
 		    border      : false,
 		    width       : 220,
                     labelWidth  : 50,
 		    items : [btnRepPartyBillwise_Agewise]
+		},
+		{
+		    xtype       : 'fieldset',
+		    x           : 1100,
+		    y           : 510,
+		    border      : false,
+		    width       : 220,
+                    labelWidth  : 50,
+		    items : [btnRepPartyBillwise_WithGST]
 		},
 
 		{

@@ -1,0 +1,1201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">13</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">13</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">13</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">fixed layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="voutype" id="92">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fmdate" id="93">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="tdate" id="94">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="comp" id="95">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="12">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="13">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">voutype</property>
+                    <property name="paramName">voutype</property>
+                    <property name="nativeName">voutype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fmdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">2</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">tdate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">3</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">comp</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-6</property>
+                    <property name="position">4</property>
+                    <property name="isOptional">true</property>
+                    <property name="allowNull">true</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">accref_seqno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">accref_vouno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">accref_vou_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">accref_voudate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">accref_narration</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">acctran_dbamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">acctran_cramt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">acctran_totamt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">led_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">acctrail_inv_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">acctrail_inv_date</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">led_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">acctran_serialno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">accref_seqno</property>
+                    <property name="nativeName">accref_seqno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">accref_vouno</property>
+                    <property name="nativeName">accref_vouno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">accref_vou_type</property>
+                    <property name="nativeName">accref_vou_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">accref_voudate</property>
+                    <property name="nativeName">accref_voudate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">accref_narration</property>
+                    <property name="nativeName">accref_narration</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">acctran_dbamt</property>
+                    <property name="nativeName">acctran_dbamt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">acctran_cramt</property>
+                    <property name="nativeName">acctran_cramt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">acctran_totamt</property>
+                    <property name="nativeName">acctran_totamt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">led_code</property>
+                    <property name="nativeName">led_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">acctrail_inv_no</property>
+                    <property name="nativeName">acctrail_inv_no</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">acctrail_inv_date</property>
+                    <property name="nativeName">acctrail_inv_date</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">led_name</property>
+                    <property name="nativeName">led_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">acctran_serialno</property>
+                    <property name="nativeName">acctran_serialno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call acc_sp_rep_dbcrnote_register(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>voutype</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>2</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>19</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>19</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-6</design:nativeDataTypeCode>
+          <design:precision>3</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Nullable</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:optional>true</design:optional>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="topMargin">0in</property>
+            <property name="leftMargin">0.25in</property>
+            <property name="bottomMargin">0in</property>
+            <property name="rightMargin">0.17708333333333334in</property>
+            <page-footer>
+                <text id="3">
+                    <property name="fontSize">13pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="textAlign">center</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>pageNumber</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="14">
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftColor">#000000</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightColor">#000000</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopColor">#000000</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="display">inline</property>
+            <property name="masterPage">Simple MasterPage</property>
+            <property name="width">7.760416666666667in</property>
+            <property name="dataSet">Data Set</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">accref_seqno</property>
+                    <text-property name="displayName">accref_seqno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_seqno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_vouno</property>
+                    <text-property name="displayName">accref_vouno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_vouno"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_vou_type</property>
+                    <text-property name="displayName">accref_vou_type</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_vou_type"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_voudate</property>
+                    <text-property name="displayName">accref_voudate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_voudate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">accref_narration</property>
+                    <text-property name="displayName">accref_narration</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["accref_narration"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_dbamt</property>
+                    <text-property name="displayName">acctran_dbamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_dbamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_cramt</property>
+                    <text-property name="displayName">acctran_cramt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_cramt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_totamt</property>
+                    <text-property name="displayName">acctran_totamt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_totamt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">led_code</property>
+                    <text-property name="displayName">led_code</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["led_code"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">led_name</property>
+                    <text-property name="displayName">led_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["led_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acctrail_inv_no</property>
+                    <text-property name="displayName">acctrail_inv_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_inv_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acctrail_inv_date</property>
+                    <text-property name="displayName">acctrail_inv_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_inv_date"]</expression>
+                    <property name="dataType">date-time</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dtsel</property>
+                    <text-property name="displayName">dtsel</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">title</property>
+                    <text-property name="displayName">title</text-property>
+                    <expression name="expression" type="javascript">if (params["voutype"].value=="EXP")&#13;
+"EXPENSES REGISTER " + BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy")) &#13;
+else if (params["voutype"].value=="GJV")&#13;
+"JOURNAL REGISTER " + BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+else if (params["voutype"].value=="DNG")&#13;
+"DEBIT NOTE REGISTER "  + BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+else if (params["voutype"].value=="CNG")&#13;
+"CREDIT NOTE REGISTER "  + BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+else if (params["voutype"].value=="GSI")&#13;
+"SALES REGISTER "  + BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))&#13;
+else if (params["voutype"].value=="OSI")&#13;
+"OTHER SALES REGISTER "  + BirtStr.concat("From Date : ",Formatter.format(params["fmdate"].value,"dd/MM/yyyy"),"  To Date : ",Formatter.format(params["tdate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">comp</property>
+                    <text-property name="displayName">comp</text-property>
+                    <expression name="expression" type="javascript">if(params["comp"].value == 1)&#13;
+"SRI HARI VENKATESWARA PAPER MILLS (P) LTD"&#13;
+else if (params["comp"].value == 90)&#13;
+"TRIAL STORE"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sumdb</property>
+                    <text-property name="displayName">sumdb</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>vounogrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_dbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sumcr</property>
+                    <text-property name="displayName">sumcr</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>vounogrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_cramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">acctran_serialno</property>
+                    <text-property name="displayName">acctran_serialno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctran_serialno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_total_debit</property>
+                    <text-property name="displayName">sum_total_debits</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_dbamt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_total_cramt</property>
+                    <text-property name="displayName">sum_total_cramt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctran_cramt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">RunDate</property>
+                    <text-property name="displayName">RunDate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(BirtDateTime.today(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">vouno</property>
+                    <text-property name="displayName">vouno</text-property>
+                    <expression name="expression" type="javascript">row["accref_vouno"].substring(3,10)</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="repeatHeader">true</property>
+            <property name="pageBreakInterval">40</property>
+            <list-property name="sort">
+                <structure>
+                    <expression name="key" type="javascript">row["accref_seqno"]</expression>
+                    <property name="direction">asc</property>
+                    <property name="strength">-1</property>
+                </structure>
+            </list-property>
+            <column id="33">
+                <property name="width">0.9in</property>
+            </column>
+            <column id="34">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="35">
+                <property name="width">3.5in</property>
+            </column>
+            <column id="36">
+                <property name="width">1in</property>
+            </column>
+            <column id="37">
+                <property name="width">1in</property>
+            </column>
+            <header>
+                <row id="157">
+                    <property name="fontWeight">bold</property>
+                    <property name="masterPage">Simple MasterPage</property>
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.3020833333333333in</property>
+                    <cell id="158">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <data id="114">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">comp</property>
+                        </data>
+                    </cell>
+                    <cell id="161">
+                        <label id="535">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="162">
+                        <data id="537">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">RunDate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="163">
+                    <property name="fontWeight">bold</property>
+                    <property name="masterPage">Simple MasterPage</property>
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.23958333333333334in</property>
+                    <cell id="164">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <data id="113">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">title</property>
+                        </data>
+                    </cell>
+                    <cell id="167">
+                        <label id="534">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Page No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="168">
+                        <auto-text id="536">
+                            <property name="fontWeight">normal</property>
+                            <property name="color">black</property>
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="15">
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">medium</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">dotted</property>
+                    <property name="borderTopWidth">medium</property>
+                    <property name="masterPage">Simple MasterPage</property>
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.2708333333333333in</property>
+                    <cell id="16">
+                        <label id="85">
+                            <text-property name="text">Vou Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="17">
+                        <label id="86">
+                            <text-property name="text">Vou No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="18">
+                        <label id="84">
+                            <text-property name="text">Ledger Name / Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="19">
+                        <label id="80">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Debit Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="20">
+                        <label id="82">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Credit Amount</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="38">
+                <property name="groupName">GrpVoudate</property>
+                <expression name="keyExpr" type="javascript">row["accref_voudate"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["accref_voudate"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="39">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.010416666666666666in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="40"/>
+                        <cell id="41"/>
+                        <cell id="42"/>
+                        <cell id="43"/>
+                        <cell id="44"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="45">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">avoid</property>
+                        <property name="height">0.16666666666666666in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="46"/>
+                        <cell id="47"/>
+                        <cell id="48">
+                            <data id="152"/>
+                        </cell>
+                        <cell id="49"/>
+                        <cell id="50"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="52">
+                <property name="groupName">GrpVouno</property>
+                <expression name="keyExpr" type="javascript">row["vouno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["vouno"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="53">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.2604166666666667in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="54"/>
+                        <cell id="55"/>
+                        <cell id="56">
+                            <data id="538">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">vouno</property>
+                            </data>
+                        </cell>
+                        <cell id="57"/>
+                        <cell id="58"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="59">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">avoid</property>
+                        <property name="height">0.14583333333333334in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="60"/>
+                        <cell id="61"/>
+                        <cell id="62"/>
+                        <cell id="63"/>
+                        <cell id="64"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="568">
+                <property name="groupName">vounogrp</property>
+                <expression name="keyExpr" type="javascript">row["accref_vouno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["accref_vouno"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="569">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.34375in</property>
+                        <cell id="570">
+                            <data id="51">
+                                <structure name="dateTimeFormat">
+                                    <property name="category">Custom</property>
+                                    <property name="pattern">dd/MM/yyyy</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">accref_voudate</property>
+                            </data>
+                        </cell>
+                        <cell id="571">
+                            <data id="65">
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">accref_vouno</property>
+                            </data>
+                        </cell>
+                        <cell id="572">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <grid id="582">
+                                <property name="width">4.75in</property>
+                                <column id="583">
+                                    <property name="width">0.99in</property>
+                                </column>
+                                <column id="584"/>
+                                <column id="585">
+                                    <property name="width">0.99in</property>
+                                </column>
+                                <column id="586">
+                                    <property name="width">1in</property>
+                                </column>
+                                <row id="587">
+                                    <cell id="588">
+                                        <label id="89">
+                                            <property name="fontWeight">bold</property>
+                                            <property name="textAlign">right</property>
+                                            <list-property name="visibility">
+                                                <structure>
+                                                    <property name="format">all</property>
+                                                    <expression name="valueExpr" type="javascript">if (row["accref_vou_type"] == "GJV")&#13;
+true</expression>
+                                                </structure>
+                                            </list-property>
+                                            <text-property name="text">Inv/Ref No : </text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="589">
+                                        <data id="88">
+                                            <property name="marginTop">0pt</property>
+                                            <list-property name="visibility">
+                                                <structure>
+                                                    <property name="format">all</property>
+                                                    <expression name="valueExpr" type="javascript">if (row["accref_vou_type"] == "GJV")&#13;
+true</expression>
+                                                </structure>
+                                            </list-property>
+                                            <property name="resultSetColumn">acctrail_inv_no</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="590">
+                                        <label id="90">
+                                            <property name="fontWeight">bold</property>
+                                            <property name="textAlign">right</property>
+                                            <list-property name="visibility">
+                                                <structure>
+                                                    <property name="format">all</property>
+                                                    <expression name="valueExpr" type="javascript">if (row["accref_vou_type"] == "GJV")&#13;
+true</expression>
+                                                </structure>
+                                            </list-property>
+                                            <text-property name="text">Inv/Ref Date : </text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="591">
+                                        <data id="91">
+                                            <structure name="dateTimeFormat">
+                                                <property name="category">Custom</property>
+                                                <property name="pattern">dd/MM/yyyy</property>
+                                            </structure>
+                                            <list-property name="visibility">
+                                                <structure>
+                                                    <property name="format">all</property>
+                                                    <expression name="valueExpr" type="javascript">if (row["accref_vou_type"] == "GJV")&#13;
+true</expression>
+                                                </structure>
+                                            </list-property>
+                                            <property name="resultSetColumn">acctrail_inv_date</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                        <cell id="574"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="575">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.34375in</property>
+                        <cell id="576"/>
+                        <cell id="577"/>
+                        <cell id="578">
+                            <data id="87">
+                                <property name="fontSize">8pt</property>
+                                <property name="marginTop">0pt</property>
+                                <property name="resultSetColumn">accref_narration</property>
+                            </data>
+                        </cell>
+                        <cell id="579">
+                            <data id="115">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">maroon</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderTopStyle">dotted</property>
+                                <property name="borderTopWidth">thin</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sumdb</property>
+                            </data>
+                        </cell>
+                        <cell id="580">
+                            <data id="116">
+                                <property name="fontWeight">bold</property>
+                                <property name="color">maroon</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderTopStyle">dotted</property>
+                                <property name="borderTopWidth">thin</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sumcr</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <group id="138">
+                <property name="groupName">slnogrp</property>
+                <expression name="keyExpr" type="javascript">row["acctran_serialno"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["acctran_serialno"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="139">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">avoid</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="140">
+                            <data id="151">
+                                <property name="resultSetColumn">acctran_serialno</property>
+                            </data>
+                        </cell>
+                        <cell id="141"/>
+                        <cell id="142"/>
+                        <cell id="143"/>
+                        <cell id="144"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="145">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">avoid</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="146"/>
+                        <cell id="147"/>
+                        <cell id="148"/>
+                        <cell id="149"/>
+                        <cell id="150"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="66">
+                <property name="groupName">GrpLed</property>
+                <expression name="keyExpr" type="javascript">row["led_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["led_name"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="67">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">auto</property>
+                        <property name="height">0.21875in</property>
+                        <cell id="68"/>
+                        <cell id="69"/>
+                        <cell id="70">
+                            <data id="79">
+                                <property name="textAlign">left</property>
+                                <property name="resultSetColumn">led_name</property>
+                            </data>
+                        </cell>
+                        <cell id="71">
+                            <data id="81">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">acctran_dbamt</property>
+                            </data>
+                        </cell>
+                        <cell id="72">
+                            <data id="83">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">acctran_cramt</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="73">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakInside">avoid</property>
+                        <property name="height">0.16666666666666666in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="74"/>
+                        <cell id="75"/>
+                        <cell id="76"/>
+                        <cell id="77"/>
+                        <cell id="78"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="21">
+                    <property name="masterPage">Simple MasterPage</property>
+                    <property name="pageBreakInside">avoid</property>
+                    <property name="height">0.16666666666666666in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="22"/>
+                    <cell id="23"/>
+                    <cell id="24"/>
+                    <cell id="25"/>
+                    <cell id="26"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="27">
+                    <property name="fontWeight">bold</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="height">0.3645833333333333in</property>
+                    <cell id="28"/>
+                    <cell id="29"/>
+                    <cell id="30">
+                        <label id="156">
+                            <text-property name="text">GRAND TOTAL</text-property>
+                        </label>
+                    </cell>
+                    <cell id="31">
+                        <data id="154">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_total_debit</property>
+                        </data>
+                    </cell>
+                    <cell id="32">
+                        <data id="155">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_total_cramt</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

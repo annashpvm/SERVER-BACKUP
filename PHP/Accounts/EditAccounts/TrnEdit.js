@@ -6,7 +6,8 @@ Ext.onReady(function () {
 
     var GinUserid = localStorage.getItem('ginuserid');
     var GinUserType = localStorage.getItem('ginusertype');
-
+    
+    var gstfinyear = localStorage.getItem('gstyear');
 
     var seqno = 0;
     var gindbtotal;
@@ -23,6 +24,8 @@ Ext.onReady(function () {
         flxRefbills2.getStore().removeAll();
         btnTranAdd.hide();
         btnTrailAdd.hide();
+//        Ext.getCmp('Insert').setVisible(false);
+//        Ext.getCmp('Delete').setVisible(false);
     }
 
     var LedAgsDataStore = new Ext.data.Store({
@@ -118,12 +121,9 @@ Ext.onReady(function () {
             'acctran_dbamt', 'cust_name',
             'acctran_cramt',
             'acctran_totamt',
-            'acctran_cur_code',
-            'acctran_cur_amt',
-            'acctran_exch_rate',
-            'acctran_pass_no',
+
             'acctran_paytype',
-            'led_type','acctran_narration'
+            'cust_type','acctran_narration'
         ])
     });
 
@@ -163,7 +163,7 @@ Ext.onReady(function () {
             'acctrail_inv_date1',
             'acctrail_inv_value',
             'acctrail_adj_value',
-            'acctrail_led_code', 'cust_name','acctrail_amtmode','acctrail_crdays','acctrail_gracedays'
+            'acctrail_led_code', 'cust_name','acctrail_amtmode','acctrail_crdays','acctrail_gracedays','cust_type'
         ])
     });
 
@@ -247,7 +247,27 @@ Ext.onReady(function () {
                     txtValueCredit.setRawValue('');
                     txtVocherNo.setRawValue();
                     txtVocherNo.focus();
-                } else {
+                    Ext.getCmp('Insert').setVisible(false);
+                    Ext.getCmp('Delete').setVisible(false);
+                } 
+                else if (txtpass.getRawValue() === "itmishari") {
+                    flxTran.show();
+                    flxRef.show();
+                    flxTrail.show();
+                    flxRefbills.show();
+                    flxRefbills2.show();
+                    txtVocherNo.show();
+                    txtValueDebit.show();
+                    txtValueCredit.show();
+                    txtpass.hide();
+                    txtValueDebit.setRawValue('');
+                    txtValueCredit.setRawValue('');
+                    txtVocherNo.setRawValue();
+                    txtVocherNo.focus();
+                    Ext.getCmp('Insert').setVisible(true);
+                    Ext.getCmp('Delete').setVisible(true);                    
+                }                 
+                else {
                     flxTran.hide();
                     flxRef.hide();
                     flxTrail.hide();
@@ -268,6 +288,7 @@ Ext.onReady(function () {
         width: 60,
         x: 630,
         y: 420,
+        id : 'btnTranAdd',
         listeners: {
             click: function () {
 
@@ -324,7 +345,7 @@ Ext.onReady(function () {
                                 title: 'Success!',
                                 icon: Ext.Msg.QUESTION,
                                 buttons: Ext.MessageBox.YESNO,
-                                msg: 'Inserted Tran Table...',
+                                msg: 'Inserted Trail Table...',
                                 fn: function (btn) {
                                     if (btn == 'yes') {
                                         load();
@@ -346,7 +367,10 @@ Ext.onReady(function () {
         }
     });
 
+
+    var vouAdjusted = "N";   // ✅ GLOBAL
     function load() {
+        vouAdjusted = "N";
         flxRef.getStore().removeAll();
         flxTrail.getStore().removeAll();
         flxTran.getStore().removeAll();
@@ -394,6 +418,7 @@ Ext.onReady(function () {
                         } else if (VouNoDataStore.getAt(i).get('accref_comp_code') == 1) {
                             compcodenew = "SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
                         } 
+                        /*
                         if (VouNoDataStore.getAt(i).get('accref_finid') == 23) {
                             finyear = "2023-2024";
                         } else if (VouNoDataStore.getAt(i).get('accref_finid') == 24) {
@@ -402,7 +427,9 @@ Ext.onReady(function () {
                             finyear = "2025-2026";
 
                         }
+                        */
 
+                        finyear = gstfinyear
                         flxRef.getStore().insert(
                                 flxRef.getStore().getCount(),
                                 new dgrecord({
@@ -431,12 +458,20 @@ Ext.onReady(function () {
                             compcode: compcode
                         },
                         callback: function () {
+                            vouAdjusted ="N";
                             var cnt = TrailDataStore.getCount();
                           //  if (cnt > 0) {
                                 for (var i = 0; i < cnt; i++) {
                                     if (TrailDataStore.getAt(i).get('acctrail_adj_value') > 0) {
-                                        Ext.getCmp('title').setText('Voucher Already Make Adjust!');
+                                        //Ext.getCmp('title').setText('Voucher Already Make Adjust!');
+                                        vouAdjusted ="Y";
+                                        alert("Voucher Already Adjusted... You can't Modify the Amount...");
                                     }
+
+
+
+
+
                                     flxTrail.getStore().insert(
                                             flxTrail.getStore().getCount(),
                                             new dgrecord({
@@ -448,6 +483,7 @@ Ext.onReady(function () {
                                                 acctrail_inv_value: TrailDataStore.getAt(i).get('acctrail_inv_value'),
                                                 acctrail_adj_value: TrailDataStore.getAt(i).get('acctrail_adj_value'),
                                                 acctrail_led_code: TrailDataStore.getAt(i).get('acctrail_led_code'),
+                                                cust_type: TrailDataStore.getAt(i).get('cust_type'),
                                                 led_name: TrailDataStore.getAt(i).get('cust_name'),
                                                 acctrail_amtmode: TrailDataStore.getAt(i).get('acctrail_amtmode'),
                                                 acctrail_crdays: TrailDataStore.getAt(i).get('acctrail_crdays'),
@@ -481,7 +517,7 @@ Ext.onReady(function () {
                                                             acctran_exch_rate: TranDataStore.getAt(i).get('acctran_exch_rate'),
                                                             acctran_pass_no: TranDataStore.getAt(i).get('acctran_pass_no'),
                                                             acctran_paytype: TranDataStore.getAt(i).get('acctran_paytype'),
-                                                            ledtype : TranDataStore.getAt(i).get('led_type')
+                                                            cust_type : TranDataStore.getAt(i).get('cust_type')
                                                         }));
                                                             acctran_narration : TranDataStore.getAt(i).get('acctran_narration')
 
@@ -637,6 +673,7 @@ Ext.onReady(function () {
                     editable: true,
                     allowblank: false,
                     listeners: {
+                    
                         keyup: function () {
                             led = this.getRawValue();
                             LedgerDataStore.load({
@@ -710,47 +747,86 @@ Ext.onReady(function () {
                 }},
 
             {header: "TotAmt", dataIndex: 'acctran_totamt', sortable: true, width: 100, align: 'right'},
-/*
-            {header: "CurCode", dataIndex: 'acctran_cur_code', sortable: true, width: 100, align: 'left',
-                editor: {
-                    xtype: 'textfield',
-                    allowBlank: true,
-                    enableKeyEvents: true
-                }},
-            {header: "Cur Amt", dataIndex: 'acctran_cur_amt', sortable: true, width: 100, align: 'left',
-                editor: {
-                    xtype: 'textfield',
-                    allowBlank: true,
-                    enableKeyEvents: true
-                }},
-            {header: "Exch Date", dataIndex: 'acctran_exch_rate', sortable: true, width: 80, align: 'left',
-                editor: {
-                    xtype: 'textfield',
-                    allowBlank: true,
-                    enableKeyEvents: true
-                }
-            },
-            {header: "PassNo", dataIndex: 'acctran_pass_no', sortable: true, width: 100, align: 'left', editor: {
-                    xtype: 'textfield',
-                    allowBlank: true,
-                    enableKeyEvents: true
-                }},
-*/
+
             {header: "PayType", dataIndex: 'acctran_paytype', sortable: true, width: 80, align: 'left', editor: {
                     xtype: 'textfield',
                     allowBlank: true,
                     enableKeyEvents: true
                 }},
-            {header: "LedType", dataIndex: 'ledtype', sortable: true, width: 80, align: 'left', editor: {
-                    xtype: 'textfield',
-                    allowBlank: true,
-                    enableKeyEvents: true
-                }},
+            {header: "LedType", dataIndex: 'cust_type', sortable: true, width: 80, align: 'left',},
                {header: "Narration", dataIndex: 'acctran_narration', sortable: true, width: 100, align: 'left'},   
 
         ],
-        store: []
+        store: [],
+        listeners: {
+            beforeedit: function(e){
+        
+                var custType = e.record.get('cust_type');  // 👈 get from row
+
+                if (vouAdjusted === "Y" &&
+                    (e.field === 'acctran_dbamt' || e.field === 'acctran_cramt') &&
+                    custType !== 'G') {
+        
+                    return false;   // ❌ block for non-G
+                }
+            },
+            afteredit: function(e){
+
+                // ✅ recalculate only when Debit/Credit changed
+                if (e.field === 'acctran_dbamt' || e.field === 'acctran_cramt') {
+                    calculatedbvalue();
+                }
+            }
+            
+        }        
     });
+
+    function validateTrailGrid() {
+        var store = flxTrail.getStore();
+        var count = store.getCount();
+    
+        for (var i = 0; i < count; i++) {
+            var rec = store.getAt(i);
+    
+            var ledName = rec.get('led_name');
+            var ledCode = rec.get('acctrail_led_code');
+            var amtMode = rec.get('acctrail_amtmode');
+    
+            // 🔴 Condition 1: Ledger name موجود but code = 0
+            if (ledName && (!ledCode || parseInt(ledCode) === 0)) {
+                Ext.Msg.alert('Error', 'Ledger code missing for row ' + (i + 1));
+                return false;
+            }
+    
+            // 🔴 Condition 2: DR/CR blank
+            if (!amtMode || amtMode.trim() === '') {
+                Ext.Msg.alert('Error', 'DR/CR cannot be blank at row ' + (i + 1));
+                return false;
+            }
+        }
+
+        var tranStore = flxTran.getStore();
+        var tranCount = tranStore.getCount();
+    
+        for (var j = 0; j < tranCount; j++) {
+            var recT = tranStore.getAt(j);
+    
+            var db  = Number(recT.get('acctran_dbamt')) || 0;
+            var cr  = Number(recT.get('acctran_cramt')) || 0;
+            var tot = Number(recT.get('acctran_totamt')) || 0;
+    
+            // 🔴 Check: Debit + Credit = Total
+            if (Math.abs((db + cr) - tot) >= 0.01) {
+                Ext.Msg.alert(
+                    'Error',
+                    'Debit + Credit must equal Total at row ' + (j + 1)
+                );
+                return false;
+            }
+        }        
+    
+        return true;
+    }
 
     var flxTrail = new Ext.grid.EditorGridPanel({
         frame: false,
@@ -759,7 +835,7 @@ Ext.onReady(function () {
         autoShow: true, id: 'my-grid3',
         stripeRows: true,
         scrollable: true, hidden: true,
-        height: 100,
+        height: 130,
         width: 1450,
         x: 0,
         y: 380,
@@ -785,7 +861,7 @@ Ext.onReady(function () {
                     allowBlank: true,
                     enableKeyEvents: true
                 }},
-            {header: "LedName", dataIndex: 'led_name', sortable: true, width: 200, align: 'left',
+            {header: "LedName", dataIndex: 'led_name', sortable: true, width: 300, align: 'left',
                 editor: new fm.ComboBox({
                     allowBlank: false,
                     store: 'LedgerDataStore',
@@ -856,7 +932,26 @@ Ext.onReady(function () {
                     enableKeyEvents: true
                 }, },
             {header: "Ledcode", dataIndex: 'acctrail_led_code', sortable: true, width: 80, align: 'left'},
-            {header: "DR/CR", dataIndex: 'acctrail_amtmode', sortable: true, width: 70, align: 'left'},
+            {
+                header: "DR/CR",
+                dataIndex: 'acctrail_amtmode',
+                sortable: true,
+                width: 70,
+                align: 'left',
+                editor: new Ext.form.ComboBox({
+                    store: new Ext.data.SimpleStore({
+                        fields: ['value'],
+                        data: [['D'], ['C']]
+                    }),
+                    displayField: 'value',
+                    valueField: 'value',
+                    mode: 'local',
+                    triggerAction: 'all',
+                    editable: false,          
+                    forceSelection: false,   // ✅ allow values other than D/C
+                    selectOnFocus: true
+                })
+            },
             {header: "Payment Terms", dataIndex: 'acctrail_crdays', sortable: true, width: 120, align: 'left',
                 editor: {
                     xtype: 'numberfield',
@@ -894,9 +989,21 @@ Ext.onReady(function () {
                 }
             },
         ],
-        store: []
+        store: [],
+        listeners: {
+            
+                beforeedit: function(e){
+            
+                    if (vouAdjusted === "Y" &&
+                        (e.field === 'acctrail_inv_value' || e.field === 'acctrail_adj_value')) {
+            
+                            return false;  
+                    }
+                }
+                
+        }
+    
     });
-
 
     var flxRefbills = new Ext.grid.EditorGridPanel({
         frame: false,
@@ -977,6 +1084,14 @@ Ext.onReady(function () {
         style: {textTransform: "uppercase"}
     });
 
+    function isDebitCreditEqual() {
+
+        var debit  = Number(txtValueDebit.getValue()) || 0;
+        var credit = Number(txtValueCredit.getValue()) || 0;
+    
+        return Math.abs(debit - credit) < 0.01;
+    }
+
 
     var EntryFormPanel = new Ext.FormPanel({
         renderTo: Ext.getBody(),
@@ -1011,6 +1126,7 @@ Ext.onReady(function () {
             items: [
                 {
                     text: 'Update',
+                    id  : 'update',
                     style: 'text-align:center;',
                     tooltip: 'Update Details...',
                     height: 40, style: 'background-color: yellow;',
@@ -1023,6 +1139,15 @@ Ext.onReady(function () {
                         click: function () {
 
 
+                            if (!validateTrailGrid()) {
+                                return; 
+                            }
+                            if (!isDebitCreditEqual()) {
+                                Ext.Msg.alert("Mismatch", "Debit and Credit are not equal. Cannot update.");
+                                return;   // ❌ stop update
+                            }
+                    
+
 			  if(cmbApprove.getRawValue()===""){
  						 alert('Select Approval');
 			 }else if(cmbRequest.getRawValue()===""){
@@ -1032,7 +1157,7 @@ Ext.onReady(function () {
 
 
 
-                            if (txtpass.getRawValue() == "mishari") {
+                            if (txtpass.getRawValue() == "mishari" ||  txtpass.getRawValue() == "itmishari") {
                                 Ext.getCmp('approved').setText(seqno);
 
                                 ApprovecheckDataStore.removeAll();
@@ -1237,6 +1362,7 @@ Ext.onReady(function () {
                 }, '-',
                 {
                     text: 'Insert',
+                    id : 'Insert',
                     style: 'text-align:center;',
                     height: 40,
                     fontSize: 30, style: 'background-color: white;',
@@ -1253,6 +1379,7 @@ Ext.onReady(function () {
                 }, '-',
                 {
                     text: 'Delete',
+                    id : 'Delete',
                     style: 'text-align:center;',
                     height: 40, style: 'background-color: yellow;',
                             fontSize: 30,
@@ -1444,9 +1571,9 @@ Ext.onReady(function () {
         resizable: false,
         border: false,
         draggable: false,
+        onEsc:function(){},        
         listeners: {
             show: function () {
-            
                 RefreshData();
                 
             }

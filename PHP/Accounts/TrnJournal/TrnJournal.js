@@ -1701,7 +1701,11 @@ function add_btn_click()
         }
     });
     
-   
+    function clearTime(dt) {
+        return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    }
+    
+
   function NewDateCheck()
   {
         var dt_today = new Date();
@@ -1723,9 +1727,25 @@ function add_btn_click()
 
         }
 
-    if(Ext.util.Format.date(dtpVouDate.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
-            Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
-    }
+        var finStart = new Date(finstdate);
+        var finEnd   = new Date(finenddate);
+
+        dt_voucher    = clearTime(dt_voucher);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (gstFlag === "Add" && (dt_voucher < finStart || dt_voucher > finEnd))
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+//                dtpVouDate.setValue(dt_today);
+dtpVouDate.focus();
+                return;
+            }        
+
     dtpRefdate.setRawValue(dtpVouDate.getRawValue());
     dtpLedgerRefdate.setRawValue(dtpVouDate.getRawValue());
 
@@ -1755,6 +1775,13 @@ function add_btn_click()
  
  }
 
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
 
 
 
@@ -1763,11 +1790,16 @@ function add_btn_click()
         id: 'dtpVouDate',
         name: '',
         format: 'd-m-Y',
-        value: new Date(),
+        value: defaultDate,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ", 
        	enableKeyEvents: true,
         listeners:{
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },   
           specialkey:function(f,e){
 
              if (e.getKey() == e.ENTER)
@@ -1802,7 +1834,7 @@ var lblNarration = new Ext.form.Label({
 
 
     var lblRefNo = new Ext.form.Label({
-        fieldLabel  : 'Ref No.',
+        fieldLabel  : 'Inv/Ref No.',
         id          : 'lblRefNo',
         width       : 70,
       labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
@@ -1810,10 +1842,16 @@ var lblNarration = new Ext.form.Label({
    
 
     var lblRefDate = new Ext.form.Label({
-        fieldLabel  : 'Ref Date.',
+        fieldLabel  : 'Inv/Ref Date.',
         id          : 'lblRefDate',
-        width       : 70,
-      labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
+        width       : 120,
+        labelStyle  : "font-size:12px;font-weight:bold;color:#fc9403",
+/*        
+        autoEl  : {
+            tag: 'span',
+            style: 'font-size:14px;font-weight:bold;color:#fc9403;'
+        }
+        */
     });
    
 
@@ -2075,7 +2113,7 @@ function InsertUnAdjustedBillDetail(){
                     gstfin =   gstfinyear;
 
                        var tamt = Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value')) -
-                                    Number(UnAdjustedBillDetaildatastore.getAt(i).get('dbcr_invvalue'));
+                                    Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_adj_value'));
                        var pamt = UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value') -
                                     Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_adj_value'));
 
@@ -2701,7 +2739,7 @@ function edit_click()
             {header: "Credit", dataIndex: 'cramt',sortable:true,width:100,align:'right'},
             {header: "Ledseqno", dataIndex: 'ledseq',sortable:true,width:60,align:'left',hidden:false},
             {header: "totamt", dataIndex: 'totamt',sortable:true,width:80,align:'left',hidden:false},
-            {header: "ledtype", dataIndex: 'ledtype',sortable:true,width:60,align:'left',hidden:true},
+            {header: "ledtype", dataIndex: 'ledtype',sortable:true,width:60,align:'left',hidden:false},
             {header: "Narration", dataIndex: 'narration', sortable: true, width: 300, align: 'left', hidden: false},
             {header: "Ref No.", dataIndex: 'refno', sortable: true, width: 100, align: 'left', hidden: false},     
             {header: "Ref Date", dataIndex: 'refdate', sortable: true, width: 100, align: 'left', hidden: false},
@@ -3282,7 +3320,7 @@ function edit_click()
                     { 
                         xtype       : 'fieldset',
                         title       : '',
-                        width       : 100,
+                        width       : 120,
                         x           : 200,
                         y           : 60,
                         defaultType : 'label',

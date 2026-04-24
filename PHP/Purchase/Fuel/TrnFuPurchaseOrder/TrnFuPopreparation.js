@@ -3704,24 +3704,26 @@ function save_click()
             if (gstSave === "true")
                 {  
 
-           
-            var poData = flxDetail.getStore().getRange();                                        
-            var poupdData = new Array();
-            Ext.each(poData, function (record) {
+
+                Ext.getCmp('save').setDisabled(true);                      
+
+                var poData = flxDetail.getStore().getRange();                                        
+                var poupdData = new Array();
+                Ext.each(poData, function (record) {
                 poupdData.push(record.data);
-            });
+                });
 
 
-            Ext.Ajax.request({
-            url: 'TrnFuPOPreparationSave.php',
-            params :
-             {
+                Ext.Ajax.request({
+                url: 'TrnFuPOPreparationSave.php',
+                params :
+                {
                 savetype                : gstFlag,
-             	griddet		: Ext.util.JSON.encode(poupdData),                                      
+                griddet		: Ext.util.JSON.encode(poupdData),                                      
                 po_company_code		: Gincompcode,
-		po_finid		: GinFinid,
-		cnt			: poData.length,
-		po_vendor_code 		: supcode,
+                po_finid		: GinFinid,
+                cnt			: poData.length,
+                po_vendor_code 		: supcode,
                 po_no                   : txtPONo.getValue(),
                 po_seqno                : poseqno,
                 po_date 		: Ext.util.Format.date(dtpPodate.getValue(),"Y-m-d"),
@@ -3729,50 +3731,50 @@ function save_click()
                 porefdate   		: Ext.util.Format.date(dtpRefDate.getValue(),"Y-m-d"),
 
                 orderterms 		: txtOrderTerms.getRawValue(),
-		po_transport_mode 	: cmbDespatchThrough.getValue(),
-		po_paymode 		: cmbPayMode.getValue(),
-		creditdays 		: txtPaymtDays.getRawValue(),
+                po_transport_mode 	: cmbDespatchThrough.getValue(),
+                po_paymode 		: cmbPayMode.getValue(),
+                creditdays 		: txtPaymtDays.getRawValue(),
 
-		remarks			: txtRemarks.getRawValue(),
+                remarks			: txtRemarks.getRawValue(),
 
-		cgstper 		: txtCGST.getRawValue(),
-		sgstper 		: txtSGST.getRawValue(),
-		igstper 		: txtIGST.getRawValue(),
+                cgstper 		: txtCGST.getRawValue(),
+                sgstper 		: txtSGST.getRawValue(),
+                igstper 		: txtIGST.getRawValue(),
 
 
-		itemval 		: txtTotValue.getRawValue(),
-		roundoff 		: 0,
-		totval 		        : txtPOValue.getRawValue(),
-		userid   		: GinUserid,
-		entrydate 		: Ext.util.Format.date(dtpwefdate.getValue(),"Y-m-d"),
-		wefdate 		: Ext.util.Format.date(dtpwefdate.getValue(),"Y-m-d"),
+                itemval 		: txtTotValue.getRawValue(),
+                roundoff 		: 0,
+                totval 		        : txtPOValue.getRawValue(),
+                userid   		: GinUserid,
+                entrydate 		: Ext.util.Format.date(dtpwefdate.getValue(),"Y-m-d"),
+                wefdate 		: Ext.util.Format.date(dtpwefdate.getValue(),"Y-m-d"),
                 handlingmt		: txtHandlingPMT.getValue(),
                 handlingcgst		: txtHandlingcgst.getValue(),
                 handlingsgst		: txtHandlingsgst.getValue(),
-                                              
-		handlingamt		: txtHandingAmount.getValue(),
+                                
+                handlingamt		: txtHandingAmount.getValue(),
 
 
                 gcvadb 			: txtGCVADB.getRawValue(),
-		gcvadb_tot 	        : txtGCVADB_PM.getRawValue(),
+                gcvadb_tot 	        : txtGCVADB_PM.getRawValue(),
                 gcvarb 			: txtGCVARB.getRawValue(),
-		gcvarb_tot 	        : txtGCVARB_PM.getRawValue(),
+                gcvarb_tot 	        : txtGCVARB_PM.getRawValue(),
 
-		moispercentage		: txtTotMoisturePercentage.getRawValue(),
-		moistolarance 		: txtTotMoisturePM.getRawValue(),
-		inh_mois 		: txtTotInhrMoisturePercentage.getRawValue(),
+                moispercentage		: txtTotMoisturePercentage.getRawValue(),
+                moistolarance 		: txtTotMoisturePM.getRawValue(),
+                inh_mois 		: txtTotInhrMoisturePercentage.getRawValue(),
                 fixedcarbon             : txtFixedCarbon.getRawValue(), 
-		ash 			: txtAshPercentage.getRawValue(),
-		tcsp 			: txttcs.getRawValue(),
-		sulpher 		: txtSulpherPercentage.getRawValue(),
-		volmatr 		: txtVolatileMatter.getRawValue(),
-		fusize 			: txtsize.getRawValue(),
-		vessal 			: txtVessal.getRawValue(),
-		cessmt 			: txtCessPMT.getRawValue(),
+                ash 			: txtAshPercentage.getRawValue(),
+                tcsp 			: txttcs.getRawValue(),
+                sulpher 		: txtSulpherPercentage.getRawValue(),
+                volmatr 		: txtVolatileMatter.getRawValue(),
+                fusize 			: txtsize.getRawValue(),
+                vessal 			: txtVessal.getRawValue(),
+                cessmt 			: txtCessPMT.getRawValue(),
                 indpreparedby           : txtPreparedBy.getRawValue(),
-		purledger       	: cmbPurchaseLedger.getValue(),
+                purledger       	: cmbPurchaseLedger.getValue(),
                 roundneed               : roundoff,
-           	poroundoff              : txtroundoff.getValue(),
+                poroundoff              : txtroundoff.getValue(),
 
 		},
               callback: function(options, success, response)
@@ -3788,7 +3790,8 @@ function save_click()
                     RefreshData();
                   }else
 			{
-Ext.MessageBox.alert("Purchase Order Not Completed! Pls Check!- " + obj['pono']);                                                  
+    Ext.MessageBox.alert("Purchase Order Not Completed! Pls Check!- " + obj['pono']);                                                  
+    Ext.getCmp('save').setDisabled(false);  
                     }
                 }
            });         
@@ -3866,6 +3869,7 @@ var TrnPoFormPanel = new Ext.FormPanel({
         },'-',
           {
             text: 'Save',
+            id :  'save',
             style  : 'text-align:center;',
             tooltip: 'Save Details...',
             height: 25,
@@ -4063,10 +4067,11 @@ var TrnPoFormPanel = new Ext.FormPanel({
 });
 
 function RefreshData(){
+    Ext.getCmp('save').setDisabled(false);  
     gstFlag = "Add";
-     poseqno = 0;  
-       Ext.getCmp('cmbPONo').setVisible(false);
-            txtPreparedBy.setRawValue(GinUser);
+    poseqno = 0;  
+    Ext.getCmp('cmbPONo').setVisible(false);
+    txtPreparedBy.setRawValue(GinUser);
     dateval=new Date();
    // txtIGST.hide();
   //  txtIGSTvalue.hide();

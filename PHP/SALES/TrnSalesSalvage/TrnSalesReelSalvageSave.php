@@ -43,12 +43,16 @@ for ($i=0;$i<$rowcnt;$i++)
 	$result1=mysqli_query($conn, $query1);            
 
 
+//echo $query1;
+//echo "<br>";
 
 
 	$query2= "insert into trnsal_finish_stock  (stk_comp_code,stk_finyear,stk_ent_no,stk_ent_date,stk_var_code,stk_sr_no,stk_wt,stk_sono,stk_source,stk_yymm,stk_rollno,stk_shift) VALUES ('$compcode','$fincode','100','$entdate','$newsizecode','$newreelno','$newwt',$newsono,'S',$oldyymm,$oldrollno,'A')";
 	$result2=mysqli_query($conn, $query2);
 
 
+//	echo $query2;
+	//echo "<br>";
   
 }
 
@@ -57,10 +61,12 @@ $query3  = "update trnsal_finish_stock set stk_destag = 'S' ,stk_slipno = '$entn
 $result3 = mysqli_query($conn, $query3);    
 
 //echo $query3;
+//echo "<br>";
+
 
 if($result1 && $result2 && $result3)
 {
-  mysqli_rollback($conn);                   
+	mysqli_commit($conn);                  
   echo '({"success":"true","entno":"'.$entno.'"})';
 }
 else

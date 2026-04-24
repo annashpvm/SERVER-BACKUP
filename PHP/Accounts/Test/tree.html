@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Trial Balance - ExtJS 4.1</title>
+
+<!-- EXTJS CSS -->
+<link rel="stylesheet" href="/ext-4.1/resources/css/ext-all.css">
+
+<!-- EXTJS JS -->
+<script src="/ext-4.1/ext-all.js"></script>
+
+<script>
+Ext.onReady(function () {
+
+    // ✅ DEFINE MODEL (BEST PRACTICE)
+    Ext.define('TrialBalanceModel', {
+        extend: 'Ext.data.Model',
+        fields: [
+            'text',
+            'debit',
+            'credit',
+            'closing',  
+            'level',
+            'mgrpcode',
+            'subgrp',
+            'subgrp2'
+        ]
+    });
+
+    // ✅ TREE STORE
+    var store = Ext.create('Ext.data.TreeStore', {
+
+        model: 'TrialBalanceModel',
+
+        proxy: {
+            type: 'ajax',
+            url: 'getTrialBalanceTree.php',
+            reader: {
+                type: 'json',
+                root: 'children'
+            },
+            extraParams: {
+                level: 'GROUP',
+                finid: 25,
+                compcode: 1,
+                startdate: '2025-04-01',
+                enddate: '2026-03-31',
+                finfirstdate: '2025-04-01'
+            }
+        },
+
+        root: {
+            text: 'Root',
+            level: 'GROUP',   // 🔥 IMPORTANT
+            expanded: true
+        },
+
+        listeners: {
+
+            beforeload: function (store, operation) {
+
+                var node = operation.node;
+                console.log("Node Data:", node.data);
+                store.getProxy().extraParams.level     = node.get('level') || 'GROUP';
+                store.getProxy().extraParams.mgrpcode  = node.get('mgrpcode') || 0;
+                store.getProxy().extraParams.subgrp    = node.get('subgrp') || 0;
+                store.getProxy().extraParams.subgrp2   = node.get('subgrp2') || 0;
+
+                // DEBUG (optional)
+                console.log("Loading Level:", store.getProxy().extraParams.level);
+            }
+        }
+    });
+
+    // ✅ TREE PANEL
+    Ext.create('Ext.tree.Panel', {
+
+        title: 'Trial Balance',
+        width: 900,
+        height: 500,
+        renderTo: Ext.getBody(),
+
+        store: store,
+
+        rootVisible: false,
+        useArrows: true,
+        border: true,
+
+        columns: [
+                    {
+                xtype: 'treecolumn',
+                text: 'Particulars',
+                dataIndex: 'text',
+                flex: 3,
+                renderer: function(value, meta, record){
+
+                    var level = record.get('level');
+
+                    // 🔥 MAIN HEAD (Top Level)
+                    if (level === 'SUBMAIN') {
+                        return '<b>' + value + '</b>';
+                    }
+
+                    return value;
+                }
+            },
+            {
+                text: 'Debit',
+                flex: 1,
+                align: 'right',
+                renderer: function(v, meta, rec){
+                    var closing = rec.get('closing') || 0;
+
+                    if (closing > 0) {
+                        return Ext.util.Format.number(closing, '0,0.00');
+                    }
+                    return '';
+                }
+            },
+            {
+                text: 'Credit',
+                flex: 1,
+                align: 'right',
+                renderer: function(v, meta, rec){
+                    var closing = rec.get('closing') || 0;
+
+                    if (closing < 0) {
+                        return Ext.util.Format.number(Math.abs(closing), '0,0.00');
+                    }
+                    return '';
+                }
+            }
+        ],
+
+        listeners: {
+            itemexpand: function(node) {
+                console.log("Expanded:", node.get('text'), "Level:", node.get('level'));
+            }
+        }
+
+    });
+
+});
+</script>
+
+<style>
+body {
+    margin: 20px;
+}
+</style>
+
+</head>
+
+<body>
+</body>
+</html>

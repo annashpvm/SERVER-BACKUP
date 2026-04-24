@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="author">ChatGPT</property>
+    <property name="createdBy">ChatGPT</property>
+    <property name="units">in</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[Page Footer]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="4">
+            <property name="width">5in</property>
+            <column id="5"/>
+            <column id="6"/>
+            <header>
+                <row id="7">
+                    <cell id="8">
+                        <label id="9">
+                            <text-property name="text">ID</text-property>
+                        </label>
+                    </cell>
+                    <cell id="10">
+                        <label id="11">
+                            <text-property name="text">Description</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="12">
+                    <cell id="13">
+                        <data id="14">
+                            <property name="resultSetColumn">id</property>
+                            <property name="style">shrinkStyle</property>
+                        </data>
+                    </cell>
+                    <cell id="15">
+                        <data id="16">
+                            <property name="resultSetColumn">description</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="17"/>
+            </footer>
+        </table>
+    </body>
+    <styles>
+        <style name="shrinkStyle" id="18">
+            <property name="whiteSpace">nowrap</property>
+            <property name="textOverflow">ellipsis</property>
+            <property name="overflow">hidden</property>
+        </style>
+    </styles>
+    <data-sources>
+        <data-source name="Sample Source" id="19" type="org.eclipse.birt.report.data.oda.flatfile.dataSource">
+            <property name="HOME">resource</property>
+        </data-source>
+    </data-sources>
+    <data-sets>
+        <data-set name="Sample Data" id="20" dataSource="Sample Source" type="org.eclipse.birt.report.data.oda.flatfile.dataSet">
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">description</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="fileName">sample.txt</property>
+            <property name="charset">UTF-8</property>
+            <property name="delimiter">,</property>
+        </data-set>
+    </data-sets>
+</report>

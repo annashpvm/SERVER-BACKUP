@@ -34,6 +34,31 @@ var UserId   = localStorage.getItem('ginuserid');
    var repopt ='Over Due Bills Oustanding';
 
 
+   var chkWithVouNo = new Ext.form.Checkbox({
+    fieldLabel : '',
+    boxLabel   : '<span style="color:#0000FF;font-weight:bold;">With Voucher No</span>',
+    id         : 'chkWithVouNo',
+    inputValue : '1',
+    checked    : true
+});
+
+var chkWithNarration = new Ext.form.Checkbox({
+    fieldLabel : '',
+    boxLabel   : '<span style="color:#0000FF;font-weight:bold;">With Narration</span>',
+    id         : 'chkWithNarration',
+    inputValue : '1',
+    checked    : true    
+});
+
+var chkWithBillAdjustments = new Ext.form.Checkbox({
+    fieldLabel : '',
+    boxLabel   : '<span style="color:#0000FF;font-weight:bold;">With Bill Adjustments</span>',
+    id         : 'chkWithBillAdjustments',
+    inputValue : '1',
+    checked    : true    
+});
+
+
      var loadCN_DN_Datastore = new Ext.data.Store({
         id: 'loadCN_DN_Datastore',
         proxy: new Ext.data.HttpProxy({
@@ -1045,7 +1070,7 @@ var flxVouTypeList = new Ext.grid.EditorGridPanel({
     y:40,
     height: 385,
     hidden:false,
-    width: 380,
+    width: 340,
     id: 'my-grid5',  
 
     columns:
@@ -1094,7 +1119,7 @@ var flxVouNoDetail = new Ext.grid.EditorGridPanel({
     y:40,
     height: 385,
     hidden:false,
-    width: 750,
+    width: 710,
  //   id: 'my-grid',  
 
     columns:
@@ -1105,10 +1130,10 @@ var flxVouNoDetail = new Ext.grid.EditorGridPanel({
 },
         {header: "Vou No" , dataIndex: 'accref_vouno',sortable:true,width:100,align:'center', menuDisabled: true,
 },
-        {header: "Ref/Inv No" , dataIndex: 'accref_payref_no',sortable:false,width:110,align:'left', menuDisabled: true,
+        {header: "Ref/Inv No" , dataIndex: 'accref_payref_no',sortable:false,width:90,align:'left', menuDisabled: true,
 },
         {header: "Vou Date" , dataIndex: 'accref_voudate',sortable:true,width:90,align:'center', menuDisabled: false},
-        {header: "Ledger" , dataIndex: 'cust_name',sortable:true,width:260,align:'left', menuDisabled: true,
+        {header: "Ledger" , dataIndex: 'cust_name',sortable:true,width:240,align:'left', menuDisabled: true,
 		renderer : function(value, meta ,record) {
 		    var vou=record.get('cust_name');
 		    if(vou!=='') {
@@ -1664,7 +1689,7 @@ alert(cnt);
 		     xtype   : 'fieldset',
 		     title   : '',
 		     border  : false,
-		     x       : 410,
+		     x       : 360,
 		     y       : 0,
 		     items: [flxVouNoDetail]
 		},	
@@ -1695,7 +1720,20 @@ alert(cnt);
 
 		},
 
-
+        {
+            xtype: 'fieldset',
+            title: 'Display Options',
+            layout: 'form',
+            labelWidth : 1,
+            x       : 1090,
+            y       : 60,   
+            width   : 300,                 
+            items: [
+                chkWithVouNo,
+                chkWithNarration,
+                chkWithBillAdjustments
+            ]
+        },
 
 		{
 		xtype       : 'fieldset',
@@ -1703,7 +1741,7 @@ alert(cnt);
 
 		labelWidth  : 1,
 		x           : 1170,
-		y           : 150,
+		y           : 250,
 		border      : false,
 		items : [btnColumnAR]
 		},
@@ -1715,7 +1753,7 @@ alert(cnt);
 
 		labelWidth  : 1,
 		x           : 1170,
-		y           : 205,
+		y           : 305,
 		border      : false,
 		items : [btnColumnSelect]
 		},
@@ -1866,15 +1904,47 @@ alert(cnt);
                     listeners:{
                        click: function () {
 
-       
-//                    var fdate=Ext.getCmp('monthstartdate').value;
-//                    var tdate=Ext.getCmp('monthenddate').value;
-//                    var d1 =  fdate + " 00:00:00.000";
-//                    var d2 =  tdate + " 00:00:00.000";
+
+                        var withVouNo = Ext.getCmp('chkWithVouNo').getValue();
+                        var withNarration = Ext.getCmp('chkWithNarration').getValue();
+                        var withAdjustments = Ext.getCmp('chkWithBillAdjustments').getValue();
+    
+                        var vouchertype2 = vouchertype;
+
+                        if (vouchertype == "BKP,CHP")
+                            vouchertype2 = "PAY";
+                        
+                        if (vouchertype == "BKR,CHR")
+                            vouchertype2 = "REC";
+    
+                        if (vouchertype == "DNG,DNN,SDN")
+                            vouchertype2 = "DNOTE";
+                        
+                        if (vouchertype == "CNG,CNN")
+                            vouchertype2 = "CNOTE";
+
+                    var vou = "&voutype="+encodeURIComponent(vouchertype2);
+                    var fd = "&fmdate="+encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));
+                    var td = "&tdate="+encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                    var comp = "&comp="+encodeURIComponent(Gincompcode);
+                    var withvouno = "&withvouno="+encodeURIComponent(withVouNo);
+                    var withnarration = "&withnarration="+encodeURIComponent(withNarration);
+                    var withadjustments = "&withadjustments="+encodeURIComponent(withAdjustments);
+   
+                    var param = (vou+fd+td+comp+withvouno+withnarration+withadjustments) ;
 
 
-             
+                        if (printtype == "PDF") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouRegister_withAdjustments.rptdesign&__format=pdf&'+param,  '_blank' );
+                            else if (printtype == "XLS") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouRegister_withAdjustments.rptdesign&__format=XLS' + param, '_blank');
+                            else
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouRegister_withAdjustments.rptdesign' + param, '_blank');	
 
+/*
+
+/*
+                      
                     var vou = "&voutype="+encodeURIComponent(vouchertype);
                     var fd = "&fmdate="+encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));
                     var td = "&tdate="+encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
@@ -1891,14 +1961,6 @@ if  (optionselect == "P")
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign' + param, '_blank');
 
-/*             
-                    if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign&__format=pdf&'+param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign&__format=xls' + param, '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign' + param, '_blank');	
-*/
 else
                     if (printtype == "PDF") 
                     window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign&__format=pdf&'+param,  '_blank' );
@@ -1906,6 +1968,8 @@ else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign&__format=xls' + param, '_blank');
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign' + param, '_blank');
+
+*/            
 
 		}
                     }

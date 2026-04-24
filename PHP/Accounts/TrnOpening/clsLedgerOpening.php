@@ -145,25 +145,12 @@
         global $conn;
        	$compcode = $_POST['compcode'];
        	$fincode = $_POST['fincode'];
-/*
-	$sql = "select * from acc_current_balance where curbal_led_code=1717 and curbal_finid = '$fincode' and curbal_comp_code = '$compcode' ";
-
-
-	$sql="select concat('01-04-20',curbal_finid) as clodate, curbal_obdbamt closing from acc_current_balance where curbal_led_code=1717 and curbal_finid = '$fincode' and curbal_comp_code =  '$compcode'
-union all
-select  DATE_FORMAT(clostk_date, '%d-%m-%Y') as clodate,
-clostk_value closing from acc_closing_stock where clostk_fincode = '$fincode' and clostk_compcode = '$compcode'";
-
-//echo $sql;
-
-	$sql = "select concat('01-04-20',curbal_finid) as clodate, curbal_obdbamt closing from acc_current_balance where curbal_led_code=1717 and curbal_finid = '$fincode' and curbal_comp_code =  '$compcode'
-union all
-select  DATE_FORMAT(clostk_date, '%d-%m-%Y') as clodate,
-clostk_value closing from acc_closing_stock where clostk_fincode = '$fincode' and clostk_compcode = '$compcode'";
-*/
+        $enddate = $_POST['enddate'];  
 
 	$sql = "select  DATE_FORMAT(clostk_date, '%d-%m-%Y') as clodate,
 clostk_value closing from acc_closing_stock where clostk_fincode = '$fincode' and clostk_compcode = '$compcode'";
+
+ //    $sql = "SELECT * FROM acc_closing_stock t WHERE t.clostk_value = (SELECT clostk_value FROM acc_closing_stock s WHERE s.clostk_compcode = '$compcode' AND s.clostk_fincode = '$fincode' AND s.clostk_date <=  '2025-12-31' ORDER BY s.clostk_date DESC  LIMIT 1);";
 
     $r = mysqli_query($conn, $sql);
 

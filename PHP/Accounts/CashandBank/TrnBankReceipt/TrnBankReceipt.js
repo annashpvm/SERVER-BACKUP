@@ -79,6 +79,22 @@ Ext.onReady(function () {
        }    
   
     }   
+
+    var txtAdjDaysRange = new Ext.form.TextField({
+        fieldLabel: 'Adj Range',
+        id: 'txtAdjDaysRange',
+        width: 100,
+        name: 'txtAdjDaysRange',
+        readOnly : true,
+        labelStyle   : "font-size:14px;font-weight:bold;color:#0080ff",
+        style: {
+            'color':'#900C3F ',readOnly:true,'text-align': 'right',
+            'style': 'Helvetica',
+            'font-size': '14px','font-weight':'bold'
+        },
+        });
+        
+        
       
      var txtPassword = new Ext.form.TextField({
       fieldLabel  : 'Password',
@@ -384,21 +400,29 @@ style: {textTransform: "uppercase"}
 });
 
 var dtpRefDate = new Ext.form.DateField({
-fieldLabel: 'Ref Date',
+fieldLabel: 'Recpt. Date',
 id: 'dtpRefDate',
 name: 'RefDate',
 format: 'd-m-Y',
 value: new Date(),
 //value: '2020-03-31',
 //    anchor: '100%',
+maxValue: new Date(),
 width: 100,
 labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
 enableKeyEvents: true,
 listeners   :{
 
-  change: function (obj, newValue) {
-    loadCDDetails();
-  },
+    change: function (obj, newValue) {
+        var today = new Date();
+        today.setHours(0,0,0,0);
+
+        if (newValue > today) {
+            Ext.Msg.alert('Error', 'Future date is not allowed');
+            obj.setValue(today);
+            return;
+        }
+    },     
    blur:function(){
       loadCDDetails();
    },
@@ -1191,6 +1215,8 @@ function RecordSave()
                                 cnvouno     : txtCNNo.getValue(),  
                                 billnolist  : billnolist,  
 
+                                AdjDaysRange: txtAdjDaysRange.getValue(),  
+                               
 		              },
 		            callback: function (options, success, response)
 		            {
@@ -1374,6 +1400,35 @@ alert(diff);
 
 function save_click() 
 {
+
+
+    var store = flxAccounts.getStore();
+    var count = store.getCount();
+    var invalid = false;
+    
+    if (count > 1 && Number(txtTotCDAmt.getValue()) > 0 ) {
+    
+        store.each(function(rec){
+    
+            if(rec.get('ledcode') == 0){
+    
+                invalid = true;
+                return false; // exit loop
+    
+            }
+    
+        });
+    
+    }
+    
+    if(invalid){
+        Ext.Msg.alert('Validation','In Credit Note, Ledger code cannot be zero.. Please Check..');
+        return;
+    }
+    
+    // continue save
+    
+    
 
 
         var saverecord = 'Y';
@@ -2411,7 +2466,8 @@ function add_btn_click()
         var ginigstamt = 0;   
         var gininvamt = 0;
 
-
+        var minDays = 0;
+        var maxDays = 0;
 
         gstbillnos = "";
         narra = '';
@@ -2435,9 +2491,25 @@ function add_btn_click()
                     ginigstamt = ginigstamt   + Number(rec.get('igstamount'));
 
 
+
+                  if (Number(rec.get('cdvalue')) > 0 ) 
+                  { 
+                    var days = Number(rec.get('adjdays'));
+
+                    if (!isNaN(days)) {
+                        if (minDays == 0 || days < minDays) {
+                            minDays = days;
+                        }
+                        if (maxDays == 0 || days > maxDays) {
+                            maxDays = days;
+                        }
+                    }      
+                  }  
+
                        }
                        gininvamt += Number(rec.get('pendingamt') || 0);
 
+                 
             }
         }
 
@@ -2445,8 +2517,13 @@ function add_btn_click()
       
         newcdamount =  Math.round(newcdamount*100/100); 
 
-
-
+        if (minDays !== null && maxDays !== null) {
+            minDays += Number(txtAddnlCDDays.getValue());
+            maxDays += Number(txtAddnlCDDays.getValue());
+            var rangeText = (minDays === maxDays) ? minDays + " days" : minDays + "-" + maxDays + " days";
+            Ext.getCmp('txtAdjDaysRange').setValue(rangeText); // your field id
+        }
+    
 
         txtTotNetAmt.setValue(ginadjtotal);
 //        txtTotCDAmt.setValue(gincdamt);
@@ -2825,6 +2902,8 @@ function getAdjustmentDetails2()
         diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24)); 
 
         diffdays = diffdays - Number(txtAddnlCDDays.getValue());  
+
+        
         var PTGD = Number(crdays) + Number(grdays);
         var cdpermt_new = 0;
         if (PTGD <= 7 )
@@ -2843,7 +2922,7 @@ function getAdjustmentDetails2()
            cdpermt_new = PMT60dayscdamt3;
         else if (PTGD == 90 && diffdays < 11)
            cdpermt_new = PMT60dayscdamt1;
-        else if (PTGD == 90 && diffdays <= 35)
+        else if (PTGD == 90 && diffdays <= 30)
            cdpermt_new = PMT60dayscdamt2;
         else if (PTGD == 90 && diffdays <= 45)
            cdpermt_new = PMT60dayscdamt3;
@@ -3395,7 +3474,11 @@ adjusted = 0;
     var dateon;
     var getdate;
 
-
+    function clearTime(dt) {
+        return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    }
+    
+    
   function NewDateCheck()
   {
         var dt_today = new Date();
@@ -3417,10 +3500,24 @@ adjusted = 0;
 
         }
 
-    if(Ext.util.Format.date(dtpVouDate.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
-            Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
-    }
+        var finStart = new Date(finstdate);
+        var finEnd   = new Date(finenddate);
 
+        dt_voucher    = clearTime(dt_voucher);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (gstFlag === "Add" && (dt_voucher < finStart || dt_voucher > finEnd))
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+//                dtpVouDate.setValue(dt_today);
+dtpVouDate.focus();
+                return;
+            }
     dtpRefDate.setRawValue(dtpVouDate.getRawValue());
 
  }
@@ -3459,18 +3556,29 @@ adjusted = 0;
  }
 
 
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
 
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
 
     var dtpVouDate= new Ext.form.DateField({
         fieldLabel: '',
         id: 'dtpVouDate',
         name: '',
         format: 'd-m-Y',
-        value: new Date(),
+        value: defaultDate,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ", 
        	enableKeyEvents: true,
         listeners:{
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },             
            blur:function(){
               NewDateCheck();
            },
@@ -3913,8 +4021,10 @@ function loadCDDetails() {
             var PTGD = Number(rec.get('payterms')) + Number(rec.get('grdays'));
 
 
-            rec.set('adjdays', diffdays);
-
+           // rec.set('adjdays', diffdays);
+           
+           rec.set('adjdays', diffdays+1);
+           
             if (rec.get('voutype') !== 'AD' && Number(rec.get('pendingamt')) >1) {
                 cashdisc_value = 0;
                 ratediffmt = rec.get('ratediff');
@@ -3965,7 +4075,7 @@ function loadCDDetails() {
                        }
                        cdpermt = rec.get('PMT45dayscdamt1');
                     }
-                    else if (diffdays <= 35 )
+                    else if (diffdays <= 30 )
                     {
                           if (cdtype == 'Y')
                           {
@@ -4004,7 +4114,7 @@ function loadCDDetails() {
                           }
                           cdpermt = rec.get('PMT60dayscdamt1');
                        } 
-                       else if (diffdays <= 35 )
+                       else if (diffdays <= 30 )
                        {
                           if (cdtype == 'Y')
                           {
@@ -4043,6 +4153,8 @@ function loadCDDetails() {
 
                    else if ( PTGD == 75 || PTGD == 90)
                    {  
+
+// alert(diffdays);                 
                       if (diffdays < 8)
                       {
 
@@ -4063,7 +4175,7 @@ function loadCDDetails() {
 
                           cdpermt = rec.get('PMT90dayscdamt1');
                        } 
-                       else if (diffdays <= 35 )
+                       else if (diffdays <= 30 )
                        {
                           if (cdtype == 'Y')
                           {
@@ -4281,7 +4393,7 @@ flxAdjustDetails.getView().refresh();
 		   LoadGSTDetailsdatastore.load({
 		   url: 'clsBankReceipt.php',
 		   params: {
-			task: 'LoadInvGSTDetails',
+			    task: 'LoadInvGSTDetails',
 		        seqno : accseqno,
 		  },
 		  callback: function () {
@@ -4308,7 +4420,7 @@ flxAdjustDetails.getView().refresh();
 		           sgstledcode = LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code');       
 		           sgstledname = LoadGSTDetailsdatastore.getAt(j).get('cust_name');       
 		            }
-		      if (LoadGSTDetailsdatastore.getAt(j).get('cust_acc_group') == 44 && LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code') == 1646  )
+		      if (LoadGSTDetailsdatastore.getAt(j).get('cust_acc_group') == 44 && (LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code') == 1646 || LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code') == 5133) )
 		            {  
 		           igstledcode = LoadGSTDetailsdatastore.getAt(j).get('acctran_led_code');       
 		           igstledname = LoadGSTDetailsdatastore.getAt(j).get('cust_name');       
@@ -5224,7 +5336,7 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
    id:'my-grid3',
     columns:
     [
-	{header: "S.No" ,       dataIndex: 'slno',sortable:true,width:40,align:'left'},
+	{header: "S.No" ,       dataIndex: 'slno',sortable:true,width:55,align:'center'},
 	{header: "Led.Code",    dataIndex: 'ledcode',sortable:true,width:55,align:'left',hidden : true},
 	{header: "Ledger Name", dataIndex: 'ledname',sortable:true,width:350,align:'left'},
 	{header: "Dedit",       dataIndex: 'debit',sortable:true,width:120,align:'right'},
@@ -5443,13 +5555,19 @@ alert(rec.get('adjamt'));
         var subtot2  = Math.round(subtot*100/100);
 
         rounding =Ext.util.Format.number(Number(subtot)-Number(subtot2),'0.00');
+
+   
 	var rounddr = 0;
 	var roundcr = 0;
 	if ( rounding  > 0)
 	   rounddr = rounding;
 	else
+    {
+       if (rounding == -0.50)    // Modified on 16/03/2026
+        rounddr = Math.abs(rounding);        
+       else 
 	   roundcr = Math.abs(rounding);
-
+    }
 
 	if (rounding != 0)
 	{
@@ -6285,6 +6403,17 @@ var tabAccounts = new Ext.TabPanel({
                 border: false,
                 items: [txtTotINVAmount]
             },
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 150,
+                width: 500,
+                x: 980,
+                y: 480,
+                border: false,
+                items: [txtAdjDaysRange]
+            },            
             {
                 xtype: 'fieldset',
                 title: '',
@@ -6939,7 +7068,7 @@ var tabAccounts = new Ext.TabPanel({
         gstFlag = "Add";
         flxLedger.hide();
 
-
+        txtAdjDaysRange.setRawValue("");
 
         txtCNRemarks.setRawValue("");
         txtNarration.setRawValue("");
@@ -7141,6 +7270,7 @@ var tabAccounts = new Ext.TabPanel({
 },
         listeners: {
             show: function () {
+
                 //Ext.getCmp('optPayType').hide(true);
                  Ext.getCmp('saveOld').setDisabled(true);
                 //Ext.get('txtCNRemarks').setStyle('word-wrap', 'break-word');

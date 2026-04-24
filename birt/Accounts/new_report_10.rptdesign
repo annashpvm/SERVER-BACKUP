@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251:3306/shvpm?allowMultiQueries=true</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="5">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">led_name</property>
+                    <expression name="expression">led_name</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">led_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <xml-property name="queryText"><![CDATA[{call spacc_rep_receivables_outstanding_Bills_Agewise_Report()} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="6">
+            <property name="dataSet">Data Set</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">led_name</property>
+                    <text-property name="displayName">led_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["led_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="19"/>
+            <column id="20"/>
+            <column id="21"/>
+            <header>
+                <row id="7">
+                    <cell id="8">
+                        <label id="22">
+                            <text-property name="text">led_name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="9"/>
+                    <cell id="10"/>
+                </row>
+            </header>
+            <detail>
+                <row id="11">
+                    <cell id="12">
+                        <data id="23">
+                            <property name="resultSetColumn">led_name</property>
+                        </data>
+                    </cell>
+                    <cell id="13"/>
+                    <cell id="14"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="15">
+                    <cell id="16"/>
+                    <cell id="17"/>
+                    <cell id="18"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

@@ -307,6 +307,7 @@ $querya7 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$invno','$invdate','$t
 
         $inscnt2 = 0;
         for($i=0;$i<$rowcnt2;$i++){
+            if ($diffvalue > 0){
             $slno      = $i+1;
             $hsn       = $griddet2[$i]['invt_hsncode'];
             $sizename  = $griddet2[$i]['var_name'];
@@ -321,7 +322,7 @@ $querya7 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$invno','$invdate','$t
             $resulta3  = mysqli_query($conn, $querya3);
 //echo  $querya3;
 //echo "<br>";
-
+            }
         }  
 
 

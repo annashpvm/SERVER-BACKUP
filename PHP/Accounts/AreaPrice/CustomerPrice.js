@@ -1773,7 +1773,7 @@ var cmbProductType = new Ext.form.ComboBox({
                 {
 
 
-                  if (cmbProductType.getValue() != 14)
+                  if (cmbProductType.getValue() != 14 && cmbProductType.getValue() != 19)
                   {  
 
                       flxDetailPB.hide();

@@ -3825,8 +3825,8 @@ var flxDetailInv = new Ext.grid.EditorGridPanel({
        {header: "Size Code", dataIndex:'sizecode',sortable:false,width:100,align:'left',hidden :true},
        {header: "Value", dataIndex:'value',sortable:false,width:100,align:'left'},
        {header: "Tax Value", dataIndex:'taxval',sortable:false,width:100,align:'left'},
-       {header: "QC Dev Y/N", dataIndex:'qcdev',sortable:false,width:100,align:'left',hidden :true},
-       {header: "Loss Per MT", dataIndex:'losspmt',sortable:false,width:100,align:'left',hidden :true},
+    //   {header: "QC Dev Y/N", dataIndex:'qcdev',sortable:false,width:100,align:'left',hidden :true},
+//       {header: "Loss Per MT", dataIndex:'losspmt',sortable:false,width:100,align:'left',hidden :true},
 
 
 
@@ -5554,6 +5554,8 @@ alert(itime);
                      Ext.getCmp('cmbTax').setDisabled(true);  
                      Ext.getCmp('cmbTransport').hide();
                      RefreshData();
+
+                     alert("TEST");
 
 //alert(finstartdate);
 //alert(finenddate);

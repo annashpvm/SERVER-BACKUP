@@ -11,6 +11,8 @@ Ext.onReady(function(){
    var yrfrom = yr.substr(0,4);  
    var yrto  = yr.substr(5,4);  
 
+   var  invfin = localStorage.getItem('invfin');
+
    var repmonth = "0";
    var repyear = "0";
 
@@ -817,7 +819,7 @@ function find_dates(mmon)
 	loadGSTR_2B_Excess_DataStore.load({
 	 url: 'ClsViewStatements.php',
                 params: {
-	    	task: 'loadGSTR2B_Excess_Details',
+	    	    task: 'loadGSTR2B_Excess_Details',
                 compcode:Gincompcode,
                 finid:GinFinid,
                 rmonth : repmonth,
@@ -1090,6 +1092,78 @@ function grid_tot(){
 
 
 
+function exportColumnGrid(gridId, type, paper){
+
+    var millname="SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
+    var heading="GSTR 2B";
+
+    var fromdate=Ext.util.Format.date(monthstartdate.getValue(),"d-m-Y");
+    var todate=Ext.util.Format.date(monthenddate.getValue(),"d-m-Y");
+
+    // 🔥 dynamic grid
+    var grid = Ext.getCmp(gridId);
+
+    if(!grid){
+        alert("Grid not found: " + gridId);
+        return;
+    }
+
+    var store = grid.getStore();
+    var cm = grid.getColumnModel();
+
+    var columns=[];
+    var data=[];
+
+    /* ===== GET VISIBLE COLUMNS ===== */
+    for(var i=0;i<cm.getColumnCount();i++){
+
+        if(!cm.isHidden(i)){
+
+            var c=cm.getColumnAt(i);
+
+            columns.push({
+                header:c.header,
+                dataIndex:c.dataIndex,
+                align:c.align||'left'
+            });
+        }
+    }
+
+    /* ===== GET GRID DATA ===== */
+    store.each(function(rec){
+        data.push(rec.data);
+    });
+
+    /* ===== CREATE FORM ===== */
+    var form=document.createElement("form");
+    form.method="POST";
+    form.action="/SHVPM/export_"+type+".php";
+
+    if(type=='pdf'){
+        form.setAttribute("target","_blank");
+    }
+
+    function addField(name,value){
+        var input=document.createElement("input");
+        input.type="hidden";
+        input.name=name;
+        input.value=value;
+        form.appendChild(input);
+    }
+
+    addField("columns",Ext.encode(columns));
+    addField("data",Ext.encode(data));
+    addField("fname","columnar_report");
+    addField("paper",paper||'A4');
+    addField("millname",millname);
+    addField("heading",heading);
+    addField("fromdate",fromdate);
+    addField("todate",todate);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+}
 
 var dgrecord = Ext.data.Record.create([]);
 
@@ -1109,7 +1183,7 @@ var flx2BDetails = new Ext.grid.EditorGridPanel({
     height: 350,
     hidden:false,
     width: 1300,
- //   id: 'my-grid',  
+    id: 'flx2BDetails',  
 
     columns:
     [ 	 
@@ -1127,7 +1201,50 @@ var flx2BDetails = new Ext.grid.EditorGridPanel({
         {header: "IGST AMT" , dataIndex: 'igstamt',sortable:false,width:100,align:'right', menuDisabled: true},
         {header: "CESS AMT" , dataIndex: 'cessamt',sortable:false,width:100,align:'right', menuDisabled: true},
     ],
-
+    tbar:[
+    
+        {
+            text:'Export Excel',
+            iconCls:'icon-excel',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+                exportColumnGrid('flx2BDetails','excel','A4');
+            }
+        },
+    
+        '-',
+ 
+        {
+            text:'Export PDF',
+            iconCls:'icon-pdf',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+    
+                Ext.Msg.show({
+    
+                    title:'Paper Size',
+                    msg:'Select Paper Size',
+    
+                    buttons:{
+                        ok:'A4',
+                        yes:'LEGAL'
+                    },
+    
+                    fn:function(btn){
+    
+                        var paper = (btn=='yes') ? 'LEGAL' : 'A4';
+    
+                        exportColumnGrid('flx2BDetails','pdf',paper);
+    
+                    }
+    
+                });
+    
+            }
+        }
+    ],    
     store:loadGSTR_2B_DataStore,
     listeners:{	
 
@@ -1139,7 +1256,7 @@ var flx2BDetails = new Ext.grid.EditorGridPanel({
 
             voutype = selrow.get('saltype')
             hsnhead = selrow.get('hsncode')
-            tabOverall.setActiveTab(1);
+        //    tabOverall.setActiveTab(1);
 
 
 	    loadInvoiceDataStore.removeAll();
@@ -1180,7 +1297,7 @@ var flx2BDetails_Not_Tally = new Ext.grid.EditorGridPanel({
     height: 350,
     hidden:false,
     width: 1300,
- //   id: 'my-grid',  
+    id: 'flx2BDetails_Not_Tally',  
 
     columns:
     [ 	 
@@ -1205,7 +1322,50 @@ var flx2BDetails_Not_Tally = new Ext.grid.EditorGridPanel({
         {header: "Ex.CESS AMT" , dataIndex: 'gst_2b_cessamt',sortable:false,width:100,align:'right', menuDisabled: true},
 
     ],
-
+    tbar:[
+    
+        {
+            text:'Export Excel',
+            iconCls:'icon-excel',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+                exportColumnGrid('flx2BDetails_Not_Tally','excel','A4');
+            }
+        },
+    
+        '-',
+ 
+        {
+            text:'Export PDF',
+            iconCls:'icon-pdf',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+    
+                Ext.Msg.show({
+    
+                    title:'Paper Size',
+                    msg:'Select Paper Size',
+    
+                    buttons:{
+                        ok:'A4',
+                        yes:'LEGAL'
+                    },
+    
+                    fn:function(btn){
+    
+                        var paper = (btn=='yes') ? 'LEGAL' : 'A4';
+    
+                        exportColumnGrid('flx2BDetails_Not_Tally','pdf',paper);
+    
+                    }
+    
+                });
+    
+            }
+        }
+    ],    
     store:loadGSTR_2B_NotTally_DataStore,
     listeners:{	
 
@@ -1217,7 +1377,7 @@ var flx2BDetails_Not_Tally = new Ext.grid.EditorGridPanel({
 
             voutype = selrow.get('saltype')
             hsnhead = selrow.get('hsncode')
-            tabOverall.setActiveTab(1);
+ //           tabOverall.setActiveTab(1);
 
 
 	    loadInvoiceDataStore.removeAll();
@@ -1257,7 +1417,7 @@ var flx2BDetails_Excess = new Ext.grid.EditorGridPanel({
     height: 350,
     hidden:false,
     width: 1300,
- //   id: 'my-grid',  
+   id: 'flx2BDetails_Excess',  
 
     columns:
     [ 	 
@@ -1273,7 +1433,50 @@ var flx2BDetails_Excess = new Ext.grid.EditorGridPanel({
         {header: "IGST AMT" , dataIndex: 'gst_2b_igstamt',sortable:false,width:100,align:'right', menuDisabled: true},
         {header: "CESS AMT" , dataIndex: 'gst_2b_cessamt',sortable:false,width:100,align:'right', menuDisabled: true},
     ],
-
+    tbar:[
+    
+        {
+            text:'Export Excel',
+            iconCls:'icon-excel',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+                exportColumnGrid('flx2BDetails_Excess','excel','A4');
+            }
+        },
+    
+        '-',
+ 
+        {
+            text:'Export PDF',
+            iconCls:'icon-pdf',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+    
+                Ext.Msg.show({
+    
+                    title:'Paper Size',
+                    msg:'Select Paper Size',
+    
+                    buttons:{
+                        ok:'A4',
+                        yes:'LEGAL'
+                    },
+    
+                    fn:function(btn){
+    
+                        var paper = (btn=='yes') ? 'LEGAL' : 'A4';
+    
+                        exportColumnGrid('flx2BDetails_Excess','pdf',paper);
+    
+                    }
+    
+                });
+    
+            }
+        }
+    ],    
     store:loadGSTR_2B_Excess_DataStore,
     listeners:{	
 
@@ -1285,7 +1488,7 @@ var flx2BDetails_Excess = new Ext.grid.EditorGridPanel({
 
             voutype = selrow.get('saltype')
             hsnhead = selrow.get('hsncode')
-            tabOverall.setActiveTab(1);
+  //          tabOverall.setActiveTab(1);
 
 
 	    loadInvoiceDataStore.removeAll();
@@ -1910,7 +2113,6 @@ onEsc:function(){
 },
 	listeners:{
                show:function(){
-
                    Refreshdata();
    		}
 			

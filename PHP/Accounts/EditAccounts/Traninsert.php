@@ -3,7 +3,7 @@ require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
 $seqno=$_REQUEST['accseqno'];
 
-mysqli_query($conn, "BEGIN");
+mysqli_begin_transaction($conn);
  
 $query1 =  "select acctran_accref_seqno,max(acctran_serialno)+1 as acctran_serialno,acctran_paytype from acc_tran where acctran_accref_seqno='$seqno' group  by acctran_accref_seqno,acctran_paytype";
 //echo $query1;
@@ -17,8 +17,9 @@ $acctranledcode=0;
 
 $query = "INSERT into acc_tran values('$acctranaccrefseqno', '$acctranserialno', '$acctranledcode', '0.00', '0.00', '0.00', '$type','')";
 //echo $query;
+$result= mysqli_query($conn, $query);
 
-mysqli_begin_transaction($conn);
+
 
 if ($result) {
 

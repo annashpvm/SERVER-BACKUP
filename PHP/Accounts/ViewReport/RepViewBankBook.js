@@ -176,7 +176,7 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#7133ff",
         {name: 'cust_code', type: 'int', mapping: 'cust_code'},
         {name: 'cust_name', type: 'string', mapping: 'cust_name'}
       ]),
-      sortInfo:{field: 'cust_code', direction: "DESC"}
+      sortInfo:{field: 'cust_name', direction: "ASC"}
     });
 
  
@@ -444,19 +444,19 @@ var lblText = Ext.getCmp('lblCrDr').getEl().dom.innerHTML;
 
 
 
-                    var p1 = "&ledcode="+encodeURIComponent(2139);    
-		    var p2 = "&compcode="+encodeURIComponent(compcode);      
-	            var p3 = "&finid=" + encodeURIComponent(GinFinid);
+            var p1 = "&ledcode="+encodeURIComponent(2139);    
+            var p2 = "&compcode="+encodeURIComponent(compcode);      
+            var p3 = "&finid=" + encodeURIComponent(GinFinid);
 
-                    var p4 = "&finstartdate=" + encodeURIComponent(Ext.util.Format.date(finstartdate,"Y-m-  d"));	
-                    
+            var p4 = "&finstartdate=" + encodeURIComponent(Ext.util.Format.date(finstartdate,"Y-m-  d"));	
 
-	            var p5 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
-                    var p6 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-	            var p7 = "&lename=" + encodeURIComponent(cmbBank.getRawValue());
-	            var p8 = "&prtdsp=" + encodeURIComponent('B');
-	            var p9 = "&opening=" + encodeURIComponent(txtOpening3.getRawValue());
-	            var p10 = "&drcr=" + encodeURIComponent(lblText);
+
+            var p5 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
+            var p6 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+            var p7 = "&lename=" + encodeURIComponent(cmbBank.getRawValue());
+            var p8 = "&prtdsp=" + encodeURIComponent('B');
+            var p9 = "&opening=" + encodeURIComponent(txtOpening3.getRawValue());
+            var p10 = "&drcr=" + encodeURIComponent(lblText);
 
  		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
 //alert(param);
@@ -922,7 +922,8 @@ function myFunction() {
 
              rdate= monthenddate.getValue().add(Date.DAY, 1);
 
-
+             if (cmbMonth.getRawValue() == '')
+                return;
 
 
               LoadOpeningClosingDataStore.removeAll();
@@ -1013,6 +1014,8 @@ function myFunction() {
 
                     },
                     callback:function(){
+                        grid_tot2();
+/*
                         var cnt=MonthClickVocDataStore.getCount();
                         if(cnt>0){
                             for(var i=0;i<cnt;i++){
@@ -1032,11 +1035,13 @@ function myFunction() {
                                     accref_narration: MonthClickVocDataStore.getAt(i).get('accref_narration'),
                                     accref_payref_no: MonthClickVocDataStore.getAt(i).get('accref_payref_no'),
                                     accref_payref_date: Ext.util.Format.date(MonthClickVocDataStore.getAt(i).get('accref_payref_date')),
+                                    row_type: MonthClickVocDataStore.getAt(i).get('row_type'),
                                 })
                                 );
                              grid_tot2();
                             }
                         }
+                        */
                     }
          });
 
@@ -1233,10 +1238,14 @@ function grid_tot(){
 
         flxdetails.getSelectionModel().selectAll();
         var sele=flxdetails.getSelectionModel().getSelections();
+
         for(var i=0;i<Row1;i++)
         {
-            totdb=Number(totdb)+Number(sele[i].data.acctran_dbamt);
-            totcr=Number(totcr)+Number(sele[i].data.acctran_cramt);
+            if (sele[i].data.row_type == 'DATA')
+            {    
+               totdb=Number(totdb)+Number(sele[i].data.acctran_dbamt);
+               totcr=Number(totcr)+Number(sele[i].data.acctran_cramt);
+            }
         }
         txttotdebit2.setRawValue(Ext.util.Format.number(totdb,"0.00"));
         txttotcredit2.setRawValue(Ext.util.Format.number(totcr,"0.00"));
@@ -1446,6 +1455,7 @@ function grid_sum_daytotal(){
 
   var MonthClickVocDataStore = new Ext.data.Store({
         id: 'MonthClickVocDataStore',
+        autoLoad : true,
         proxy: new Ext.data.HttpProxy({
             url: 'ClsViewStatements.php',  // File to connect to
             method: 'POST'
@@ -1460,7 +1470,7 @@ function grid_sum_daytotal(){
             id: 'id'
         },['accref_seqno', 'accref_vouno','accref_voudate','accref_narration','actran_led_code',
 'acctran_dbamt' ,'acctran_cramt','accref_payref_no','accref_payref_date', 'ledcode2','yropdebit', 
- 'yropcredit', 'trnobdebit', 'trnobcreit','cust_name' ])
+ 'yropcredit', 'trnobdebit', 'trnobcreit','cust_name' ,'row_type'])
     });
 
 
@@ -1688,15 +1698,31 @@ var btnProcess = new Ext.Button({
     });
 
 
+
+    
+    var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    if (finEnd) finEnd.setHours(0,0,0,0);
+    
+    var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
+
+
     var ToDate = new Ext.form.DateField({
 	fieldLabel: 'To Date',
         id: 'yrenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
 	format: 'd-m-Y',
-        value: new Date() ,
+        value: defaultDate ,
        	enableKeyEvents: true,
         listeners:{
-
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },  
            keyup:function(){
               process_main_abstract();
             },
@@ -1864,7 +1890,7 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
 
 
     var txttotdebit2 = new Ext.form.NumberField({
-        fieldLabel  : 'Total Debit',
+        fieldLabel  : 'Debit',
         id          : 'txttotdebit2',
         name        : 'txttotdebit2',
         width       : 120,
@@ -1880,7 +1906,7 @@ style: {
     });
 
     var txttotcredit2 = new Ext.form.NumberField({
-        fieldLabel  : 'Total Credit',
+        fieldLabel  : 'Credit',
         id          : 'txttotcredit2',
         name        : 'txttotcredit2',
         width       : 120,
@@ -1947,7 +1973,7 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
     });
 
     var txtLOpening = new Ext.form.NumberField({
-        fieldLabel  : 'Opening Balance',
+        fieldLabel  : 'Opening',
         id          : 'txtLOpening',
         name        : 'txtLOpening',
         width       : 120,
@@ -1963,7 +1989,7 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
     });
 
     var txtLClosing = new Ext.form.NumberField({
-        fieldLabel  : 'Closing Balance',
+        fieldLabel  : 'Closing',
         id          : 'txtLClosing',
         name        : 'txtLClosing',
         width       : 120,
@@ -2144,30 +2170,190 @@ myobject ='01';
 
 */	
 
+
+        
+function exportColumnGrid2(type,paper){
+
+    
+
+    var millname="SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
+
+    var heading="LEDGER : "+ cmbBank.getRawValue() ;
+    
+    var fromdate=Ext.util.Format.date(monthstartdate.getValue(),"d-m-Y");
+    
+    var todate=Ext.util.Format.date(monthenddate.getValue(),"d-m-Y");        
+
+    var grid = Ext.getCmp('my-grid-font');
+    
+    var store = grid.getStore();
+    
+    var cm = grid.getColumnModel();
+    
+    var columns=[];
+    var data=[];
+    
+    /* ===== GET VISIBLE COLUMNS ===== */
+    
+    for(var i=0;i<cm.getColumnCount();i++){
+    
+        if(!cm.isHidden(i)){
+    
+            var c=cm.getColumnAt(i);
+    
+            columns.push({
+    
+                header:c.header,
+                dataIndex:c.dataIndex,
+                align:c.align||'left'
+    
+            });
+    
+        }
+    
+    }
+    
+    /* ===== GET GRID DATA ===== */
+    
+    store.each(function(rec){
+    
+        data.push(rec.data);
+    
+    });
+    
+    /* ===== CREATE FORM ===== */
+    
+    var form=document.createElement("form");
+    
+    form.method="POST";
+    
+    form.action="/SHVPM/export_"+type+".php";
+    
+    if(type=='pdf'){
+        form.setAttribute("target","_blank");
+    }
+    
+    
+    function addField(name,value){
+    
+        var input=document.createElement("input");
+    
+        input.type="hidden";
+    
+        input.name=name;
+    
+        input.value=value;
+    
+        form.appendChild(input);
+    
+    }
+    
+    addField("columns",Ext.encode(columns));
+    addField("data",Ext.encode(data));
+    addField("fname","columnar_report");
+    addField("paper",paper||'A4');
+    addField("millname",millname);
+    addField("heading",heading);
+    addField("fromdate",fromdate);
+    addField("todate",todate);
+
+    
+    document.body.appendChild(form);
+    
+    form.submit();
+    
+    document.body.removeChild(form);
+    
+    }
+    
+
     var flxdetails = new Ext.grid.EditorGridPanel({
         frame: false,
-        store: [],
+        store: MonthClickVocDataStore,
         sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
-    id: 'my-grid-font', 
-style:{
+   //     autoShow: true,
+    //    scrollable: true,
+	    stripeRows: true,
+        id: 'my-grid-font', 
+        style:{
              color: 'DarkBlue' ,
              backgroundColor:'White'
 	     
         },
         columnLines: true,
         height: 400,
-        width: 1280,
+        width: 1000,
         border:false,
         x: 370,
         y: 40,
 
-        enableKeyEvents: true,
+    //    enableKeyEvents: true,
+        viewConfig: {
+            getRowClass: function(record) {
+                var type = record.get('row_type');
+    
+                if (type === 'OPENING') {
+                    return 'row-opening';
+                }
+                if (type === 'TOTAL') {
+                    return 'row-total';
+                }
+                if (type === 'GRAND') {
+                    return 'row-closing';
+                }
+                if (type === 'CLOSING') {
+                    return 'row-closing';
+                }                
+            }
+        },
+        tbar: [
+            {
+                text:'Export Excel',
+                iconCls:'icon-excel',
+                cls:'report-btn',
+                scale:'medium',
+                handler:function(){
+                    exportColumnGrid2('excel','A4');
+                }
+            },
+            '-',
+            {
+                text:'Export PDF',
+                iconCls:'icon-pdf',
+                cls:'report-btn',
+                scale:'medium',
+                handler:function(){
+    
+                    Ext.Msg.show({
+                        title:'Paper Size',
+                        msg:'Select Paper Size',
+                        buttons:{
+                            ok:'A4',
+                            yes:'LEGAL'
+                        },
+                        fn:function(btn){
+                            var paper = (btn=='yes') ? 'LEGAL' : 'A4';
+                            exportColumnGrid2('pdf',paper);
+                        }
+                    });
+    
+                }
+            }
+        ],          
+    
         columns: [
-            {header: "S.No", dataIndex: 'sno',width:50,align:'left', sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Date ", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,             },
+//            {header: "S.No", dataIndex: 'sno',width:50,align:'left', sortable: false,defaultSortable: false,menuDisabled: false,},
+            {header: "Date ", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,
+                renderer: function(value) {
+                    if (!value) return '';
+            
+                    var dt = new Date(value);
+                    var day   = ("0" + dt.getDate()).slice(-2);
+                    var month = ("0" + (dt.getMonth() + 1)).slice(-2);
+                    var year  = dt.getFullYear();
+            
+                    return day + '/' + month + '/' + year;
+                } },
             {header: "Account Name", dataIndex: 'cust_name',width:300,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,
 		renderer : function(value, meta ,record) {
 		    var vou=record.get('cust_name');
@@ -2182,12 +2368,13 @@ style:{
             {header: "Vou. No.", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
             {header: "Debit", dataIndex: 'acctran_dbamt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
             {header: "Credit", dataIndex: 'acctran_cramt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
-            {header: "Description", dataIndex: 'accref_narration',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
+            {header: "Description", dataIndex: 'accref_narration',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'left'},
             {header: "Chq/Ref", dataIndex: 'accref_payref_no',width:100,align:'center',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
             {header: "Chq/Ref dt", dataIndex: 'accref_payref_date',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
 
-            {header: "Seq. No.", dataIndex: 'accref_seqno',width:80,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
-            {header: "Led Code", dataIndex: 'cust_code',width:100,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right'},
+            {header: "Seq. No.", dataIndex: 'accref_seqno',width:80,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden:true},
+            {header: "Led Code", dataIndex: 'acctran_led_code',width:100,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden:true},
+            {header: "row_type", dataIndex: 'row_type',width:100,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden:true},
         ],
          listeners :{
 
@@ -2210,7 +2397,9 @@ style:{
 
                 VoucherClick();
 	        flxld.getSelectionModel().selectAll();
-            },'cellclick': function (flxdetails, rowIndex, cellIndex, e) {
+            },
+/*            
+            'rowDblClick': function (flxdetails, rowIndex, cellIndex, e) {
                  var selected_rows =flxdetails.getSelectionModel().getSelections();
 		        for(var i=0; i<selected_rows.length; i++)
 		        {
@@ -2233,6 +2422,7 @@ style:{
                                 }
                             });
 	   },
+/*       
             'rowselect' : function(flxdetails,rowIndex,cellIndex,e){
 //alert("Hai");
                 tabOverall.setActiveTab(3);
@@ -2245,7 +2435,7 @@ style:{
                 VoucherClick();
 	        flxld.getSelectionModel().selectAll();
             },
-
+*/
         }
     });
 
@@ -2531,30 +2721,30 @@ style: {
             click: function () {
 
 
-var columnCount = flxdetails.getColumnModel().getColumnCount(true);
+            var columnCount = flxdetails.getColumnModel().getColumnCount(true);
+            var p1 = "&ledcode="+encodeURIComponent(cmbBank.getValue());    
+            var p2 = "&compcode="+encodeURIComponent(compcode);      
+            var p3 = "&finid=" + encodeURIComponent(GinFinid);
+
+            var p4 = "&finstartdate=" + encodeURIComponent(Ext.util.Format.date(finstartdate,"Y-m-  d"));	
 
 
-
-                    var p1 = "&ledcode="+encodeURIComponent(cmbBank.getValue());    
-		    var p2 = "&compcode="+encodeURIComponent(compcode);      
-	            var p3 = "&finid=" + encodeURIComponent(GinFinid);
-
-                    var p4 = "&finstartdate=" + encodeURIComponent(Ext.util.Format.date(finstartdate,"Y-m-  d"));	
-                    
-
-	            var p5 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
-                    var p6 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-	            var p7 = "&lename=" + encodeURIComponent('BANK BOOK');
-	            var p8 = "&prtdsp=" + encodeURIComponent('B');
+            var p5 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
+            var p6 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+            var p7 = "&lename=" + encodeURIComponent(cmbBank.getRawValue());
+            var p8 = "&prtdsp=" + encodeURIComponent('B');
 
  		    var param = (p1+p2+p3+p4+p5+p6+p7+p8) ;
-//alert(param);
+
                     if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepAccCashBankBook.rptdesign&__format=pdf&' + param, '_blank');
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepCashBankBook.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepAccCashBankBook.rptdesign&__format=xls' + param, '_blank');
                     else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepAccCashBankBook.rptdesign' + param, '_blank');	
+                    {
+                
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepCashBankBook.rptdesign&__format=pdf&' + param, '_blank');	
+                    }
             }
         }
     });
@@ -2824,10 +3014,10 @@ grid_sum_daytotal();
 
         {
             xtype       : 'fieldset',
-            x           : 180,
-            y           : 480,
+            x           : 1050,
+            y           : 100,
             border      : false,
-            labelWidth  : 120,
+            labelWidth  : 80,
             width       :400,
             items : [txtLOpening]
         },
@@ -2835,8 +3025,8 @@ grid_sum_daytotal();
 
         {
             xtype       : 'fieldset',
-            x           : 430,
-            y           : 480,
+            x           : 1260,
+            y           : 100,
             border      : false,
             width       :250,
             items : [lblCrDrPeriod]
@@ -2845,10 +3035,9 @@ grid_sum_daytotal();
         {
             xtype       : 'fieldset',
             width       : 800,
-            height      : 100,
-            labelWidth  : 100,
-            x           : 500,
-            y           : 480,
+            labelWidth  : 80,
+            x           : 1050,
+            y           : 130,
             border      : false,
             anchor: '100%',
             items : [txttotdebit2]
@@ -2859,9 +3048,9 @@ grid_sum_daytotal();
             xtype       : 'fieldset',
             width       : 800,
             height      : 100,
-            labelWidth  : 100,
-            x           : 750,
-            y           : 480,
+            labelWidth  : 80,
+            x           : 1050,
+            y           : 160,
             border      : false,
             anchor: '100%',
             items : [txttotcredit2]
@@ -2870,10 +3059,10 @@ grid_sum_daytotal();
 
         {
             xtype       : 'fieldset',
-            x           : 1000,
-            y           : 480,
+            x           : 1050,
+            y           : 190,
             border      : false,
-            labelWidth  : 120,
+            labelWidth  : 80,
             width       :400,
             items : [txtLClosing]
         },
@@ -2881,8 +3070,8 @@ grid_sum_daytotal();
 
         {
             xtype       : 'fieldset',
-            x           : 1250,
-            y           : 480,
+            x           : 1260,
+            y           : 190,
             border      : false,
             width       :250,
             items : [lblCrDrPeriod2]

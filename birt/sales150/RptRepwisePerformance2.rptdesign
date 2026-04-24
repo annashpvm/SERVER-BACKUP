@@ -1,0 +1,2693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">75</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">75</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">75</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="7">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="8">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="9">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="repcode" id="213">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="financeyear" id="402">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="partygrp" id="422">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="mmonth" id="442">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="myear" id="443">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ds_repperformance" id="75">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">repcode</property>
+                    <property name="paramName">repcode</property>
+                    <property name="nativeName">repcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">5</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">partygrp</property>
+                    <property name="paramName">partygrp</property>
+                    <property name="nativeName">partygrp</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">6</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">mm</property>
+                    <property name="paramName">mmonth</property>
+                    <property name="nativeName">mm</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">7</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">yy</property>
+                    <property name="paramName">myear</property>
+                    <property name="nativeName">yy</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">8</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">monthStartdate</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">monthEnddate</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">repr_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">cust_ref</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">cust_cr_days</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">cust_desp_target</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">invh_date</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">weight</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">cust_noof_visits</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">cust_payperf</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">cust_grade</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">monthStartdate</property>
+                    <property name="nativeName">monthStartdate</property>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">monthEnddate</property>
+                    <property name="nativeName">monthEnddate</property>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">repr_name</property>
+                    <property name="nativeName">repr_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">cust_ref</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">cust_cr_days</property>
+                    <property name="nativeName">cust_cr_days</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">cust_desp_target</property>
+                    <property name="nativeName">cust_desp_target</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">invh_date</property>
+                    <property name="nativeName">invh_date</property>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">weight</property>
+                    <property name="nativeName">weight</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">cust_noof_visits</property>
+                    <property name="nativeName">cust_noof_visits</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">cust_payperf</property>
+                    <property name="nativeName">cust_payperf</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">cust_grade</property>
+                    <property name="nativeName">cust_grade</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call sprep_sal_rep_custwise(?,?,?,?,?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>mm</design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>yy</design:name>
+            <design:position>8</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="headerHeight">0.2in</property>
+            <property name="footerHeight">0.2in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="76">
+            <property name="dataSet">ds_repperformance</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">monthStartdate</property>
+                    <text-property name="displayName">monthStartdate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["monthStartdate"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">monthEnddate</property>
+                    <text-property name="displayName">monthEnddate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["monthEnddate"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">invh_date</property>
+                    <text-property name="displayName">invh_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["invh_date"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">IWeek</property>
+                    <text-property name="displayName">IWeek</text-property>
+                    <expression name="expression" type="javascript">if  (dataSetRow["invh_date"]  >= dataSetRow["monthStartdate"]   &amp;&amp;  dataSetRow["invh_date"]  &lt;= dataSetRow["monthEnddate"])&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 1 &amp;&amp; BirtDateTime.day(dataSetRow["invh_date"])  &lt;= 7)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IWeek</property>
+                    <text-property name="displayName">sum_IWeek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["IWeek"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">II Week</property>
+                    <text-property name="displayName">II Week</text-property>
+                    <expression name="expression" type="javascript">if  (dataSetRow["invh_date"]  >= dataSetRow["monthStartdate"]   &amp;&amp;  dataSetRow["invh_date"]  &lt;= dataSetRow["monthEnddate"])&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 8 &amp;&amp; BirtDateTime.day(dataSetRow["invh_date"])  &lt;= 15)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">III Week</property>
+                    <text-property name="displayName">III Week</text-property>
+                    <expression name="expression" type="javascript">if  (dataSetRow["invh_date"]  >= dataSetRow["monthStartdate"]   &amp;&amp;  dataSetRow["invh_date"]  &lt;= dataSetRow["monthEnddate"])&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 16 &amp;&amp; BirtDateTime.day(dataSetRow["invh_date"])  &lt;= 22)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">IV week</property>
+                    <text-property name="displayName">IV week</text-property>
+                    <expression name="expression" type="javascript">if  (dataSetRow["invh_date"]  >= dataSetRow["monthStartdate"]   &amp;&amp;  dataSetRow["invh_date"]  &lt;= dataSetRow["monthEnddate"])&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 23)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">MonthTotal</property>
+                    <text-property name="displayName">MonthTotal</text-property>
+                    <expression name="expression" type="javascript">if  (dataSetRow["invh_date"]  >= dataSetRow["monthStartdate"]   &amp;&amp;  dataSetRow["invh_date"]  &lt;= dataSetRow["monthEnddate"])&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IIweek</property>
+                    <text-property name="displayName">sum_IIweek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["II Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IIIWeek</property>
+                    <text-property name="displayName">sum_IIIWeek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["III Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IVweek</property>
+                    <text-property name="displayName">sum_IVweek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["IV week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_month_total</property>
+                    <text-property name="displayName">sum_month_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["MonthTotal"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_desp_target</property>
+                    <text-property name="displayName">cust_desp_target</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_desp_target"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_cr_days</property>
+                    <text-property name="displayName">cust_cr_days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_cr_days"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_Iweek</property>
+                    <text-property name="displayName">sum_cust_Iweek</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["IWeek"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_IIweek</property>
+                    <text-property name="displayName">sum_cust_IIweek</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["II Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_IIIweek</property>
+                    <text-property name="displayName">sum_cust_IIIweek</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["III Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_IVweek</property>
+                    <text-property name="displayName">sum_cust_IVweek</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["IV week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_MonthTotal</property>
+                    <text-property name="displayName">sum_cust_MonthTotal</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["MonthTotal"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">repr_name</property>
+                    <text-property name="displayName">repr_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["repr_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">MonthName</property>
+                    <text-property name="displayName">MonthName</text-property>
+                    <expression name="expression" type="javascript">"Month"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">reptotal</property>
+                    <text-property name="displayName">reptotal</text-property>
+                    <expression name="expression" type="javascript">row["repr_name"] + " Total"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">apr</property>
+                    <text-property name="displayName">apr</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 4)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_rep_apr</property>
+                    <text-property name="displayName">sum_cus_apr</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["apr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_apr_total</property>
+                    <text-property name="displayName">sum_apr_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["apr"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">may</property>
+                    <text-property name="displayName">may</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 5)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">jun</property>
+                    <text-property name="displayName">jun</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 6)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">jul</property>
+                    <text-property name="displayName">jul</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 7)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">aug</property>
+                    <text-property name="displayName">aug</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 8)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sep</property>
+                    <text-property name="displayName">sep</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 9)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">oct</property>
+                    <text-property name="displayName">oct</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 10)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">nov</property>
+                    <text-property name="displayName">nov</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 11)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dec</property>
+                    <text-property name="displayName">dec</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 12)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">jan</property>
+                    <text-property name="displayName">jan</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 1)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">feb</property>
+                    <text-property name="displayName">feb</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 2)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">mar</property>
+                    <text-property name="displayName">mar</text-property>
+                    <expression name="expression" type="javascript">if (BirtDateTime.month(dataSetRow["invh_date"]) == 3)&#13;
+dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_total</property>
+                    <text-property name="displayName">custtotal</text-property>
+                    <expression name="expression" type="javascript">row["apr"]+row["may"]+row["jun"]+row["jul"]+row["aug"]+row["sep"]+row["oct"]+row["nov"]+row["dec"]+row["jan"]+row["feb"]+row["mar"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_may</property>
+                    <text-property name="displayName">sum_cust_may</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["may"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_jun</property>
+                    <text-property name="displayName">sum_cust_may</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["jun"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_jul</property>
+                    <text-property name="displayName">sum_cust_jul</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["jul"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_aug</property>
+                    <text-property name="displayName">sum_cust_aug</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["aug"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_sep</property>
+                    <text-property name="displayName">sum_cust_sep</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sep"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_oct</property>
+                    <text-property name="displayName">sum_cust_oct</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["oct"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_nov</property>
+                    <text-property name="displayName">sum_cust_nov</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["nov"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_dec</property>
+                    <text-property name="displayName">sum_cust_dec</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dec"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_jan</property>
+                    <text-property name="displayName">sum_cust_jan</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["jan"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_feb</property>
+                    <text-property name="displayName">sum_cust_feb</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["feb"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_mar</property>
+                    <text-property name="displayName">sum_cust_mar</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["mar"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_total</property>
+                    <text-property name="displayName">sum_cust_total</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>custgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cust_total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_may_total</property>
+                    <text-property name="displayName">sum_may_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["may"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_jun_total</property>
+                    <text-property name="displayName">sum_jun_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["jun"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_jul_total</property>
+                    <text-property name="displayName">sum_jul_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["jul"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_aug_total</property>
+                    <text-property name="displayName">sum_aug_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["aug"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_sep_total</property>
+                    <text-property name="displayName">sum_sep_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sep"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_oct_total</property>
+                    <text-property name="displayName">sum_oct_totals</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["oct"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_nov_total</property>
+                    <text-property name="displayName">sum_nov_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["nov"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_dec_total</property>
+                    <text-property name="displayName">sum_dec_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["dec"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_jan_total</property>
+                    <text-property name="displayName">sum_jan_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["jan"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_feb_total</property>
+                    <text-property name="displayName">sum_feb_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["feb"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_mar_total</property>
+                    <text-property name="displayName">sum_mar_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["mar"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_cust_total1</property>
+                    <text-property name="displayName">sum_cust_total1</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cust_total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">currentMonth</property>
+                    <text-property name="displayName">currentMonth</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(row["monthEnddate"],"MMM-yy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">repheading</property>
+                    <text-property name="displayName">repheading</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["repr_name"] +  " -  SALES DETAILS  - " + params["financeyear"].value</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">rundate</property>
+                    <text-property name="displayName">rundate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(new Date(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_noof_visits</property>
+                    <text-property name="displayName">cust_noof_visits</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_noof_visits"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_payperf</property>
+                    <text-property name="displayName">cust_payperf</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_payperf"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_group_name</property>
+                    <text-property name="displayName">cust_group_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_group_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_grade</property>
+                    <text-property name="displayName">cust_grade</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_grade"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_target</property>
+                    <text-property name="displayName">sum_target</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["cust_desp_target"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="110">
+                <property name="width">2in</property>
+            </column>
+            <column id="434">
+                <property name="width">0.45in</property>
+            </column>
+            <column id="111">
+                <property name="width">0.46in</property>
+            </column>
+            <column id="112">
+                <property name="width">0.46in</property>
+            </column>
+            <column id="113">
+                <property name="width">0.45in</property>
+            </column>
+            <column id="209">
+                <property name="width">0.35in</property>
+            </column>
+            <column id="114">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="115">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="116">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="117">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="118">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="119">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="238">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="256">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="247">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="292">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="283">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="274">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="265">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="328">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="319">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="310">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="301">
+                <property name="width">0.39in</property>
+            </column>
+            <column id="364">
+                <property name="width">0.4in</property>
+            </column>
+            <header>
+                <row id="157">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="158">
+                        <property name="colSpan">10</property>
+                        <property name="rowSpan">1</property>
+                        <label id="168">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Sri Hari Venkateswara Paper Mills Pvt Ltd</text-property>
+                        </label>
+                    </cell>
+                    <cell id="166"/>
+                    <cell id="167"/>
+                    <cell id="230"/>
+                    <cell id="248"/>
+                    <cell id="239"/>
+                    <cell id="284"/>
+                    <cell id="275"/>
+                    <cell id="266"/>
+                    <cell id="257">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="398">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Page No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="311">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <auto-text id="397">
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="146">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="147">
+                        <property name="colSpan">16</property>
+                        <property name="rowSpan">1</property>
+                        <data id="396">
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">repheading</property>
+                        </data>
+                    </cell>
+                    <cell id="417"/>
+                    <cell id="418"/>
+                    <cell id="419">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="401">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="312">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="400">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">rundate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="214">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="215">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="220">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="393">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="resultSetColumn">currentMonth</property>
+                        </data>
+                    </cell>
+                    <cell id="225">
+                        <property name="colSpan">13</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                </row>
+                <row id="77">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="78">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="120">
+                            <text-property name="text">Customer Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="429">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="436">
+                            <text-property name="text">Grade</text-property>
+                        </label>
+                    </cell>
+                    <cell id="79">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="200">
+                            <text-property name="text">Target</text-property>
+                        </label>
+                    </cell>
+                    <cell id="80">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="201">
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Payment Terms</text-property>
+                        </label>
+                    </cell>
+                    <cell id="81">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="210">
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Payment Perf.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="204">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="211">
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">No.of Visits</text-property>
+                        </label>
+                    </cell>
+                    <cell id="82">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="137">
+                            <text-property name="text">I</text-property>
+                        </label>
+                    </cell>
+                    <cell id="83">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="138">
+                            <text-property name="text">II</text-property>
+                        </label>
+                    </cell>
+                    <cell id="84">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="139">
+                            <text-property name="text">III</text-property>
+                        </label>
+                    </cell>
+                    <cell id="85">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="140">
+                            <text-property name="text">IV</text-property>
+                        </label>
+                    </cell>
+                    <cell id="86">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="392">
+                            <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="87">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="329">
+                            <text-property name="text">Apr</text-property>
+                        </label>
+                    </cell>
+                    <cell id="233">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="330">
+                            <text-property name="text">May</text-property>
+                        </label>
+                    </cell>
+                    <cell id="251">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="331">
+                            <text-property name="text">Jun</text-property>
+                        </label>
+                    </cell>
+                    <cell id="242">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="332">
+                            <text-property name="text">Jul</text-property>
+                        </label>
+                    </cell>
+                    <cell id="287">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="333">
+                            <text-property name="text">Aug</text-property>
+                        </label>
+                    </cell>
+                    <cell id="278">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="334">
+                            <text-property name="text">Sep</text-property>
+                        </label>
+                    </cell>
+                    <cell id="269">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="335">
+                            <text-property name="text">Oct</text-property>
+                        </label>
+                    </cell>
+                    <cell id="260">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="336">
+                            <text-property name="text">Nov</text-property>
+                        </label>
+                    </cell>
+                    <cell id="323">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="337">
+                            <text-property name="text">Dec</text-property>
+                        </label>
+                    </cell>
+                    <cell id="314">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="338">
+                            <text-property name="text">Jan</text-property>
+                        </label>
+                    </cell>
+                    <cell id="305">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="339">
+                            <text-property name="text">Feb</text-property>
+                        </label>
+                    </cell>
+                    <cell id="296">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="340">
+                            <text-property name="text">Mar</text-property>
+                        </label>
+                    </cell>
+                    <cell id="359">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <label id="391">
+                            <property name="fontSize">9pt</property>
+                            <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="171">
+                <property name="groupName">custgrp</property>
+                <expression name="keyExpr" type="javascript">row["cust_group_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["cust_group_name"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="172">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="173">
+                            <data id="424">
+                                <property name="resultSetColumn">cust_group_name</property>
+                            </data>
+                        </cell>
+                        <cell id="430"/>
+                        <cell id="174"/>
+                        <cell id="175"/>
+                        <cell id="176"/>
+                        <cell id="205"/>
+                        <cell id="177"/>
+                        <cell id="178"/>
+                        <cell id="179"/>
+                        <cell id="180"/>
+                        <cell id="181"/>
+                        <cell id="182"/>
+                        <cell id="234"/>
+                        <cell id="252"/>
+                        <cell id="243"/>
+                        <cell id="288"/>
+                        <cell id="279"/>
+                        <cell id="270"/>
+                        <cell id="261"/>
+                        <cell id="324"/>
+                        <cell id="315"/>
+                        <cell id="306"/>
+                        <cell id="297"/>
+                        <cell id="360"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="183">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <property name="height">0.23958333333333334in</property>
+                        <cell id="184">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="423">
+                                <property name="fontSize">7pt</property>
+                                <property name="resultSetColumn">cust_group_name</property>
+                            </data>
+                            <text-data id="441">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <expression name="valueExpr">vars["targetsum"] = vars["targetsum"] + row["cust_desp_target"]</expression>
+                                <property name="contentType">html</property>
+                            </text-data>
+                        </cell>
+                        <cell id="432">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="435">
+                                <property name="fontSize">9pt</property>
+                                <property name="resultSetColumn">cust_grade</property>
+                            </data>
+                        </cell>
+                        <cell id="185">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="169">
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["cust_desp_target"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">cust_desp_target</property>
+                            </data>
+                        </cell>
+                        <cell id="186">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="170">
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">cust_cr_days</property>
+                            </data>
+                        </cell>
+                        <cell id="187">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="421">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["cust_payperf"] == 0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">cust_payperf</property>
+                            </data>
+                        </cell>
+                        <cell id="207">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="420">
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["cust_noof_visits"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">cust_noof_visits</property>
+                            </data>
+                        </cell>
+                        <cell id="188">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="195">
+                                <property name="paddingRight">3pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_Iweek"] == 0)&#13;
+  true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_Iweek</property>
+                            </data>
+                        </cell>
+                        <cell id="189">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="196">
+                                <property name="paddingRight">3pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_IIweek"] == 0)&#13;
+  true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_IIweek</property>
+                            </data>
+                        </cell>
+                        <cell id="190">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="197">
+                                <property name="paddingRight">3pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_IIIweek"] == 0)&#13;
+  true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_IIIweek</property>
+                            </data>
+                        </cell>
+                        <cell id="191">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="198">
+                                <property name="paddingRight">3pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_IVweek"] == 0)&#13;
+  true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_IVweek</property>
+                            </data>
+                        </cell>
+                        <cell id="192">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="199">
+                                <property name="paddingRight">3pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_MonthTotal"] == 0)&#13;
+  true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_MonthTotal</property>
+                            </data>
+                        </cell>
+                        <cell id="193">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="342">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_rep_apr"]==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_rep_apr</property>
+                            </data>
+                        </cell>
+                        <cell id="236">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="366">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_may"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_may</property>
+                            </data>
+                        </cell>
+                        <cell id="254">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="367">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_jun"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_jun</property>
+                            </data>
+                        </cell>
+                        <cell id="245">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="368">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_jul"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_jul</property>
+                            </data>
+                        </cell>
+                        <cell id="290">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="369">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_aug"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_aug</property>
+                            </data>
+                        </cell>
+                        <cell id="281">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="370">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_sep"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_sep</property>
+                            </data>
+                        </cell>
+                        <cell id="272">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="371">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_oct"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_oct</property>
+                            </data>
+                        </cell>
+                        <cell id="263">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="372">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_nov"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_nov</property>
+                            </data>
+                        </cell>
+                        <cell id="326">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="373">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_dec"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_dec</property>
+                            </data>
+                        </cell>
+                        <cell id="317">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="374">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_jan"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_jan</property>
+                            </data>
+                        </cell>
+                        <cell id="308">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="375">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_feb"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_feb</property>
+                            </data>
+                        </cell>
+                        <cell id="299">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="377">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">if (row["sum_cust_mar"] ==0)&#13;
+true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">sum_cust_mar</property>
+                            </data>
+                        </cell>
+                        <cell id="362">
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">1px</property>
+                            <data id="378">
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_cust_total</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="88">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="height">0.2708333333333333in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="89">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="425">
+                            <property name="resultSetColumn">cust_group_name</property>
+                        </data>
+                    </cell>
+                    <cell id="431">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="90">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="91">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="92">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="206">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="93">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="128">
+                            <property name="resultSetColumn">IWeek</property>
+                        </data>
+                    </cell>
+                    <cell id="94">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="130">
+                            <property name="resultSetColumn">II Week</property>
+                        </data>
+                    </cell>
+                    <cell id="95">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="133">
+                            <property name="resultSetColumn">III Week</property>
+                        </data>
+                    </cell>
+                    <cell id="96">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="135">
+                            <property name="resultSetColumn">IV week</property>
+                        </data>
+                    </cell>
+                    <cell id="97">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="136">
+                            <property name="resultSetColumn">MonthTotal</property>
+                        </data>
+                    </cell>
+                    <cell id="98">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="341">
+                            <property name="resultSetColumn">apr</property>
+                        </data>
+                    </cell>
+                    <cell id="235">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="344">
+                            <property name="resultSetColumn">may</property>
+                        </data>
+                    </cell>
+                    <cell id="253">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="345">
+                            <property name="resultSetColumn">jun</property>
+                        </data>
+                    </cell>
+                    <cell id="244">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="346">
+                            <property name="resultSetColumn">jul</property>
+                        </data>
+                    </cell>
+                    <cell id="289">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="348">
+                            <property name="resultSetColumn">aug</property>
+                        </data>
+                    </cell>
+                    <cell id="280">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="349">
+                            <property name="resultSetColumn">sep</property>
+                        </data>
+                    </cell>
+                    <cell id="271">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="350">
+                            <property name="resultSetColumn">oct</property>
+                        </data>
+                    </cell>
+                    <cell id="262">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="351">
+                            <property name="resultSetColumn">nov</property>
+                        </data>
+                    </cell>
+                    <cell id="325">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="352">
+                            <property name="resultSetColumn">dec</property>
+                        </data>
+                    </cell>
+                    <cell id="316">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="353">
+                            <property name="resultSetColumn">jan</property>
+                        </data>
+                    </cell>
+                    <cell id="307">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="354">
+                            <property name="resultSetColumn">feb</property>
+                        </data>
+                    </cell>
+                    <cell id="298">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="355">
+                            <property name="resultSetColumn">mar</property>
+                        </data>
+                    </cell>
+                    <cell id="361">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="365">
+                            <property name="resultSetColumn">cust_total</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="99">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="100">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="229">
+                            <property name="resultSetColumn">reptotal</property>
+                        </data>
+                    </cell>
+                    <cell id="433">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="101">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="102">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="103">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="208">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="104">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="129">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IWeek</property>
+                        </data>
+                    </cell>
+                    <cell id="105">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="141">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IIweek</property>
+                        </data>
+                    </cell>
+                    <cell id="106">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="142">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IIIWeek</property>
+                        </data>
+                    </cell>
+                    <cell id="107">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="144">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IVweek</property>
+                        </data>
+                    </cell>
+                    <cell id="108">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="145">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_month_total</property>
+                        </data>
+                    </cell>
+                    <cell id="109">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="343">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_apr_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_apr_total</property>
+                        </data>
+                    </cell>
+                    <cell id="237">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="379">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_may_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_may_total</property>
+                        </data>
+                    </cell>
+                    <cell id="255">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="380">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_jun_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_jun_total</property>
+                        </data>
+                    </cell>
+                    <cell id="246">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="381">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_jul_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_jul_total</property>
+                        </data>
+                    </cell>
+                    <cell id="291">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="382">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_aug_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_aug_total</property>
+                        </data>
+                    </cell>
+                    <cell id="282">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="383">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_sep_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_sep_total</property>
+                        </data>
+                    </cell>
+                    <cell id="273">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="384">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_oct_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_oct_total</property>
+                        </data>
+                    </cell>
+                    <cell id="264">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="385">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_nov_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_nov_total</property>
+                        </data>
+                    </cell>
+                    <cell id="327">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="386">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_jan_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_dec_total</property>
+                        </data>
+                    </cell>
+                    <cell id="318">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="387">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_jan_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_jan_total</property>
+                        </data>
+                    </cell>
+                    <cell id="309">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="388">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_feb_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_feb_total</property>
+                        </data>
+                    </cell>
+                    <cell id="300">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="389">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["sum_mar_total"] ==0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">sum_mar_total</property>
+                        </data>
+                    </cell>
+                    <cell id="363">
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <data id="390">
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_cust_total1</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <property name="pageVariables">
+        <variable-element name="targetsum">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+    </property>
+</report>

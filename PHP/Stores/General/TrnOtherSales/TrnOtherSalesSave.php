@@ -184,14 +184,32 @@ os_delivery_addr1, os_delivery_addr2, os_delivery_addr3, os_delivery_city, os_de
 
  $result4=mysqli_query($conn, $query4); 
 
-
-
-
 //echo $query4;        
 //echo "<br>";  
 }
+
+
+$invcount = 0;
+$refcount = 0;
+$trancount = 0;
+$trailcount = 0;
+
+$query = "SELECT  (SELECT COUNT(*) FROM trn_other_sales WHERE os_acc_seqno = '$ginaccrefseq') AS invcount,
+ (SELECT COUNT(*) FROM acc_ref WHERE accref_seqno = '$ginaccrefseq' and accref_vouno = '$snhinvno') AS refcount,
+ (SELECT COUNT(*) FROM acc_tran WHERE acctran_accref_seqno = '$ginaccrefseq') AS trancount,
+ (SELECT COUNT(*) FROM acc_trail WHERE acctrail_accref_seqno = '$ginaccrefseq') AS trailcount";
+
+$result = mysqli_query($conn, $query);
+
+$row = mysqli_fetch_assoc($result);
+
+$invcount   = intval($row['invcount']);
+$refcount   = intval($row['refcount']);
+$trancount  = intval($row['trancount']);
+$trailcount = intval($row['trailcount']);
+
         
-   if ( $result4 && $resulta1  && $resulta2)
+   if ( $result4 && $resulta1  && $resulta2  && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0)
    {
       mysqli_commit($conn);                       
       echo '({"success":"true","saleno":"'.$snhinvno.'"})';

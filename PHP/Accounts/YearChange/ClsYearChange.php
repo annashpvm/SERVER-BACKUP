@@ -30,7 +30,7 @@ mysqli_set_charset($conn, "utf8");
     {
         global $conn;
 
-        $sql = "select * from mas_finyear where fin_code > 21 order by fin_code desc";
+        $sql = "select * from mas_finyear where fin_code > 23 order by fin_code desc";
         $r = mysqli_query($conn, $sql);
 
 	$nrow = mysqli_num_rows($r);

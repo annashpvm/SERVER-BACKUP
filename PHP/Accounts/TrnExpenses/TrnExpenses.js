@@ -417,9 +417,24 @@ new Ext.KeyMap( Ext.getBody(), [{
 
         }
 
-    if(Ext.util.Format.date(dtpVouDate.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
-            Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
-    }
+        var finStart = new Date(finstdate);
+        var finEnd   = new Date(finenddate);
+
+        dt_voucher    = clearTime(dt_voucher);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (gstFlag === "Add" && (dt_voucher < finStart || dt_voucher > finEnd))
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+//                dtpVouDate.setValue(dt_today);
+dtpVouDate.focus();
+                return;
+            }
 
  }
 
@@ -446,17 +461,30 @@ new Ext.KeyMap( Ext.getBody(), [{
 
 
 
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
 
     var dtpVouDate= new Ext.form.DateField({
         fieldLabel: '',
         id: 'dtpVouDate',
         name: '',
         format: 'd-m-Y',
-        value: new Date(),
+        value: defaultDate,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ", 
        	enableKeyEvents: true,
         listeners:{
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },               
            blur:function(){
               NewDateCheck();
               txtPartyName.focus();
@@ -1826,11 +1854,11 @@ if (testbtn == 1)
 //    font-size:18px,
     columns:
     [
-       {header: "Led. Code", dataIndex:'ledcode',sortable:false,width:100,align:'left'},
+       {header: "Led. Code", dataIndex:'ledcode',sortable:false,width:100,align:'left',hidden : true},
        {header: "Led. Name", dataIndex:'ledname',sortable:false,width:320,align:'left'},
        {header: "Debit", dataIndex:'debit',sortable:false,width:120,align:'right'},
        {header: "Credit", dataIndex:'credit',sortable:false,width:120,align:'right'},
-       {header: "ledtype", dataIndex: 'ledtype', sortable: true, width: 100, align: 'left'},
+       {header: "ledtype", dataIndex: 'ledtype', sortable: true, width: 100, align: 'left',hidden : true},
        {header: "Remarks", dataIndex: 'remarks', sortable: true, width: 500, align: 'left'},
     ],
 
@@ -2340,7 +2368,7 @@ function LedgerSearch()
           },
             keyup: function () {
 
-               findledgers()
+          //    findledgers()
 
             }   
         }
@@ -3787,6 +3815,11 @@ function grid_tot2(){
     };
 
 
+    function clearTime(dt) {
+        return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    }
+    
+
 
     function save_click()
     {
@@ -3858,6 +3891,9 @@ function grid_tot2(){
 		                        msg: 'Are You Sure to Add This Record?',
 		                        fn: function (btn) {
                                     	 if (btn === 'yes') {
+
+
+                                        Ext.getCmp('save').setDisabled(true);   
 
                                         var purData = flxTrans.getStore().getRange();
                                         var purupdData = new Array();

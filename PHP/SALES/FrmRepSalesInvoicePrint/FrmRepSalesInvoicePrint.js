@@ -5,6 +5,7 @@ Ext.onReady(function(){
  var invprttype = "1";
 
 var invtype = "N";
+var invsaltype = "N";
 
 var invstate = "TN";
 var fm = Ext.form;
@@ -117,7 +118,7 @@ var flxInvoice = new Ext.grid.EditorGridPanel({
     columns:
     [ 	 	
       {header: "Date" , dataIndex: 'invhdate',sortable:false,width:120,align:'center', menuDisabled: true},
-      {header: "Invoice No" , dataIndex: 'invh_seqno',sortable:false,width:140,align:'left', menuDisabled: true,},
+      {header: "Invoice No" , dataIndex: 'invh_seqno',sortable:false,width:140,align:'left', menuDisabled: true,hidden : true},
       {header: "Invoice No" , dataIndex: 'invh_invrefno',sortable:false,width:140,align:'left', menuDisabled: true,},
       {header: "Customer" , dataIndex: 'cust_ref',sortable:false,width:350,align:'left', menuDisabled: true},
 
@@ -130,8 +131,9 @@ var flxInvoice = new Ext.grid.EditorGridPanel({
 		var sm = flxInvoice.getSelectionModel();
 		var selrow = sm.getSelected();
 
-                var invseqno = selrow.get('invh_seqno')
-                var invno = selrow.get('invh_invrefno')
+                var invseqno = selrow.get('invh_seqno');
+                var invno = selrow.get('invh_invrefno');
+                var tcs = '';
 		loadCHKEinvoicegenerated.load({
 			 url: 'ClsTrnSalesInvoicePrint.php', 
 			 params:
@@ -607,7 +609,7 @@ var optInvoiceType = new Ext.form.FieldSet({
     title: '',
     fieldLabel: '',
     layout : 'hbox',
-    width:400,
+    width: 500,
     height:250,
     x:40,
     y:0,
@@ -616,7 +618,7 @@ var optInvoiceType = new Ext.form.FieldSet({
 
     {
         xtype: 'radiogroup',
-        columns: 4,
+        columns: 5,
         rows : 1,
         id: 'optInvoieType',
         items: [
@@ -640,6 +642,7 @@ var optInvoiceType = new Ext.form.FieldSet({
                  }
                }
             },
+            
             {boxLabel: 'FSC - Invoice ' , name: 'optInvoiceType', id:'fscinvoice', inputValue: 7,
               listeners:{
                 check:function(rb,checked){
@@ -650,6 +653,18 @@ var optInvoiceType = new Ext.form.FieldSet({
                 }
               }
            },
+/*           
+           {boxLabel: 'Export - Invoice ' , name: 'optInvoiceType', id:'exoinvoice', inputValue: 9,
+            listeners:{
+              check:function(rb,checked){
+                  if(checked===true){
+                    invtype = "EXP";      	
+                   Ext.getCmp('optMill').hide(true);	                      
+                  }
+              }
+            }
+         },     
+         */      
             {boxLabel: 'Blank Invoice  Format' , name: 'optInvoiceType', id:'blankinvoice', inputValue: 8,
                listeners:{
                  check:function(rb,checked){
@@ -680,7 +695,7 @@ var optMill = new Ext.form.FieldSet({
     layout : 'hbox',
     width:250,
     height:250,
-    x:550,
+    x:750,
     y:20,
     border: true,
         id: 'optMill',
@@ -773,7 +788,7 @@ var optrep = new Ext.form.FieldSet({
     layout : 'hbox',
     width:250,
     height:250,
-    x:480,
+    x:680,
     y:85,
     border: false,
     items: [
@@ -789,6 +804,8 @@ var optrep = new Ext.form.FieldSet({
                  check:function(rb,checked){
                      if(checked===true){
                      cmbinvno.setRawValue('');
+
+                     invsaltype = "TN";  
                      Ext.getCmp('dtpgpdate').hide(true);
                       cmbinvno.label.update('Invoice No');
                      		loadinvoiceprint.removeAll();
@@ -817,6 +834,7 @@ var optrep = new Ext.form.FieldSet({
                      Ext.getCmp('dtpgpdate').hide(true);
                       cmbinvno.label.update('Invoice No');
                      		loadinvoiceprint.removeAll();
+                         invsaltype = "OS";  
 				 loadinvoiceprint.load({
                 		 url: '/SHVPM/SALES/ClsSalesRep.php', 
                         	 params:
@@ -834,31 +852,56 @@ var optrep = new Ext.form.FieldSet({
                }
             },
 
-            {boxLabel: 'Invoice - SEZ' , name: 'optrep', id:'optinvSEZ', inputValue: 7,
-               listeners:{
-                 check:function(rb,checked){
-                     if(checked===true){
-                     cmbinvno.setRawValue('');
-                     Ext.getCmp('dtpgpdate').hide(true);
-                      cmbinvno.label.update('Invoice No');
-                     		loadinvoiceprint.removeAll();
-				 loadinvoiceprint.load({
-                		 url: '/SHVPM/SALES/ClsSalesRep.php', 
-                        	 params:
-                       		 {
-                         	 task:"loadinvoiceno",
-                                 invstate  : "SEZ",
-				 finid:GinFinid,
-				 compcode: GinCompcode,
-                        	 }
-				 });	
-				 salrep = "SEZinv";	
-	   			                      
-                     }
-                 }
-               }
+            {boxLabel: 'Invoice - Export' , name: 'optrep', id:'optinvEXO', inputValue: 7,
+              listeners:{
+                check:function(rb,checked){
+                if(checked===true){
+                cmbinvno.setRawValue('');
+                Ext.getCmp('dtpgpdate').hide(true);
+                cmbinvno.label.update('Invoice No');
+                loadinvoiceprint.removeAll();
+                invsaltype = "EXP";  
+                loadinvoiceprint.load({
+                url: '/SHVPM/SALES/ClsSalesRep.php', 
+                params:
+                {
+                task:"loadinvoiceno",
+                    invstate  : "EXP",
+                finid:GinFinid,
+                compcode: GinCompcode,
+                }
+                });	
+                salrep = "EXPinv";	
+                  
+                }
+                }
+              }
             },
-  
+            {boxLabel: 'Invoice - SEZ' , name: 'optrep', id:'optinvSEZ', inputValue: 7,
+              listeners:{
+                check:function(rb,checked){
+                    if(checked===true){
+                    cmbinvno.setRawValue('');
+                    Ext.getCmp('dtpgpdate').hide(true);
+                    invsaltype = "FSC";  
+                     cmbinvno.label.update('Invoice No');
+                        loadinvoiceprint.removeAll();
+        loadinvoiceprint.load({
+                    url: '/SHVPM/SALES/ClsSalesRep.php', 
+                          params:
+                           {
+                           task:"loadinvoiceno",
+                                invstate  : "SEZ",
+        finid:GinFinid,
+        compcode: GinCompcode,
+                          }
+        });	
+        salrep = "SEZinv";	
+                                
+                    }
+                }
+              }
+           },  
             {boxLabel: 'Packing Slip - TamilNadu', name: 'optrep', id:'optpackslip', inputValue: 4,
                listeners:{
                  check:function(rb,checked){
@@ -866,6 +909,7 @@ var optrep = new Ext.form.FieldSet({
                      Ext.getCmp('dtpgpdate').hide(true);
                      cmbinvno.label.update('Invoice No');
                      		salrep = "pckslp1";
+                         invsaltype = "TN";  
                      		cmbinvno.reset();
 				 loadinvoiceprint.load({
                 		 url: '/SHVPM/SALES/ClsSalesRep.php', 
@@ -891,6 +935,7 @@ var optrep = new Ext.form.FieldSet({
                      Ext.getCmp('dtpgpdate').hide(true);
                      cmbinvno.label.update('Invoice No');
                      		salrep = "pckslp1";
+                         invsaltype = "OS";  
                      		cmbinvno.reset();
 				 loadinvoiceprint.load({
                 		 url: '/SHVPM/SALES/ClsSalesRep.php', 
@@ -911,31 +956,59 @@ var optrep = new Ext.form.FieldSet({
             },
 
             {boxLabel: 'Packing Slip - SEZ ', name: 'optrep', id:'optpackslip3', inputValue: 4,
-               listeners:{
-                 check:function(rb,checked){
-                     if(checked===true){
-                     Ext.getCmp('dtpgpdate').hide(true);
-                     cmbinvno.label.update('Invoice No');
-                     		salrep = "pckslp1";
-                     		 cmbinvno.reset();
-                                 loadinvoiceprint.removeAll();
-				 loadinvoiceprint.load({
-                		 url: '/SHVPM/SALES/ClsSalesRep.php', 
-                        	 params:
-                       		 {
-                         	 task:"loadinvoiceno",
-				 finid:GinFinid,
-				 compcode: GinCompcode,
-                                 invstate  : "SEZ",
-                        	 }
-				 });                     		
-                   		
-                     }
+              listeners:{
+                check:function(rb,checked){
+                if(checked===true){
+                Ext.getCmp('dtpgpdate').hide(true);
+                cmbinvno.label.update('Invoice No');
+                salrep = "pckslp1";
+                invsaltype = "SEZ";  
+                cmbinvno.reset();
+                loadinvoiceprint.removeAll();
+                loadinvoiceprint.load({
+                url: '/SHVPM/SALES/ClsSalesRep.php', 
+                params:
+                {
+                task:"loadinvoiceno",
+                finid:GinFinid,
+                compcode: GinCompcode,
+                invstate  : "SEZ",
+                }
+                });                     		
 
-                 }
-               }
-             
+                }
+
+                }
+              }
             },
+
+
+            {boxLabel: 'Packing Slip - EXPORT ', name: 'optrep', id:'optpackslip5', inputValue: 4,
+              listeners:{
+                check:function(rb,checked){
+                if(checked===true){
+                Ext.getCmp('dtpgpdate').hide(true);
+                cmbinvno.label.update('Invoice No');
+                salrep = "pckslp1";
+                invsaltype = "EXP";  
+                cmbinvno.reset();
+                loadinvoiceprint.removeAll();
+                loadinvoiceprint.load({
+                url: '/SHVPM/SALES/ClsSalesRep.php', 
+                params:
+                {
+                task:"loadinvoiceno",
+                finid:GinFinid,
+                compcode: GinCompcode,
+                invstate  : "EXP",
+                }
+                });                     		
+
+                }
+
+                }
+              }
+            },            
             {boxLabel: 'Packing Slip - Bundle - TamilNadu', name: 'optrep', id:'optpackslipTNbund', inputValue: 4,
                listeners:{
                  check:function(rb,checked){
@@ -1184,9 +1257,9 @@ var optinvprttype = new Ext.form.FieldSet({
                     listeners:{
                         click: function () {
 
-//alert(invprttype);
-                        
-                        if ( salrep == "TNinv" || salrep == "OSinv" || salrep == "SEZinv") {
+                          var tcs = '';
+            
+                        if ( salrep == "TNinv" || salrep == "OSinv" || salrep == "SEZinv" || salrep == "EXPinv") {
 
 				if(cmbinvno.getValue()==0) 
 
@@ -1196,24 +1269,28 @@ var optinvprttype = new Ext.form.FieldSet({
 			     else
 				{
 
+
+
+
 				 loadCHKEinvoicegenerated.load({
 		        		 url: 'ClsTrnSalesInvoicePrint.php', 
 		                	 params:
 		               		 {
-		                 	 task:"loadInvoiceNoDetails",
-		                         invno  : cmbinvno.getValue(),
-					 finid   :GinFinid,
-					 compcode: GinCompcode
+        task:"loadInvoiceNoDetails",
+        invno  : cmbinvno.getValue(),
+        finid   :GinFinid,
+        compcode: GinCompcode
 		                	 },
 		                         callback: function () {
-	                                       tcs = loadCHKEinvoicegenerated.getAt(0).get('U_TCSStatus');			
+                                         var tcs = loadCHKEinvoicegenerated.getAt(0).get('U_TCSStatus') || "";	
                                          einv = loadCHKEinvoicegenerated.getAt(0).get('E_inv_confirm');	
 
-                                       
 
 						var p1 = "&compcode=" + encodeURIComponent(GinCompcode);
 						var p2 = "&fincode=" + encodeURIComponent(GinFinid);
 						var p3 = "&invno=" + encodeURIComponent(cmbinvno.getRawValue());
+
+ 
 		                                if (invprttype == 0) {
 				                  for (i=1;i<=3;i++){
 				                       if ( i == 1 ) {i1 = "ORIGINAL FOR BUYER";}
@@ -1236,6 +1313,8 @@ var optinvprttype = new Ext.form.FieldSet({
                                                        }
                                                        else 
                                                        if (invtype == "N") {  
+
+                                                      
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
                                                        }
                                                        else { 
@@ -1248,6 +1327,10 @@ var optinvprttype = new Ext.form.FieldSet({
                                       
                                               } 
 					      else if (invprttype == 1) {
+
+
+
+                
 				                      i1 = "ORIGINAL FOR BUYER";
 				                      var p4 = "&displayword=" + encodeURIComponent(i1);
 						      var param = (p1 + p2 + p3 + p4 );  
@@ -1272,16 +1355,27 @@ var optinvprttype = new Ext.form.FieldSet({
                                                        }
                                                        else if (tcs !='' && einv == "Y" && invtype == "E" )  
                                                        { 
-						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf'+ param);
+                                                         if (invsaltype == "EXP")                                                         
+						      window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODEExport.rptdesign&__format=pdf'+ param);
+                                                         else
+                  window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE.rptdesign&__format=pdf'+ param);                                                         
+
                                                        }
-                                                       else if (tcs !='' &&  invtype == "N" )  
+                                                       else if ( invtype == "N" )  
                                                        {
- 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
+                                                        if (invsaltype == "EXP")     
+ 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoiceExport.rptdesign&__format=pdf'+ param); 
+                                                        else
+                                 window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
   
                                                       }   
                                                       else if (invtype == "FSC") {
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
                                                       }
+                                                      else if (invtype == "EXP") {
+                                 window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODEExport.rptdesign&__format=pdf'+ param); 
+                                                    }        
+
 				              }     
 					      else if (invprttype == 2) {
 				                      i1 = "DUPLICATE FOR TRANSPORT";
@@ -1293,6 +1387,8 @@ var optinvprttype = new Ext.form.FieldSet({
 				                       window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
                              else if (invtype == "FSC") 
                               window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
+                             else if (invtype == "EXP") 
+                              window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODEExport.rptdesign&__format=pdf'+ param); 
                                                   
 
 				              } 
@@ -1306,7 +1402,9 @@ var optinvprttype = new Ext.form.FieldSet({
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
                                                       else if (invtype == "FSC") 
                                                         window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
-                          
+                                                      else if (invtype == "EXP") 
+                                                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODEExport.rptdesign&__format=pdf'+ param); 
+                                                    
 
 				               }
 					      else if (invprttype == 4) {
@@ -1321,6 +1419,8 @@ var optinvprttype = new Ext.form.FieldSet({
 				                          window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvoice.rptdesign&__format=pdf'+ param); 
                                   else if (invtype == "FSC") 
                                     window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODE_FSC.rptdesign&__format=pdf'+ param); 
+                                  else if (invtype == "EXP") 
+                                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RptSalesInvQRCODEExport.rptdesign&__format=pdf'+ param); 
       
 
 				               }  
@@ -1412,7 +1512,7 @@ var optinvprttype = new Ext.form.FieldSet({
                 title   : 'Invoice Print',
                 layout  : 'hbox',
                 border  : true,
-                height  : 320,
+                height  : 400,
                 width   : 500,
 		style:{ border:'1px solid red'},
                 layout  : 'absolute',
@@ -1448,7 +1548,7 @@ var optinvprttype = new Ext.form.FieldSet({
                                 	labelWidth  : 130,
                                 	width       : 350,
                                 	x           : 30,
-                                	y           : 220,
+                                	y           : 270,
                                     	border      : false,
                                 	items: [cmbinvno]
                             		},

@@ -54,6 +54,23 @@ Ext.onReady(function () {
     var cngsttype = localStorage.getItem('GSTTYPE');
 
 
+
+    var LoadAdjustedBillDetaildatastore = new Ext.data.Store({
+        id: 'LoadAdjustedBillDetaildatastore',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsCreditNote.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task: "LoadAdjustedDetails"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },['ref_adjseqno','ref_invno', 'ref_invdate', 'ref_adjamount' ])
+    });
+
+
     var UnAdjustedBillDetaildatastore = new Ext.data.Store({
         id: 'UnAdjustedBillDetaildatastore',
         proxy: new Ext.data.HttpProxy({
@@ -326,10 +343,34 @@ function UpdateReceiptBillsAdjusted(){
     });
     
 
+    var adjDocStore = new Ext.data.JsonStore({
+        fields: [
+            { name: 'accrefvouno' },
+            { name: 'accrefvoudate' },
+            { name: 'invno' },
+            { name: 'invdate' },
+            { name: 'payterms' },
+            { name: 'invamt', type: 'float', defaultValue: 0 },
+            { name: 'dbcramt', type: 'float', defaultValue: 0 },
+            { name: 'totamt', type: 'float', defaultValue: 0 },
+            { name: 'pendingamt', type: 'float', defaultValue: 0 },
+            { name: 'adjamt', type: 'float', defaultValue: 0 },
+            { name: 'balamt', type: 'float', defaultValue: 0 },
+            { name: 'voutype' },
+            { name: 'Year' },
+            { name: 'accrefseqno' },
+            { name: 'recpayamt', type: 'float', defaultValue: 0 }
+        ]
+    });
+    adjDocStore.on('load', function (store) {
+        store.each(function (rec) {
+            rec.set('adjamt', Number(rec.get('adjamt') || 0));
+        });
+    });
     
     var flxAdjdocDetail = new Ext.grid.EditorGridPanel({
         frame: false,
-        store: [],
+        store: adjDocStore,
         sm: new Ext.grid.RowSelectionModel(),
         autoShow: true,
         stripeRows : true,
@@ -482,12 +523,58 @@ function InsertUnAdjustedBillDetail(){
                             pendingamt: Ext.util.Format.number(Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_inv_value')) - Number(UnAdjustedBillDetaildatastore.getAt(i).get('acctrail_adj_value')),"0.00"),
                             voutype: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vou_type'),
                             Year:gstfin,
+                            adjamt : 0,
                             accrefseqno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_seqno'),
                             accrefvouno: UnAdjustedBillDetaildatastore.getAt(i).get('accref_vouno'),
                             accrefvoudate: UnAdjustedBillDetaildatastore.getAt(i).get('accref_voudate')
                         })
                     );
                 }
+
+//anna
+if (gstFlag == "Edit") {
+
+    LoadAdjustedBillDetaildatastore.removeAll();
+    LoadAdjustedBillDetaildatastore.load({
+        url: 'ClsCreditNote.php',
+        params: {
+            task      : "LoadAdjustedDetails",
+            compcode  : gstfincompcode,
+            finid     : ginfinid,
+            accseqno  : accseqno
+        },
+        callback: function () {
+
+            var RowCnt = LoadAdjustedBillDetaildatastore.getCount();
+            if (RowCnt <= 0) return;
+
+            var gridStore = flxAdjdocDetail.getStore();
+            if (!gridStore) return;   // safety guard
+
+            for (var j = 0; j < RowCnt; j++) {
+
+                var invoiceno = LoadAdjustedBillDetaildatastore.getAt(j).get('ref_invno');
+                var adjusted2 = Number(LoadAdjustedBillDetaildatastore.getAt(j).get('ref_adjamount'));
+
+                gridStore.each(function (rec) {
+
+               
+                    if (rec.get('invno') == invoiceno) {
+                        console.log(rec.data);
+//alert(rec.get('adjamt'));      
+//alert(adjusted2);
+                        var rowadjusted = Number(rec.get('adjamt')) + adjusted2;
+                        var rowpending  = Number(rec.get('pendingamt'))+ adjusted2;
+
+                        rec.set('adjamt', rowadjusted);
+                        rec.set('pendingamt', rowpending);
+                    }
+                });
+            }
+        }
+    });
+}
+
             }
         });
     }
@@ -1126,6 +1213,28 @@ var cmbHSNList = new Ext.form.ComboBox({
         } 
 });
 
+function getRemarks()
+{
+    var narration = "BEING CREDITED TO YOUR ACCOUNT";
+
+    if (txtRefNo.getRawValue() !== '') {
+        narration += " | For Ref No : " + txtRefNo.getRawValue();
+    }
+    if (Number(txtQty.getValue()) > 0) {
+        narration += " | For Qty : " + txtQty.getRawValue();
+    }
+
+    if (cmbReason.getValue() !== '') {
+        narration += " | For the reason : " + cmbReason.getRawValue();
+    }
+
+
+
+    txtNarration.setRawValue(narration)
+
+
+
+}
 
     var txtQty = new Ext.form.NumberField({
         fieldLabel  : 'Qty',
@@ -1141,7 +1250,14 @@ var cmbHSNList = new Ext.form.ComboBox({
 		},
         enableKeyEvents: true,
         listeners:{
-
+           keyup: function(){
+                getRemarks();
+           },
+           change: function(){
+                getRemarks();
+           },
+                      
+               
         } 
     });
 
@@ -1164,6 +1280,7 @@ var cmbReason = new Ext.form.ComboBox({
     	style      :"border-radius: 5px;textTransform: uppercase; ", 
         listeners:{
            select: function(){
+                getRemarks();
 
            }
         } 
@@ -1343,47 +1460,45 @@ var cmbCNNo = new Ext.form.ComboBox({
         triggerAction   : 'all',
         selectOnFocus   : false,
         editable        : true,
-	tabIndex	: 0,
+    	tabIndex	: 0,
         allowblank      : true,
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         listeners:{
            select: function(){
 
-                       Ext.getCmp('editchk').hide();
-                       flxDetail.getStore().removeAll();
-     	               LoadVouNoDetailsdatastore.removeAll();
+                    Ext.getCmp('editchk').hide();
+                    flxDetail.getStore().removeAll();
+                    LoadVouNoDetailsdatastore.removeAll();
 
-                       LoadCreditNoteVoucherDetailDataStore.removeAll();
-     	               LoadCreditNoteVoucherDetailDataStore.load({
-                           url: 'ClsCreditNote.php',
-	                   params: {
-			        task: 'LoadCreditNoteVoucherDetails',
-			        fincode : ginfinid,
-			        compcode: gstfincompcode,
-                                vouno   : cmbCNNo.getRawValue(),
-	                  },
-		          callback: function () {
+                    LoadCreditNoteVoucherDetailDataStore.removeAll();
+                    LoadCreditNoteVoucherDetailDataStore.load({
+                    url: 'ClsCreditNote.php',
+                    params: {
+                    task: 'LoadCreditNoteVoucherDetails',
+                    fincode : ginfinid,
+                    compcode: gstfincompcode,
+                    vouno   : cmbCNNo.getRawValue(),
+                    },
+		            callback: function () {
 
 
                        LoadCreditNoteVoucherTypeDataStore.removeAll();
      	               LoadCreditNoteVoucherTypeDataStore.load({
-                           url: 'ClsCreditNote.php',
+                       url: 'ClsCreditNote.php',
 	                   params: {
-			        task: 'loadCNVouType',
-			        fincode : ginfinid,
-			        compcode: gstfincompcode,
-                                vouno   : cmbCNNo.getRawValue(),
-	                  },
-		          callback: function () {
-
-
-                        if (LoadCreditNoteVoucherTypeDataStore.getAt(0).get('nos') >0 )
-               	       {  
-                          alert("We can't Change the Credit Note... Because this entry made from Auto Adjustments");
-                  	   Ext.getCmp('save').setDisabled(true);
-                       } 
-                          }
-                          });  
+           			        task: 'loadCNVouType',
+			                fincode : ginfinid,
+			                compcode: gstfincompcode,
+                            vouno   : cmbCNNo.getRawValue(),
+	                   },
+		               callback: function () {
+                            if (LoadCreditNoteVoucherTypeDataStore.getAt(0).get('nos') >0 )
+                            {  
+                                alert("We can't Change the Credit Note... Because this entry made from Auto Adjustments");
+                                Ext.getCmp('save').setDisabled(true);
+                            } 
+                       }
+                       });  
 
  
 
@@ -1394,12 +1509,12 @@ var cmbCNNo = new Ext.form.ComboBox({
                          {
                            if (cngsttype == "G")
                            {    
-                		Ext.getCmp('txtCgstper').setDisabled(false);
+                	        	Ext.getCmp('txtCgstper').setDisabled(false);
                                 Ext.getCmp('txtSgstper').setDisabled(false)
                                 Ext.getCmp('txtIgstper').setDisabled(true);
-			        Ext.getCmp('cmbCGSTledger').setDisabled(false);
-			        Ext.getCmp('cmbSGSTledger').setDisabled(false);
-			        Ext.getCmp('cmbIGSTledger').setDisabled(true);
+                                Ext.getCmp('cmbCGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbSGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbIGSTledger').setDisabled(true);
                                 txtIgstper.setValue(0); 
                                 txtIgstvalue.setValue(0); 
                                 cmbIGSTledger.setValue(''); 
@@ -1407,12 +1522,12 @@ var cmbCNNo = new Ext.form.ComboBox({
                             }    
                             else
                            {    
-                		Ext.getCmp('txtCgstper').setDisabled(false);
+                		        Ext.getCmp('txtCgstper').setDisabled(false);
                                 Ext.getCmp('txtSgstper').setDisabled(false)
                                 Ext.getCmp('txtIgstper').setDisabled(false);
-			        Ext.getCmp('cmbCGSTledger').setDisabled(false);
-			        Ext.getCmp('cmbSGSTledger').setDisabled(false);
-			        Ext.getCmp('cmbIGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbCGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbSGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbIGSTledger').setDisabled(false);
                                 txtIgstper.setValue(0);
                                 txtIgstvalue.setValue(0); 
                                 cmbIGSTledger.setValue(''); 
@@ -1423,12 +1538,12 @@ var cmbCNNo = new Ext.form.ComboBox({
                          {
                            if (cngsttype == "G")
                            {    
-                		Ext.getCmp('txtCgstper').setDisabled(true);
+                		        Ext.getCmp('txtCgstper').setDisabled(true);
                                 Ext.getCmp('txtSgstper').setDisabled(true)
                                 Ext.getCmp('txtIgstper').setDisabled(false);
-			        Ext.getCmp('cmbCGSTledger').setDisabled(true);
-			        Ext.getCmp('cmbSGSTledger').setDisabled(true);
-			        Ext.getCmp('cmbIGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbCGSTledger').setDisabled(true);
+                                Ext.getCmp('cmbSGSTledger').setDisabled(true);
+                                Ext.getCmp('cmbIGSTledger').setDisabled(false);
                                 txtIgstper.setValue(0); 
                                 txtIgstvalue.setValue(0); 
                                 cmbIGSTledger.setValue(''); 
@@ -1436,85 +1551,84 @@ var cmbCNNo = new Ext.form.ComboBox({
                             }    
                             else
                            {    
-                		Ext.getCmp('txtCgstper').setDisabled(false);
+                		        Ext.getCmp('txtCgstper').setDisabled(false);
                                 Ext.getCmp('txtSgstper').setDisabled(false)
                                 Ext.getCmp('txtIgstper').setDisabled(false);
-			        Ext.getCmp('cmbCGSTledger').setDisabled(false);
-			        Ext.getCmp('cmbSGSTledger').setDisabled(false);
-			        Ext.getCmp('cmbIGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbCGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbSGSTledger').setDisabled(false);
+                                Ext.getCmp('cmbIGSTledger').setDisabled(false);
                                 txtIgstper.setValue(0);
                                 txtIgstvalue.setValue(0); 
                                 cmbIGSTledger.setValue(''); 
 
                             }   
                            }  
-                                txtCNNo.setRawValue(cmbCNNo.getRawValue());
-                                dtpVouDate.setRawValue(Ext.util.Format.date(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_date'),"d-m-Y"));  
-                                accseqno = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_accseqno');    
-                                dncrseqno = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_seqno');   
-                                vouseqno  = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_no'); 
-                                partyledcode = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_partycode');
-                                partycode = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_partycode');
-                                partytype = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_party_type');
-    
-  
-                                cmbQuality.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_item'));
-   
-                                txtAccountName.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('cust_name'));
-				txtPartyCredit.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_value'));
-				txtRefNo.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_inv_no'));
+                            txtCNNo.setRawValue(cmbCNNo.getRawValue());
+                            dtpVouDate.setRawValue(Ext.util.Format.date(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_date'),"d-m-Y"));  
+                            accseqno = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_accseqno');    
+                            dncrseqno = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_seqno');   
+                            vouseqno  = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_no'); 
+                            partyledcode = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_partycode');
+                            partycode = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_partycode');
+                            partytype = LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_party_type');
 
-                                dtpRefDate.setRawValue(Ext.util.Format.date(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_inv_date'),"d-m-Y"));  
-				txtTotCredit.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_grossvalue'));
-				txtTaxable.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_taxable'));
+                            cmbQuality.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_item'));
 
-				txtDebitValue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_grossvalue'));
-				txtFrtAmount.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_frtamt'));
+                            txtAccountName.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('cust_name'));
+                            txtPartyCredit.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_value'));
+                            txtRefNo.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_inv_no'));
 
-				txtCgstper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_cgstper'));
-				txtCgstvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_cgstvalue'));
-				txtSgstper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_sgstper'));
-				txtSgstvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_sgstvalue'));
-				txtIgstper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_igstper'));
-				txtIgstvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_igstvalue'));
+                            dtpRefDate.setRawValue(Ext.util.Format.date(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_inv_date'),"d-m-Y"));  
+                            txtTotCredit.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_grossvalue'));
+                            txtTaxable.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_taxable'));
 
-               findledgers();
+                            txtDebitValue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_grossvalue'));
+                            txtFrtAmount.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_frtamt'));
+
+                            txtCgstper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_cgstper'));
+                            txtCgstvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_cgstvalue'));
+                            txtSgstper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_sgstper'));
+                            txtSgstvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_sgstvalue'));
+                            txtIgstper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_igstper'));
+                            txtIgstvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_igstvalue'));
+
+                            findledgers();
 
 
-				txtNarration.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_narration'));
-				cmbDebitLedger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_ledcode'));
-				cmbCGSTledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_cgstledcode'));
-				cmbSGSTledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_sgstledcode'));
-				cmbIGSTledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_igstledcode'));
+                            txtNarration.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_narration'));
+                            cmbDebitLedger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_ledcode'));
+                            cmbCGSTledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_cgstledcode'));
+                            cmbSGSTledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_sgstledcode'));
+                            cmbIGSTledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_igstledcode'));
 
-				cmbTCSledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_tcsledcode'));
+                            cmbTCSledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_tcsledcode'));
 
-				cmbFrtLedger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_frtledcode'));
+                            cmbFrtLedger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_frtledcode'));
 
-//alert(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_rounding'));
-				txtRounding.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_rounding'));
+                            //alert(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_rounding'));
+                            txtRounding.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_rounding'));
 
-				txtTCSper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_tcsper'));
-				txttcsvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_tcsvalue'));
+                            txtTCSper.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_tcsper'));
+                            txttcsvalue.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcrt_tcsvalue'));
 
-				txtOtherAmount.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_otheramt'));
-				cmbOthersledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_otherledcode'));
-				cmbHSNList.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_hsncode'));
+                            txtOtherAmount.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_otheramt'));
+                            cmbOthersledger.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_otherledcode'));
+                            cmbHSNList.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_hsncode'));
 
-				cmbReason.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_reason'));
-				txtQty.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_qty'));
+                            cmbReason.setValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_reason'));
+                            txtQty.setRawValue(LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_qty'));
 
 //annadurai
-                               if (LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_output') == 'Y')
-                                   Ext.getCmp("chkOutput").setValue(true);
-                               else
-                                   Ext.getCmp("chkOutput").setValue(false);
+                            if (LoadCreditNoteVoucherDetailDataStore.getAt(0).get('dbcr_output') == 'Y')
+                                Ext.getCmp("chkOutput").setValue(true);
+                            else
+                                Ext.getCmp("chkOutput").setValue(false);
 
-                               if (partytype == 'C' && gstfincompcode == 1 && cntype == 'CNG' )
-                                   Ext.getCmp('EInv').setVisible(true);
-                               
-                               else
-                                   Ext.getCmp('EInv').setVisible(false);
+                            if (partytype == 'C' && gstfincompcode == 1 && cntype == 'CNG' )
+                                Ext.getCmp('EInv').setVisible(true);
+                            
+                            else
+                                Ext.getCmp('EInv').setVisible(false);
 
 
 
@@ -1523,57 +1637,57 @@ var cmbCNNo = new Ext.form.ComboBox({
  
 
 //alert( txtRounding.getValue());
-calculateGSTvalue();
+                    calculateGSTvalue();
 //alert(txtAccountName.getValue());
 
 
-InsertUnAdjustedBillDetail();
+                       InsertUnAdjustedBillDetail();
 
 
                        LoadCreditNoteSLNODataStore.removeAll();
      	               LoadCreditNoteSLNODataStore.load({
-                           url: 'ClsCreditNote.php',
+                       url: 'ClsCreditNote.php',
 	                   params: {
-			        task: 'LoadCreditNoteVoucherSLNO',
-			        fincode : ginfinid,
-			        compcode: gstfincompcode,
-                                cnslno  : cnslno,
-	                  },
-		          callback: function () {
-                            	var cnt = LoadCreditNoteSLNODataStore.getCount();
-                                if (cnt > 0)    
-                                {                                      
-                                   if (LoadCreditNoteSLNODataStore.getAt(0).get('nos') > 0 ) 
-                                   {   
-                                   Ext.getCmp('docdelete').hide();                        
-                                  alert("We can't delete the Credit Note... Because entries made after this Credit Note");
-                                   }                                
-                                   else
-                                   {
-                                      Ext.getCmp('docdelete').show();                        
-                                   }  
-                                } 
+                        task: 'LoadCreditNoteVoucherSLNO',
+                        fincode : ginfinid,
+                        compcode: gstfincompcode,
+                        cnslno  : cnslno,
+	                   },
+		               callback: function () {
+                        var cnt = LoadCreditNoteSLNODataStore.getCount();
+                        if (cnt > 0)    
+                        {                                      
+                            if (LoadCreditNoteSLNODataStore.getAt(0).get('nos') > 0 ) 
+                            {   
+                            Ext.getCmp('docdelete').hide();                        
+                            alert("We can't delete the Credit Note... Because entries made after this Credit Note");
+                            }                                
+                            else
+                            {
+                            Ext.getCmp('docdelete').show();                        
+                            }  
+                        } 
 
 
-	       if (LoadCreditNoteVoucherDetailDataStore.getAt(0).get('U_AckNo') == '')
-	       {  
+                        if (LoadCreditNoteVoucherDetailDataStore.getAt(0).get('U_AckNo') == '')
+                        {  
 
-		   Ext.getCmp('doccancel').show();
-//		   Ext.getCmp('save').setDisabled(false);
+                        Ext.getCmp('doccancel').show();
+                        //		   Ext.getCmp('save').setDisabled(false);
 
-	       } 
-	       else  
-	       {    
-		   alert("E-Credit Note Generated. Can't Modify this document. .." );
-		   Ext.getCmp('save').setDisabled(true);
-		   Ext.getCmp('btnEInvoice').setDisabled(true);
-		   Ext.getCmp('btnReupload').setDisabled(true);
-		   Ext.getCmp('doccancel').show();
-		   Ext.getCmp('docdelete').hide();
-	       }  
+                        } 
+                        else  
+                        {    
+                        alert("E-Credit Note Generated. Can't Modify this document. .." );
+                        Ext.getCmp('save').setDisabled(true);
+                        Ext.getCmp('btnEInvoice').setDisabled(true);
+                        Ext.getCmp('btnReupload').setDisabled(true);
+                        Ext.getCmp('doccancel').show();
+                        Ext.getCmp('docdelete').hide();
+                        }  
          
-                          }
-                          });  
+                       }
+                      });  
 
 
 
@@ -1877,6 +1991,16 @@ InsertUnAdjustedBillDetail();
         name: '',
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         autoCreate:{tag:'input',type:'text',size:'20',autocomplete:'off',maxlength:'29'},
+        enableKeyEvents: true,
+        listeners:{
+           keyup: function(){
+                getRemarks();
+           },
+           change: function(){
+                getRemarks();
+           },
+               
+        }         
     });
 
 
@@ -3425,20 +3549,20 @@ function save_click()
 function edit_click()
 {
 
-       Ext.getCmp('cmbCNNo').setVisible(true);
-       gstFlag = 'Edit';
-       LoadCreditNoteVoucherDataStore.load({
-           url: 'ClsCreditNote.php',
-           params: {
-		task: 'LoadCreditNoteVoucherList',
-		fincode : ginfinid,
-		compcode: gstfincompcode,
-                voutype : cntype,
-          },
-	  callback: function () {
+    Ext.getCmp('cmbCNNo').setVisible(true);
+    gstFlag = 'Edit';
+    LoadCreditNoteVoucherDataStore.load({
+    url: 'ClsCreditNote.php',
+    params: {
+    task: 'LoadCreditNoteVoucherList',
+    fincode : ginfinid,
+    compcode: gstfincompcode,
+    voutype : cntype,
+    },
+    callback: function () {
 
-          }
-	});
+    }
+    });
 }
 
 
@@ -4464,7 +4588,7 @@ onEsc:function(){
         
                 });
 
-               txtNarration.setRawValue("BEING CREDITED TO YOUR ACCOUNT");
+               txtNarration.setRawValue("BEING CREDITED TO YOUR ACCOUNT ");
 
                 gst_depname = "A";
                	        LoadCGSTLedgerDataStore.removeAll();

@@ -1602,6 +1602,21 @@ Ext.onReady(function(){
          style       :"border-radius: 5px;  textTransform: uppercase ", 
      });
  
+
+     var chkChangeFrtQty = new Ext.form.Checkbox({
+        fieldLabel : '',
+        boxLabel   : '<span style="color:#0000FF;font-weight:bold;">Do you want to Change the Frieght Qty</span>',
+        id         : 'chkChangeFrtQty',
+        inputValue : '1',
+        checked    : false,
+        listeners  : {
+            check: function(cb, checked) {
+                Ext.getCmp('txtFrtQty').setDisabled(!checked);
+            }
+        }
+
+    });
+    
  
     var txtSO = new Ext.form.TextField({
          fieldLabel  : 'SO.No.',
@@ -1626,6 +1641,15 @@ Ext.onReady(function(){
      });
  
  
+
+
+     var lblInfo = new Ext.form.Label({
+        id    : 'lblInfo',
+        width : 200,
+        html  : '<span style="color:green;font-style:italic;font-weight:bold;text-transform:uppercase;">type URP -> for UnRegister Customer</span>'
+    });
+
+
      var lblInsPer = new Ext.form.Label({
         fieldLabel  : 'INS %',
         id          : 'lblInsPer',
@@ -1842,8 +1866,9 @@ function PartySearch()
          }
      });
  
- 
- 
+
+
+
     var txtFrtAmt = new Ext.form.NumberField({
          fieldLabel  : '',
          id          : 'txtFrtAmt',
@@ -4789,7 +4814,20 @@ function PartySearch()
                                                  y           : 435,
                                                  border      : false,
                                                  items: [txtSMSNo] 
-                                    }
+                                    },
+
+                               
+                                    {
+                                        xtype       : 'fieldset',
+                                        title       : '',
+                                        labelWidth  : 1,
+                                        width       : 400,
+                                        x           : 370,
+                                        y           : 460,
+                                        border      : false,
+                                        items: [chkChangeFrtQty] 
+                           }
+                            
  
  
  ,btnSMS,//btnRefreshService,
@@ -4970,7 +5008,7 @@ function PartySearch()
                                    xtype       : 'fieldset',
                                    title       : 'DELIVERY ADDRESS',
                                    width       : 600,
-                                   height      : 200,
+                                   height      : 220,
                                    x           : 15,
                                    y           : 250,
                                    border      : true,
@@ -5048,7 +5086,17 @@ function PartySearch()
                                               border      : false,
                                               items: [txtGstNo] 
                                           },
- 
+                                          {
+                                            xtype       : 'fieldset',
+                                            title       : '',
+                                            labelWidth  : 200,
+                                            width       : 300,
+                                            x           : 300,
+                                            y           : 150,	
+                                            border      : false,
+                                            items: [lblInfo] 
+                                        },
+
  
                       ]	
                              },
@@ -5244,16 +5292,13 @@ function PartySearch()
             Ext.Msg.alert('Sales-Invoice','Enter Delivery Pin Code .....');
             gstSave="false";
      }
-     else if (txtAddr1.getRawValue().trim() != '' &&  txtGstNo.getRawValue() == '' )
-     {       
-            Ext.Msg.alert('Sales-Invoice','Enter Delivery GST No .....');
-            gstSave="false";
-     }
-     else if (txtAddr1.getRawValue().trim() != '' &&  txtGstNo.getRawValue().length != 15  )
-     {       
-            Ext.Msg.alert('Sales-Invoice','Error in  Delivery GST No .....');
-            gstSave="false";
-     }
+
+     else if ( txtAddr1.getRawValue().trim() != '' &&  txtGstNo.getRawValue().trim() != '' && txtGstNo.getRawValue().trim() != 'URP' && txtGstNo.getRawValue().length != 15 )
+        {       
+               Ext.Msg.alert('Sales-Invoice','Error in  Delivery GST No .....');
+               gstSave="false";
+        }
+   
  
      else if (txtSO.getRawValue().trim() == '' )
      {       
@@ -5367,6 +5412,7 @@ function PartySearch()
                  invhtransportgst  :txtTransportGST.getRawValue(),
                  usercode          : userid,
                  frtparty          :frtpartycode,
+                 invhexrate        : 0,
          },
                callback: function(options, success, response)
                {
@@ -5604,6 +5650,9 @@ function PartySearch()
      
  
     function RefreshData(){
+
+
+        
  
         flxParty.hide();
  
@@ -5644,7 +5693,7 @@ function PartySearch()
           errcode = 0;
           Ext.getCmp('btnDistanceUpdate').hide();
  
- 
+          Ext.getCmp('txtFrtQty').setDisabled(true); 
                       Ext.getCmp('btnSMS').setDisabled(false);  
  
               Ext.getCmp('btnSMS').hide();

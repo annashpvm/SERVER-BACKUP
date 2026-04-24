@@ -1123,6 +1123,8 @@ var flxInvDetail = new Ext.grid.EditorGridPanel({
 		    xtype:'numberfield',
                     allowBlank: true,
                     enableKeyEvents: true,
+                    decimalPrecision :3,   
+
 	     	    listeners:{
              	    keyup: function () {
                               calculateValue();
@@ -3737,6 +3739,7 @@ onEsc:function(){
 },
         listeners: {
             show: function () {
+
  cmbReason.setRawValue("CASH DISC");
            Ext.getCmp('EInv').setVisible(false);
                 gstFlag = "Add";

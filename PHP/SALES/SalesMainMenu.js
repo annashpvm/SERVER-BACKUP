@@ -562,7 +562,15 @@ var map = new Ext.KeyMap(document, [
                                           }
                                 },
 
-
+                                {
+                                    text: '<b>EXPORT SALES</b>',
+                                    group: 'theme',
+                                    handler: function(){
+                                           localStorage.setItem("GSTTYPE",'EXP');     
+                                           window.location.href=('http://10.0.0.251/SHVPM/SALES/TrnSalesInvoice/TrnSalesInvoiceExport.php');
+                                           }
+                                 },
+ 
                                 {
                                    text: '<b>TN SALES -NEW</b>',
                                    group: 'theme',
@@ -1047,11 +1055,30 @@ var map = new Ext.KeyMap(document, [
         }
 
    }),
+   new Ext.Toolbar.SplitButton({
+    text: '<b>FIN YEAR</b>',
+    id: 'finyear',
+    style: 'background-color: #F1F5EA',
+    width: 130,
 
- new Ext.Toolbar.SplitButton({
-                text: '<b></b>', id: 'finyear', style: 'background-color: #F1F5EA',
-                width: 150
-            }),
+    handler: function () {
+        window.location.href = 'http://10.0.0.251/SHVPM/SALES/YearChange/yearChange.php';
+    },
+
+    menu: {
+        items: [
+            {
+                text: 'Change Financial Year',
+                handler: function () {
+                    window.location.href = 'http://10.0.0.251/SHVPM/SALES/YearChange/yearChange.php';
+                }
+            }
+        ]
+    }
+}),
+        
+
+
 			
  new Ext.Toolbar.SplitButton({
                 text: '<b></b>', id: 'comp', style: 'background-color: #F1F5EA',
@@ -1068,7 +1095,7 @@ var map = new Ext.KeyMap(document, [
 
 
 
-        if (UserLogin == 'annait' || UserLogin == 'vinothini' || UserLogin == 'suganyasal' || UserLogin == 'jeyasal' || UserLogin == 'bsection'   )
+        if (UserLogin == 'annait'  || UserLogin == 'suganyasal' ||  UserLogin == 'bsection'   )
         { 
             Ext.getCmp('so2').setVisible(true);
             Ext.getCmp('dc').setVisible(true);

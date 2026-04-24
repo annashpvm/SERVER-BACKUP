@@ -2219,7 +2219,7 @@ function get_DebitNote_Ledger()
 		task    : 'LoadDNNumber',
 		finid   : GinFinid,
 		compcode: GinCompcode,
-                gsttype : dngsttype,  
+        gsttype : dngsttype,  
 
 
 		},
@@ -2246,7 +2246,7 @@ function get_DebitNote_Ledger()
                      }
                 } 
 
-   
+
 
              vno =  vno.slice(-4);  
              vno =  vno.trim() +'/'+ invfin; 
@@ -2261,13 +2261,12 @@ function get_DebitNote_Ledger()
                    vno = "DNN/"+vno;    
                    dntype = 'DNN';
                 }   
-
+		
 
                 if (gstFlag == "Add")
                    txtDNVouNo.setValue(vno);
                 else
                    txtDNVouNo.setValue(loadgrneddtdatastore.getAt(0).get('rech_dnno'));    
-
 
 		}
 	});

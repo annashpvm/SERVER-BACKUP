@@ -853,7 +853,59 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
           }
     });
 
+function purchaseDataLoad()
+{
+    flxdetails.getStore().removeAll();     
+    MonthClickVocDataStore.removeAll();
 
+    MonthClickVocDataStore.load({
+     url: 'ClsViewStatements.php',
+            params: {
+            task: 'loadPurchaseDocumentList',
+            compcode:compcode,
+            finid:finid,
+            startdate: Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
+            enddate: Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
+            voucherType : 'All'
+
+        },
+                    scope:this,
+                    callback:function(){
+                    var cnt=MonthClickVocDataStore.getCount();
+                    if(cnt>0){
+                        for(var i=0;i<cnt;i++){
+
+                           flxdetails.getStore().insert(
+                            flxdetails.getStore().getCount(),
+                            new dgrecord({
+                                sno          : i+1,
+                                voudate      : MonthClickVocDataStore.getAt(i).get('voudate'),
+                                cust_name     : MonthClickVocDataStore.getAt(i).get('cust_name'),
+                                voutype      : MonthClickVocDataStore.getAt(i).get('voutype'),
+                                accref_payref_no: MonthClickVocDataStore.getAt(i).get('accref_payref_no'),
+                                acctran_dbamt: MonthClickVocDataStore.getAt(i).get('acctran_dbamt'),
+                                acctran_cramt: MonthClickVocDataStore.getAt(i).get('acctran_cramt'),
+                                accref_vou_type: MonthClickVocDataStore.getAt(i).get('accref_vou_type'),
+                                accref_vouno: MonthClickVocDataStore.getAt(i).get('accref_vouno'),
+                                accref_seqno: MonthClickVocDataStore.getAt(i).get('accref_seqno'),
+
+                                led_code    : MonthClickVocDataStore.getAt(i).get('cust_code'),
+
+                                taxable: MonthClickVocDataStore.getAt(i).get('taxable'),
+                                cgstamt: MonthClickVocDataStore.getAt(i).get('cgstamt'),
+                                sgstamt: MonthClickVocDataStore.getAt(i).get('sgstamt'),
+                                igstamt: MonthClickVocDataStore.getAt(i).get('igstamt'),
+                                tdsamt : MonthClickVocDataStore.getAt(i).get('tdsamt'),
+                                cust_gstin : MonthClickVocDataStore.getAt(i).get('cust_gstin'),
+
+                            })
+                            );
+                         grid_tot2();
+                        }
+                    }
+                }
+     });
+}
 
 var btnProcess = new Ext.Button({
 
@@ -869,77 +921,55 @@ var btnProcess = new Ext.Button({
         icon    : 'BACK.JPG',   
 	listeners:{
           click: function(){  
-		flxdetails.getStore().removeAll();     
-		MonthClickVocDataStore.removeAll();
-
-		MonthClickVocDataStore.load({
-		 url: 'ClsViewStatements.php',
-		        params: {
-		    	task: 'loadPurchaseDocumentList',
-		        compcode:compcode,
-		        finid:finid,
-		        startdate: Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-		        enddate: Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-
-			},
-                        scope:this,
-                        callback:function(){
-                        var cnt=MonthClickVocDataStore.getCount();
-                        if(cnt>0){
-                            for(var i=0;i<cnt;i++){
-
-                               flxdetails.getStore().insert(
-                                flxdetails.getStore().getCount(),
-                                new dgrecord({
-                                    sno          : i+1,
-                                    voudate      : MonthClickVocDataStore.getAt(i).get('voudate'),
-                                    cust_name     : MonthClickVocDataStore.getAt(i).get('cust_name'),
-                                    voutype      : MonthClickVocDataStore.getAt(i).get('voutype'),
-                                    accref_payref_no: MonthClickVocDataStore.getAt(i).get('accref_payref_no'),
-                                    acctran_dbamt: MonthClickVocDataStore.getAt(i).get('acctran_dbamt'),
-                                    acctran_cramt: MonthClickVocDataStore.getAt(i).get('acctran_cramt'),
-                                    accref_vou_type: MonthClickVocDataStore.getAt(i).get('accref_vou_type'),
-                                    accref_vouno: MonthClickVocDataStore.getAt(i).get('accref_vouno'),
-                                    accref_seqno: MonthClickVocDataStore.getAt(i).get('accref_seqno'),
-
-                                    led_code    : MonthClickVocDataStore.getAt(i).get('cust_code'),
-
-                                    taxable: MonthClickVocDataStore.getAt(i).get('taxable'),
-                                    cgstamt: MonthClickVocDataStore.getAt(i).get('cgstamt'),
-                                    sgstamt: MonthClickVocDataStore.getAt(i).get('sgstamt'),
-                                    igstamt: MonthClickVocDataStore.getAt(i).get('igstamt'),
-                                    tdsamt : MonthClickVocDataStore.getAt(i).get('tdsamt'),
-                                    cust_gstin : MonthClickVocDataStore.getAt(i).get('cust_gstin'),
-
-                                })
-                                );
-                             grid_tot2();
-                            }
-                        }
-                    }
-		 });
+               purchaseDataLoad(); 
              }
           }
 
 });
 
 
-    var monthstartdate = new Ext.form.DateField({
+var monthstartdate = new Ext.form.DateField({
 	fieldLabel: 'From Date',
-        id: 'monthfirstdate',
-	format: 'd-m-Y',
+        id: 'monthstartdate',
+	    format: 'd-m-Y',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-        value: new Date()   
+        value: new Date(),
+        listeners: {
+            blur: function () 
+            {
+                //purchaseDataLoad();
+            },
+            change: function ()  
+            {
+                //purchaseDataLoad();
+            },
+            keyup: function ()  
+            {
+                //purchaseDataLoad();
+            },
+        }
     });
     var monthenddate = new Ext.form.DateField({
 	fieldLabel: 'To Date',
         id: 'monthenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
-        value: new Date()   
+	    format: 'd-m-Y',
+        value: new Date(),   
+        listeners: {
+            blur: function () 
+            {
+                purchaseDataLoad();
+            },
+            change: function ()  
+            {
+                purchaseDataLoad();
+            },
+            keyup: function ()  
+            {
+                purchaseDataLoad();
+            },
+        }
     });
-
-
 
 
 

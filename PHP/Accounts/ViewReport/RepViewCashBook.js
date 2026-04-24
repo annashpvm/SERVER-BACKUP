@@ -658,6 +658,10 @@ function myFunction() {
               flxdetails.getStore().removeAll();
 
 
+
+             if (cmbMonth.getRawValue() == '')
+                 return;
+
              rdate= monthenddate.getValue().add(Date.DAY, 1);
 
 
@@ -700,6 +704,7 @@ function myFunction() {
 
 
                         }
+                        grid_tot();
                     }   
               });
              LoadOpeningClosingDataStore2.removeAll();
@@ -734,7 +739,7 @@ function myFunction() {
                         }
                     }   
               });
-
+              grid_tot()
 
 
               MonthClickVocDataStore.removeAll();
@@ -1399,15 +1404,31 @@ var btnProcess = new Ext.Button({
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         value: new Date()   
     });
+
+
+
+    var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    if (finEnd) finEnd.setHours(0,0,0,0);
+    
+    var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
+    
     var monthenddate = new Ext.form.DateField({
 	fieldLabel: 'To Date',
         id: 'monthenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
 	format: 'd-m-Y',
-        value: new Date() ,
+        value: defaultDate ,
        	enableKeyEvents: true,
         listeners:{
-
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },   
            keyup:function(){
               process_data();
             },
@@ -1432,10 +1453,14 @@ var btnProcess = new Ext.Button({
         id: 'yrenddate',
         labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
 	format: 'd-m-Y',
-        value: new Date() ,
+        value: defaultDate,
        	enableKeyEvents: true,
         listeners:{
-
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },   
            keyup:function(){
               RefreshData();
             },
@@ -1856,7 +1881,7 @@ renderer: function (val, metaData, r){
     store:[], // store: GetGridDetailsDatastore,
     listeners:{	
 
-       'cellclick': function (flxMonth, rowIndex, cellIndex, e) {
+       'cellDblclick': function (flxMonth, rowIndex, cellIndex, e) {
 		var sm = flxMonth.getSelectionModel();
 		var selrow = sm.getSelected();
                 repmonth = selrow.get('month');
@@ -2338,11 +2363,11 @@ var columnCount = flxdetails.getColumnModel().getColumnCount(true);
  		    var param = (p1+p2+p3+p4+p5+p6+p7+p8) ;
 //alert(param);
                     if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepAccCashBankBook.rptdesign&__format=pdf&' + param, '_blank');
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepCashBankBook.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepAccCashBankBook.rptdesign&__format=xls' + param, '_blank');
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepCashBankBook.rptdesign&__format=xls' + param, '_blank');
                     else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/RepAccCashBankBook.rptdesign' + param, '_blank');	
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepCashBankBook.rptdesign' + param, '_blank');	
             }
         }
     });
@@ -2538,7 +2563,7 @@ var lblText = Ext.getCmp('lblCrDr3').getEl().dom.innerHTML;
                             }
 			          }
 
-//                       grid_tot();
+                       grid_tot();
 
                 }   
 

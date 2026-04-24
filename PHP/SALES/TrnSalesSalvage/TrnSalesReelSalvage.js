@@ -582,7 +582,9 @@ var loadRollNoDatastore = new Ext.data.Store({
       ]),
     });
 
-      var txtProdMonth = new Ext.form.NumberField({
+
+
+	var txtProdMonth = new Ext.form.NumberField({
    	fieldLabel  :'Production YYMM',
    	id	    :'txtProdMonth',
    	name	    :'txtProdMonth',
@@ -607,7 +609,8 @@ var loadRollNoDatastore = new Ext.data.Store({
 				   compcode : Gincompcode,
 				   finid    : GinFinid,   
 				   yr       :  "20"+yymm.substring(0,2),   
-				   mon      :  yymm.substring(2,4),   
+				 //  mon      :  yymm.substring(0,2),   
+				 mon: yymm.substring(yymm.length - 2)
 				 },
 				 callback:function()
 				   {

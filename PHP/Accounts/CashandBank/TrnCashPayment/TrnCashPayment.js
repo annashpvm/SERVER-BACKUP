@@ -15,6 +15,10 @@ Ext.onReady(function () {
    var GinEditDays = Number(localStorage.getItem('editdays'));
    var  invfin = localStorage.getItem('invfin');
 
+
+   var finstdate = localStorage.getItem('gfinstdate');   
+   var finenddate = localStorage.getItem('gfineddate'); 
+
     var gstrcpttype;
     var gstPaytype;
 
@@ -576,6 +580,14 @@ function getAdjustmentDetails2()
     });
 
 
+
+
+    function clearTime(dt) {
+        return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    }
+    
+    
+
   function NewDateCheck()
   {
         var dt_today = new Date();
@@ -598,10 +610,25 @@ function getAdjustmentDetails2()
              dtpVouDate.setRawValue(Ext.util.Format.date(dt_today,"d-m-Y"));
 
         }
+        var finStart = new Date(finstdate);
+        var finEnd   = new Date(finenddate);
 
-    if(Ext.util.Format.date(dtpVouDate.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
-            Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
-    }
+        dt_voucher    = clearTime(dt_voucher);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (dt_voucher < finStart || dt_voucher > finEnd)
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+//                dtpVouDate.setValue(dt_today);
+                dtpVouDate.focus();
+                return;
+            }
+
 
  }
 
@@ -627,19 +654,29 @@ function getAdjustmentDetails2()
  }
 
 
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
 
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
 
     var dtpVouDate= new Ext.form.DateField({
         fieldLabel: '',
         id: 'dtpVouDate',
         name: '',
         format: 'd-m-Y',
-        value: new Date(),
+        value: defaultDate,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ", 
        	enableKeyEvents: true,
         listeners:{
-
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            }, 
 	  specialkey:function(f,e){
 	     if (e.getKey() == e.ENTER)
 	     {
@@ -2151,7 +2188,7 @@ x: 10,
 
                 var rcnt = flxDetail.getStore().getCount();
                 var fromdate;
-		var crdr=Number(txtTotDebit.getRawValue());
+	        	var crdr=Number(txtTotDebit.getRawValue());
                 var todate;
                 fromdate = "04/01/" + gstfinyear.substring(0, 4);
                 todate = "03/31/" + gstfinyear.substring(5, 9);

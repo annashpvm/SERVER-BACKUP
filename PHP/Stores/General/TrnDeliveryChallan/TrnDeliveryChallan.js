@@ -3,6 +3,17 @@ Ext.QuickTips.init();
 
     var Ginfinid =localStorage.getItem('ginfinid');
     var Gincompcode = localStorage.getItem('gincompcode');;
+
+
+    var finStartDate = localStorage.getItem('gfinstdate');
+    var finEndDate = localStorage.getItem('gfineddate');
+    var userid   = localStorage.getItem('ginuser');
+    var usertype = localStorage.getItem('ginusertype');
+    var usertype = localStorage.getItem('ginuser');
+    var UserName = localStorage.getItem('ginusername');
+    var UserId   = localStorage.getItem('ginuserid');
+    
+
     var editrow = 0;
     var gridedit = "false";
     var gstFlag = "Add";
@@ -706,6 +717,42 @@ function ItemSearch()
         name        : 'txtuom'
    });
 
+
+function clearTime(dt) {
+    return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+}
+
+   
+  function datecheck()
+  {
+        dt_today = new Date();
+        var dt_today = new Date();
+        var dtDC = dtDCdate.getValue();
+
+        var finStart = new Date(finStartDate);
+        var finEnd   = new Date(finEndDate);
+
+
+
+        dtDC    = clearTime(dtDC);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (dtDC < finStart || dtDC > finEnd)
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+                dtDCdate.setValue(dt_today);
+                dtDCdate.focus();
+                return;
+            }
+
+
+ }
+
   var dtDCdate = new Ext.form.DateField
     ({
        fieldLabel : ' Date',
@@ -724,13 +771,16 @@ function ItemSearch()
              {
                    txtPartyName.focus();
                    dtref.setRawValue(dtDCdate.getRawValue());
+                   datecheck();
              }
          },
            keyup:function(){
             dtref.setRawValue(dtDCdate.getRawValue());
+            datecheck();
           },
            blur:function(){
           dtref.setRawValue(dtDCdate.getRawValue());
+          datecheck();
            },
        }
     });

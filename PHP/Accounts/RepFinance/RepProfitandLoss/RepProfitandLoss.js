@@ -152,13 +152,24 @@ var RepProfitandLossFormPanel = new Ext.form.FormPanel({
 		        var rdchk1=RepProfitandLossFormPanel.getForm().getValues()['chkabs1'];
                     var param = (p1+p2+p3+p4) ;
 
- if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign&__format=pdf&'+param,  '_blank' );
+            if (repopt == 3)        
+            {    
+            if (printtype == "PDF") 
+                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_New.rptdesign&__format=pdf&'+param,  '_blank' );
 		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign&__format=XLS' + param, '_blank');
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_New.rptdesign&__format=XLS' + param, '_blank');
                     else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign' + param, '_blank');
-
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_New.rptdesign' + param, '_blank');
+            }
+            else
+            {    
+                if (printtype == "PDF") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign&__format=pdf&'+param,  '_blank' );
+                else if (printtype == "XLS") 
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign&__format=XLS' + param, '_blank');
+                        else
+                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign' + param, '_blank');
+            }             
 
                  /*   if (printtype == "PDF") 
                         window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_Detailed.rptdesign&__format=pdf&.rptdesign'+param,  '_blank' );

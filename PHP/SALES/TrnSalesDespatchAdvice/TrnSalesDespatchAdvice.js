@@ -129,7 +129,7 @@ function flx_change()
 		editrow = selrow;
 		custcode = selrow.get('cust_code');
 		custledcode = selrow.get('cust_led_code');
-                txtCustomer.setRawValue(selrow.get('cust_ref'));
+        txtCustomer.setRawValue(selrow.get('cust_ref'));
 
 		custname = selrow.get('cust_ref');
                 flxParty.hide();
@@ -140,12 +140,12 @@ function flx_change()
 		    task: 'loadSONo',
 		    party:custcode,
 		    compcode :Gincompcode,
-                    finid:GinFinid
+             finid:GinFinid
 		},
  	        callback:function()
                 { 
 	 	        cmbSO.setValue(loadSONodatastore.getAt(0).get('ordh_sono'));
-                        cmbSize.reset();
+                cmbSize.reset();
 			loadSalesSizestore.removeAll();
 			loadSalesSizestore.load({
 				url: 'ClsTrnSalesDespatchAdvice.php',
@@ -153,11 +153,11 @@ function flx_change()
 			    	task: 'loadsizedetails',
 			    	party:custcode,
 			    	compcode :Gincompcode,
-		                finid :GinFinid,
+		            finid :GinFinid,
 			    	socno : cmbSO.getRawValue()
 				},
-		           	callback:function()
-		         	{
+		         	callback:function()
+		        	{
 
 					varietyname = "";
 					varietycode = 0;
@@ -183,29 +183,33 @@ function flx_change()
 						},
 						callback:function()
 						{
-							txtOrdQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_qty'));
-							txtPendingQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('penqty'));
-							//txtStock.setRawValue(GetqtyDetailDatastore.getAt(0).get(''));
-							txtRate.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_rate'));
 
-
-                                        varietyname  = GetqtyDetailDatastore.getAt(0).get('var_desc');
-                                        varietycode  = GetqtyDetailDatastore.getAt(0).get('var_groupcode');
-					bf = GetqtyDetailDatastore.getAt(0).get('var_bf');
-					gsm = GetqtyDetailDatastore.getAt(0).get('var_gsm');
-					rsize = GetqtyDetailDatastore.getAt(0).get('var_size2');
-	                                sizename = GetqtyDetailDatastore.getAt(0).get('var_name');
-
-	                                inch_cm  = GetqtyDetailDatastore.getAt(0).get('var_inchcm');
-                                        full_bit = "All Reels";
-
-                                        if (bf == 0 )
-                                        {
-                                        if  ((inch_cm == "I" && Number(rsize) > 16) || (inch_cm == "C" && Number(rsize) > 41))
-                                            full_bit = "Full Reel";
-                                         else
-                                            full_bit = "Bit Reel";
-	                                 } 
+                            txtOrdQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_qty'));
+                            txtPendingQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('penqty'));
+                            //txtStock.setRawValue(GetqtyDetailDatastore.getAt(0).get(''));
+                            txtRate.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_rate'));
+        
+                            varietyname  = GetqtyDetailDatastore.getAt(0).get('var_desc');
+                            varietycode  = GetqtyDetailDatastore.getAt(0).get('var_groupcode');
+        
+                            bf = GetqtyDetailDatastore.getAt(0).get('var_bf');
+                            gsm = GetqtyDetailDatastore.getAt(0).get('var_gsm');
+                            rsize = GetqtyDetailDatastore.getAt(0).get('var_size2');
+                            sizename = GetqtyDetailDatastore.getAt(0).get('var_name');
+                            inch_cm  = GetqtyDetailDatastore.getAt(0).get('var_inchcm');
+                            varshade  = GetqtyDetailDatastore.getAt(0).get('var_shade');
+        
+        
+                            full_bit = "All Reels"; 
+        
+                            if (bf == 0 )
+                            {
+                                if  ((inch_cm == "I" && Number(rsize) > 16) || (inch_cm == "C" && Number(rsize) > 41))
+                                full_bit = "Full Reel";
+                            else
+                               full_bit = "Bit Reel";
+                            } 
+        
 							loadStockDetailDatastore.load({
 								url: 'ClsTrnSalesDespatchAdvice.php',
 								params: {
@@ -894,30 +898,31 @@ var cmbSize = new Ext.form.ComboBox({
 					},
 					callback:function()
 					{
-					txtOrdQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_qty'));
-					txtPendingQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('penqty'));
-					//txtStock.setRawValue(GetqtyDetailDatastore.getAt(0).get(''));
-					txtRate.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_rate'));
+                    txtOrdQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_qty'));
+                    txtPendingQty.setRawValue(GetqtyDetailDatastore.getAt(0).get('penqty'));
+                    //txtStock.setRawValue(GetqtyDetailDatastore.getAt(0).get(''));
+                    txtRate.setRawValue(GetqtyDetailDatastore.getAt(0).get('ordt_rate'));
 
-                                        varietyname  = GetqtyDetailDatastore.getAt(0).get('var_desc');
-                                        varietycode  = GetqtyDetailDatastore.getAt(0).get('var_groupcode');
+                    varietyname  = GetqtyDetailDatastore.getAt(0).get('var_desc');
+                    varietycode  = GetqtyDetailDatastore.getAt(0).get('var_groupcode');
 
-					bf = GetqtyDetailDatastore.getAt(0).get('var_bf');
-					gsm = GetqtyDetailDatastore.getAt(0).get('var_gsm');
-					rsize = GetqtyDetailDatastore.getAt(0).get('var_size2');
-	                                sizename = GetqtyDetailDatastore.getAt(0).get('var_name');
-	                                inch_cm  = GetqtyDetailDatastore.getAt(0).get('var_inchcm');
-	                                varshade  = GetqtyDetailDatastore.getAt(0).get('var_shade');
+                    bf = GetqtyDetailDatastore.getAt(0).get('var_bf');
+                    gsm = GetqtyDetailDatastore.getAt(0).get('var_gsm');
+                    rsize = GetqtyDetailDatastore.getAt(0).get('var_size2');
+                    sizename = GetqtyDetailDatastore.getAt(0).get('var_name');
+                    inch_cm  = GetqtyDetailDatastore.getAt(0).get('var_inchcm');
+                    varshade  = GetqtyDetailDatastore.getAt(0).get('var_shade');
 
-                                        full_bit = "All Reels"; 
-                             
-                                        if (bf == 0 )
-                                        {
-                                        if  ((inch_cm == "I" && Number(rsize) > 16) || (inch_cm == "C" && Number(rsize) > 41))
-                                            full_bit = "Full Reel";
-                                         else
-                                            full_bit = "Bit Reel";
-	                                 } 
+
+                    full_bit = "All Reels"; 
+
+                    if (bf == 0 )
+                    {
+                        if  ((inch_cm == "I" && Number(rsize) > 16) || (inch_cm == "C" && Number(rsize) > 41))
+                        full_bit = "Full Reel";
+                    else
+                       full_bit = "Bit Reel";
+                    } 
 
 
 					}			
@@ -1162,75 +1167,9 @@ var flxDetail = new Ext.grid.EditorGridPanel({
    }
 });
 
-
-/*
-
 function grid_move() {
 
 
-
-     flxcheckRate.getStore().removeAll();
-
-
-    let finalStore = flxcheckRate.getStore();
-
-    // Re-select all rows to ensure correct selection (could be optimized out if not needed)
-    flxDetail.getSelectionModel().selectAll();
-    var sel = flxDetail.getSelectionModel().getSelections();
-
-    for (var i = 0; i < sel.length; i++) {
-        var recData = sel[i].data;
-
-            var exists = false;
-
-            // Check if the record already exists in the final store
-            for (var j = 0; j < finalStore.getCount(); j++) {
-                var existing = finalStore.getAt(j);
-
-
-                if (
-                     existing.get('variety') === recData.varietyname && existing.get('ccode') === recData.custcode && Number(existing.get('bf')) === Number(recData.bf) && Number(existing.get('gsm')) === Number(recData.gsm)  && existing.get('reeltype') === recData.reeltype  && existing.get('inchcm') === recData.inchcm && existing.get('shade') === recData.shade
-                )
-
-                {
-                    if(Number(existing.get('rate')) === Number(recData.unitrate))
-                    {
-                       exists = true;
-                       break;
-                    } 
-                    else
-                    {
-                         flxDetail.getStore().remove(sel[i]);
-                         alert("A record with the same BF+GSM+Other fields exists but with a different rate. Can't Add the Record. Check the rate in the SO and Continue..");
-                         exists = true;
-                    }   
-                }
-            }
-
-            if (!exists) {
-                // Add record to final store
-                finalStore.add(new dgrecord({
-                    ccode    : Number(recData.custcode),
-                    customer : recData.customer,
-                    vcode    : Number(recData.varietycode),
-                    variety  : recData.varietyname,
-                    rate     : Number(recData.unitrate),
-                    bf       : Number(recData.bf),
-                    gsm      : Number(recData.gsm),
-                    inchcm   : recData.inchcm,
-                    reeltype : recData.reeltype,
-                    shade    : recData.shade,
-                }));
-            }
-
-
-
-        }
-    }
-*/
-
-
-function grid_move() {
     flxcheckRate.getStore().removeAll();
     let finalStore = flxcheckRate.getStore();
 
@@ -1284,7 +1223,7 @@ function grid_move() {
 }
 
 
-
+/*
 function add_btn_click()
 {
 
@@ -1408,6 +1347,165 @@ grid_move();
           }
 
 }
+
+
+*/
+
+
+
+function add_btn_click()
+{
+    
+	    var gstadd="true";
+
+
+            if (Number(txtAdvQty.getValue())===0){
+                Ext.MessageBox.alert("DA ", "Enter Advice quantity..");
+                txtAdvQty.focus();
+                gstadd="false";
+            }
+
+//alert(gridedit);
+            if(gstadd=="true")
+            {
+		var ginitemseq = cmbSize.getRawValue();
+                flxDetail.getSelectionModel().selectAll();
+                var selrows = flxDetail.getSelectionModel().getCount();
+                var sel = flxDetail.getSelectionModel().getSelections();
+
+                var cnt = 0;
+                for (var i=0;i<selrows;i++)
+		{
+                    if (sel[i].data.itemcode == cmbSize.getValue() &&  sel[i].data.custcode ==  custcode &&  sel[i].data.orderno ==  cmbSO.getValue() )
+		    {
+                        cnt = cnt + 1;
+                    }
+                }
+                
+                if (cnt >0)
+                {
+                    alert("Customer + SO Number + Size combination Already Selected..")
+                    gridedit = "false";
+                }  
+
+
+
+
+        	if(gridedit === "true")
+	          {
+//alert(cmbitem.getRawValue());
+			gridedit = "false";
+                       	var idx = flxDetail.getStore().indexOf(editrow);
+            
+                        sel[idx].set('customer' , txtCustomer.getRawValue());
+                        sel[idx].set('orderno'  , cmbSO.getRawValue());
+                        sel[idx].set('orddate'  , Ext.util.Format.date(dptDA.getValue(),"Y-m-d"));
+                        sel[idx].set('itemname' , cmbSize.getRawValue());
+                        sel[idx].set('ordqty'   , txtOrdQty.getValue());
+                        sel[idx].set('pendqty'  , txtPendingQty.getValue());
+                        sel[idx].set('advqty'   , txtAdvQty.getValue());
+                        sel[idx].set('despqty'  , 0);
+                        sel[idx].set('despdate' , Ext.util.Format.date(dptDesp.getValue(),"Y-m-d"));
+                        sel[idx].set('unitrate' , txtRate.getValue());
+                        sel[idx].set('remarks'  , txtRemarks.getRawValue());
+                        sel[idx].set('custcode' , custcode);
+                        sel[idx].set('itemcode' , cmbSize.getValue());
+
+                        sel[idx].set('varietyname' , varietyname);
+                        sel[idx].set('varietycode' , varietycode);
+                        sel[idx].set('varname' , sizename);
+                        sel[idx].set('size' , rsize);
+                        sel[idx].set('bf' , bf);
+                        sel[idx].set('gsm' , gsm);
+
+                        sel[idx].set('inchcm' , inch_cm);
+
+                        sel[idx].set('reeltype' , full_bit);
+                        sel[idx].set('shade' , varshade);
+
+
+                   }                 
+                   else if (cnt === 0)
+                    {
+  
+           
+                    
+                        var isRateMismatch = false;
+                    
+                        flxDetail.getStore().each(function(rec){
+                    
+                            if (
+                                String(rec.get('varietyname')).trim() === String(varietyname).trim() &&
+                                String(rec.get('custcode')).trim()   === String(custcode).trim() &&
+                                Number(rec.get('bf'))                === Number(bf) &&
+                                Number(rec.get('gsm'))               === Number(gsm) &&
+                                String(rec.get('reeltype')).trim().toUpperCase() === String(full_bit).trim().toUpperCase() &&
+                                String(rec.get('inchcm')).trim().toUpperCase()   === String(inch_cm).trim().toUpperCase() &&
+                                String(rec.get('shade')).trim().toUpperCase()    === String(varshade).trim().toUpperCase()
+                            ){
+                                if (Number(rec.get('unitrate')) !== Number(txtRate.getValue())){
+                                    isRateMismatch = true;
+                                    return false; // break loop
+                                }
+                            }
+                    
+                        });
+                    
+                        if(isRateMismatch){
+                            alert("A record with the same BF+GSM+Other fields exists but with a different rate. Can't Add the Record. Check the rate in the SO and Continue...");
+                            return;
+                        }
+                    
+
+                        flxDetail.getStore().insert(
+                            flxDetail.getStore().getCount(),
+                            new dgrecord({
+                                customer : txtCustomer.getRawValue(),
+                                orderno  : cmbSO.getRawValue(),
+                                orddate  : Ext.util.Format.date(dptDA.getValue(),"Y-m-d"),
+                                itemname : cmbSize.getRawValue(),
+                                ordqty   : txtOrdQty.getValue(),
+                                pendqty  : txtPendingQty.getValue(),
+                                advqty   : txtAdvQty.getValue(),
+                                despqty  : 0,
+                                despdate : Ext.util.Format.date(dptDesp.getValue(),"Y-m-d"),
+                                unitrate : txtRate.getValue(),
+                                remarks  : txtRemarks.getRawValue(),
+                                custcode : custcode,
+                                itemcode : cmbSize.getValue(),
+                                status   : '',
+                                varietyname : varietyname,
+                                varietycode : varietycode,
+                                varname     : sizename,
+                                size        : rsize,
+                                bf          : bf,
+                                gsm         : gsm,
+                                inchcm      : inch_cm,
+                                reeltype    : full_bit,
+                                shade       : varshade
+                            })
+                        );
+                    
+                        var lastIndex = flxDetail.getStore().getCount() - 1;
+                        flxDetail.getView().focusRow(lastIndex);
+                        flxDetail.getSelectionModel().selectRow(lastIndex);
+                    }
+
+grid_move();
+
+
+			txtOrdQty.setValue('')
+			txtPendingQty.setValue('');
+			txtRate.setValue('');
+			txtAdvQty.setValue('');
+ 			txtRemarks.setValue('');
+			txtStock.setValue('');       
+                        Ext.getCmp('cmbSize').focus(false, 200);       
+          }
+
+}
+
+/*
 var btnSubmit = new Ext.Button({
     style   : 'text-align:center;',
     text    : "SUBMIT",
@@ -1422,6 +1520,22 @@ bodyStyle:{"background-color":"#ebebdf"},
   }
 }
 });
+*/
+var btnSubmit = new Ext.Button({
+    style   : 'text-align:center;',
+    text    : "SUBMIT",
+    width   : 80,
+    height  : 40,
+    x       : 890,
+    y       : 160,
+bodyStyle:{"background-color":"#ebebdf"},
+ listeners:{
+        click: function(){              
+         add_btn_click();
+  }
+}
+});
+
 
 function edit_click()
 {
@@ -1593,6 +1707,8 @@ var TrnSalesDespatchAdvicePanel = new Ext.FormPanel({
             listeners:{
                 click: function () {
                     RefreshData();
+                    TrnSalesDespatchAdvicePanel.getForm().reset();
+                    flxDetail.getStore().removeAll();                    
                 }
             }
         },'-',

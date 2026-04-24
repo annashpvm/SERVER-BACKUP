@@ -1,0 +1,865 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">5</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">5</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">5</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="8">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="ledcode" id="9">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="ledname" id="61">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="php" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="Data Set" id="5">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">ledcode</property>
+                    <property name="paramName">ledcode</property>
+                    <property name="nativeName">ledcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">led_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">acctrail_led_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">acctrail_inv_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">acctrail_inv_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">acctrail_inv_value</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">acctrail_adj_value</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">acctrail_crdays</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">duedate</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">oddays</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">php</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">led_name</property>
+                    <property name="nativeName">led_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">acctrail_led_code</property>
+                    <property name="nativeName">acctrail_led_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">acctrail_inv_no</property>
+                    <property name="nativeName">acctrail_inv_no</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">acctrail_inv_date</property>
+                    <property name="nativeName">acctrail_inv_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">acctrail_inv_value</property>
+                    <property name="nativeName">acctrail_inv_value</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">acctrail_adj_value</property>
+                    <property name="nativeName">acctrail_adj_value</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">acctrail_crdays</property>
+                    <property name="nativeName">acctrail_crdays</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">duedate</property>
+                    <property name="nativeName">duedate</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">oddays</property>
+                    <property name="nativeName">oddays</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call accsp_rep_ar_billwisedue(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>ledcode</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="10">
+            <property name="dataSet">Data Set</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">acctrail_inv_date</property>
+                    <text-property name="displayName">acctrail_inv_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_inv_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">acctrail_inv_no</property>
+                    <text-property name="displayName">acctrail_inv_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_inv_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">acctrail_inv_value</property>
+                    <text-property name="displayName">acctrail_inv_value</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_inv_value"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">acctrail_adj_value</property>
+                    <text-property name="displayName">acctrail_adj_value</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_adj_value"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">Balance</property>
+                    <text-property name="displayName">Balance</text-property>
+                    <expression name="expression" type="javascript">row["acctrail_inv_value"]-row["acctrail_adj_value"]</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">acctrail_crdays</property>
+                    <text-property name="displayName">acctrail_crdays</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["acctrail_crdays"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">duedate</property>
+                    <text-property name="displayName">duedate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["duedate"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">oddays</property>
+                    <text-property name="displayName">oddays</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["oddays"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <text-property name="displayName">heading</text-property>
+                    <expression name="expression" type="javascript">"Billwise Outstanding For the Period " + BirtStr.concat("From ",Formatter.format(params["fromdate"].value,"dd/MM/yyyy"),"  To  ",Formatter.format(params["todate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">rundate</property>
+                    <text-property name="displayName">rundate</text-property>
+                    <expression name="expression" type="javascript">Formatter.format(BirtDateTime.today(),"dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_invvalue</property>
+                    <text-property name="displayName">sum_invvalue</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctrail_inv_value"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_adjusted</property>
+                    <text-property name="displayName">sum_adjusted</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["acctrail_adj_value"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_balance</property>
+                    <text-property name="displayName">sum_balance</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Balance"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">subhead</property>
+                    <text-property name="displayName">subhead</text-property>
+                    <expression name="expression" type="javascript">"BILLWISE OUTSTANDING FOR " +params["ledname"].value</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="38"/>
+            <column id="39"/>
+            <column id="40"/>
+            <column id="41"/>
+            <column id="42"/>
+            <column id="43"/>
+            <column id="44"/>
+            <column id="45"/>
+            <header>
+                <row id="62">
+                    <cell id="63">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <label id="241">
+                            <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="69">
+                        <label id="534">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Page No. :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="70">
+                        <auto-text id="536">
+                            <property name="fontWeight">normal</property>
+                            <property name="color">black</property>
+                            <property name="textAlign">left</property>
+                            <property name="type">page-number</property>
+                        </auto-text>
+                    </cell>
+                </row>
+                <row id="71">
+                    <cell id="72">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                        <data id="242">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="78">
+                        <label id="535">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Run Date :</text-property>
+                        </label>
+                    </cell>
+                    <cell id="79">
+                        <data id="537">
+                            <property name="resultSetColumn">rundate</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="543">
+                    <cell id="544">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="552">
+                            <property name="resultSetColumn">subhead</property>
+                        </data>
+                    </cell>
+                    <cell id="550"/>
+                    <cell id="551"/>
+                </row>
+                <row id="11">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="12">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="46">
+                            <text-property name="text">Inv. date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="13">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="48">
+                            <text-property name="text">Inv .No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="14">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="50">
+                            <text-property name="text">Inv. Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="15">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="52">
+                            <text-property name="text">Adjusted</text-property>
+                        </label>
+                    </cell>
+                    <cell id="16">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="538">
+                            <text-property name="text">Balance</text-property>
+                        </label>
+                    </cell>
+                    <cell id="17">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="55">
+                            <text-property name="text">Payment Terms</text-property>
+                        </label>
+                    </cell>
+                    <cell id="18">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="57">
+                            <text-property name="text">Due Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="19">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="59">
+                            <text-property name="text">Over Due Days</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="20">
+                    <cell id="21">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="47">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">acctrail_inv_date</property>
+                        </data>
+                    </cell>
+                    <cell id="22">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="49">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">acctrail_inv_no</property>
+                        </data>
+                    </cell>
+                    <cell id="23">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="51">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">acctrail_inv_value</property>
+                        </data>
+                    </cell>
+                    <cell id="24">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="53">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">acctrail_adj_value</property>
+                        </data>
+                    </cell>
+                    <cell id="25">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="54">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Balance</property>
+                        </data>
+                    </cell>
+                    <cell id="26">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="56">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">acctrail_crdays</property>
+                        </data>
+                    </cell>
+                    <cell id="27">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="58">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">duedate</property>
+                        </data>
+                    </cell>
+                    <cell id="28">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="60">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">oddays</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="29">
+                    <cell id="30">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="31">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="32">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="540">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_invvalue</property>
+                        </data>
+                    </cell>
+                    <cell id="33">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="541">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_adjusted</property>
+                        </data>
+                    </cell>
+                    <cell id="34">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="542">
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_balance</property>
+                        </data>
+                    </cell>
+                    <cell id="35">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="36">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="37">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

@@ -245,10 +245,12 @@
 
 if ($invno === "0")
 {
-      if (  $gsttype  == "TN")
+	if ( $gsttype  == "EXP")
+    	$sql= "select cust_code,cust_ref  ,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip,cust_gstin,cust_name  from trnsal_packslip_header a, trnsal_packslip_trailer b, massal_customer c , massal_repr d  where cust_state = 34 and cust_repr = repr_code and a.pckh_no = b.pckt_no and a.pckh_comp_code = b.pckt_comp_code and a.pckh_fincode = b.pckt_fincode and pckh_invstat <> 'T'and a.pckh_party = c.cust_code and a.pckh_fincode = $fincode and a.pckh_comp_code =$compcode  group by cust_code,cust_ref,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip,cust_gstin,cust_name  order by cust_code,cust_ref";
+	else if (  $gsttype  == "TN")
         $sql= "select cust_code,cust_ref  ,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip,cust_gstin,cust_name  from trnsal_packslip_header a, trnsal_packslip_trailer b, massal_customer c , massal_repr d  where cust_state = 24 and cust_repr = repr_code and a.pckh_no = b.pckt_no and a.pckh_comp_code = b.pckt_comp_code and a.pckh_fincode = b.pckt_fincode and pckh_invstat <> 'T'and a.pckh_party = c.cust_code and a.pckh_fincode = $fincode and a.pckh_comp_code =$compcode  group by cust_code,cust_ref,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip,cust_gstin,cust_name  order by cust_code,cust_ref";
       else
-        $sql= "select cust_code,cust_ref  ,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip ,cust_gstin,cust_name from trnsal_packslip_header a, trnsal_packslip_trailer b, massal_customer c , massal_repr d  where cust_state <> 24 and cust_repr = repr_code and a.pckh_no = b.pckt_no and a.pckh_comp_code = b.pckt_comp_code and a.pckh_fincode = b.pckt_fincode and pckh_invstat <> 'T'and a.pckh_party = c.cust_code and a.pckh_fincode = $fincode and a.pckh_comp_code =$compcode  group by cust_code,cust_ref,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip,cust_gstin,cust_name  order by cust_code,cust_ref";
+        $sql= "select cust_code,cust_ref  ,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip ,cust_gstin,cust_name from trnsal_packslip_header a, trnsal_packslip_trailer b, massal_customer c , massal_repr d  where  cust_state  NOT IN (24,34) and cust_repr = repr_code and a.pckh_no = b.pckt_no and a.pckh_comp_code = b.pckt_comp_code and a.pckh_fincode = b.pckt_fincode and pckh_invstat <> 'T'and a.pckh_party = c.cust_code and a.pckh_fincode = $fincode and a.pckh_comp_code =$compcode  group by cust_code,cust_ref,cust_phone,cust_email, cust_smsno , repr_mobile ,cust_zip,cust_gstin,cust_name  order by cust_code,cust_ref";
 }
 else
 {

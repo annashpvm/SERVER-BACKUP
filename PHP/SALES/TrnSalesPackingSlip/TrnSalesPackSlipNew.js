@@ -2821,7 +2821,6 @@ var TrnSalesPackSlipWindow = new Ext.Window({
 
 
 
-
 		loadPackSlipnodatastore.load({
                   url: 'ClsTrnSalesPackSlip.php',
                   params: {

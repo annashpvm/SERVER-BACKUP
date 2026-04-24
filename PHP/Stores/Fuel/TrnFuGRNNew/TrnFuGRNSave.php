@@ -628,6 +628,30 @@ $QCresult1 = mysqli_query($conn, $QCquery1);
  
 
 
+
+$invcount = 0;
+$refcount = 0;
+$trancount = 0;
+$trailcount = 0;
+
+$query = "SELECT  (SELECT COUNT(*) FROM trnfu_receipt_header WHERE rech_acc_seqno = '$ginaccrefseq') AS invcount,
+ (SELECT COUNT(*) FROM acc_ref WHERE accref_seqno = '$ginaccrefseq' and accref_vouno = '$rech_no') AS refcount,
+ (SELECT COUNT(*) FROM acc_tran WHERE acctran_accref_seqno = '$ginaccrefseq') AS trancount,
+ (SELECT COUNT(*) FROM acc_trail WHERE acctrail_accref_seqno = '$ginaccrefseq') AS trailcount";
+
+$result = mysqli_query($conn, $query);
+
+$row = mysqli_fetch_assoc($result);
+
+$invcount   = intval($row['invcount']);
+$refcount   = intval($row['refcount']);
+$trancount  = intval($row['trancount']);
+$trailcount = intval($row['trailcount']);
+
+
+
+
+
  $vno = $grnno; // . " and Accounts Voucher No. " .$vouno;
 
 
@@ -640,7 +664,7 @@ if ($gstFlaggrn === "Add") {
 
 		 $vno = $grnno . " and Debit Note Voucher No. " .$vouno;
 
-		if( $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $result11  && $result12)
+		if( $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $result11  && $result12  && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0 )
 		{
 			mysqli_commit($conn);                      
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
@@ -659,7 +683,7 @@ if ($gstFlaggrn === "Add") {
 
 
 
-		if( $result1 && $result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1  && $result11  && $result12) 
+		if( $result1 && $result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1  && $result11  && $result12  && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0 ) 
 		{
 			mysqli_commit($conn);                        
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
@@ -688,7 +712,7 @@ if ($debitnoteamount > 0)
 
 		 $vno = $grnno . " and Debit Note Voucher No. " .$vouno;
 
-		if( $result4 && $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12)
+		if( $result4 && $result2  && $result3   && $result5   && $result6   && $result7 && $DNresult1 && $DNresult5 && $DNresult6 && $DNresult7 && $DNresult8 && $DNresult9  && $DNresult10  && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12  && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0 )
 		{
 			mysqli_commit($conn);                    
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';
@@ -708,7 +732,7 @@ if ($debitnoteamount > 0)
 
 
 
-		if($result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12)
+		if($result2  && $result3   && $result5   && $result6   && $result7 && $QCresult1 && $resultfu && $resultac1 && $resultac2 && $resultac3 && $resultac4  && $result11  && $result12  && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0 )
 		{
 			mysqli_commit($conn);              
 			echo '({"success":"true","GRNNo":"'. $vno . '"})';

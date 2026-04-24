@@ -1383,7 +1383,9 @@ var tens = Array("", "", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY","SEVENTY
                 </structure>
                 <structure>
                     <property name="name">printedby</property>
-                    <expression name="expression" type="javascript">"Printed By " + dataSetRow["usr_name"]</expression>
+                    <expression name="expression" type="javascript">(dataSetRow["usr_name"] == null || String(dataSetRow["usr_name"]).trim() == "")&#13;
+    ? ""&#13;
+    : "Printed By " + dataSetRow["usr_name"]</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -1439,8 +1441,9 @@ else    &#13;
                 <structure>
                     <property name="name">accref_payref_no</property>
                     <text-property name="displayName">accref_payref_no</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["accref_payref_no"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["accref_payref_no"]+ " - "  +Formatter.format(dataSetRow["accref_payref_date"],"dd/MM/yyyy")</expression>
                     <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="23">

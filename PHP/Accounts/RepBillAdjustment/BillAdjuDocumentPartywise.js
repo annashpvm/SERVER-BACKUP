@@ -189,6 +189,48 @@ var txtAccountName = new Ext.form.TextField({
     });
 
 
+LedgerType = 'S';
+    var optLedgerType = new Ext.form.FieldSet({
+        xtype: 'fieldset',
+        title: '',
+        fieldLabel: '',
+        layout : 'hbox',
+        border: false,
+        items: [
+        {
+            xtype: 'radiogroup',
+    //        columns: 0,
+            rows : 1,
+            id: 'optLedgerType',
+            items: [
+            {boxLabel: 'Selective Ledger', name: 'optLedgerType', id:'optSelectiveLedger', inputValue: 1,checked:true,
+                listeners:{
+                    check:function(rb,checked){
+                        if(checked==true){
+                            LedgerType = 'S';
+                        }
+                    }
+                }
+            },
+                 {boxLabel: 'All Ledger', name: 'optLedgerType', id:'optAllLedger', inputValue: 2,
+                listeners:{
+                    check:function(rb,checked){
+                        if(checked==true){
+                            LedgerType = 'A';
+                           }
+                    }
+                }
+            },
+                
+            ],
+        }
+    
+    
+    
+        ]
+});
+
+
 var optVouType = new Ext.form.FieldSet({
     xtype: 'fieldset',
     title: '',
@@ -318,23 +360,27 @@ var JournalRegiterFormPanel = new Ext.form.FormPanel({
                    listeners:{
                         click:
                           function () {
-			    var p1 = "&compcode="+encodeURIComponent(compcode);      
-			    var p2 = "&fincode=" + encodeURIComponent(finid);
+                            var p1 = "&compcode="+encodeURIComponent(compcode);      
+                            var p2 = "&fincode=" + encodeURIComponent(finid);
 
-			    var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
-		            var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-			    var p5 = "&ledcode="+encodeURIComponent(ledcode);                
-	       		    var p6 = "&drcr="+encodeURIComponent(dbcr);
+                            var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
+                            var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                            if (LedgerType == 'S')
+                               var p5 = "&ledcode="+encodeURIComponent(ledcode);                
+                            else
+                               var p5 = "&ledcode="+encodeURIComponent(0);                                            
 
-	 		    var param = (p1+p2+p3+p4+p5+p6) ;
+                            var p6 = "&drcr="+encodeURIComponent(dbcr);
 
-		            if (printtype == "PDF") 
-		            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_BillAdjustment_Partywise.rptdesign&__format=PDF&'+param,  '_blank' );
-			    else if (printtype == "XLS") 
-			    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_BillAdjustment_Partywise.rptdesign&__format=XLS' + param, '_blank');
-		            else
-			    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_BillAdjustment_Partywise.rptdesign' + param, '_blank');
-                       }
+                            var param = (p1+p2+p3+p4+p5+p6) ;
+
+                            if (printtype == "PDF") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_BillAdjustment_Partywise.rptdesign&__format=PDF&'+param,  '_blank' );
+                            else if (printtype == "XLS") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_BillAdjustment_Partywise.rptdesign&__format=XLS' + param, '_blank');
+                            else
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_BillAdjustment_Partywise.rptdesign' + param, '_blank');
+                         }
 
                    }
 
@@ -390,6 +436,18 @@ var JournalRegiterFormPanel = new Ext.form.FormPanel({
 			items:[optprinttype],
 		},
 
+		{ 
+			xtype   : 'fieldset',
+			title   : '',
+			layout  : 'hbox',
+			border  : true,
+			height  : 60,
+			width   : 300,
+			layout  : 'absolute',
+			x       : 800,
+			y       : 0,
+			items:[optLedgerType],
+		},
 		      
 
 		{

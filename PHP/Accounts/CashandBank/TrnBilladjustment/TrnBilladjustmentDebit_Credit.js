@@ -846,20 +846,20 @@ var tabAadjustment = new Ext.TabPanel({
 		            });
 	
                             Ext.Ajax.request({
-                            url: 'TrnBilladjustmentDebit_Credit_Save.php',
+                            url: 'TrnBilladjustment_Auto_Debit_Credit_Save.php',
                             params :
                             {
-                             	griddet_debit : Ext.util.JSON.encode(DebitupdData),                          
-				cnt_debit     : DebitData.length,
+                            griddet_debit : Ext.util.JSON.encode(DebitupdData),                          
+                            cnt_debit     : DebitData.length,
 
-                             	griddet_credit : Ext.util.JSON.encode(CreditupdData),                          
-				cnt_credit     : CreditData.length,
+                            griddet_credit : Ext.util.JSON.encode(CreditupdData),                          
+                            cnt_credit     : CreditData.length,
 
-                             	griddet_adjust : Ext.util.JSON.encode(AdjustupdData),                          
-				cnt_adjust     : AdjustData.length,
-				compcode	: GinCompcode,
-                                finid		: GinFinid,
-				ledcode		: ledgercode
+                            griddet_adjust : Ext.util.JSON.encode(AdjustupdData),                          
+                            cnt_adjust     : AdjustData.length,
+                            compcode	: GinCompcode,
+                            finid		: GinFinid,
+                            ledcode		: ledgercode
 
                             },
                             callback: function(options, success, response)
@@ -917,7 +917,7 @@ var tabAadjustment = new Ext.TabPanel({
             items: [
                 {
 //save
-                    text: 'Save',
+                    text: 'Save Adjustments',
                     id : 'save',
                     style  : 'text-align:center;',
                     tooltip: 'Save Details...', height: 40, fontSize:30,width:70,
@@ -1040,7 +1040,6 @@ onEsc:function(){
         listeners:
             {
                 show:function(){
-                    alert("TESt");
 //  Ext.getCmp('save').setDisabled(true);  
                  RefreshData();
                 }

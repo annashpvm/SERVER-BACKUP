@@ -6,7 +6,7 @@
     if ( isset($_POST['task'])){
         $task = $_POST['task']; // Get this from Ext
     }
-        mysqli_set_charset($conn, "utf8");
+mysqli_set_charset($conn, "utf8");
     switch($task){
 		case "loadFinYears":
 		getFinYears();
@@ -28,10 +28,10 @@
 
  function getFinYears()
     {
-        mysqli_set_charset($conn, "utf8");
+        global $conn;
 
-        $sql = "select * from mas_finyear where fin_code > 21 order by fin_code desc");
-
+        $sql = "select * from mas_finyear where fin_code > 23 order by fin_code desc";
+        $r = mysqli_query($conn, $sql);
 
 	$nrow = mysqli_num_rows($r);
 	while($re = mysqli_fetch_array($r))

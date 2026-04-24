@@ -350,7 +350,10 @@
                 <structure>
                     <property name="name">item_avgrate</property>
                     <text-property name="displayName">item_avgrate</text-property>
-                    <expression name="expression" type="javascript">row["sum_item_value"] / row["sum_item_qty"]</expression>
+                    <expression name="expression" type="javascript">if (row["sum_item_value"] > 0 &amp;&amp;  row["sum_item_qty"] > 0)&#13;
+    row["sum_item_value"] / row["sum_item_qty"]&#13;
+else&#13;
+   0</expression>
                     <property name="dataType">float</property>
                     <property name="allowExport">true</property>
                 </structure>

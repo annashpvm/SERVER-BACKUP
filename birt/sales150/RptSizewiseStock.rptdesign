@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="sizecode" id="7">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="stock" id="5">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">sizecode</property>
+                    <property name="paramName">sizecode</property>
+                    <property name="nativeName">sizecode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">var_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">stk_yymm</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">stk_rollno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">stk_ent_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">emonth</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">reelno</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">var_size2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">var_inchcm</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">var_shade</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">stk_sr_no</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">stk_wt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">stk_sono</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">var_name</property>
+                    <property name="nativeName">var_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">stk_yymm</property>
+                    <property name="nativeName">stk_yymm</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">stk_rollno</property>
+                    <property name="nativeName">stk_rollno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">stk_ent_date</property>
+                    <property name="nativeName">stk_ent_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">emonth</property>
+                    <property name="nativeName">emonth</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">reelno</property>
+                    <property name="nativeName">reelno</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">var_size2</property>
+                    <property name="nativeName">var_size2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">var_inchcm</property>
+                    <property name="nativeName">var_inchcm</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">var_shade</property>
+                    <property name="nativeName">var_shade</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">stk_sr_no</property>
+                    <property name="nativeName">stk_sr_no</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">stk_wt</property>
+                    <property name="nativeName">stk_wt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">stk_sono</property>
+                    <property name="nativeName">stk_sono</property>
+                    <property name="dataType">integer</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call spsal_reel_stock_size(?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>sizecode</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="rightMargin">0.7395833333333334in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="8">
+            <property name="dataSet">stock</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">stk_ent_date</property>
+                    <text-property name="displayName">stk_ent_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["stk_ent_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">emonth</property>
+                    <text-property name="displayName">emonth</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["emonth"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">stk_rollno</property>
+                    <text-property name="displayName">stk_rollno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["stk_rollno"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">reelno</property>
+                    <text-property name="displayName">reelno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["reelno"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">stk_sr_no</property>
+                    <text-property name="displayName">stk_sr_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["stk_sr_no"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">stk_wt</property>
+                    <text-property name="displayName">stk_wt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["stk_wt"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">stk_sono</property>
+                    <text-property name="displayName">stk_sono</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["stk_sono"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">var_name</property>
+                    <text-property name="displayName">var_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["var_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">IC</property>
+                    <text-property name="displayName">IC</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["var_inchcm"]== "I")&#13;
+"INCH"&#13;
+else&#13;
+"CM"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">SHADE</property>
+                    <text-property name="displayName">SHADE</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["var_shade"] == "N")&#13;
+{&#13;
+   "NAT"&#13;
+ }&#13;
+else if (dataSetRow["var_shade"] == "G")&#13;
+{&#13;
+   "GYT"&#13;
+}&#13;
+else if (dataSetRow["var_shade"] == "D")&#13;
+{&#13;
+   "DP"&#13;
+}&#13;
+else if (dataSetRow["var_shade"] == "Y")&#13;
+{&#13;
+   "SHYS"&#13;
+}&#13;
+&#13;
+else if (dataSetRow["var_shade"] == "B")&#13;
+{&#13;
+   "GB"&#13;
+}&#13;
+else &#13;
+{&#13;
+   "OTH"&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">var_size2</property>
+                    <text-property name="displayName">var_size2</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["var_size2"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_wt</property>
+                    <text-property name="displayName">sum_wt</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["stk_wt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <text-property name="displayName">heading</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("STOCK AS ON ", Formatter.format(BirtDateTime.today(),"dd/MM/YYYY"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="24"/>
+            <column id="25"/>
+            <column id="26"/>
+            <column id="27"/>
+            <column id="39"/>
+            <column id="49"/>
+            <column id="43"/>
+            <header>
+                <row id="223">
+                    <cell id="224">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <data id="239">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="229"/>
+                    <cell id="230"/>
+                </row>
+                <row id="9">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="10">
+                        <label id="28">
+                            <text-property name="text">Fin. Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="11">
+                        <label id="30">
+                            <text-property name="text">Month</text-property>
+                        </label>
+                    </cell>
+                    <cell id="12">
+                        <label id="32">
+                            <text-property name="text">Roll No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="13">
+                        <label id="34">
+                            <text-property name="text">Reel No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="36">
+                        <label id="44">
+                            <text-property name="text">Reel No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="46">
+                        <label id="50">
+                            <text-property name="text">Weight</text-property>
+                        </label>
+                    </cell>
+                    <cell id="40">
+                        <label id="52">
+                            <text-property name="text">SO NO</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="55">
+                <property name="groupName">SIZEGRP</property>
+                <expression name="keyExpr" type="javascript">row["var_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["var_name"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="56">
+                        <cell id="57">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="fontWeight">bold</property>
+                            <data id="72">
+                                <property name="resultSetColumn">var_name</property>
+                            </data>
+                        </cell>
+                        <cell id="59"/>
+                        <cell id="60">
+                            <label id="219">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">SIZE :</text-property>
+                            </label>
+                        </cell>
+                        <cell id="61">
+                            <data id="220">
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="resultSetColumn">var_size2</property>
+                            </data>
+                        </cell>
+                        <cell id="62">
+                            <data id="73">
+                                <property name="resultSetColumn">IC</property>
+                            </data>
+                        </cell>
+                        <cell id="63">
+                            <data id="74">
+                                <property name="resultSetColumn">SHADE</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="64">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="65"/>
+                        <cell id="66"/>
+                        <cell id="67"/>
+                        <cell id="68"/>
+                        <cell id="69"/>
+                        <cell id="70"/>
+                        <cell id="71"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="14">
+                    <property name="textAlign">center</property>
+                    <cell id="15">
+                        <data id="29">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">stk_ent_date</property>
+                        </data>
+                    </cell>
+                    <cell id="16">
+                        <data id="31">
+                            <property name="resultSetColumn">emonth</property>
+                        </data>
+                    </cell>
+                    <cell id="17">
+                        <data id="33">
+                            <property name="resultSetColumn">stk_rollno</property>
+                        </data>
+                    </cell>
+                    <cell id="18">
+                        <data id="35">
+                            <property name="resultSetColumn">reelno</property>
+                        </data>
+                    </cell>
+                    <cell id="37">
+                        <data id="45">
+                            <property name="resultSetColumn">stk_sr_no</property>
+                        </data>
+                    </cell>
+                    <cell id="47">
+                        <data id="51">
+                            <property name="paddingRight">10pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">stk_wt</property>
+                        </data>
+                    </cell>
+                    <cell id="41">
+                        <data id="53">
+                            <property name="resultSetColumn">stk_sono</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="19">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="20"/>
+                    <cell id="21"/>
+                    <cell id="22">
+                        <label id="222">
+                            <text-property name="text">TOTAL</text-property>
+                        </label>
+                    </cell>
+                    <cell id="23"/>
+                    <cell id="38"/>
+                    <cell id="48">
+                        <data id="221">
+                            <property name="paddingRight">10pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_wt</property>
+                        </data>
+                    </cell>
+                    <cell id="42"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

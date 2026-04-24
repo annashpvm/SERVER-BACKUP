@@ -35,7 +35,23 @@ Ext.onReady(function(){
         value: new Date(),
         labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
         style : "font-size:14px;font-weight:bold",   
-        width       : 120,   
+        width       : 120, 
+        enableKeyEvents: true,
+        listeners: {
+            blur: function () 
+            {
+                process_data();
+            },
+            change: function ()  
+            {
+                process_data();
+            },
+            keyup: function ()  
+            {
+                process_data();
+            },  
+        }    
+
     });
 
 var optprinttype = new Ext.form.FieldSet({
@@ -52,7 +68,7 @@ var optprinttype = new Ext.form.FieldSet({
     items: [
     {
         xtype: 'radiogroup',
-        columns: 2,
+        columns: 3,
         rows : 1,
         id: 'optprinttype',
         items: [
@@ -66,6 +82,17 @@ var optprinttype = new Ext.form.FieldSet({
 				}
 			}
 		},
+		{boxLabel: 'Excel', name: 'optprinttype', id:'optExcel', inputValue: 2,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+						printtype="XLS";
+
+
+					}
+				}
+			}
+		},        
 		{boxLabel: 'Others', name: 'optprinttype', id:'optOTH', inputValue: 2,
 			listeners:{
 				check:function(rb,checked){
@@ -284,6 +311,8 @@ var lblDetail3 = new Ext.form.Label({
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStoresStoreLedgerItem.rptdesign&__format=pdf&' + param, '_blank');	
+                    else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStoresStoreLedgerItem.rptdesign&__format=XLS&' + param, '_blank');	
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepStoresStoreLedgerItem.rptdesign' + param, '_blank');	
 
@@ -319,6 +348,8 @@ var lblDetail3 = new Ext.form.Label({
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepMainGroupStock.rptdesign&__format=pdf&' + param, '_blank');	
+                    else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepMainGroupStock.rptdesign&__format=XLSX&' + param, '_blank');	        
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepMainGroupStock.rptdesign' + param, '_blank');	
 
@@ -354,6 +385,8 @@ var lblDetail3 = new Ext.form.Label({
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepGroup_Itemwise_Stock.rptdesign&__format=pdf&' + param, '_blank');	
+                    else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepGroup_Itemwise_Stock.rptdesign&__format=XLS&' + param, '_blank');        
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepGroup_Itemwise_Stock.rptdesign' + param, '_blank');	
 
@@ -390,6 +423,8 @@ var lblDetail3 = new Ext.form.Label({
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepGroup_Itemwise_Stock_Vs_Actual.rptdesign&__format=pdf&' + param, '_blank');	
+                    else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepGroup_Itemwise_Stock_Vs_Actual.rptdesign&__format=XLSXf&' + param, '_blank');	        
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepGroup_Itemwise_Stock_Vs_Actual.rptdesign' + param, '_blank');	
 
@@ -426,6 +461,8 @@ var lblDetail3 = new Ext.form.Label({
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepSubgrpStockList.rptdesign&__format=pdf&' + param, '_blank');	
+            else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepSubgrpStockList.rptdesign&__format=XLS&' + param, '_blank');	        
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepSubgrpStockList.rptdesign' + param, '_blank');	
 
@@ -463,6 +500,8 @@ var lblDetail3 = new Ext.form.Label({
 //alert(param);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepSubgrpStockList.rptdesign&__format=pdf&' + param, '_blank');	
+            else if (printtype == "PDF") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepSubgrpStockList.rptdesign&__format=XLS&' + param, '_blank');        
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Stores/RepSubgrpStockList.rptdesign' + param, '_blank');	
 
@@ -650,7 +689,8 @@ function grid_tot_ledger(){
 function process_data()
 {
 
-flxGroup.getStore().removeAll();
+            flxGroup.getStore().removeAll();
+            flxSubGroup.getStore().removeAll();
 		    Ext.Ajax.request({
 		    url: '/SHVPM/Stores/General/RepGSReports/RepGSRPT.php',
 		    params :
@@ -788,7 +828,7 @@ var flxGroup = new Ext.grid.EditorGridPanel({
     ],
     store: loadGroupListDataStore,
     listeners:{	
-       'cellclick': function (flxGroup, rowIndex, cellIndex, e) {
+       'cellDblclick': function (flxGroup, rowIndex, cellIndex, e) {
 		var sm = flxGroup.getSelectionModel();
 		var selrow = sm.getSelected();
                 grpcode = selrow.get('grp_code');
@@ -844,7 +884,7 @@ var flxSubGroup = new Ext.grid.EditorGridPanel({
      store: loadSubGroupListDataStore,
     listeners:{	
 
-            'cellclick': function (flxSubGroup, rowIndex, cellIndex, e) {
+            'cellDblclick': function (flxSubGroup, rowIndex, cellIndex, e) {
                 var sm = flxSubGroup.getSelectionModel();
                 var selrow = sm.getSelected();
                 subgrpcode = selrow.get('subgrp_code');
@@ -903,7 +943,7 @@ var flxItem = new Ext.grid.EditorGridPanel({
     store: loadItemListDataStore,
     listeners:{	
 
-            'cellclick': function (flxSubGroup, rowIndex, cellIndex, e) {
+            'cellDblclick': function (flxSubGroup, rowIndex, cellIndex, e) {
                 var sm = flxSubGroup.getSelectionModel();
                 var selrow = sm.getSelected();
                 itemcode = selrow.get('item_code');
@@ -1398,7 +1438,7 @@ ReppreprintWindow.hide();
 		layout  : 'hbox',
 		border  : true,
 		height  : 50,
-		width   : 220,
+		width   : 320,
 		layout  : 'absolute',
 		x       : 650,
 		y       : -5,

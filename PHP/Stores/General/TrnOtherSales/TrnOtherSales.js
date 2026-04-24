@@ -2443,10 +2443,14 @@ var store6 = new Ext.data.Store({
         }
 
  }
+
+
+
   var dtsales = new Ext.form.DateField
     ({
        fieldLabel : ' Date',
        name        : 'fdate',
+       id: 'dtsales',  
        format      : 'd-m-Y',
        style       : 'text-align:left;',
        width       : 90,
@@ -2464,18 +2468,61 @@ specialkey:function(f,e){
 
            change:function(){
               datecheck();
+              finyearcheck();  
            },
            blur:function(){
               datecheck();
+              finyearcheck();  
            },
            keyup:function(){
               datecheck();
+              finyearcheck();  
             }
  
 
 }
         
     });
+
+
+    function finyearcheck() {
+        var dtField = Ext.getCmp('dtsales');  // use id
+        var dt = dtField.getValue();
+    
+        if (!dt) return;
+    
+        var fyStartYear, fyEndYear;
+    
+        if (dt.getMonth() >= 3) {
+            fyStartYear = dt.getFullYear();
+            fyEndYear   = dt.getFullYear() + 1;
+        } else {
+            fyStartYear = dt.getFullYear() - 1;
+            fyEndYear   = dt.getFullYear();
+        }
+    
+        var startCode = ("0" + (fyStartYear % 100)).slice(-2);
+        var endCode   = ("0" + (fyEndYear % 100)).slice(-2);
+    
+//         alert(startCode + '-' + endCode);
+        finsuffix = startCode +'-' +endCode;
+
+ 
+        if (txtSalesInvNo.getValue().slice(-5) != finsuffix)
+ 
+            if (txtSalesInvNo.getValue().slice(-5) != finsuffix)
+            {
+               alert("Error in Invoice Number . Prease refresh and Continue...");
+               Ext.getCmp('save').setDisabled(true);
+               return;
+            }    
+            else
+            {
+               Ext.getCmp('save').setDisabled(false);
+            }
+                    
+    }    
+
    
 var dgrecord = Ext.data.Record.create([]);
    var flxParty = new Ext.grid.EditorGridPanel({
@@ -2510,17 +2557,18 @@ var dgrecord = Ext.data.Record.create([]);
              'render' : function(cmp) {
                     cmp.getEl().on('keypress', function(e) {
                         if (e.getKey() == e.ENTER) {
-			var sm = flxParty.getSelectionModel();
-			var selrow = sm.getSelected();
-			var chkitem = (selrow.get('cust_code'));
-				supcode = selrow.get('cust_code');
-				supname = selrow.get('cust_ref');
-                                txtSupplier.setRawValue(selrow.get('cust_ref'));
-                        	txtGSTIN.setValue(selrow.get('cust_gstin'));
-                                custstate   = selrow.get('cust_state');
-                                custledcode= selrow.get('cust_code');
-                                flxParty.hide();
-                                cmbitem.focus();  
+                            var sm = flxParty.getSelectionModel();
+                            var selrow = sm.getSelected();
+                            var chkitem = (selrow.get('cust_code'));
+                            supcode = selrow.get('cust_code');
+                            supname = selrow.get('cust_ref');
+                            txtSupplier.setRawValue(selrow.get('cust_ref'));
+                            txtGSTIN.setValue(selrow.get('cust_gstin'));
+                            custstate   = selrow.get('cust_state');
+                            custledcode= selrow.get('cust_code');
+                            flxParty.hide();
+                            cmbitem.focus();  
+                            finyearcheck();
                         }
                      });
              },
@@ -3629,6 +3677,8 @@ var myFormPanel = new Ext.form.FormPanel({
 					      if (btn == 'yes')
 			                      { 
 
+                                    Ext.getCmp('save').setDisabled(true);
+
                                                var finData = flxDetail.getStore().getRange();                                        
       					       var finupdData = new Array();
                                                Ext.each(finData, function (record) {
@@ -3685,7 +3735,7 @@ var myFormPanel = new Ext.form.FormPanel({
 
 						if (obj['success']==="true")
 						{    
-                   	                                    RefreshData();
+            //       	                                    RefreshData();
 	                                    Ext.MessageBox.alert("Other Sales Entry Saved -" + obj['saleno']);
 	                                    myFormPanel.getForm().reset();
 	                                    flxDetail.getStore().removeAll();

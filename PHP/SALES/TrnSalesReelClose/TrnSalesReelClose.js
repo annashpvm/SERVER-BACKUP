@@ -514,6 +514,8 @@ var btnClose = new Ext.Button({
 	listeners:{
                 show:function(){
 
+                    txtPassword.setValue('closereel')
+
         Ext.getCmp('save').setDisabled(true);
          
 

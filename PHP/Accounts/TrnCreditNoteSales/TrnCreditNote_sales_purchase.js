@@ -10,6 +10,8 @@ var usertype = localStorage.getItem('ginuser');
 var UserName = localStorage.getItem('ginusername');
    var GinUserid = localStorage.getItem('ginuserid');
 
+   var finstdate = localStorage.getItem('gfinstdate');   
+   var finenddate = localStorage.getItem('gfineddate');   
 
     var dgadjrecord = Ext.data.Record.create([]);
     var gstfin='';
@@ -247,12 +249,22 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 		},
     });
 
+
+    
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
     var dtpCNDate = new Ext.form.DateField({
         fieldLabel: 'Date',
         id: 'dtpCNDate',
         name: 'dtpCNDate',
         format: 'd-m-Y',
-        value: new Date(),
+        value: defaultDate,
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
 	style: {
 		    'color':'#900C3F ',readOnly:true,'text-align': 'left',
@@ -262,6 +274,11 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
 //value: '2020-03-31',
         width: 115,
         listeners: {
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },               
           specialkey:function(f,e){
 
              if (e.getKey() == e.ENTER)
@@ -354,7 +371,7 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
                         cdeligibledays = diffdays;
 
 
-                  if (diffdays < 10)
+                  if (diffdays < 11)
                   {   
 
 
@@ -368,14 +385,14 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
                           totaladjusted =  Number(totaladjusted) + Number(tobeadjust1);
 		                  tobeadjust1 = 0;
                           tobeadjust2 = Number(tobeadjust2)-Number(t1);
-/*
+                 /*
                           if (invno == "TN/3798/25-26")                    
                             {
                             alert(t1);
                             alert(totaladjusted);
                             alert(totaladjust2);
                             }      
-                            */                       
+                  */                                 
     //                      alert(tobeadjust2);
 		     } 
 		     else
@@ -459,7 +476,7 @@ var dtpDate = new Ext.form.DateField({
     id         : 'dtpDate',
     name       : 'dtpDate',
     format     : 'd-m-Y',
-    value      : new Date(),
+    value      : defaultDate,
     labelStyle	: "font-size:12px;font-weight:bold;",
     style      :"border-radius: 5px; ",  
  enableKeyEvents: true,   
@@ -467,7 +484,12 @@ var dtpDate = new Ext.form.DateField({
     width : 100,
 
     listeners:{
-specialkey:function(f,e){
+        afterrender: function(field) {
+            setTimeout(function(){
+                field.setValue(defaultDate);
+            }, 200);
+        },           
+        specialkey:function(f,e){
              if (e.getKey() == e.ENTER)
              {
                      load_data();
@@ -513,7 +535,8 @@ function chk_adjustments()
 
 		    add_adjustments();
 
-                    debit[db].set('adjamt', Ext.util.Format.number(Number(totaladjusted), '0.00') );
+               debit[db].set('adjamt', Ext.util.Format.number(Number(totaladjusted), '0.00') );
+
 
                     var amt1 = parseFloat((Number(tobeadjust3) || 0).toFixed(0));
                     var amt2 = parseFloat((Number(totaladjusted) || 0).toFixed(0));
@@ -2151,7 +2174,6 @@ onEsc:function(){
 
                 show:function(){
   Ext.getCmp('save').setDisabled(false); 
-
 
 RefreshData();
                 }

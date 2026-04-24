@@ -66,6 +66,10 @@
     $narration=str_replace("'","",$narration);
     $CNRemarks=str_replace("'","",$CNRemarks);
 
+    $AdjDaysRange  = $_POST['AdjDaysRange'];
+
+
+
     mysqli_begin_transaction($conn);
     if ($flagtype == "Add")
     {
@@ -385,7 +389,7 @@ for($i=0;$i<$arowcnt;$i++){
 
         $ginrefslno = $ginrefslno + 1;
 
-	$querydate = "select datediff('$voudate','$invdate') as daysin";
+	$querydate = "select datediff('$voudate','$invdate') + 1 as daysin";
 	$resultdate = mysqli_query($conn, $querydate);
 	$recdatenew = mysqli_fetch_array($resultdate);
 	$adjdays=$recdatenew['daysin'];
@@ -464,6 +468,9 @@ if ($generateCN == "YES")
 
 	$dquery2 = "delete from acc_dbcrnote_trailer_invoice where dbcrt_seqno = $gindbcrseq;";
 	$dresult2= mysqli_query($conn, $dquery2);
+
+  $dquery2_1 = "delete from acc_dbcrnote_trailer3 where dbcrt3_seqno = $gindbcrseq;";
+	$dresult2_1= mysqli_query($conn, $$dquery2_1);
 
 	$dquery3 = "delete from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and  dbcr_finid = '$finid' and dbcr_vouno = '$vouno2';";
 	$dresult3 = mysqli_query($conn, $dquery3);
@@ -657,6 +664,9 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 	    $igstper     = (float) $gridadjdet[$i]['igstper'];
 	    $invwt       = (float) $gridadjdet[$i]['invwt'];
 
+	    $adjdaysgrid = (int)$gridadjdet[$i]['adjdays'];
+      
+
 	    if ($cdamount > 0)
 	    {
 
@@ -688,10 +698,19 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 //echo "<br>";
                 $countchk = $countchk + 1;
 
+      $querya8_2 = "insert into  acc_dbcrnote_trailer3 values ('$gindbcrseq','$refdate','$AdjDaysRange')";
+
+      //        echo  $querya8_2;
+      //        echo "<br>";
+      $resulta8_2 = mysqli_query($conn, $querya8_2);
+                        
+                        
+
               }
 
-		$querya8 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$taxable' ,'$cdamount','$igstval', '$cgstval','$sgstval','$igstper','$cgstper','$sgstper','$igstledcode','$cgstledcode','$sgstledcode',0,0,0,0,0,'$rounding',0,0,$taxable ,  $invwt)";
+		$querya8 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$taxable' ,'$cdamount','$igstval', '$cgstval','$sgstval','$igstper','$cgstper','$sgstper','$igstledcode','$cgstledcode','$sgstledcode',0,0,0,0,0,'$rounding',0,0,$taxable ,  $invwt , $adjdaysgrid)";
 		$resulta8 = mysqli_query($conn, $querya8);
+
 
 
        $query = "select ifnull(max(ref_slno),0) as refslno from acc_adjustments";
@@ -701,7 +720,7 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 
         $ginrefslno = $ginrefslno + 1;
 
-	$querydate = "select datediff('$voudate','$invdate') as daysin";
+	$querydate = "select datediff('$voudate','$invdate') + 1 as daysin";
 	$resultdate = mysqli_query($conn, $querydate);
 	$recdatenew = mysqli_fetch_array($resultdate);
 	$adjdays=$recdatenew['daysin'];

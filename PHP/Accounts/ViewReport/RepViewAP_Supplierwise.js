@@ -1927,7 +1927,9 @@ style:{
             var p9 = "&days3="+encodeURIComponent(0);             
             var p10 = "&days4="+encodeURIComponent(0);             
 
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+            var p11 = "&drcropt=" + encodeURIComponent('A');
+
+            var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11) ;
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -1970,7 +1972,9 @@ style:{
                 var p9 = "&days3="+encodeURIComponent(0);             
                 var p10 = "&days4="+encodeURIComponent(0);             
     
-                 var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+                var p11 = "&drcropt=" + encodeURIComponent('A');
+
+ 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11) ;
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 

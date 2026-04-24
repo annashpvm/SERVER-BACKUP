@@ -56,12 +56,12 @@ if (isset($_POST["Import"])) {
 
             if ($itemcode > 0 ) 
             {
-        $qry = "update  maspur_item_trailer set item_group_code =  $colE ,item_stock = '$colB' ,item_avg_rate = '$colC', item_yr_opqty = '$colB',item_yr_opval = '$colD' WHERE item_comp_code = 1 and item_fin_code = 25 and item_code = '$itemcode' ";
+        $qry = "update  maspur_item_trailer set item_stock = '$colB' ,item_avg_rate = '$colC', item_yr_opqty = '$colB',item_yr_opval = '$colD' , item_stockvalue  = '$colD' WHERE item_comp_code = 1 and item_fin_code = 26 and item_code = '$itemcode' ";
 
 //echo $qry;
 //echo "<br>";
 
-        $insert = $pdo->prepare("update  maspur_item_trailer set item_stock = '$colB' ,item_avg_rate = '$colC', item_yr_opqty = '$colB',item_yr_opval = '$colD' WHERE item_comp_code = 1 and item_fin_code = 25 and item_code = '$itemcode' ");
+        $insert = $pdo->prepare("update  maspur_item_trailer set item_stock = '$colB' ,item_avg_rate = '$colC', item_yr_opqty = '$colB',item_yr_opval = '$colD'  , item_stockvalue  = '$colD' WHERE item_comp_code = 1 and item_fin_code = 26 and item_code = '$itemcode' ");
             $insert->bindParam(':columnA', $packData[0]);  //NAME
             if ($insert->execute()) {
 		$cnnt=$cnnt+1;

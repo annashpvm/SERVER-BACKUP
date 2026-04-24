@@ -84,7 +84,7 @@ if ($loadwttype == 2 && $loadwt >0)
 mysqli_begin_transaction($conn);
 
 $query2="update trn_weight_card set wc_vehicleno =  '$vehicleno' where wc_compcode = $compcode and wc_fincode = $finid and wc_ticketno = '$ticketno'";
-// echo $query2;
+ //echo $query2;
 $result2 = mysqli_query($conn, $query2);
 
 

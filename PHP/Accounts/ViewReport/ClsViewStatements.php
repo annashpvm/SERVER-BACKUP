@@ -30,6 +30,7 @@ mysqli_set_charset($conn, "utf8");
                 getVouNoList();
 		break;
 
+	
 		case "loadDocumentList":
                 getDocumentList();
 		break;
@@ -61,6 +62,10 @@ mysqli_set_charset($conn, "utf8");
 		case "load_Ledger_Details":
                 get_Ledger_Details();
 		break;
+
+		case "load_Ledger_DetailsEmail":
+			get_Ledger_DetailsEmail();
+	    break;
 
 		case "load_GroupLedger_Opening":
                 get_GroupLedger_Opening();
@@ -282,7 +287,9 @@ mysqli_set_charset($conn, "utf8");
 		get_Rep_AR_Agewise();
 		break;
 
-
+		case "loadPayableGroup":
+			get_PayableGroup();
+	break;
 
                default:
                	    echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
@@ -367,6 +374,8 @@ else
 
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
+
+
 
  function getDocumentList()
     {
@@ -642,11 +651,8 @@ $sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','
 	$enddate = $_POST['enddate'];
 	$mgrpcode = $_POST['mgrpcode'];
 	$fsdate = $_POST['fsdate'];
-         $sql = "call accspreptrialbalanceclosing_View_Subgroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$fsdate')";
-
-
-
-		 $r = mysqli_query($conn, $sql);
+    $sql = "call accspreptrialbalanceclosing_View_Subgroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$fsdate')";
+	$r = mysqli_query($conn, $sql);
 	$nrow = mysqli_num_rows($r);
 	while($re = mysqli_fetch_array($r))
 	{
@@ -705,6 +711,7 @@ $sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','
 
          $sql = "call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$enddate','','$ledtype')";
 
+//echo $sql;		
 		 $r = mysqli_query($conn, $sql);
 
 	$nrow = mysqli_num_rows($r);
@@ -716,6 +723,38 @@ $sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','
 
 	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }
+
+
+	function get_Ledger_DetailsEmail()
+    {
+        global $conn;
+
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$startdate = $_POST['startdate'];
+	$enddate = $_POST['enddate'];
+	$ledcode = $_POST['ledcode'];
+	$ledtype = $_POST['ledgertype'];    
+
+
+//$sql = "call acc_sp_rep_ledger('$ledcode',$compcode,$finid ,'$startdate', '$enddate','','$ledtype')";  
+
+//echo $sql;
+
+         $sql = "call acc_sp_rep_ledgerEmail('$ledcode',$compcode,$finid ,'$startdate', '$enddate','','$ledtype')";
+
+//echo $sql;		
+		 $r = mysqli_query($conn, $sql);
+
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+
+	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }	
 
  function get_AR_Bills_Details()
     {
@@ -734,7 +773,7 @@ $sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','
      if ($ledtype == "S")
 	 {
 
-		   $x = "call accsp_rep_ap_billwisedue($compcode, '$startdate','$enddate',$ledcode,'P',0,0,0,0);";
+		   $x = "call accsp_rep_ap_billwisedue($compcode, '$startdate','$enddate',$ledcode,'P',0,0,0,0,'A');";
 	 }
      else
 	 {
@@ -877,7 +916,7 @@ $sql = "call spsal_rep_MonthwiseSales_Abstract($compcode,$finid , '$startdate','
 
 //        $r = "call accsp_rep_ap_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'$repopt',0,0,0,0)";
 //echo $r;
-        $sql = "call accsp_rep_ap_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'$repopt',0,0,0,0)";
+        $sql = "call accsp_rep_ap_billwisedue($compcode,'$startdate', '$enddate',$ledcode,'$repopt',0,0,0,0,'A')";
 
 
 
@@ -1324,10 +1363,10 @@ select   acctran_led_code ledgercode , sum(acctran_dbamt)  opdbamt  , sum(acctra
         $ledname = trim(str_replace(" ", "", $ledname)); 
         $ledname = trim(str_replace(".", "", $ledname)); 
         $ledname = trim(str_replace("-", "", $ledname));
-//        $sql = "select * from massal_customer where cust_name like '%$ledname%'";
-      $sql = "select * from massal_customer where left(cust_name,2) != 'zz' and replace(replace(replace(cust_name,' ','')  ,'.',''),'-','')   like '%$ledname%' order by cust_name";
 
-//echo $sql;
+//       $sql = "select * from massal_customer where left(cust_name,2) != 'zz' and replace(replace(replace(cust_name,' ','')  ,'.',''),'-','')   like '%$ledname%' order by cust_name";
+      $sql = "SELECT * FROM massal_customer WHERE cust_name NOT LIKE 'zz%'  AND REGEXP_REPLACE(cust_ref, '[ .-]', '')  LIKE '%$ledname%' ORDER BY cust_name;";
+ //echo $sql;
 
   $r = mysqli_query($conn, $sql);
     $arr = [];
@@ -2148,6 +2187,29 @@ error_reporting(E_ALL);
 
 
 
+	$nrow = mysqli_num_rows($r);
+	while($re = mysqli_fetch_array($r))
+	{
+	$arr[]= $re ;
+        }
+		$jsonresult = JEncode($arr);
+
+	echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+	function get_PayableGroup()
+    {
+        global $conn;
+
+	$finid    = $_POST['finid'];
+	$compcode = $_POST['compcode'];
+	$startdate = $_POST['startdate'];
+	$enddate = $_POST['enddate'];
+	$mgrpcode = $_POST['mgrpcode'];
+	$fsdate = $_POST['fsdate'];
+    $sql = "call accsprep_PayableGroup($finid ,$compcode, '$startdate', '$enddate','$mgrpcode','$fsdate')";
+	$r = mysqli_query($conn, $sql);
 	$nrow = mysqli_num_rows($r);
 	while($re = mysqli_fetch_array($r))
 	{

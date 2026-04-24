@@ -57,7 +57,7 @@
 		global $conn;  
 	$compcode = $_POST['compcode'];
 
-	$sql= "select DATE_FORMAT(invh_date, '%d-%m-%Y') as invhdate, invh_seqno, invh_invrefno , cust_ref from trnsal_invoice_header , massal_customer where invh_party = cust_code and invh_comp_code = $compcode and invh_date >= NOW() - INTERVAL 2 DAY order by invh_seqno desc";
+	$sql= "select DATE_FORMAT(invh_date, '%d-%m-%Y') as invhdate, invh_seqno, invh_invrefno , cust_ref from trnsal_invoice_header , massal_customer where invh_party = cust_code and invh_comp_code = $compcode and invh_date >= NOW() - INTERVAL 2 DAY order by invh_date desc , invh_seqno desc";
 	$r = mysqli_query($conn, $sql);
 	$nrow = mysqli_num_rows($r);
 

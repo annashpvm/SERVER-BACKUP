@@ -37,10 +37,10 @@ $to          = $_REQUEST['idemail'];
 //echo $to;
 //echo "<br>";
 
-$from = '<finance@sriharipapers.com>';
+$from = '<accounts@sriharipapers.com>';
 
 
-$to= 'it@sriharipapers.com';
+//$to= 'it@sriharipapers.com';
 
 
 $subject = 'Confirmation of Accounts';
@@ -66,8 +66,8 @@ $smtp = Mail::factory('smtp', array(
         'host' => 'ssl://smtp.gmail.com',
         'port' => '465',
         'auth' => true,
-        'username' => 'finance@sriharipapers.com',
-        'password' => 'molh jlrp pzbe liym'
+        'username' => 'accounts@sriharipapers.com',
+        'password' => 'gfed hecz vbdf ttby',    // 'molh jlrp pzbe liym'  for finance email id
     ));
 
 
@@ -75,13 +75,14 @@ $smtp = Mail::factory('smtp', array(
 
 
 
-//$mail = $smtp->send($to, $headers,$body);
+ $mail = $smtp->send($to, $headers,$body);
 
 if (PEAR::isError($mail)) {
     echo('<p>' . $mail->getMessage() . '</p>');
 } else {
     echo('<p>Message successfully sent!</p>');
 }
+    
 fclose($mail);
 
 

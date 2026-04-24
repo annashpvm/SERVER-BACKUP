@@ -1,32 +1,39 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"]."/dbConn.php");
 
-$seqno=$_REQUEST['accseqno'];
+$seqno = mysqli_real_escape_string($conn, $_REQUEST['accseqno']);
 
-mysqli_query($conn, "BEGIN");
- 
-$query1 =  "select acctrail_accref_seqno,max(acctrail_serialno)+1 as acctrail_serialno, acctrail_inv_no,acctrail_inv_date,acctrail_inv_value,0 as acctrail_adj_value,acctrail_led_code from acc_trail where acctrail_accref_seqno='$seqno'";
+mysqli_begin_transaction($conn);
+
+$query1 = "SELECT acctrail_accref_seqno,
+                  MAX(acctrail_serialno)+1 AS acctrail_serialno
+           FROM acc_trail
+           WHERE acctrail_accref_seqno='$seqno'";
+
 $result1 = mysqli_query($conn, $query1);
 $rec1 = mysqli_fetch_array($result1);
-$acctrailaccrefseqno=$rec1['acctrail_accref_seqno'];
-$acctrailserialno=$rec1['acctrail_serialno'];
-$acctrailinvno=$rec1['acctrail_inv_no'];
-$acctrailinvdate=$rec1['acctrail_inv_date'];
-$acctrailinvvalue=$rec1['acctrail_inv_value'];
-$acctrailledcode=$rec1['acctrail_led_code'];
+
+if (!$rec1) {
+    echo "No records found";
+    exit;
+}
+
+$acctrailaccrefseqno = $rec1['acctrail_accref_seqno'];
+$acctrailserialno    = $rec1['acctrail_serialno'];
 
 
-$query = "insert into acc_trail values('$acctrailaccrefseqno', '$acctrailserialno', '$acctrailinvno', '$acctrailinvdate',  '$acctrailinvvalue',0, '$acctrailledcode','D' , 0,0 )";
+$query = "INSERT INTO acc_trail 
+          (acctrail_accref_seqno, acctrail_serialno, acctrail_inv_no, acctrail_inv_date, acctrail_inv_value, acctrail_adj_value, acctrail_led_code, acctrail_amtmode, acctrail_crdays, acctrail_gracedays)
+          VALUES ('$acctrailaccrefseqno', '$acctrailserialno', '',  '1900-01-01', 0, 0, 0, '', 0, 0)";
+
 $result = mysqli_query($conn, $query);
 
+
 if ($result) {
-    mysqli_begin_transaction($conn);
+    mysqli_commit($conn);
     echo '({"success":"true","msg":"' . $acctrailaccrefseqno . '"})';
 } else {
     mysqli_rollback($conn);
-
-
     echo '({"success":"false","msg":"' . $acctrailaccrefseqno . '"})';
 }
 ?>
-

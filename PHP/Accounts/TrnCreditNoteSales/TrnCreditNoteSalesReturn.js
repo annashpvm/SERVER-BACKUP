@@ -564,6 +564,25 @@ function save_click()
     });
 
 
+
+
+    var loadINVOICEBalanceDataStore = new Ext.data.Store({
+        id: 'loadINVOICEBalanceDataStore',
+        proxy: new Ext.data.HttpProxy({
+            url: 'ClsCreditNote.php', // File to connect to
+            method: 'POST'
+        }),
+        baseParams: {task: "loadINVBalance"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+            // we tell the datastore where to get his data from
+            root: 'results',
+            totalProperty: 'total',
+            id: 'id'
+        }, ['accref_vouno', 'balamt'])
+    });
+
+
+
 	var InvoicNoListDataStore = new Ext.data.Store({
 	id: 'InvoicNoListDataStore',
 	proxy: new Ext.data.HttpProxy({
@@ -905,8 +924,8 @@ var cmbIGSTledger = new Ext.form.ComboBox({
                     params: {
                         task: 'loadSRInvNoDetail',
                         invoiceno  : cmbInvNo.getRawValue(),
-		        ginfinid   : ginfinid,
-		        gincompcode: gstfincompcode,
+		                ginfinid   : ginfinid,
+		                gincompcode: gstfincompcode,
                         ledcode    : cmbCustomerName.getValue(),
                         editchk    : 'N',
                     },
@@ -943,6 +962,22 @@ var cmbIGSTledger = new Ext.form.ComboBox({
                         payterms = InvoicNoDetailDataStore.getAt(0).get('invh_crd_days');
 
                   
+
+
+                        loadINVOICEBalanceDataStore.removeAll();
+                        loadINVOICEBalanceDataStore.load({
+                            url: 'ClsCreditNote.php',
+                            params: {
+                                task: 'loadINVBalance',
+                                acseqno    : InvoicNoDetailDataStore.getAt(0).get('invh_acc_refno'),
+                                ginfinid   : ginfinid,
+                                compcode   : gstfincompcode,
+                            },
+                            callback: function () {
+                    
+                                       txtInvBalance.setRawValue(loadINVOICEBalanceDataStore.getAt(0).get('balamt')); 
+                                    }
+                                });   
 
 
 		        loadCreditLedgerDataStore.removeAll();
@@ -1467,6 +1502,22 @@ var flxAccounts = new Ext.grid.EditorGridPanel({
       });     
 
 
+
+        var txtInvBalance = new Ext.form.NumberField({
+        fieldLabel: 'Inv. Balance',
+        id: 'txtInvBalance',
+        width: 80,
+        name: '',
+        readOnly: true,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+	style: {
+		    'color':'#900C3F ',readOnly:true,'text-align': 'right',
+		    'style': 'Helvetica',
+		    'font-size': '13px','font-weight':'bold'
+		},
+    });
+
+
     var txtRRNo = new Ext.form.TextField({
         fieldLabel: 'Sales Return No',
         id: 'txtRRNo',
@@ -1797,6 +1848,7 @@ ViewAccounts();
 });  
 
 
+    var dispcount = 0;
 
     function CalcTotalDebitCredit() {
 
@@ -1808,6 +1860,8 @@ ViewAccounts();
         var gincrtotal = 0;
         var gintotgst = 0;
         var gintottds = 0;
+
+
 
         for (var i = 0; i < selrows; i++) {
             gindbtotal = gindbtotal + Number(sel[i].data.debit);
@@ -1821,6 +1875,23 @@ ViewAccounts();
         txtTotDebit.setRawValue(Ext.util.Format.number(gindbtotal,'0.00'));
         txtTotCredit.setRawValue(Ext.util.Format.number(gincrtotal,'0.00'));
 
+
+        
+        if (Number(gincrtotal) > Number(txtInvBalance.getValue()))
+        { 
+           if (dispcount === 0) {  
+              alert("  CREDIT NOTE amount is greater than INVOICE BALANCE amount. You can't Save the Record. Go BILL ADJUSTMENT CHANGE and Modify the balance amount for the Inv. No."+cmbInvNo.getRawValue() + " and continue... ");
+              Ext.getCmp('save').setDisabled(true);
+              dispcount = 1;
+           }
+        }   
+        else
+        {
+              Ext.getCmp('save').setDisabled(false);   
+              dispcount = 0;
+   
+        }
+        
 
     }
 
@@ -2258,7 +2329,7 @@ function edit_click()
         {
                 xtype: 'fieldset',
                 title: '',
-                width: 1165,
+                width: 1300,
                 height: 80,
                 x: 10,
                 y: 0,
@@ -2341,7 +2412,7 @@ function edit_click()
                         title: '',
                         labelWidth: 130,
                         width: 300,
-                        x: 850,
+                        x: 1000,
                         y: 0,
                         defaultType: 'textfield',
                         border: false,
@@ -2353,11 +2424,24 @@ function edit_click()
                         title: '',
                         labelWidth: 130,
                         width: 260,
-                        x: 850,
+                        x: 1000,
                         y: 35,
                         defaultType: 'textfield',
                         border: false,
                         items: [dtpInvRetDate]
+                    },
+
+                    
+                    {
+                        xtype: 'fieldset',
+                        title: '',
+                        labelWidth: 100,
+                        width: 260,
+                        x: 790,
+                        y: 35,
+                        defaultType: 'textfield',
+                        border: false,
+                        items: [txtInvBalance]
                     },
                 ]
             },
@@ -2365,7 +2449,7 @@ function edit_click()
            {
                 xtype: 'fieldset',
                 title: '',
-                width: 1165,
+                width: 1300,
                 height: 465,
                 x: 10,
                 y: 80,
@@ -2703,6 +2787,8 @@ function edit_click()
         txtCNNo.setValue('');
         refresh();
 
+        Ext.getCmp('doccancel').hide();
+
         txtCgstper.setValue('');
         txtCgstvalue.setRawValue('');
         txtSgstper.setValue('');
@@ -2778,7 +2864,7 @@ function edit_click()
 
 
     var CreditNoteWindow = new Ext.Window({
-        width: 1200,
+        width: 1340,
         height: 620,
         y: 20,
         items: CreditNoteFormPanel,
@@ -2795,6 +2881,7 @@ function edit_click()
         },
         listeners: {
             show: function () {
+
                RefreshData(); 
             }
         }

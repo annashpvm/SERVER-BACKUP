@@ -1,0 +1,1431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="fromdate" id="34">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="35">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="compcode" id="36">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fincode" id="37">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="shvpmphp" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="bs" id="5">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">finid</property>
+                    <property name="paramName">fincode</property>
+                    <property name="nativeName">finid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">acctran_led_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">led_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">curbal_obdbamt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">curbal_obcramt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">debit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">credit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">closing</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">maingrp</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">subgrp</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">subgrp2</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">grp0</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">grp1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">grp2</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">grp3</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">grp4</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">cust_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">grp_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">grp_pl_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">order_of_printing</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">add_less</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">shvpmphp</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">acctran_led_code</property>
+                    <property name="nativeName">acctran_led_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">led_name</property>
+                    <property name="nativeName">led_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">curbal_obdbamt</property>
+                    <property name="nativeName">curbal_obdbamt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">curbal_obcramt</property>
+                    <property name="nativeName">curbal_obcramt</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">debit</property>
+                    <property name="nativeName">debit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">credit</property>
+                    <property name="nativeName">credit</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">closing</property>
+                    <property name="nativeName">closing</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">maingrp</property>
+                    <property name="nativeName">maingrp</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">subgrp</property>
+                    <property name="nativeName">subgrp</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">subgrp2</property>
+                    <property name="nativeName">subgrp2</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">grp0</property>
+                    <property name="nativeName">grp0</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">grp1</property>
+                    <property name="nativeName">grp1</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">grp2</property>
+                    <property name="nativeName">grp2</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">grp3</property>
+                    <property name="nativeName">grp3</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">grp4</property>
+                    <property name="nativeName">grp4</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">cust_type</property>
+                    <property name="nativeName">cust_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">grp_type</property>
+                    <property name="nativeName">grp_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">grp_pl_type</property>
+                    <property name="nativeName">grp_pl_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">order_of_printing</property>
+                    <property name="nativeName">order_of_printing</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">add_less</property>
+                    <property name="nativeName">add_less</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call accsp_profitloss_New(?,?,?,?)} ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="NewStyle" id="390">
+            <structure name="numberFormat">
+                <property name="category">Fixed</property>
+                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+            </structure>
+        </style>
+        <style name="NewStyle1" id="391">
+            <structure name="numberFormat">
+                <property name="category">Fixed</property>
+                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+            </structure>
+        </style>
+        <style name="shrink" id="392">
+            <property name="canShrink">true</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="topMargin">0.15in</property>
+            <property name="leftMargin">0.75in</property>
+            <property name="bottomMargin">0.15in</property>
+            <property name="rightMargin">0.625in</property>
+            <property name="headerHeight">0.2in</property>
+            <property name="footerHeight">0.2in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="620">
+            <property name="dataSet">bs</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">order_of_printing</property>
+                    <text-property name="displayName">order_of_printing</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["order_of_printing"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">grp2</property>
+                    <text-property name="displayName">grp2</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp2"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">led_name</property>
+                    <text-property name="displayName">led_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["led_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">closing</property>
+                    <text-property name="displayName">closing</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["closing"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">closingvalue</property>
+                    <expression name="expression" type="javascript">dataSetRow["closing"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ledgerClosing</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["closingvalue"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_closingvalue</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>accgrp</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_ledger_closing</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_closingvalue"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_sales</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "SALES ACCOUNTS"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_indirectincomes</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "INDIRECT INCOMES"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_opening</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "OPENING"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_purchase</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "PURCHASE ACCOUNTS"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_closing</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "CLOSING STOCK"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_indirect_expenses</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ledgerClosing"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "INDIRECT EXPENSES"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_direct_expenses</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["closingvalue"]</expression>
+                        </structure>
+                    </list-property>
+                    <expression name="filterExpr" type="javascript">row["grp2"] != null &amp;&amp; &#13;
+row["grp2"].toUpperCase().replace(/^\s+|\s+$/g, "") == "DIRECT EXPENSES"&#13;
+    ? row["closingvalue"]&#13;
+    : 0</expression>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">profit_loss</property>
+                    <expression name="expression" type="javascript">row["sum_sales"]+row["sum_indirectincomes"]-row["sum_opening"]-row["sum_purchase"]+row["sum_closing"]-row["sum_direct_expenses"]-row["sum_indirect_expenses"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">salessum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_sales"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">indirectincomesum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_indirectincomes"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">openingsum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_opening"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">purchasesum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_purchase"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">closingsum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_closing"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">indirect_expensessum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_indirect_expenses"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">directexpeses_sum</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["sum_direct_expenses"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">profit</property>
+                    <expression name="expression" type="javascript">var columnvalue= row["profit_loss"], customformat="##,##,##,##,##0.00"; //we can add here a test for conditional formatting&#13;
+if (columnvalue!= 0){&#13;
+  var symbols=Packages.com.ibm.icu.text.DecimalFormatSymbols(new Packages.java.util.Locale("en","IN"));&#13;
+  var formatter=Packages.com.ibm.icu.text.DecimalFormat(customformat,symbols);&#13;
+  var value=new Packages.java.math.BigDecimal(columnvalue.toString());&#13;
+formatter.format(value);&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">heading</property>
+                    <expression name="expression" type="javascript">BirtStr.concat("Profit and Loss for the Period From ",Formatter.format(params["fromdate"].value,"dd/MM/yyyy")," To  ",Formatter.format(params["todate"].value,"dd/MM/yyyy"))</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">grp4</property>
+                    <text-property name="displayName">grp4</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grp4"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="pageBreakInterval">0</property>
+            <column id="647">
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
+                <property name="width">0.2in</property>
+            </column>
+            <column id="639">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="640">
+                <property name="width">4in</property>
+            </column>
+            <column id="641">
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
+                <property name="width">0.6in</property>
+            </column>
+            <column id="642">
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr" type="javascript">true</expression>
+                    </structure>
+                </list-property>
+            </column>
+            <column id="643">
+                <property name="width">1.5in</property>
+            </column>
+            <header>
+                <row id="808">
+                    <cell id="809"/>
+                    <cell id="810">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="587">
+                            <property name="textAlign">left</property>
+                            <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD</text-property>
+                        </label>
+                    </cell>
+                    <cell id="812"/>
+                    <cell id="813"/>
+                    <cell id="814"/>
+                </row>
+                <row id="801">
+                    <cell id="802"/>
+                    <cell id="803">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <data id="815">
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">heading</property>
+                        </data>
+                    </cell>
+                    <cell id="807">
+                        <grid id="825">
+                            <column id="826"/>
+                            <column id="827"/>
+                            <row id="828">
+                                <cell id="829">
+                                    <label id="584">
+                                        <property name="textAlign">right</property>
+                                        <text-property name="text">Page No.</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="830">
+                                    <auto-text id="448">
+                                        <property name="fontSize">x-small</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="type">page-number</property>
+                                    </auto-text>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="621">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="644">
+                        <label id="648">
+                            <text-property name="text">order_of_printing</text-property>
+                        </label>
+                    </cell>
+                    <cell id="622"/>
+                    <cell id="623">
+                        <label id="652">
+                            <text-property name="text">Ledger Name                                                     </text-property>
+                        </label>
+                    </cell>
+                    <cell id="624"/>
+                    <cell id="625"/>
+                    <cell id="626">
+                        <label id="654">
+                            <text-property name="text">Closing </text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="657">
+                <property name="groupName">printorder</property>
+                <expression name="keyExpr" type="javascript">row["order_of_printing"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["order_of_printing"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="658">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="659">
+                            <data id="672">
+                                <property name="resultSetColumn">order_of_printing</property>
+                            </data>
+                        </cell>
+                        <cell id="660"/>
+                        <cell id="661"/>
+                        <cell id="662"/>
+                        <cell id="663"/>
+                        <cell id="664"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="665">
+                        <cell id="666"/>
+                        <cell id="667"/>
+                        <cell id="668"/>
+                        <cell id="669"/>
+                        <cell id="670"/>
+                        <cell id="671"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="673">
+                <property name="groupName">accgrp</property>
+                <expression name="keyExpr" type="javascript">row["grp2"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp2"]</expression>
+                </structure>
+                <property name="repeatHeader">false</property>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="674">
+                        <cell id="675"/>
+                        <cell id="676">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <data id="688">
+                                <property name="fontWeight">bold</property>
+                                <property name="resultSetColumn">grp2</property>
+                            </data>
+                        </cell>
+                        <cell id="678"/>
+                        <cell id="679">
+                            <data id="690">
+                                <property name="resultSetColumn">sum_closingvalue</property>
+                            </data>
+                        </cell>
+                        <cell id="680">
+                            <data id="691">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_ledger_closing</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="681">
+                        <cell id="682"/>
+                        <cell id="683"/>
+                        <cell id="684"/>
+                        <cell id="685"/>
+                        <cell id="686"/>
+                        <cell id="687"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="858">
+                <property name="groupName">grp4</property>
+                <expression name="keyExpr" type="javascript">row["grp4"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["grp4"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="859">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="860">
+                            <data id="873">
+                                <property name="resultSetColumn">grp4</property>
+                            </data>
+                        </cell>
+                        <cell id="861"/>
+                        <cell id="862"/>
+                        <cell id="863"/>
+                        <cell id="864"/>
+                        <cell id="865"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="866">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="867"/>
+                        <cell id="868"/>
+                        <cell id="869"/>
+                        <cell id="870"/>
+                        <cell id="871"/>
+                        <cell id="872"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="840">
+                <property name="groupName">ledgergrp</property>
+                <expression name="keyExpr" type="javascript">row["led_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["led_name"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="841">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="842">
+                            <data id="855">
+                                <property name="resultSetColumn">led_name</property>
+                            </data>
+                        </cell>
+                        <cell id="843"/>
+                        <cell id="844"/>
+                        <cell id="845"/>
+                        <cell id="846"/>
+                        <cell id="847">
+                            <data id="857">
+                                <property name="resultSetColumn">grp4</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="848">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="849"/>
+                        <cell id="850"/>
+                        <cell id="851"/>
+                        <cell id="852"/>
+                        <cell id="853"/>
+                        <cell id="854"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="627">
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.19791666666666666in</property>
+                    <cell id="645">
+                        <data id="649">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">order_of_printing</property>
+                        </data>
+                    </cell>
+                    <cell id="628">
+                        <data id="651">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">grp2</property>
+                        </data>
+                    </cell>
+                    <cell id="629">
+                        <data id="653">
+                            <property name="resultSetColumn">led_name</property>
+                        </data>
+                    </cell>
+                    <cell id="630">
+                        <data id="655">
+                            <property name="resultSetColumn">closing</property>
+                        </data>
+                    </cell>
+                    <cell id="631">
+                        <data id="656">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">closingvalue</property>
+                        </data>
+                    </cell>
+                    <cell id="632">
+                        <data id="689">
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ledgerClosing</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="633">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <cell id="646"/>
+                    <cell id="634"/>
+                    <cell id="635">
+                        <label id="741"/>
+                    </cell>
+                    <cell id="636"/>
+                    <cell id="637"/>
+                    <cell id="638"/>
+                </row>
+                <row id="787">
+                    <property name="fontWeight">bold</property>
+                    <cell id="788"/>
+                    <cell id="789"/>
+                    <cell id="790">
+                        <label id="824"/>
+                    </cell>
+                    <cell id="791"/>
+                    <cell id="792">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="793"/>
+                </row>
+                <row id="794">
+                    <property name="fontWeight">bold</property>
+                    <cell id="795"/>
+                    <cell id="796">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="823">
+                            <property name="fontSize">12pt</property>
+                            <text-property name="text">SUMMARY</text-property>
+                        </label>
+                    </cell>
+                    <cell id="798"/>
+                    <cell id="799">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="800"/>
+                </row>
+                <row id="816">
+                    <property name="fontWeight">bold</property>
+                    <cell id="817"/>
+                    <cell id="818"/>
+                    <cell id="819"/>
+                    <cell id="820"/>
+                    <cell id="821">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="822"/>
+                </row>
+                <row id="831">
+                    <property name="fontWeight">bold</property>
+                    <cell id="832"/>
+                    <cell id="833">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="834">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="838">
+                            <text-property name="text">Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="835">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="836">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="837">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="839">
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Amount</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="692">
+                    <property name="fontWeight">bold</property>
+                    <cell id="693"/>
+                    <cell id="694"/>
+                    <cell id="695">
+                        <label id="743">
+                            <text-property name="text">SALES ACCOUNTS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="696"/>
+                    <cell id="697">
+                        <property name="textAlign">right</property>
+                        <data id="742">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_sales</property>
+                        </data>
+                    </cell>
+                    <cell id="698">
+                        <data id="779">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">salessum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="706">
+                    <cell id="707"/>
+                    <cell id="708">
+                        <label id="746">
+                            <text-property name="text">ADD</text-property>
+                        </label>
+                    </cell>
+                    <cell id="709">
+                        <label id="744">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">INDIRECT INCOMES</text-property>
+                        </label>
+                    </cell>
+                    <cell id="710"/>
+                    <cell id="711">
+                        <data id="745">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_indirectincomes</property>
+                        </data>
+                    </cell>
+                    <cell id="712">
+                        <data id="780">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">indirectincomesum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="699">
+                    <cell id="700"/>
+                    <cell id="701">
+                        <label id="748">
+                            <text-property name="text">LESS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="702">
+                        <label id="749">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">OPENING STOCK</text-property>
+                        </label>
+                    </cell>
+                    <cell id="703"/>
+                    <cell id="704">
+                        <data id="750">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_opening</property>
+                        </data>
+                    </cell>
+                    <cell id="705">
+                        <data id="781">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">openingsum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="734">
+                    <cell id="735"/>
+                    <cell id="736">
+                        <label id="751">
+                            <text-property name="text">LESS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="737">
+                        <label id="752">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">PURCHASE ACCOUNTS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="738"/>
+                    <cell id="739">
+                        <data id="753">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_purchase</property>
+                        </data>
+                    </cell>
+                    <cell id="740">
+                        <data id="782">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">purchasesum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="727">
+                    <cell id="728"/>
+                    <cell id="729">
+                        <label id="774">
+                            <text-property name="text">ADD</text-property>
+                        </label>
+                    </cell>
+                    <cell id="730">
+                        <label id="754">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">CLOSING STOCK</text-property>
+                        </label>
+                    </cell>
+                    <cell id="731"/>
+                    <cell id="732">
+                        <data id="755">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_closing</property>
+                        </data>
+                    </cell>
+                    <cell id="733">
+                        <data id="783">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">closingsum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="720">
+                    <cell id="721"/>
+                    <cell id="722">
+                        <label id="775">
+                            <text-property name="text">LESS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="723">
+                        <label id="757">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">DIRECT EXPENSES</text-property>
+                        </label>
+                    </cell>
+                    <cell id="724"/>
+                    <cell id="725">
+                        <data id="773">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_direct_expenses</property>
+                        </data>
+                    </cell>
+                    <cell id="726">
+                        <data id="785">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">directexpeses_sum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="713">
+                    <cell id="714"/>
+                    <cell id="715">
+                        <label id="776">
+                            <text-property name="text">LESS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="716">
+                        <label id="756">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">INDIRECT EXPENSES</text-property>
+                        </label>
+                    </cell>
+                    <cell id="717"/>
+                    <cell id="718">
+                        <data id="772">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_indirect_expenses</property>
+                        </data>
+                    </cell>
+                    <cell id="719">
+                        <data id="784">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">indirect_expensessum</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="758">
+                    <cell id="759"/>
+                    <cell id="760"/>
+                    <cell id="761">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="778">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">PROFIT / LOSS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="762">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                    </cell>
+                    <cell id="763">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="777">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">profit_loss</property>
+                        </data>
+                    </cell>
+                    <cell id="764">
+                        <property name="borderBottomStyle">dotted</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopWidth">1px</property>
+                        <data id="786">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">profit</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="765">
+                    <cell id="766"/>
+                    <cell id="767"/>
+                    <cell id="768"/>
+                    <cell id="769"/>
+                    <cell id="770"/>
+                    <cell id="771"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <property name="pageVariables">
+        <variable-element name="totalincome">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="totalexpenses">
+            <expression name="value" type="javascript">0</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="finalexpenses">
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="inc">
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="exp">
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="NewVariableElement">
+            <property name="type">page</property>
+        </variable-element>
+    </property>
+</report>

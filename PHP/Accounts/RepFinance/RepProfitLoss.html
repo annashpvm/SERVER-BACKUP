@@ -113,7 +113,7 @@ var closingstock = 0;
       id: 'LoadClosingValueDataStore',
 //      autoLoad : true,
       proxy: new Ext.data.HttpProxy({
-                url: '/SHVPM/Accounts/TrnOpening/clsLedgerOpening.php',    // File to connect to
+                url: 'ClsViewStatements.php',    // File to connect to
                 method: 'POST'
             }),
             baseParams:{task: "loadClosingValue"}, // this parameter asks for listing
@@ -327,6 +327,40 @@ var row0col2 = 0, row1col2 = 0, row2col2 = 0, row3col2 = 0, row4col2 = 0, row5co
 	    }
 	}
 	});
+
+
+
+    var btnPrintNew = new Ext.Button({
+        style   : 'text-align:center;',
+        text    : "New Format",
+        width   : 60,
+        id:'btnPrintNew',
+        x : 800,  
+        y : 350, 
+	border: 1,
+	style: {
+	borderColor: 'blue',
+	borderStyle: 'solid',
+ 	}, 
+        listeners: {
+            click: function(){
+                    var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	
+                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                    var p3 = "&fincode="+encodeURIComponent(GinFinid);
+                    var p4 = "&compcode="+encodeURIComponent(Gincompcode);
+                    var param = (p1+p2+p3+p4) ;
+                    if (printtype == "PDF") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_New.rptdesign&__format=pdf&'+param,  '_blank' );
+                    else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_New.rptdesign&__format=XLSX&' + param, '_blank');
+                    else
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepProfitandLoss_New.rptdesign' + param, '_blank');
+            }
+
+	}
+	});
+
+    
 
 var optprinttype = new Ext.form.FieldSet({
     xtype: 'fieldset',
@@ -2204,17 +2238,17 @@ if (printtype == "PDF")
 	codedirectexpenses = 0;
 	codeindirectincomes = 0;
 	codeopeningstock = 0;
-        subtotalexp = 0;
-        subtotalinc = 0;
+    subtotalexp = 0;
+    subtotalinc = 0;
 
 
-        flxExpenses.getStore().removeAll();
-        flxIncomes.getStore().removeAll();
+    flxExpenses.getStore().removeAll();
+    flxIncomes.getStore().removeAll();
 	PLMaingrpDataStorPLMaingrpDataStore.removeAll();
 	PLMaingrpDataStorPLMaingrpDataStore.load({
 	 url: 'ClsViewStatements.php',
                 params: {
-	    	task: 'loadPandLMainGroup',
+	    	    task: 'loadPandLMainGroup',
                 compcode:Gincompcode,
                 finid:GinFinid,
                 startdate: Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
@@ -2233,7 +2267,7 @@ if (printtype == "PDF")
  		   { 
          
 //alert(PLMaingrpDataStorPLMaingrpDataStore.getAt(j).get('grp_name'));
-                    if (PLMaingrpDataStorPLMaingrpDataStore.getAt(j).get('grp_name')==  "INDIRECT EXPESNES")
+                    if (PLMaingrpDataStorPLMaingrpDataStore.getAt(j).get('grp_name')==  "INDIRECT EXPENSES")
                     { 
                        indirectexpenses = PLMaingrpDataStorPLMaingrpDataStore.getAt(j).get('closing');
                        codeindirectexpenses = PLMaingrpDataStorPLMaingrpDataStore.getAt(j).get('grpcode1');
@@ -2297,20 +2331,21 @@ if (printtype == "PDF")
 
 
                   LoadClosingValueDataStore.load({
-                    url:'/SHVPM/Accounts/TrnOpening/clsLedgerOpening.php',
+                    url:'ClsViewStatements.php',
                     params:{
                         task:'loadClosingValue',
                         compcode : Gincompcode,
                         fincode : GinFinid,
-
+                        enddate: Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
                     },
                     callback:function(){
+                        closingstock = 0;
                     var cnt=LoadClosingValueDataStore.getCount();
-
+//alert(LoadClosingValueDataStore.getAt(0).get('clostk_value'))
                     if (cnt > 0)
-                         closingstock = LoadClosingValueDataStore.getAt(0).get('curbal_obdbamt');
+                         closingstock = LoadClosingValueDataStore.getAt(0).get('clostk_value');
 
-
+                     //alert(closingstock);    
                      if (closingstock == 0)    
                          closingstock = openingstock;
 // EXPENSES
@@ -3239,7 +3274,7 @@ style:{
                              items: [flxIncomes]
                         },
 
-	btnPrintMain,
+	btnPrintMain,btnPrintNew,
 
 
         ]

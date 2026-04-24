@@ -122,8 +122,9 @@
         $yr    = (int)$_POST['yr'];
         if ($month > 0)
         {
-        $sql = "select stk_sr_no , stk_finyear from trnsal_finish_stock WHERE   stk_comp_code = $compcode and stk_finyear = $finid and  length(stk_sr_no) = 10 and  SUBSTR(stk_sr_no,6,3)  = $rollno and  SUBSTR(stk_sr_no,3,2)  =  $month and  SUBSTR(stk_sr_no,1,2)  = '$yr' and stk_destag = ''  order by stk_sr_no";
-//        $sql = "select  stk_sr_no , stk_finyear from trnsal_finish_stock WHERE   stk_comp_code = $compcode and stk_finyear = $finid and  length(stk_sr_no) = 10 and  SUBSTR(stk_sr_no,6,3)  = $rollno and  SUBSTR(stk_sr_no,3,2)  =  $month ");
+//        $sql = "select stk_sr_no , stk_finyear from trnsal_finish_stock WHERE   stk_comp_code = $compcode and stk_finyear = $finid and  length(stk_sr_no) = 10 and  SUBSTR(stk_sr_no,6,3)  = $rollno and  SUBSTR(stk_sr_no,3,2)  =  $month and  SUBSTR(stk_sr_no,1,2)  = '$yr' and stk_destag = ''  order by stk_sr_no";
+        $sql = "select stk_sr_no , stk_finyear from trnsal_finish_stock WHERE   stk_comp_code = $compcode and   length(stk_sr_no) = 10 and stk_rollno  = $rollno and  SUBSTR(stk_sr_no,3,2)  =  $month and  SUBSTR(stk_sr_no,1,2)  = '$yr' and stk_destag = ''  order by stk_sr_no";
+
          }   
         else
          {
@@ -231,7 +232,7 @@
 
 
       $sql = "select ordh_sono from trnsal_order_header where ordh_fincode = $finid  and ordh_comp_code= $compcode group by ordh_sono  order by ordh_sono desc";
-      $sql = "select ordh_sono from trnsal_order_header, trnsal_order_trailer,massal_variety,masprd_variety where ordh_comp_code = ordt_comp_code and  ordh_fincode  = ordt_fincode and ordh_sono = ordt_sono and  ordt_var_code = var_code and var_grpcode = var_groupcode and    ordh_comp_code = $compcode  and  ordh_fincode = $finid and var_grpcode = $varietycode group by ordh_sono order by ordh_sono desc";
+      $sql = "select ordh_sono from trnsal_order_header, trnsal_order_trailer,massal_variety,masprd_variety where ordh_comp_code = ordt_comp_code and  ordh_fincode  = ordt_fincode and ordh_sono = ordt_sono and  ordt_var_code = var_code and var_grpcode = var_groupcode and    ordh_comp_code = $compcode  and  ordh_fincode <= $finid and var_grpcode = $varietycode group by ordh_sono order by ordh_sono desc";
     $r = mysqli_query($conn, $sql);
 
     $arr = [];
@@ -277,8 +278,9 @@ $r = mysqli_query($conn, $sql);
         $mon      = $_POST['mon']; 
         $yr       = $_POST['yr']; 
 	
-$sql = "select prd_rollno  from trn_dayprod_roll_details where prd_compcode = '$compcode' and prd_fincode = '$finid'  and month(prd_date) = '$mon' and year(prd_date)= '$yr' and prd_roll_status = 'A'  group by prd_rollno  order by prd_rollno desc";
-
+//$sql = "select prd_rollno  from trn_dayprod_roll_details where prd_compcode = '$compcode' and prd_fincode = '$finid'  and month(prd_date) = '$mon' and year(prd_date)= '$yr' and prd_roll_status = 'A'  group by prd_rollno  order by prd_rollno desc";
+$sql = "select prd_rollno  from trn_dayprod_roll_details where prd_compcode = '$compcode'  and month(prd_date) = '$mon' and year(prd_date)= '$yr' and prd_roll_status = 'A'  group by prd_rollno  order by prd_rollno desc";
+//echo $sql;
 
 //	$sql = "select prd_rollno from trn_dayprod_roll_details a, trn_dayprod_roll_variety_details where prd_seqno = prdv_seqno and prd_rollno = prdv_rollno and prd_compcode = '$compcode' and prd_fincode = '$finid'  and prd_date = '$rdate' and prd_roll_status = 'A' group by prd_rollno  order by prd_rollno");
 

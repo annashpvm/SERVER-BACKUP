@@ -46,6 +46,10 @@
 		getApprvedvarietydetails2();
 		break;
 
+        case "ApprovedVarietydetails3":
+            getApprvedvarietydetails3();
+            break;
+    
 		case "findRateDetails":
 		getRateDetails();
 		break;
@@ -287,15 +291,17 @@
    
    $query11 = "select ifnull(max(rate_code),0) rate_code from massal_rate where rate_comp_code = '$compcode' and rate_fincode = $finid  and rate_approved = 'Y'  and  rate_cust = '$custcode'";
    
+
    $result11 = mysqli_query($conn, $query11);
    $rec1 = mysqli_fetch_array($result11);
    $rateseqno=$rec1['rate_code'];
    
    if ($rateseqno == 0)
-           $sql = "select rate_code ,rate_fincode  ,rate_price_terms from massal_rate where rate_comp_code = '$compcode' and rate_fincode < $finid and rate_approved = 'Y'  and rate_close = 'N' and rate_cust = '$custcode' and rate_code in ( select max(rate_code) from massal_rate where rate_comp_code = '$compcode' and rate_fincode < $finid and rate_approved = 'Y'  and  rate_cust = '$custcode') group by rate_code,rate_fincode,rate_price_terms order by rate_code desc";
+           $sql = "select rate_code ,rate_fincode  ,rate_price_terms from massal_rate where rate_comp_code = '$compcode' and rate_fincode = $finid-1 and rate_approved = 'Y'  and rate_close = 'N' and rate_cust = '$custcode' and rate_code in ( select max(rate_code) from massal_rate where rate_comp_code = '$compcode' and rate_fincode = $finid-1 and rate_approved = 'Y'  and  rate_cust = '$custcode') group by rate_code,rate_fincode,rate_price_terms order by rate_code desc";
    else
            $sql = "select rate_code ,rate_fincode  ,rate_price_terms from massal_rate where rate_comp_code = '$compcode' and rate_fincode = $finid and rate_approved = 'Y'  and rate_close = 'N' and rate_cust = '$custcode' and rate_code in ($rateseqno) group by rate_code,rate_fincode,rate_price_terms order by rate_code desc";
    
+       
        $r = mysqli_query($conn, $sql);
    
        $arr = [];
@@ -923,6 +929,56 @@ stk_sono = 1001 and stk_comp_code = $compcode and stk_destag = '' and var_code i
     }
 
     echo json_encode(["total" => count($arr), "results" => $arr]);
+    }    
+
+
+
+    function getApprvedvarietydetails2()
+    {
+    global $conn;  
+
+    $finid    = $_POST['finid'];
+    $compcode = $_POST['compcode'];
+    $apprno   = $_POST['apprno'];
+    if ($apprno   == 0)   
+       $sql = "select * from masprd_variety  order by var_desc";
+    else
+       $sql = "select vargrp_type_name , vargrp_type_code from massal_rate join masprd_type on  rate_vartype = vargrp_type_code  where rate_comp_code = $compcode and rate_fincode = $finid and rate_code =  $apprno and rate_approved = 'Y' and rate_close = 'N'
+  group by vargrp_type_name , vargrp_type_code";
+
+    $r = mysqli_query($conn, $sql); 
+
+    $nrow = mysqli_num_rows($r);
+    while($re = mysqli_fetch_array($r))
+    {
+    $arr[]= $re ;
+     }
+        $jsonresult = JEncode($arr);
+        echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
+    }
+
+
+    function getApprvedvarietydetails3()
+    {
+    global $conn;  
+
+    $finid    = $_POST['finid'];
+    $compcode = $_POST['compcode'];
+    $apprno   = $_POST['apprno'];
+    $qly      = $_POST['qly'];
+
+    $sql = "select * from massal_rate  where rate_comp_code = $compcode and rate_fincode = $finid and rate_code =  $apprno and rate_approved = 'Y' and rate_close = 'N'
+  and rate_vartype = $qly";
+
+    $r = mysqli_query($conn, $sql); 
+
+    $nrow = mysqli_num_rows($r);
+    while($re = mysqli_fetch_array($r))
+    {
+    $arr[]= $re ;
+     }
+        $jsonresult = JEncode($arr);
+        echo '({"total":"'.$nrow.'","results":'.$jsonresult.'})';
     }    
 
 ?>

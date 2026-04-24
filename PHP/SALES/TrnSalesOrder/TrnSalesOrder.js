@@ -1257,6 +1257,11 @@ var lblGodown = new Ext.form.Label({
         dt_today = new Date();
         var dt_today = new Date();
         var dt_so = dptSONo.getValue();
+
+        var finStart = new Date(finStartDate);
+        var finEnd   = new Date(finEndDate);
+
+
         var diffdays = (dt_today.getDate()-dt_so.getDate());
         var diffdays = (dt_today.getTime()-dt_so.getTime());
 //alert(diffdays);
@@ -1276,14 +1281,22 @@ var lblGodown = new Ext.form.Label({
 
         }
 
+        dt_so    = clearTime(dt_so);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
 
-//alert(finStartDate);
-//alert(finEndDate);
+        if (gstFlag === "Add" && (dt_so < finStart || dt_so > finEnd))
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+                dptSONo.setValue(dt_today);
+                dptSONo.focus();
+                return;
+            }
 
-
- //       if(Ext.util.Format.date(dptSONo.getRawValue(),"Y-m-d") > Ext.util.Format.date(finEndDate,"Y-m-d")){
-//            Ext.MessageBox.alert("Alert","Voucher Date not in current finyear");
-//        }
 
  }
 
@@ -1319,6 +1332,16 @@ var lblGodown = new Ext.form.Label({
 
  }
 
+ var finenddate = localStorage.getItem('gfineddate');
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+ 
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
+
  var dptSONo= new Ext.form.DateField({
         fieldLabel: 'Date',
         id: 'dptSONo',
@@ -1326,11 +1349,16 @@ var lblGodown = new Ext.form.Label({
         format: 'd-m-Y',
         width       :  120,
 //        readOnly : true,
-        value: new Date(),
+        value:defaultDate,
          	labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         style : "font-size:14px;font-weight:bold",
        	enableKeyEvents: true,
         listeners:{
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },            
 		  specialkey:function(f,e){
 		     if (e.getKey() == e.ENTER)
 		     {
@@ -1550,7 +1578,7 @@ function findweight()
         fieldLabel  : 'Over Due',
         id          : 'txtOverDue',
         name        : 'txtOverDue',
-        width       :  120,
+        width       :  100,
         labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
 
         tabindex    : 2,
@@ -2098,6 +2126,43 @@ var GetAreaVarietylistDatastore = new Ext.data.Store({
         }, ['var_groupcode', 'var_desc', 'var_typecode', 'var_bf', 'var_gsm', 'rate_bf14', 'rate_bf16', 'rate_bf18', 'rate_bf20', 'rate_bf22', 'rate_bf24', 'rate_bf26','rate_bf28','rate_bf30', 'rate_bf32', 'rate_othershades', 'rate_gsmfrom', 'rate_gsmto', 'rate2_gsmfrom', 'rate2_gsmto', 'rate2_extraamt', 'rate3_gsmfrom', 'rate3_gsmto', 'rate3_extraamt', 'rate4_gsmfrom', 'rate4_gsmto', 'rate4_extraamt', 
 'rate_rate', 'rate_crdays', 'rate_cashdisc_per', 'rate_cashdisc_days', 'rate_gst_per' , 'rate_bf14_bit', 'rate_bf16_bit', 'rate_bf18_bit', 'rate_bf20_bit', 'rate_bf22_bit', 'rate_bf24_bit', 'rate_bf26_bit','rate_bf28_bit','rate_bf30_bit', 'rate_bf32_bit'])
     });
+
+
+    
+var loadRateMasQualityDataStore = new Ext.data.Store({
+    id: 'loadRateMasQualityDataStore',
+   autoLoad : true,
+    proxy: new Ext.data.HttpProxy({
+        url: '/SHVPM/SALES/TrnSalesOrder/ClsTrnSalesOrder.php', // File to connect to
+        method: 'POST'
+    }),
+    baseParams: {task: "AreaApprovedVarietydetails2"}, // this parameter asks for listing
+    reader: new Ext.data.JsonReader({
+        // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+    }, ['vargrp_type_name' , 'vargrp_type_code'])
+});
+
+
+var loadRate_find_payterm_DataStore = new Ext.data.Store({
+    id: 'loadRate_find_payterm_DataStore',
+   autoLoad : true,
+    proxy: new Ext.data.HttpProxy({
+        url: '/SHVPM/SALES/TrnSalesOrder/ClsTrnSalesOrder.php', // File to connect to
+        method: 'POST'
+    }),
+    baseParams: {task: "AreaApprovedVarietydetail3"}, // this parameter asks for listing
+    reader: new Ext.data.JsonReader({
+        // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+
+}, ['rate_price_terms' , 'rate_grace_days'])
+});
+
 
 var GetGridDetailsDatastore = new Ext.data.Store({
         id: 'GetGridDetailsDatastore',
@@ -2698,6 +2763,53 @@ var cmbSizetype = new Ext.form.ComboBox({
 });
 
 
+var cmbRateQuality = new Ext.form.ComboBox({
+    fieldLabel      : 'Quality',
+    width           : 170,
+    displayField    : 'vargrp_type_name', 
+    valueField      : 'vargrp_type_code',
+    hiddenName      : '',
+    id              : 'cmbRateQuality',
+    typeAhead       : true,
+    mode            : 'local',
+    store           : loadRateMasQualityDataStore,
+    forceSelection  : true,
+    triggerAction   : 'all',
+    selectOnFocus   : true,
+    editable        : true,
+    tabIndex	: 0,
+    allowblank      : true,
+    labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+    enableKeyEvents: true,
+    listeners: {
+
+        select: function () {
+
+        loadRate_find_payterm_DataStore.removeAll();
+        loadRate_find_payterm_DataStore.load({
+          url: '/SHVPM/SALES/TrnSalesOrder/ClsTrnSalesOrder.php',
+          params:
+              {
+                  task:"ApprovedVarietydetails3",
+                  finid    : cmbPriceno.getValue(),       
+                  compcode : Gincompcode,
+                  apprno   : cmbPriceno.getRawValue(), 
+                  qly      : cmbRateQuality.getValue(),      
+              },
+           callback:function()
+             {
+                
+                var cnt = loadRate_find_payterm_DataStore.getCount(); 
+                if (cnt > 0) 
+                {
+                     txtPayTerms.setValue(loadRate_find_payterm_DataStore.getAt(0).get('rate_price_terms'));
+                     txtGraceDays.setValue(loadRate_find_payterm_DataStore.getAt(0).get('rate_grace_days'));
+                }     
+             }
+        });
+    }
+    }   
+});
 
 
 var cmbShade = new Ext.form.ComboBox({
@@ -2830,6 +2942,9 @@ var cmbPriceno = new Ext.form.ComboBox({
 
       txtrate.setValue('0');
 
+
+
+        GetVarietylistDatastore.removeAll();
 		GetVarietylistDatastore.load({
                         url: '/SHVPM/SALES/TrnSalesOrder/ClsTrnSalesOrder.php',
                         params:
@@ -2853,27 +2968,28 @@ var cmbPriceno = new Ext.form.ComboBox({
                              BitReelCM   = GetVarietylistDatastore.getAt(0).get('rate_bitreel_cm');
 
 
+                             loadRateMasQualityDataStore.removeAll();
+                             loadRateMasQualityDataStore.load({
+                               url: '/SHVPM/SALES/TrnSalesOrder/ClsTrnSalesOrder.php',
+                               params:
+                                   {
+                                       task:"ApprovedVarietydetails2",
+                       //                                finid    : GinFinid ,
+                                       finid    : cmbPriceno.getValue(),       
+                                       compcode : Gincompcode,
+                                       apprno   : cmbPriceno.getRawValue(),       
+                                   },
+                                callback:function()
+                                  {
+                                     cmbRateQuality.setValue(loadRateMasQualityDataStore.getAt(0).get('vargrp_type_code'));
+                                  }
+                             });
+
                             if (gstFlag == "Edit" && custchange == 1)
                                priceConfirm();
 
 
-/*   
 
-
-
-//alert(GetVarietylistDatastore.getAt(0).get('rate_price_terms'));
-
-                           if (GetVarietylistDatastore.getAt(0).get('rate_price_terms') <= 7)
-                           {
-//	                        txtPayTerms.setDisabled(true);   
-				//txtGraceDays.setDisabled(true);                            
-                           }
-                           else
-                           {
-	                        txtPayTerms.setDisabled(false);   
-				txtGraceDays.setDisabled(false);                            
-                           }
-*/
                            }
                }); 
 		
@@ -3090,7 +3206,7 @@ function get_ratedetails() {
 //alert(bf);
 //alert(getRatedetailsDataStore.getAt(0).get('var_typecode'));
 
-                  if (getRatedetailsDataStore.getAt(0).get('var_typecode')  == 14)
+                  if (getRatedetailsDataStore.getAt(0).get('var_typecode')  == 14 || getRatedetailsDataStore.getAt(0).get('var_typecode')  == 19)
                   {
 
                         txtrate.setValue(getRatedetailsDataStore.getAt(0).get('rate_pb_rate'));
@@ -3121,7 +3237,7 @@ function get_ratedetails() {
 //alert("extraamt");
 //alert(extraamt);
 //alert(gsmfrom1);
-//alert(gsmto1);
+// alert(gsmto2);
 
 
     //            if (getRatedetailsDataStore.getAt(0).get('var_typecode') != 1) 
@@ -4310,7 +4426,7 @@ var flxDetail = new Ext.grid.EditorGridPanel({
         {header: "Rate"    , dataIndex: 'rate',sortable:false,width:80,align:'left', menuDisabled: true},
         {header: "Size In" , dataIndex: 'sizein',sortable:false,width:70,align:'left', menuDisabled: true},
         {header: "Size "   , dataIndex: 'size',sortable:false,width:110,align:'left', menuDisabled: true},
-	{header: "Dia "    , dataIndex: 'dia',sortable:false,width:80,align:'left', menuDisabled: true},
+	    {header: "Dia "    , dataIndex: 'dia',sortable:false,width:80,align:'left', menuDisabled: true},
         {header: "Sizecode"  , dataIndex: 'sizecode',sortable:false,width:60,align:'left', menuDisabled: true,hidden:true},
         {header: "Qty"         , dataIndex: 'qty',sortable:false,width:80,align:'left', menuDisabled: true},
         {header: "Reels"         , dataIndex: 'reels',sortable:false,width:60,align:'left', menuDisabled: true},
@@ -5153,7 +5269,7 @@ var tabSalesOrder = new Ext.TabPanel({
                                          },   
 
 
-    					{ 
+    				             	{ 
                                              xtype       : 'fieldset',
                                              title       : '',
                                              labelWidth  : 100,
@@ -5161,9 +5277,19 @@ var tabSalesOrder = new Ext.TabPanel({
                                              x           : 460,
                                              y           : 50,
                                              border      : false,
-                                             items: [txtOverDue]
+                                             items: [cmbRateQuality]
                                         }, 
 
+                                        { 
+                                            xtype       : 'fieldset',
+                                            title       : '',
+                                            labelWidth  : 80,
+                                            width       : 500,
+                                            x           : 760,
+                                            y           : 50,
+                                            border      : false,
+                                            items: [txtOverDue]
+                                       }, 
                                    	{ 
                                              xtype       : 'fieldset',
                                              title       : '',
@@ -6416,6 +6542,8 @@ function add_btn_click()
 function edit_click()
 {
 	  gstFlag = "Edit";
+
+    
 	    Ext.getCmp('cmbSONo').show();
 	 /*  if (usertype == 1)
 	    {
@@ -6444,11 +6572,52 @@ function edit_click()
 	    });  
 }
 
+
+function clearTime(dt) {
+    return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+}
+
+
+
 function save_click()
 {
 
+    var dt_so = dptSONo.getValue(); 
+var finStart = new Date(finStartDate);
+var finEnd   = new Date(finEndDate);              
 
-              
+        var grid = Ext.getCmp('my-grid');
+        var store = grid.getStore();
+    
+        var sizeMap = {};
+        var duplicateCode = '';
+        var duplicateSize = '';
+        var duplicateSizeType = '';
+        store.each(function(rec) {
+            var sizecode = rec.get('sizecode');
+            var sizename = rec.get('size');
+            var sizename_in_cm = rec.get('sizein');
+
+            
+            if (sizecode) {
+                if (sizeMap[sizecode]) {
+                    duplicateCode = sizecode;
+                    duplicateSize = sizename;
+                    duplicateSizeType = sizename_in_cm;
+                    return false;
+                }
+                sizeMap[sizecode] = true;
+            }
+        });
+    
+        if (duplicateCode != '') {
+            Ext.Msg.alert('Warning', 'Size  :-> ' + duplicateSize + " " + duplicateSizeType + ' entered more than once!  .. Can not Save the Record' );
+            return ;
+        }
+    
+        
+
+    
 
     var gstSave;
 
@@ -6463,6 +6632,9 @@ function save_click()
 //alert(flxDetail.getStore().getCount());		 
 
 
+dt_so    = clearTime(dt_so);
+finStart = clearTime(finStart);
+finEnd   = clearTime(finEnd);
 
 
     gstSave="true";
@@ -6471,6 +6643,18 @@ function save_click()
         Ext.Msg.alert('Sales-Order','Enter Order Number.....');
         gstSave="false";
     }
+    
+    else if (dt_so < finStart || dt_so > finEnd)
+        {
+            Ext.Msg.alert(
+                'Sales-Order',
+                'SO Date must be between ' + 
+                Ext.util.Format.date(finStart,"d-m-Y") + ' and ' + 
+                Ext.util.Format.date(finEnd,"d-m-Y")
+            );
+            gstSave = "false";
+        }
+            
     else if (flxDetail.getStore().getCount()==0)
             {
                 Ext.Msg.alert('Sales-Order','Grid should not be empty..');

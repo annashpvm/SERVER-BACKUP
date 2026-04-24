@@ -6107,20 +6107,23 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                 <structure>
                     <property name="name">qc_rm_billqty</property>
                     <text-property name="displayName">qc_rm_billqty</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["qc_rm_billqty"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["qc_rm_billqty"]/1000</expression>
                     <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">qc_rm_millqty</property>
                     <text-property name="displayName">qc_rm_millqty</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["qc_rm_millqty"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["qc_rm_millqty"]/1000</expression>
                     <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">qc_rm_ticketwt</property>
                     <text-property name="displayName">qc_rm_ticketwt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["qc_rm_ticketwt"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["qc_rm_ticketwt"]/1000</expression>
                     <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="1769">
@@ -6156,11 +6159,6 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                     </cell>
                     <cell id="2164"/>
                     <cell id="1783">
-                        <property name="colSpan">1</property>
-                        <property name="rowSpan">1</property>
-                    </cell>
-                    <cell id="2273"/>
-                    <cell id="2274">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
                         <label id="2165">
@@ -6168,8 +6166,8 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                             <text-property name="text">Debit Note No. :</text-property>
                         </label>
                     </cell>
-                    <cell id="2269">
-                        <property name="colSpan">4</property>
+                    <cell id="2548">
+                        <property name="colSpan">6</property>
                         <property name="rowSpan">1</property>
                         <data id="2267">
                             <property name="fontSize">10pt</property>
@@ -6405,10 +6403,19 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2545">
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
                             </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["qc_rm_billqty"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">qc_rm_billqty</property>
                         </data>
                     </cell>
@@ -6422,10 +6429,19 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2546">
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
                             </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["qc_rm_millqty"] == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">qc_rm_millqty</property>
                         </data>
                     </cell>
@@ -6439,10 +6455,12 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2547">
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
                             </structure>
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">qc_rm_ticketwt</property>
                         </data>
                     </cell>
@@ -6456,7 +6474,7 @@ dataSetRow["qc_rm_taxable"] + row["qc_rm_ratediff"]+row["qc_rm_valuediff"]</expr
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1789">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -6482,7 +6500,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1790">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -6508,7 +6526,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1792">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6534,7 +6552,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1794">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6560,7 +6578,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1796">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6586,7 +6604,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1823">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6612,7 +6630,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1825">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6638,7 +6656,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1826">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6664,7 +6682,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1828">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0{RoundingMode=HALF_UP}</property>
@@ -6690,7 +6708,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1829">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -6716,7 +6734,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="1831">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -6827,7 +6845,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2207">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -6853,7 +6871,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2208">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -6879,7 +6897,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2209">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6905,7 +6923,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2211">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6931,7 +6949,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2212">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6957,7 +6975,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2213">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -6983,7 +7001,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2214">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -7009,7 +7027,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2215">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
@@ -7038,7 +7056,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2216">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
@@ -7057,7 +7075,7 @@ true</expression>
                         <property name="borderTopStyle">dotted</property>
                         <property name="borderTopWidth">1px</property>
                         <data id="2217">
-                            <property name="fontSize">8.5pt</property>
+                            <property name="fontSize">7.5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Fixed</property>
                                 <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>

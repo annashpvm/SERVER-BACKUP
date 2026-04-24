@@ -22,6 +22,7 @@ $ginaccrefseq = (int)$_POST['accseqno'];
 
 $qcinsno = (int)$_POST['qcinsno'];
 
+mysqli_begin_transaction($conn);       
 
         $query1 = "update trnrm_receipt_header set rech_no = '$newgrnno'  where rech_compcode = $compcode and rech_fincode = $finid  and rech_seqno = '$rech_seqno' and rech_no = '$rech_no'";
         $result1=mysqli_query($conn, $query1);
@@ -44,7 +45,7 @@ $qcinsno = (int)$_POST['qcinsno'];
 
 	if($result1 && $result2 )
 	{
-			mysqli_begin_transaction($conn);                        
+		    mysqli_commit($conn);                            
 			echo '({"success":"true","GRNNo":"' . $rech_no . '"})';
 
 		    

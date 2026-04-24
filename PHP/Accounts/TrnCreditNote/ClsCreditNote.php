@@ -77,7 +77,14 @@
             getBankReceipt();
             break;
 
+        case "LoadAdjustedDetails":
+            getAdjustedDetails();
+            break;
 
+            case "LoadCreditNoteCollDate":
+                getCreditNoteCollDate();
+                break;
+                 
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -519,4 +526,50 @@ $sql = "select * from acc_ref  where  accref_seqno  = $accseqno and  accref_comp
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
 
+
+
+    function getAdjustedDetails()
+    {
+	$compcode  = $_POST['compcode'];
+    $accseqno  = $_POST['accseqno'];
+
+    global $conn;
+    $sql = "select * from acc_adjustments  where  ref_docseqno  = $accseqno and  ref_compcode = '$compcode'  ";
+
+//echo $sql;
+
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
+
+    function getCreditNoteCollDate()
+    {
+	$seqno  = $_POST['cnseqno'];
+
+    global $conn;
+    $sql = "select * from   acc_dbcrnote_trailer3 where dbcrt3_seqno = $seqno";
+
+//echo $sql;
+
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }    
+
+    
 ?>

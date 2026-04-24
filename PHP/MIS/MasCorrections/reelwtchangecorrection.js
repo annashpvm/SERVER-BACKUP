@@ -82,7 +82,7 @@ var dtProdDate = new Ext.form.DateField({
         var diffdays = dt_today.getTime()-dt_invoice.getTime();
         diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24)); 
 //alert(diffdays);
-        if (diffdays < 15)
+        if (diffdays < 30)
         {
 
                 loadReelNoDatastore.removeAll();
@@ -100,7 +100,7 @@ var dtProdDate = new Ext.form.DateField({
 			   } 
 		  });
         }
-        if (diffdays > 15)
+        if (diffdays > 30)
         {     
              alert("You are Not Allowed to Modify in the date of " +  Ext.util.Format.date(dt_invoice,"d-m-Y"));
 
@@ -361,7 +361,6 @@ var FinSTKCorrectionWindow = new Ext.Window({
         draggable   : false,
  	listeners:{
                show:function(){
-
 
               
               

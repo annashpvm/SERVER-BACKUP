@@ -66,8 +66,7 @@ $minhtottcs = (float) $_POST['minhtottcs'];
     
 
 
- mysqli_query($conn, "BEGIN");
-
+mysqli_begin_transaction($conn);
 
 
 
@@ -114,7 +113,13 @@ for ($i=0;$i<$rowcnt;$i++){
 
 	$mintrejqty =  $griddet[$i]['mintinvqty'] - $griddet[$i]['mintrcvdqty'];
 	$mintunitrate=$griddet[$i]['mintunitrate'];
-	$mintcostrate = round($griddet[$i]['mintvalue']/$griddet[$i]['mintrcvdqty'],5); 
+	
+	
+	$mintcostrate = ($griddet[$i]['mintrcvdqty'] > 0)
+    ? round($griddet[$i]['mintvalue'] / $griddet[$i]['mintrcvdqty'], 5)
+    : 0;
+
+
 	$mintdiscount= (float)$griddet[$i]['mintdiscount'];
 	$mintdisamt = (float)$griddet[$i]['mintdisamt'];
 	$mintpfper  = (float)$griddet[$i]['mintpfper'];
@@ -163,7 +168,7 @@ for ($i=0;$i<$rowcnt;$i++){
 
 	 $query11 = "select * from maspur_item_trailer where item_comp_code ='$minhcompcode'  and item_fin_code = '$minhfincode' and item_code = '$mintitemcode'";
 	 $result11 = mysqli_query($conn, $query11);
-	 while ($row = mysql_fetch_assoc($result11)) {
+	 while ($row = mysqli_fetch_assoc($result11)) {
 
 	    $totstock = $row['item_stock'] - $oldgrnqty ;
 	    $totvalue = ($row['item_stock'] * $row['item_avg_rate']) - $oldgrnval;
@@ -184,7 +189,7 @@ for ($i=0;$i<$rowcnt;$i++){
 //echo "<br>";
  //           }
           } 
-          mysql_free_result($result);
+          mysqli_free_result($result);
 
 
 
@@ -211,7 +216,7 @@ for ($i=0;$i<$rowcnt;$i++){
 
    if ($result1 && $result2 && $resulta1  && $resulta2  && $resulta3)
    {
-           mysqli_query($conn, "COMMIT");                       
+           mysqli_commit($conn);
             echo '({"success":"true","minno":"'.$minhminno.'"})';
    }
    else

@@ -591,6 +591,17 @@ var optRpttype = new Ext.form.FieldSet({
 			}
 		},
 
+		{boxLabel: 'Customer-GSM-wise Sales', name: 'optRpttype', id:'optpartygsn', inputValue: 21,
+			listeners:{
+				check:function(rb,checked){
+					if(checked==true){
+						Rpttype="Customer-GSM-wise Sales";
+
+					}
+				}
+			}
+		},
+
          	{boxLabel: 'RATE Master', name: 'optRpttype', id:'optrate', inputValue: 17,
 			listeners:{
 				check:function(rb,checked){
@@ -1138,6 +1149,22 @@ alert(param);
 
                           }
 
+
+
+						  if (Rpttype == "Customer-GSM-wise Sales") {
+							var p5 = "&partytype=" + encodeURIComponent(partytype);
+							var p6 = "&custcodelist=" + encodeURIComponent(party_code);
+							var param = (p1+p2+p3+p4+p5+p6);
+										if (printtype == "PDF") 
+							 window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RepSalesPartyGSMwise.rptdesign&__format=pdf&' + param, '_blank'); 
+										else if (printtype == "XLS") 
+							 window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RepSalesPartyGSMwise.rptdesign&__format=xls&' + param, '_blank'); 
+										else
+							 window.open('http://10.0.0.251:8080/birt/frameset?__report=Sales/RepSalesPartyGSMwise.rptdesign&' + param, '_blank'); 
+			
+									  }
+
+									  
 
                          if (Rpttype == "Repwise Sales Details") {
           	            var p5 = "&repcode=" + encodeURIComponent(0);

@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="5">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="6">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fromdate" id="7">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="todate" id="8">
+            <property name="valueType">static</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ds_rep" id="9">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fromdate</property>
+                    <property name="paramName">fromdate</property>
+                    <property name="nativeName">fromdate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">todate</property>
+                    <property name="paramName">todate</property>
+                    <property name="nativeName">todate</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">monthStartdate</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">monthEnddate</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">repr_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">cust_ref</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">cust_cr_days</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">cust_desp_target</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">invh_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">weight</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">monthStartdate</property>
+                    <property name="nativeName">monthStartdate</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">monthEnddate</property>
+                    <property name="nativeName">monthEnddate</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">repr_name</property>
+                    <property name="nativeName">repr_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">cust_ref</property>
+                    <property name="nativeName">cust_ref</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">cust_cr_days</property>
+                    <property name="nativeName">cust_cr_days</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">cust_desp_target</property>
+                    <property name="nativeName">cust_desp_target</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">invh_date</property>
+                    <property name="nativeName">invh_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">weight</property>
+                    <property name="nativeName">weight</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call sprep_sal_rep_custwise(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fincode</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fromdate</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>todate</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2"/>
+    </page-setup>
+    <body>
+        <table id="10">
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1px</property>
+            <property name="dataSet">ds_rep</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">cust_ref</property>
+                    <text-property name="displayName">cust_ref</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_ref"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">monthEnddate</property>
+                    <text-property name="displayName">monthEnddate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["monthEnddate"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">monthStartate</property>
+                    <text-property name="displayName">monthStartate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["monthStartdate"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">weight</property>
+                    <text-property name="displayName">weight</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_desp_target</property>
+                    <text-property name="displayName">cust_desp_target</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_desp_target"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">cust_cr_days</property>
+                    <text-property name="displayName">cust_cr_days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cust_cr_days"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">I Week</property>
+                    <text-property name="displayName">I Week</text-property>
+                    <expression name="expression" type="javascript">if ( Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") >= Formatter.format(dataSetRow["monthStartdate"],"yyyy/MM/dd")  &amp;&amp;  Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") &lt;= Formatter.format(dataSetRow["monthEnddate"],"yyyy/MM/dd"))&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 1 &amp;&amp; BirtDateTime.day(dataSetRow["invh_date"])  &lt;= 7)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_Iweek</property>
+                    <text-property name="displayName">sum_Iweek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["I Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">II Week</property>
+                    <text-property name="displayName">II Week</text-property>
+                    <expression name="expression" type="javascript">if ( Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") >= Formatter.format(dataSetRow["monthStartdate"],"yyyy/MM/dd")  &amp;&amp;  Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") &lt;= Formatter.format(dataSetRow["monthEnddate"],"yyyy/MM/dd"))&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 8 &amp;&amp; BirtDateTime.day(dataSetRow["invh_date"])  &lt;= 15)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">III Week</property>
+                    <text-property name="displayName">III Week</text-property>
+                    <expression name="expression" type="javascript">if ( Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") >= Formatter.format(dataSetRow["monthStartdate"],"yyyy/MM/dd")  &amp;&amp;  Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") &lt;= Formatter.format(dataSetRow["monthEnddate"],"yyyy/MM/dd"))&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 16 &amp;&amp; BirtDateTime.day(dataSetRow["invh_date"])  &lt;= 22)&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">IV Week</property>
+                    <text-property name="displayName">IV Week</text-property>
+                    <expression name="expression" type="javascript">if ( Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") >= Formatter.format(dataSetRow["monthStartdate"],"yyyy/MM/dd")  &amp;&amp;  Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") &lt;= Formatter.format(dataSetRow["monthEnddate"],"yyyy/MM/dd"))&#13;
+  if (BirtDateTime.day(dataSetRow["invh_date"]) >= 23)&#13;
+        dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totqty</property>
+                    <text-property name="displayName">totqty</text-property>
+                    <expression name="expression" type="javascript">if ( Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") >= Formatter.format(dataSetRow["monthStartdate"],"yyyy/MM/dd")  &amp;&amp;  Formatter.format(dataSetRow["invh_date"],"yyyy/MM/dd") &lt;= Formatter.format(dataSetRow["monthEnddate"],"yyyy/MM/dd"))&#13;
+      dataSetRow["weight"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IIweek</property>
+                    <text-property name="displayName">sum_IIweek</text-property>
+                    <property name="dataType">integer</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["II Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IIIweek</property>
+                    <text-property name="displayName">sum_IIIweek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["III Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_IVweek</property>
+                    <text-property name="displayName">sum_IVweek</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["IV Week"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_totqty</property>
+                    <text-property name="displayName">sum_totqty</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["totqty"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="44">
+                <property name="width">2in</property>
+            </column>
+            <column id="45"/>
+            <column id="46"/>
+            <column id="47"/>
+            <column id="48"/>
+            <column id="49"/>
+            <column id="50"/>
+            <column id="51"/>
+            <column id="52"/>
+            <column id="53"/>
+            <header>
+                <row id="11">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="12">
+                        <label id="54">
+                            <text-property name="text">cust_ref</text-property>
+                        </label>
+                    </cell>
+                    <cell id="13">
+                        <label id="62">
+                            <text-property name="text">cust_desp_target</text-property>
+                        </label>
+                    </cell>
+                    <cell id="14">
+                        <label id="64">
+                            <text-property name="text">cust_cr_days</text-property>
+                        </label>
+                    </cell>
+                    <cell id="15"/>
+                    <cell id="16"/>
+                    <cell id="17">
+                        <label id="82">
+                            <text-property name="text">I WEEK</text-property>
+                        </label>
+                    </cell>
+                    <cell id="18">
+                        <label id="83">
+                            <text-property name="text">II WEEK</text-property>
+                        </label>
+                    </cell>
+                    <cell id="19">
+                        <label id="84">
+                            <text-property name="text">III WEEK</text-property>
+                        </label>
+                    </cell>
+                    <cell id="20">
+                        <label id="85">
+                            <text-property name="text">IV WEEK</text-property>
+                        </label>
+                    </cell>
+                    <cell id="21">
+                        <label id="87">
+                            <text-property name="text">TOTAL</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="22">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="23">
+                        <data id="55">
+                            <property name="resultSetColumn">cust_ref</property>
+                        </data>
+                    </cell>
+                    <cell id="24">
+                        <data id="63">
+                            <property name="resultSetColumn">cust_desp_target</property>
+                        </data>
+                    </cell>
+                    <cell id="25">
+                        <data id="65">
+                            <property name="resultSetColumn">cust_cr_days</property>
+                        </data>
+                    </cell>
+                    <cell id="26"/>
+                    <cell id="27">
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="28">
+                        <data id="66">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">I Week</property>
+                        </data>
+                    </cell>
+                    <cell id="29">
+                        <data id="74">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">II Week</property>
+                        </data>
+                    </cell>
+                    <cell id="30">
+                        <data id="75">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">III Week</property>
+                        </data>
+                    </cell>
+                    <cell id="31">
+                        <data id="76">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">IV Week</property>
+                        </data>
+                    </cell>
+                    <cell id="32">
+                        <data id="77">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">totqty</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="33">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">1px</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="34">
+                        <data id="89">
+                            <property name="resultSetColumn">monthStartate</property>
+                        </data>
+                    </cell>
+                    <cell id="35"/>
+                    <cell id="36"/>
+                    <cell id="37"/>
+                    <cell id="38">
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                    </cell>
+                    <cell id="39">
+                        <data id="73">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_Iweek</property>
+                        </data>
+                    </cell>
+                    <cell id="40">
+                        <data id="78">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IIweek</property>
+                        </data>
+                    </cell>
+                    <cell id="41">
+                        <data id="79">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IIIweek</property>
+                        </data>
+                    </cell>
+                    <cell id="42">
+                        <data id="80">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_IVweek</property>
+                        </data>
+                    </cell>
+                    <cell id="43">
+                        <data id="81">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">sum_totqty</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

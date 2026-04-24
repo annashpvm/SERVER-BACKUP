@@ -872,6 +872,7 @@ onEsc:function(){
             {
                 show:function(){
                  RefreshData();
+
                  cmbVoucherList.setValue('BKR')
                 }
             }

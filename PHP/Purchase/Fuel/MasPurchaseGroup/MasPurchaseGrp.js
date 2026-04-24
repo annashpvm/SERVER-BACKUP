@@ -2,11 +2,15 @@ Ext.onReady(function(){
    Ext.QuickTips.init();
    var GinFinid = localStorage.getItem('tfinid');
 
-   var AEDFlag = "Add";
-var taxseq = 0;
+   var saveFlag = "Add";
+var taxledcode = 0;
 
- var loadTaxListDatastore = new Ext.data.Store({
-      id: 'loadTaxListDatastore',
+var ledgercode = 0;
+var gstledgercode = 0;
+
+
+ var loadtaxlistdatastore = new Ext.data.Store({
+      id: 'loadtaxlistdatastore',
       proxy: new Ext.data.HttpProxy({
                 url: 'ClsPurchaseGroup.php',      // File to connect to
                 method: 'POST'
@@ -18,12 +22,341 @@ var taxseq = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-            'tax_purcode', 'tax_purname', 'tax_gst', 'tax_cgstper', 'tax_sgstper', 'tax_igstper', 'tax_cgstledcode', 'tax_sgstledcode', 'tax_igstledcode', 'tax_cgstledger', 'tax_sgstledger', 'tax_igstledger'
+ 
+            'tax_purcode', 'tax_purname', 'tax_cgstper', 'tax_sgstper', 'tax_igstper', 'tax_cgstledcode', 'tax_sgstledcode', 'tax_igstledcode',
+            'tax_cgstledger', 'tax_sgstledger', 'tax_igstledger', 'tax_gst', 'tax_purtype', 'tax_state'
+      ]),
+    });
+
+
+
+ var findGSTDetaildatastore = new Ext.data.Store({
+      id: 'findGSTDetaildatastore',
+      proxy: new Ext.data.HttpProxy({
+                url: 'ClsPurchaseGroup.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task:"LoadGSTDetails"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+            'tax_pur_ledcode', 'tax_pur_ledname', 'tax_cgst_ledcode', 'tax_sgst_ledcode', 'tax_igst_ledcode', 'tax_cgst_per', 'tax_sgst_per', 'tax_igst_per', 'tax_cgst_ledname', 'tax_sgst_ledname', 'tax_igst_ledname'
  
       ]),
     });
 
 
+ var loadSearchLedgerListDatastore = new Ext.data.Store({
+      id: 'loadSearchLedgerListDatastore',
+//      autoLoad : true,
+      proxy: new Ext.data.HttpProxy({
+                url: 'ClsPurchaseGroup.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task:"loadSearchLedgerlist"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+          'cust_code', 'cust_name','cust_type'
+      ]),
+    });
+
+
+function LedgerSearch()
+{
+        ledgercode = 0;
+        loadSearchLedgerListDatastore.removeAll();
+        loadSearchLedgerListDatastore.load({
+		url: 'ClsPurchaseGroup.php',
+		params:
+		{
+			task:"loadSearchLedgerlist",
+			ledger : txtNewPurchaseLedger.getRawValue(),
+		},
+        });
+}
+
+
+
+
+
+ var loadSearchGSTListDatastore = new Ext.data.Store({
+      id: 'loadSearchGSTListDatastore',
+//      autoLoad : true,
+      proxy: new Ext.data.HttpProxy({
+                url: 'ClsPurchaseGroup.php',      // File to connect to
+                method: 'POST'
+            }),
+            baseParams:{task:"loadSearchGSTLedgerlist"}, // this parameter asks for listing
+      reader: new Ext.data.JsonReader({
+                  // we tell the datastore where to get his data from
+        root: 'results',
+        totalProperty: 'total',
+        id: 'id'
+      },[
+          'tax_pur_ledcode', 'tax_pur_ledname'
+      ]),
+    });
+
+
+function LedgerGSTLedgerSearch()
+{
+        gstledgercode = 0;
+        loadSearchGSTListDatastore.removeAll();
+        loadSearchGSTListDatastore.load({
+		url: 'ClsPurchaseGroup.php',
+		params:
+		{
+			task:"loadSearchGSTLedgerlist",
+			ledger : txtGSTLedger.getRawValue(),
+		},
+        });
+}
+
+
+
+function grid_chk_flxLedger()
+{
+	var sm = flxLedger.getSelectionModel();
+	var selrow = sm.getSelected();
+
+	var chkitem = (selrow.get('cust_code'));
+	if ((selrow != null)){
+
+		ledgercode = selrow.get('cust_code');
+		ledtype    = selrow.get('cust_type');
+
+//				cmbAccountName.setValue(selrow.get('cust_code'));
+		txtNewPurchaseLedger.setValue(selrow.get('cust_name'));
+                flxLedger.hide();   
+
+
+	}
+
+}
+
+
+function grid_chk_flxGST()
+{
+
+	var sm = flxLedgerGST.getSelectionModel();
+	var selrow = sm.getSelected();
+
+	var chkitem = (selrow.get('tax_pur_ledcode'));
+	if ((selrow != null)){
+
+           	gstledgercode = selrow.get('tax_pur_ledcode');
+		txtGSTLedger.setValue(selrow.get('tax_pur_ledname'));
+                flxLedgerGST.hide();   
+
+        findGSTDetaildatastore.removeAll();
+        findGSTDetaildatastore.load({
+		url: 'ClsPurchaseGroup.php',
+		params:
+		{
+			task:"LoadGSTDetails",
+			ledcode :gstledgercode,
+		},
+                callback:function()
+                { 
+                   var cnt = findGSTDetaildatastore.getCount();
+                   if (cnt > 0)
+                   {
+			taxledcode = findGSTDetaildatastore.getAt(0).get('tax_pur_ledcode');				
+			txtGSTLedger.setValue(findGSTDetaildatastore.getAt(0).get('tax_pur_ledname'));
+			txtcgstper.setValue(findGSTDetaildatastore.getAt(0).get('tax_cgst_per'));
+			txtsgstper.setValue(findGSTDetaildatastore.getAt(0).get('tax_sgst_per'));
+                        txtigstper.setValue(findGSTDetaildatastore.getAt(0).get('tax_igst_per'));
+                        cmbcgstledger.setValue(findGSTDetaildatastore.getAt(0).get('tax_cgst_ledcode'));  
+                        cmbcgstledger.setRawValue(findGSTDetaildatastore.getAt(0).get('tax_cgst_ledname')); 
+                        cmbsgstledger.setValue(findGSTDetaildatastore.getAt(0).get('tax_sgst_ledcode'));  
+                        cmbsgstledger.setRawValue(findGSTDetaildatastore.getAt(0).get('tax_sgst_ledname'));
+                        cmbigstledger.setValue(findGSTDetaildatastore.getAt(0).get('tax_igst_ledcode'));  
+                        cmbigstledger.setRawValue(findGSTDetaildatastore.getAt(0).get('tax_igst_ledname')); 
+                        cmbState.setValue(findGSTDetaildatastore.getAt(0).get('tax_state'));  
+ 
+                   }
+                }
+        });
+
+
+
+	}
+
+}
+
+   var flxLedgerGST = new Ext.grid.EditorGridPanel({
+        frame: false,
+        sm: new Ext.grid.RowSelectionModel(),
+        autoShow: true,
+        stripeRows : true,
+        scrollable: true,
+        height: 450,
+        width: 500,
+        id : flxLedgerGST,
+        x: 300,
+        y: 110,
+    	labelStyle	: "font-size:12px;font-weight:bold;",
+    	style      :"border-radius: 5px;textTransform: uppercase; ",  
+        columns: [   
+//            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
+		{header: "Led Code", dataIndex: 'tax_pur_ledcode',sortable:true,width:60,align:'left',hidden:true},   
+		{header: "", dataIndex: 'tax_pur_ledname',sortable:true,width:330,align:'left'},
+
+        ],
+        store:loadSearchGSTListDatastore,
+
+    listeners:{	
+             'render' : function(cmp) {
+                    cmp.getEl().on('keypress', function(e) {
+                        if (e.getKey() == e.ENTER) {
+                           grid_chk_flxGST();
+                        }
+                     });
+             },
+             'cellDblclick' : function(flxDesc, rowIndex, cellIndex, e){
+                     grid_chk_flxGST();
+             }
+     
+   }
+   });
+
+   var flxLedger = new Ext.grid.EditorGridPanel({
+        frame: false,
+        sm: new Ext.grid.RowSelectionModel(),
+        autoShow: true,
+        stripeRows : true,
+        scrollable: true,
+        height: 450,
+        width: 500,
+        id : flxLedger,
+        x: 300,
+        y: 70,
+    	labelStyle	: "font-size:12px;font-weight:bold;",
+    	style      :"border-radius: 5px;textTransform: uppercase; ",  
+        columns: [   
+//            {header: "S.No  ", dataIndex: 'slno',sortable:true,width:30,align:'left'},    
+		{header: "Led Code", dataIndex: 'cust_code',sortable:true,width:60,align:'left',hidden:true},   
+		{header: "", dataIndex: 'cust_name',sortable:true,width:330,align:'left'},
+		{header: "", dataIndex: 'cust_type',sortable:true,width:330,align:'left'},
+
+        ],
+        store:loadSearchLedgerListDatastore,
+
+    listeners:{	
+             'render' : function(cmp) {
+                    cmp.getEl().on('keypress', function(e) {
+                        if (e.getKey() == e.ENTER) {
+                           grid_chk_flxLedger();
+                        }
+                     });
+             },
+             'cellDblclick' : function(flxDesc, rowIndex, cellIndex, e){
+                     grid_chk_flxLedger();
+             }
+     
+   }
+   });
+
+
+ var txtGSTLedger = new Ext.form.TextField({
+        fieldLabel  : 'PURCHASE LEDGER ',
+        id          : 'txtGSTLedger',
+        name        : 'txtGSTLedger',
+        width       :  400,
+        style       :  {textTransform: "uppercase"},
+	tabindex : 2,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+	enableKeyEvents: true,
+	listeners:{
+          specialkey:function(f,e){
+             if (e.getKey() == e.ENTER)
+             {
+                 if (gsttledgercode == 0)
+                 {    
+                    alert("Select Ledger Name ...");
+                    txtGSTLedger.focus();
+                 }
+                 else
+                 {    
+                   flxLedgerGST.hide();
+
+                 }     
+             }
+             if (e.getKey() == e.DOWN)
+             {
+ 
+             flxLedgerGST.getSelectionModel().selectRow(0)
+             flxLedgerGST.focus;
+             flxLedgerGST.getView().focusRow(0);
+             }
+          },
+	    keyup: function () {
+
+                if (txtGSTLedger.getRawValue().length > 0)
+                { 
+		        flxLedgerGST.getEl().setStyle('z-index','10000');
+		        flxLedgerGST.show();
+		        loadSearchGSTListDatastore.removeAll();
+		          if (txtGSTLedger.getRawValue() != '')
+		             LedgerGSTLedgerSearch();
+                }
+            }
+         }    
+  });
+
+
+
+ var txtNewPurchaseLedger = new Ext.form.TextField({
+        fieldLabel  : 'ADD NEW PURCHASE LEDGER ',
+        id          : 'txtNewPurchaseLedger',
+        name        : 'txtNewPurchaseLedger',
+        width       :  400,
+        style       :  {textTransform: "uppercase"},
+	tabindex : 2,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+	enableKeyEvents: true,
+	listeners:{
+          specialkey:function(f,e){
+             if (e.getKey() == e.ENTER)
+             {
+                 if (ledgercode == 0)
+                 {    
+                    alert("Select Purchase  Ledger Name ...");
+                    txtNewPurchaseLedger.focus();
+                 }
+                 else
+                 {    
+                   flxLedger.hide();
+
+                 }     
+             }
+             if (e.getKey() == e.DOWN)
+             {
+ 
+             flxLedger.getSelectionModel().selectRow(0)
+             flxLedger.focus;
+             flxLedger.getView().focusRow(0);
+             }
+          },
+	    keyup: function () {
+                if (txtNewPurchaseLedger.getRawValue().length > 0)
+                { 
+		        flxLedger.getEl().setStyle('z-index','10000');
+		        flxLedger.show();
+		        loadSearchLedgerListDatastore.removeAll();
+		          if (txtNewPurchaseLedger.getRawValue() != '')
+		             LedgerSearch();
+                }
+            }
+         }    
+  });
 
 
  var LoadCgstLedgerStore = new Ext.data.Store({
@@ -40,8 +373,8 @@ var taxseq = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'cust_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 
@@ -59,8 +392,8 @@ var taxseq = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'cust_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 
@@ -78,94 +411,18 @@ var taxseq = 0;
         totalProperty: 'total',
         id: 'id'
       },[
-	{name:'led_code', type: 'int',mapping:'led_code'},
-	{name:'led_name', type: 'string',mapping:'led_name'}
+	{name:'cust_code', type: 'int',mapping:'cust_code'},
+	{name:'cust_name', type: 'string',mapping:'cust_name'}
       ]),
     });
 
-
-   function find_gstper()
-   {
-      txtCGSTPer.setValue('');
-      txtSGSTPer.setValue('');
-      txtIGSTPer.setValue('');
-      if (txtGSTPer.getValue() == 0)
-      {
-          txtCGSTPer.setValue(0);
-          txtSGSTPer.setValue(0);
-          txtIGSTPer.setValue(0);
-      } 
-
-      if (txtGSTPer.getValue() > 0)
-      {
-          txtCGSTPer.setValue(txtGSTPer.getValue()/2);
-          txtSGSTPer.setValue(txtGSTPer.getValue()/2);
-          txtIGSTPer.setValue(txtGSTPer.getValue());
-
-		    	LoadCgstLedgerStore.removeAll();
-			LoadCgstLedgerStore.load({
-		        url: 'ClsPurchaseGroup.php',
-		        params: {
-			     task: 'LoadgstLedger',
-		             gsttype :'%INPUT%',   
-		             gst :  txtCGSTPer.getValue()
-		        }
-		        });
-
-    
-		    	LoadSgstLedgerStore.removeAll();
-			LoadSgstLedgerStore.load({
-		        url: 'ClsPurchaseGroup.php',
-		        params: {
-			     task: 'LoadgstLedger',
-		             gsttype :'%INPUT%',   
-		             gst :  txtSGSTPer.getValue()
-		        }
-		        });
-            	LoadIgstLedgerStore.removeAll();
-		LoadIgstLedgerStore.load({
-                url: 'ClsPurchaseGroup.php',
-                params: {
-		     task: 'LoadgstLedger',
-                     gsttype :'%INPUT%',   
-                     gst :  txtIGSTPer.getValue()
-                },
-                callback:function()
-                {
-                }
-             });
-
-
-
-      }  
-   }
-   
-
-   var txtGSTPer = new Ext.form.NumberField({
-        fieldLabel  : 'GST %',
-        id          : 'txtGSTPer',
-        name        : 'txtGSTPer',
-        width       :  60,
-        enableKeyEvents: true,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
-        listeners:{
-            keyup:function(){
-                  find_gstper();
-            } ,
-            change:function(){
-                  find_gstper();
-            } , 
-        } 
-        
-    });
-
-   var txtCGSTPer = new Ext.form.NumberField({
+   var txtcgstper = new Ext.form.NumberField({
         fieldLabel  : 'CGST %',
-        id          : 'txtCGSTPer',
-        name        : 'txtCGSTPer',
+        id          : 'txtcgstper',
+        name        : 'txtcgstper',
         width       :  60,
         enableKeyEvents: true,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",  
         listeners:{
             keyup:function(){
             	LoadCgstLedgerStore.removeAll();
@@ -173,38 +430,48 @@ var taxseq = 0;
                 url: 'ClsPurchaseGroup.php',
                 params: {
 		     task: 'LoadgstLedger',
-                     gsttype :'%INPUT%',   
-                     gst :  txtCGSTPer.getValue()
+                     gsttype :'CGST',   
+                     gst :  txtcgstper.getValue()
                 },
                 callback:function()
                 {
-                    txtSGSTPer.setValue(txtCGSTPer.getValue());
+                    var cnt=LoadCgstLedgerStore.getCount();
+	            if(cnt>0)
+		    {      
+                        txtsgstper.setValue(txtcgstper.getValue());
+                        cmbcgstledger.setValue(LoadCgstLedgerStore.getAt(0).get('tax_cgst_ledcode'));  
+                        cmbcgstledger.setRawValue(LoadCgstLedgerStore.getAt(0).get('tax_cgst_ledname'));  
 		    	LoadSgstLedgerStore.removeAll();
 			LoadSgstLedgerStore.load({
 		        url: 'ClsPurchaseGroup.php',
 		        params: {
 			     task: 'LoadgstLedger',
-		             gsttype :'%INPUT%',   
-		             gst :  txtSGSTPer.getValue()
-		        }
-		        });
+		             gsttype :'SGST',   
+		             gst :  txtsgstper.getValue()
+		        },
+                        callback:function()
+                        {
+                         }
 
+		        });
+                    }  
                 }
+        
              });
             }  
         } 
         
     });
 	
-  var txtSGSTPer = new Ext.form.NumberField({
+  var txtsgstper = new Ext.form.NumberField({
         fieldLabel  : 'SGST %',
-        id          : 'txtSGSTPer',
-        name        : 'txtSGSTPer',
+        id          : 'txtsgstper',
+        name        : 'txtsgstper',
         width       :  60,
         allowBlank  :  true,
 	tabindex : 1,
         enableKeyEvents: true,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",  
         listeners:{
             keyup:function(){
             	LoadSgstLedgerStore.removeAll();
@@ -212,8 +479,8 @@ var taxseq = 0;
                 url: 'ClsPurchaseGroup.php',
                 params: {
 		     task: 'LoadgstLedger',
-                     gsttype :'%INPUT%',   
-                     gst :  txtSGSTPer.getValue()
+                     gsttype :'SGST',   
+                     gst :  txtsgstper.getValue()
                 },
                 callback:function()
                 {
@@ -222,14 +489,14 @@ var taxseq = 0;
             }  
         } 
     });
-  var txtIGSTPer = new Ext.form.NumberField({
+  var txtigstper = new Ext.form.NumberField({
         fieldLabel  : 'IGST %',
-        id          : 'txtIGSTPer',
-        name        : 'txtIGSTPer',
+        id          : 'txtigstper',
+        name        : 'txtigstper',
         width       :  60,
         allowBlank  :  true,
         enableKeyEvents: true,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",  
         listeners:{
             keyup:function(){
             	LoadIgstLedgerStore.removeAll();
@@ -237,8 +504,8 @@ var taxseq = 0;
                 url: 'ClsPurchaseGroup.php',
                 params: {
 		     task: 'LoadgstLedger',
-                     gsttype :'%INPUT%',   
-                     gst :  txtIGSTPer.getValue()
+                     gsttype :'IGST',   
+                     gst :  txtigstper.getValue()
                 },
                 callback:function()
                 {
@@ -265,94 +532,102 @@ var taxseq = 0;
     });
 
 
-
-var loadPurchaseGroupDatasore = new Ext.data.Store({
-  id: 'loadPurchaseGroupDatasore',
-  autoLoad:true,
-  proxy: new Ext.data.HttpProxy({
-            url: 'ClsPurchaseGroup.php',      // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{task: "loadPurGroup"}, // this parameter asks for listing
-  reader: new Ext.data.JsonReader({
-              // we tell the datastore where to get his data from
-    root: 'results',
-    totalProperty: 'total',
-    id: 'id'
-  },['led_code','led_name'
-  ])
-});
-
-
-
-var cmbPurchaseLedger = new Ext.form.ComboBox({
-        fieldLabel      : 'Purchase Ledger',
-        width           : 300,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+var cmbState = new Ext.form.ComboBox({
+        fieldLabel      : 'State',
+        width           :  220,
+        displayField    : 'field2', 
+        valueField      : 'field1',
         hiddenName      : '',
-        id              : 'cmbPurchaseLedger',
+        id              : 'cmbState',
         typeAhead       : true,
         mode            : 'local',
-        store           : loadPurchaseGroupDatasore,
-        labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
+        store           : [['1','TAMIL NADU'],['2','OTHER STATES'],['2','IMPORT'] ],
         forceSelection  : true,
         triggerAction   : 'all',
         selectOnFocus   : false,
-        editable        : true,
+        editable        : false,
+//	disabled	: true,
 	tabIndex	: 0,
-        allowblank      : true,
-        
-        listeners: {
-            select: function ()                 {
-              }
-        } 
-   });
+        allowblank      : false,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+    	style      : "border-radius:5px;",         
+	listeners:{
+        select: function(combo){
 
+            var state = combo.getValue();
 
+            if(state == '1'){ // TAMIL NADU
 
+                txtcgstper.enable();
+                txtsgstper.enable();
+                cmbcgstledger.enable();
+                cmbsgstledger.enable();
+                txtigstper.setValue(0);
+                cmbigstledger.setValue('');
+                txtigstper.disable();
+                cmbigstledger.disable();
+
+            }else{ // OTHER STATES / IMPORT
+
+                txtcgstper.disable();
+                txtsgstper.disable();
+                cmbcgstledger.disable();
+                cmbsgstledger.disable();
+                txtcgstper.setValue(0);
+                txtsgstper.setValue(0);
+                cmbcgstledger.setValue('');
+                cmbsgstledger.setValue('');
+                txtigstper.enable();
+                cmbigstledger.enable();
+
+            }            
+                      
+	}
+	}
+});
 
 var cmbcgstledger = new Ext.form.ComboBox({
         fieldLabel      : 'CGST Ledger',
-        width           : 250,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+        width           : 350,
+        displayField    : 'cust_name', 
+        valueField      : 'cust_code',
         hiddenName      : '',
         id              : 'cmbcgstledger',
         typeAhead       : true,
         mode            : 'local',
         store           : LoadCgstLedgerStore,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         forceSelection  : true,
         triggerAction   : 'all',
         selectOnFocus   : false,
         editable        : true,
 	tabIndex	: 0,
         allowblank      : true,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",  
         
         listeners: {
-            select: function ()                 {
+            select: function () {
+             
               }
         } 
    });
 
 var cmbsgstledger = new Ext.form.ComboBox({
         fieldLabel      : 'SGST Ledger',
-        width           : 250,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+        width           : 350,
+        displayField    : 'cust_name', 
+        valueField      : 'cust_code',
         hiddenName      : '',
         id              : 'cmbsgstledger',
         typeAhead       : true,
         mode            : 'local',
         store           : LoadSgstLedgerStore,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         forceSelection  : true,
         triggerAction   : 'all',
         selectOnFocus   : false,
         editable        : true,
 	tabIndex	: 0,
         allowblank      : true,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",  
         
         listeners: {
             select: function ()                 {
@@ -363,22 +638,21 @@ var cmbsgstledger = new Ext.form.ComboBox({
 
 var cmbigstledger = new Ext.form.ComboBox({
         fieldLabel      : 'IGST Ledger',
-        width           : 250,
-        displayField    : 'led_name', 
-        valueField      : 'led_code',
+        width           : 350,
+        displayField    : 'cust_name', 
+        valueField      : 'cust_code',
         hiddenName      : '',
         id              : 'cmbigstledger',
         typeAhead       : true,
         mode            : 'local',
         store           : LoadIgstLedgerStore,
-     labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         forceSelection  : true,
         triggerAction   : 'all',
         selectOnFocus   : false,
         editable        : true,
 	tabIndex	: 0,
         allowblank      : true,
-        
+                labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",  
         listeners: {
             select: function ()                 {
               }
@@ -388,20 +662,33 @@ var cmbigstledger = new Ext.form.ComboBox({
 
 
    function RefreshData(){
-	txtCGSTPer.setRawValue("");
-	txtSGSTPer.setRawValue("");
-        txtIGSTPer.setRawValue("");
-         AEDFlag = "Add";
-			loadTaxListDatastore.load({
+       flxLedger.hide();
+       flxLedgerGST.hide();
+	txtcgstper.setRawValue("");
+	txtsgstper.setRawValue("");
+        txtigstper.setRawValue("");
+        SaveFlag = "Edit";
+        Ext.getCmp('txtNewPurchaseLedger').setDisabled(true);
+        Ext.getCmp('txtGSTLedger').setDisabled(false);
+
+
+			loadtaxlistdatastore.load({
 				url: 'ClsPurchaseGroup.php',
                 		params: {
                     			task: 'LoadTaxList'
-                		}
+                		},
+                callback:function()
+                {
+	//	alert(loadtaxlistdatastore.getAt(0).get('tax_state'));		
+                }
 			});
 
 
 
 };
+
+
+
    var dgrecord = Ext.data.Record.create([]);
    var flxDetail = new Ext.grid.EditorGridPanel({
         frame: false,
@@ -410,14 +697,13 @@ var cmbigstledger = new Ext.form.ComboBox({
         stripeRows : true,
         scrollable: true,
         height: 200,
-        width: 920,
+        width: 1200,
         x: 0,
         y: 0,
         columns: [   
 
-            {header: "Pur. Led Code", dataIndex: 'tax_purcode',sortable:true,width:50,align:'left'},
-            {header: "Pur Led Name", dataIndex: 'tax_purname',sortable:true,width:150,align:'left'},
-            {header: "GST %", dataIndex: 'tax_gst',sortable:true,width:60,align:'left'}, 
+            {header: "Tax Code", dataIndex: 'tax_purcode',sortable:true,width:50,align:'left'},
+            {header: "Tax Name", dataIndex: 'tax_purname',sortable:true,width:220,align:'left'},
             {header: "SGST %", dataIndex: 'tax_sgstper',sortable:true,width:60,align:'left'}, 
             {header: "CGST %", dataIndex: 'tax_cgstper',sortable:true,width:60,align:'left'}, 
             {header: "IGST %", dataIndex: 'tax_igstper',sortable:true,width:60,align:'left'}, 
@@ -427,10 +713,11 @@ var cmbigstledger = new Ext.form.ComboBox({
             {header: "CGST Ledger", dataIndex: 'tax_cgstledger',sortable:true,width:200,align:'left'},
             {header: "SGST Ledger", dataIndex: 'tax_sgstledger',sortable:true,width:200,align:'right'},
             {header: "IGST Ledger", dataIndex: 'tax_igstledger',sortable:true,width:200,align:'left'},
+            {header: "State",     dataIndex: 'tax_state',sortable:true,width:200,align:'left'},
 
 
         ],
-        store:loadTaxListDatastore,
+        store:loadtaxlistdatastore,
 
     listeners:{	
 
@@ -444,23 +731,29 @@ var cmbigstledger = new Ext.form.ComboBox({
 		msg: 'Press YES to Modify',
 		fn: function(btn){
 		if (btn === 'yes'){
-		AEDFlag = "Edit";
+		SaveFlag = "Edit";
 			var sm = flxDetail.getSelectionModel();
 			var selrow = sm.getSelected();
-			var chkitem = (selrow.get('tax_code'));
-                                AEDFlag = "Edit";
+			var chkitem = (selrow.get('tax_pur_ledcode'));
+                                SaveFlag = "Edit";
 				gridedit = "true";
 				editrow = selrow;
-				taxseq = selrow.get('tax_code');				
-				txtGSTPer.setValue(selrow.get('tax_gst'));
-				txtCGSTPer.setValue(selrow.get('tax_cgstper'));
-				txtSGSTPer.setValue(selrow.get('tax_sgstper'));
-				txtIGSTPer.setValue(selrow.get('tax_igstper'));
-                		cmbPurchaseLedger.setValue(selrow.get('tax_purcode'));
-              			cmbcgstledger.setValue(selrow.get('tax_cgstledcode'));				
-              			cmbsgstledger.setValue(selrow.get('tax_sgstledcode'));				
-              			cmbigstledger.setValue(selrow.get('tax_igstledcode'));				
-			
+				taxledcode = selrow.get('tax_purcode');	
+                ledgercode = selrow.get('tax_purcode');						
+				txtGSTLedger.setRawValue(selrow.get('tax_purname'));
+				txtcgstper.setValue(selrow.get('tax_cgstper'));
+				txtsgstper.setValue(selrow.get('tax_sgstper'));
+				txtigstper.setValue(selrow.get('tax_igstper'));
+
+                                cmbcgstledger.setValue(selrow.get('tax_cgstledcode'));
+                                cmbsgstledger.setValue(selrow.get('tax_sgstledcode'));
+                                cmbigstledger.setValue(selrow.get('tax_igstledcode'));
+
+                                cmbcgstledger.setRawValue(selrow.get('tax_cgstledger'));
+                                cmbsgstledger.setRawValue(selrow.get('tax_sgstledger'));
+                                cmbigstledger.setRawValue(selrow.get('tax_igstledger'));
+
+		                cmbState.setValue(selrow.get('tax_state'));		
 
 				flxDetail.getSelectionModel().clearSelections();
 
@@ -478,7 +771,7 @@ var cmbigstledger = new Ext.form.ComboBox({
 
    });
 
-   var MasItemGroupPanel = new Ext.FormPanel({
+   var MasPurchaseTaxPanel = new Ext.FormPanel({
         renderTo    : Ext.getBody(),
         xtype       : 'form',
         title       : 'GROUP NAME',
@@ -489,7 +782,7 @@ var cmbigstledger = new Ext.form.ComboBox({
         x           : 0,
         y           : 0,
         frame       : false,
-        id          : 'MasItemGroupPanel',
+        id          : 'MasPurchaseTaxPanel',
         method      : 'POST',
         layout      : 'absolute',
         reader: new Ext.data.JsonReader({
@@ -503,8 +796,27 @@ var cmbigstledger = new Ext.form.ComboBox({
             style   :'background-color:#d7d5fa',
             fontSize:18,
             items: [
+
                 
-         {
+                {
+                    text: 'New',
+                    id  : 'new',
+                    style  : 'text-align:center;',
+                    tooltip: 'NEW Details...', height: 40, fontSize:30,width:70,
+                    icon: '/Pictures/save.png',
+                     //fp.getForm().reset();
+                    listeners:{
+                        click: function () {
+                         Ext.getCmp('txtNewPurchaseLedger').setDisabled(false);
+                         Ext.getCmp('txtGSTLedger').setDisabled(true);
+                         SaveFlag = "Add";
+                         txtNewPurchaseLedger.focus();
+                        }
+                     }    
+                },'-',   
+                
+                {
+//save
                     text: 'Save',
                     style  : 'text-align:center;',
                     tooltip: 'Save Details...', height: 40, fontSize:30,width:70,
@@ -512,18 +824,25 @@ var cmbigstledger = new Ext.form.ComboBox({
                      //fp.getForm().reset();
                     listeners:{
                         click: function () {
+                               var ledname ='';    
+                               if (SaveFlag == "Add")
+                                  ledname =  txtNewPurchaseLedger.getRawValue();
+                               else
+                                  ledname =  txtGSTLedger.getRawValue();
+    
 
-                                if(cmbPurchaseLedger.getRawValue()=="" || cmbPurchaseLedger.getValue()==0)
-				{
-					alert("Select Purchase Ledger..");
-					cmbPurchaseLedger.setFocus();
-				}
-                                else
-                                if(txtGSTPer.getRawValue()=="" || cmbPurchaseLedger.getValue()==0)
+
+                                if (SaveFlag == "Add" && (txtNewPurchaseLedger.getRawValue()=="" || txtNewPurchaseLedger.getValue()==0))
 				{
 					alert("Enter Tax Name..");
-					cmbPurchaseLedger.setFocus();
-				}   
+					txtGSTLedger.setFocus();
+				}
+                                else if (SaveFlag == "Edit" && (txtGSTLedger.getRawValue()=="" || txtGSTLedger.getValue()==0))
+				{
+					alert("Enter Tax Name..");
+					txtNewPurchaseLedger.setFocus();
+				}
+
 				else
 				{
 					Ext.MessageBox.show({
@@ -539,20 +858,21 @@ var cmbigstledger = new Ext.form.ComboBox({
 		                            	url: 'FrmMasPurTaxSave.php',
 		                                params:
 						{
-                                                        saveflag        : AEDFlag,
-
-                                                        purledcode      : cmbPurchaseLedger.getValue(),
-                                                        purledname      : cmbPurchaseLedger.getRawValue(),
+                            saveflag        : SaveFlag,
+                            taxledcode      : ledgercode,
+							taxname         : ledname, 
 							taxsgst_ledger  : cmbsgstledger.getRawValue(), 
 							taxcgst_ledger  : cmbcgstledger.getRawValue(), 
 							taxigst_ledger  : cmbigstledger.getRawValue(),  
 							taxsgst_ledcode : cmbsgstledger.getValue(), 
 							taxcgst_ledcode : cmbcgstledger.getValue(), 
 							taxigst_ledcode : cmbigstledger.getValue(),  
-							taxsgst         : txtSGSTPer.getValue(),   
-							taxcgst         : txtCGSTPer.getValue(), 							        taxigst         : txtIGSTPer.getValue(),  
-							taxgst          : txtGSTPer.getValue(),   
+							taxsgst         : txtsgstper.getValue(),   
+							taxcgst         : txtcgstper.getValue(), 				
+                            taxigst         : txtigstper.getValue(), 
+						    statecode       : cmbState.getValue(), 
 
+ 
 
        
  	
@@ -565,7 +885,7 @@ var cmbigstledger = new Ext.form.ComboBox({
 						{
    
  						Ext.MessageBox.alert("Alert","Saved ");
-						    MasItemGroupPanel.getForm().reset();
+						    MasPurchaseTaxPanel.getForm().reset();
 							RefreshData();
                                                 }
                                              	else 
@@ -611,7 +931,7 @@ var cmbigstledger = new Ext.form.ComboBox({
                     tooltip: 'Close...', height: 40, fontSize:30,width:70,
                     icon: '/Pictures/exit.png',
                     handler: function(){	
-                            MasFuelItemGroupWindow.hide();
+                            MasPurchaseTaxWindow.hide();
                         }
                 }]
         },
@@ -621,57 +941,65 @@ var cmbigstledger = new Ext.form.ComboBox({
                 layout  : 'hbox',
                 border  : true,
                 height  : 260,
-                width   : 650,
+                width   : 940,
 		style:{ border:'1px solid red'},
                 layout  : 'absolute',
-                x       : 150,
+                x       : 90,
                 y       : 10,	
                 items:[
 
+                          { 
+                             xtype       : 'fieldset',
+                             title       : '',
+                             labelWidth  : 160,
+                             width       : 700,
+                             x           : 0,
+                             y           : 10,
+                             border      : false,
+                             items: [txtNewPurchaseLedger]   	
+                           },
 
 
+                          { 
+                             xtype       : 'fieldset',
+                             title       : '',
+                             labelWidth  : 160,
+                             width       : 700,
+                             x           : 0,
+                             y           : 60,
+                             border      : false,
+                             items: [txtGSTLedger]   	
+                           },
+
+                          { 
+                             xtype       : 'fieldset',
+                             title       : '',
+                             labelWidth  : 80,
+                             width       : 500,
+                             x           : 600,
+                             y           : 60,
+                             border      : false,
+                             items: [cmbState]   	
+                           },
 
                             { 
                               xtype       : 'fieldset',
                               title       : '',
-                              labelWidth  : 130,
-                              width       : 500,
-                              x           : 0,
-                              y           : 10,
-                              border      : false,
-                              items: [cmbPurchaseLedger]
-                            },
-
-                            { 
-                              xtype       : 'fieldset',
-                              title       : '',
-                              labelWidth  : 130,
-                              width       : 250,
-                              x           : 0,
-                              y           : 50,
-                              border      : false,
-                              items: [txtGSTPer]
-                            },
-
-
-                            { 
-                              xtype       : 'fieldset',
-                              title       : '',
-                              labelWidth  : 130,
+                              labelWidth  : 160,
                               width       : 400,
                               x           : 0,
-                              y           : 90,
+                              y           : 110,
                               border      : false,
-                              items: [txtCGSTPer]
+                              items: [txtcgstper]
                             },
 
                             { 
                               xtype       : 'fieldset',
                               title       : '',
                               labelWidth  : 100,
-                              width       : 420,
-                              x           : 220,
-                              y           : 90,
+                              width       : 600,
+                              x           : 300,
+                              y           : 110,
                               border      : false,
                               items: [cmbcgstledger]
 
@@ -681,12 +1009,12 @@ var cmbigstledger = new Ext.form.ComboBox({
                             { 
                               xtype       : 'fieldset',
                               title       : '',
-                              labelWidth  : 130,
+                              labelWidth  : 160,
                               width       : 300,
                               x           : 0,
-                              y           : 140,
+                              y           : 150,
                               border      : false,
-                              items: [txtSGSTPer]
+                              items: [txtsgstper]
                             } ,   
 		
   
@@ -694,9 +1022,9 @@ var cmbigstledger = new Ext.form.ComboBox({
                              xtype       : 'fieldset',
                              title       : '',
                              labelWidth  : 100,
-                             width       : 420,
-                             x           : 220,
-                             y           : 140,
+                             width       : 600,
+                             x           : 300,
+                             y           : 150,
                              border      : false,
                              items: [cmbsgstledger]
 
@@ -706,12 +1034,12 @@ var cmbigstledger = new Ext.form.ComboBox({
                             { 
                               xtype       : 'fieldset',
                               title       : '',
-                              labelWidth  : 130,
-                              width       : 300,
+                              labelWidth  : 160,
+                              width       : 400,
                               x           : 0,
                               y           : 190,
                               border      : false,
-                              items: [txtIGSTPer]
+                              items: [txtigstper]
                             } ,
 
   
@@ -719,8 +1047,8 @@ var cmbigstledger = new Ext.form.ComboBox({
                                xtype       : 'fieldset',
                                title       : '',
                                labelWidth  : 100,
-                               width       : 420,
-                               x           : 220,
+                               width       : 600,
+                               x           : 300,
                                y           : 190,
                                border      : false,
                                items: [cmbigstledger]
@@ -732,25 +1060,25 @@ var cmbigstledger = new Ext.form.ComboBox({
                 title   : 'DETAILS',
                 layout  : 'hbox',
                 border  : true,
-                height  : 230,
-                width   : 950,
+                height  : 250,
+                width   : 1120,
 		style:{ border:'1px solid red',color:' #581845 '},
                 layout  : 'absolute',
                 x       : 10,
-                y       : 290,
+                y       : 270,
                 items:[flxDetail]
-            },    
+            },   flxLedger ,  flxLedgerGST
 
         ],
     });
     
    
-    var MasFuelItemGroupWindow = new Ext.Window({
+    var MasPurchaseTaxWindow = new Ext.Window({
 	height      : 600,
-        width       : 1000,
+        width       : 1200,
         y           : 35,
-        title       : 'Fuel Item Group /GST Master ',
-        items       : MasItemGroupPanel,
+        title       : 'PURCHASE GST MASTER',
+        items       : MasPurchaseTaxPanel,
         layout      : 'fit',
         closable    : true,bodyStyle:{"background-color":"#E9EEDD"},
         minimizable : true,
@@ -764,5 +1092,5 @@ var cmbigstledger = new Ext.form.ComboBox({
 		}
         } 
     });
-    MasFuelItemGroupWindow.show();  
+    MasPurchaseTaxWindow.show();  
 });

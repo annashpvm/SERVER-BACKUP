@@ -37,6 +37,7 @@
   var poqty = 0;
   var itempoqty = 0;
   var itemrecdqty = 0;
+  var olddept = 0;
  var loadPassword = new Ext.data.Store({
       id: 'loadPassword',
       proxy: new Ext.data.HttpProxy({
@@ -2100,7 +2101,7 @@ function RefreshData(){
 //                           alert(Ext.getCmp('txtspec').getvalue());
 	
 
-			var gstSave;
+		            	var gstSave;
 	                    gstSave="true";
         	            if (cmbdept.getValue()==0 || cmbdept.getRawValue()=="")
         	            {
@@ -2145,6 +2146,8 @@ function RefreshData(){
 				{
                             if (btn === 'yes')
 				{
+
+                            Ext.getCmp('save').setDisabled(true);         
                             if (gstSave === "true")
 	                        {  
 
@@ -2164,44 +2167,45 @@ function RefreshData(){
                           Ext.Ajax.request({
                             url: 'TrnIndentSave.php',
                             params :
-                             {
-                             	griddet	  : Ext.util.JSON.encode(indupdData),  
-                       
-                                cnt       : indData.length,    
-                                savetype  : gstFlag,                                
-				compcode  : Gincompcode,                                 
-                                finid     : Ginfinid,
-                                indno     : txtIndno.getValue(),
-				inddate   : Ext.util.Format.date(dtpDate.getValue(),"Y-m-d"),
-                                entdate   : Ext.util.Format.date(new Date(),"Y-m-d"),
+                            {
+                            griddet	  : Ext.util.JSON.encode(indupdData),  
 
-                                indtype   : indtype,
-				preparedby: txtindentby.getRawValue(),
-				approvedby: cmbapproval.getValue(),
-				dept      : cmbdept.getValue(),
-                                purpose   : cmbPurpose.getRawValue(),
-				userid	  : userid,
-				},
-                              callback: function(options, success, response)
-                              {
-                                var obj = Ext.decode(response.responseText);
-                                 if (obj['success']==="true")
-					{                                
-                                    Ext.MessageBox.alert("Indent Saved -" + obj['msg']);
-                           
-                                    IndentFormPanel.getForm().reset();
-                                    flxDetail.getStore().removeAll();
-                                    RefreshData();
+                            cnt       : indData.length,    
+                            savetype  : gstFlag,                                
+                            compcode  : Gincompcode,                                 
+                            finid     : Ginfinid,
+                            indno     : txtIndno.getValue(),
+                            inddate   : Ext.util.Format.date(dtpDate.getValue(),"Y-m-d"),
+                            entdate   : Ext.util.Format.date(new Date(),"Y-m-d"),
 
+                            indtype   : indtype,
+                            preparedby: txtindentby.getRawValue(),
+                            approvedby: cmbapproval.getValue(),
+                            dept      : cmbdept.getValue(),
+                            purpose   : cmbPurpose.getRawValue(),
+                            userid	  : userid,
+                            },
+   
+                                callback: function(options, success, response)
+                                {
+                                    var obj = Ext.decode(response.responseText);
 
+                                    if (obj.success)
+                                    {                                
+                                        Ext.MessageBox.alert("Indent Saved - " + obj.msg);
 
-
-
-                                  }else
-					{
-Ext.MessageBox.alert("Indent Not Saved! Pls Check!- " + obj['msg']);                                                  
+                                        IndentFormPanel.getForm().reset();
+                                        flxDetail.getStore().removeAll();
+                                        RefreshData();
+                                    }
+                                    else
+                                    {
+                                        Ext.MessageBox.alert("Indent Not Saved! Pls Check! - " + obj.msg); 
+                                        Ext.getCmp('save').setDisabled(false);                                                          
                                     }
                                 }
+  
+                              
                            });         
    
                           	}

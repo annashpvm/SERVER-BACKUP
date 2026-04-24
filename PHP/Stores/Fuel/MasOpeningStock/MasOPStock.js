@@ -629,6 +629,7 @@ function grid_tot(){
                show:function(){
 			//if (gstFlag === "Add"){
 
+
 				InitialData();
 
 

@@ -220,7 +220,7 @@ var fin      = localStorage.getItem('ginfinid');
                     text: '<b>WASTE PAPER TAX MASTER</b>',
                     group: 'theme',
                     handler: function(){
-                        window.location.href=('http://10.0.0.251/SHVPM/Purchase/RawMaterial/MasPaperTax/FrmMasPaperTax.php');
+                        window.location.href=('http://10.0.0.251/SHVPM/Purchase/RawMaterial/MasPurchaseGroup/FrmMasPurchaseGroup.php');
                     }
                 },
                 {
@@ -1486,10 +1486,28 @@ new Ext.Toolbar.SplitButton({
             window.location.href=('http://10.0.0.251');
         }
     }),	 	 
- new Ext.Toolbar.SplitButton({
-                text: '<b></b>', id: 'finyear', style: 'background-color: #F1F5EA',
-                width: 150
-            }),
+    new Ext.Toolbar.SplitButton({
+        text: '<b>FIN YEAR</b>',
+        id: 'finyear',
+        style: 'background-color: #F1F5EA',
+        width: 130,
+    
+        handler: function () {
+            window.location.href = 'http://10.0.0.251/SHVPM/Stores/YearChange/yearChange.php';
+        },
+    
+        menu: {
+            items: [
+                {
+                    text: 'Change Financial Year',
+                    handler: function () {
+                        window.location.href = 'http://10.0.0.251/SHVPM/Stores/YearChange/yearChange.php';
+                    }
+                }
+            ]
+        }
+    }),
+
 			
  new Ext.Toolbar.SplitButton({
                 text: '<b></b>', id: 'comp', style: 'background-color: #F1F5EA',

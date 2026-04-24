@@ -1,0 +1,1586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="compcode" id="6">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="fincode" id="7">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="dctype" id="8">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="dcno" id="9">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="srihari" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="ds_delivery_challan" id="5">
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">compcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">compcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">fincode</property>
+                    <property name="paramName">fincode</property>
+                    <property name="nativeName">fincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">dctype</property>
+                    <property name="paramName">dctype</property>
+                    <property name="nativeName">dctype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">dcno</property>
+                    <property name="paramName">dcno</property>
+                    <property name="nativeName">dcno</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">4</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">dch_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">dch_fincode</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">dch_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">dch_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">dch_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">dch_party</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">dch_dept</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">dch_totqty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">dch_totval</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">dch_truck</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">dch_freight</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">dch_return_days</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">dch_remarks</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">dch_refno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">dch_refdate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">dct_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">dct_fincode</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">dct_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">dct_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">dct_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">dct_item_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">dct_new_item</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">dct_issqty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">dct_recqty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">dct_rate</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">dct_purpose</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">dct_hsncode</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">sup_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">sup_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">sup_refname</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">sup_addr1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">sup_addr2</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">33</property>
+                        <property name="name">sup_addr3</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">34</property>
+                        <property name="name">sup_city</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
+                        <property name="name">sup_state</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">sup_cntry_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">sup_zip</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">sup_phone</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
+                        <property name="name">sup_fax</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">sup_email</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">41</property>
+                        <property name="name">sup_web</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">42</property>
+                        <property name="name">sup_led_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">43</property>
+                        <property name="name">sup_grp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">44</property>
+                        <property name="name">sup_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">45</property>
+                        <property name="name">sup_acc_group</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">46</property>
+                        <property name="name">sup_taxcode</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">47</property>
+                        <property name="name">sup_agentcode</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">48</property>
+                        <property name="name">sup_e1saleno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">49</property>
+                        <property name="name">sup_area</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
+                        <property name="name">sup_panno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">51</property>
+                        <property name="name">sup_tinno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">52</property>
+                        <property name="name">sup_sertax_rcno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">53</property>
+                        <property name="name">sup_excise_rcno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">54</property>
+                        <property name="name">sup_tds_type</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">55</property>
+                        <property name="name">sup_gstin</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">56</property>
+                        <property name="name">item_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">57</property>
+                        <property name="name">item_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">58</property>
+                        <property name="name">item_uom</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">59</property>
+                        <property name="name">item_rate</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">60</property>
+                        <property name="name">item_hsncode</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">61</property>
+                        <property name="name">cancelflag</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">62</property>
+                        <property name="name">uom_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">63</property>
+                        <property name="name">uom_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">64</property>
+                        <property name="name">uom_short_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">65</property>
+                        <property name="name">cancelflag_65</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">66</property>
+                        <property name="name">hsn_sno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">67</property>
+                        <property name="name">hsn_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">68</property>
+                        <property name="name">hsn_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">69</property>
+                        <property name="name">hsn_igst</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">70</property>
+                        <property name="name">hsn_cgst</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">71</property>
+                        <property name="name">hsn_sgst</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">72</property>
+                        <property name="name">cancelflag_72</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">srihari</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">dch_comp_code</property>
+                    <property name="nativeName">dch_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">dch_fincode</property>
+                    <property name="nativeName">dch_fincode</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">dch_no</property>
+                    <property name="nativeName">dch_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">dch_date</property>
+                    <property name="nativeName">dch_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">dch_type</property>
+                    <property name="nativeName">dch_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">dch_party</property>
+                    <property name="nativeName">dch_party</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">dch_dept</property>
+                    <property name="nativeName">dch_dept</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">dch_totqty</property>
+                    <property name="nativeName">dch_totqty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">dch_totval</property>
+                    <property name="nativeName">dch_totval</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">dch_truck</property>
+                    <property name="nativeName">dch_truck</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">dch_freight</property>
+                    <property name="nativeName">dch_freight</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">dch_return_days</property>
+                    <property name="nativeName">dch_return_days</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">dch_remarks</property>
+                    <property name="nativeName">dch_remarks</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">dch_refno</property>
+                    <property name="nativeName">dch_refno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">dch_refdate</property>
+                    <property name="nativeName">dch_refdate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">dct_comp_code</property>
+                    <property name="nativeName">dct_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">dct_fincode</property>
+                    <property name="nativeName">dct_fincode</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">dct_no</property>
+                    <property name="nativeName">dct_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">dct_date</property>
+                    <property name="nativeName">dct_date</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">dct_type</property>
+                    <property name="nativeName">dct_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">dct_item_code</property>
+                    <property name="nativeName">dct_item_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">dct_new_item</property>
+                    <property name="nativeName">dct_new_item</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">dct_issqty</property>
+                    <property name="nativeName">dct_issqty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">dct_recqty</property>
+                    <property name="nativeName">dct_recqty</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">dct_rate</property>
+                    <property name="nativeName">dct_rate</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">dct_purpose</property>
+                    <property name="nativeName">dct_purpose</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">dct_hsncode</property>
+                    <property name="nativeName">dct_hsncode</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">sup_code</property>
+                    <property name="nativeName">sup_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">sup_name</property>
+                    <property name="nativeName">sup_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">sup_refname</property>
+                    <property name="nativeName">sup_refname</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">sup_addr1</property>
+                    <property name="nativeName">sup_addr1</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">sup_addr2</property>
+                    <property name="nativeName">sup_addr2</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">33</property>
+                    <property name="name">sup_addr3</property>
+                    <property name="nativeName">sup_addr3</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">34</property>
+                    <property name="name">sup_city</property>
+                    <property name="nativeName">sup_city</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
+                    <property name="name">sup_state</property>
+                    <property name="nativeName">sup_state</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
+                    <property name="name">sup_cntry_code</property>
+                    <property name="nativeName">sup_cntry_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">sup_zip</property>
+                    <property name="nativeName">sup_zip</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">38</property>
+                    <property name="name">sup_phone</property>
+                    <property name="nativeName">sup_phone</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">39</property>
+                    <property name="name">sup_fax</property>
+                    <property name="nativeName">sup_fax</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">40</property>
+                    <property name="name">sup_email</property>
+                    <property name="nativeName">sup_email</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">41</property>
+                    <property name="name">sup_web</property>
+                    <property name="nativeName">sup_web</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">42</property>
+                    <property name="name">sup_led_code</property>
+                    <property name="nativeName">sup_led_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">43</property>
+                    <property name="name">sup_grp_code</property>
+                    <property name="nativeName">sup_grp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">44</property>
+                    <property name="name">sup_type</property>
+                    <property name="nativeName">sup_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">45</property>
+                    <property name="name">sup_acc_group</property>
+                    <property name="nativeName">sup_acc_group</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">46</property>
+                    <property name="name">sup_taxcode</property>
+                    <property name="nativeName">sup_taxcode</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">47</property>
+                    <property name="name">sup_agentcode</property>
+                    <property name="nativeName">sup_agentcode</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">48</property>
+                    <property name="name">sup_e1saleno</property>
+                    <property name="nativeName">sup_e1saleno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">49</property>
+                    <property name="name">sup_area</property>
+                    <property name="nativeName">sup_area</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">50</property>
+                    <property name="name">sup_panno</property>
+                    <property name="nativeName">sup_panno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">51</property>
+                    <property name="name">sup_tinno</property>
+                    <property name="nativeName">sup_tinno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">52</property>
+                    <property name="name">sup_sertax_rcno</property>
+                    <property name="nativeName">sup_sertax_rcno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">53</property>
+                    <property name="name">sup_excise_rcno</property>
+                    <property name="nativeName">sup_excise_rcno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">54</property>
+                    <property name="name">sup_tds_type</property>
+                    <property name="nativeName">sup_tds_type</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">55</property>
+                    <property name="name">sup_gstin</property>
+                    <property name="nativeName">sup_gstin</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">56</property>
+                    <property name="name">item_code</property>
+                    <property name="nativeName">item_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">57</property>
+                    <property name="name">item_name</property>
+                    <property name="nativeName">item_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">58</property>
+                    <property name="name">item_uom</property>
+                    <property name="nativeName">item_uom</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">59</property>
+                    <property name="name">item_rate</property>
+                    <property name="nativeName">item_rate</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">60</property>
+                    <property name="name">item_hsncode</property>
+                    <property name="nativeName">item_hsncode</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">61</property>
+                    <property name="name">cancelflag</property>
+                    <property name="nativeName">cancelflag</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">62</property>
+                    <property name="name">uom_code</property>
+                    <property name="nativeName">uom_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">63</property>
+                    <property name="name">uom_name</property>
+                    <property name="nativeName">uom_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">64</property>
+                    <property name="name">uom_short_name</property>
+                    <property name="nativeName">uom_short_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">65</property>
+                    <property name="name">cancelflag_65</property>
+                    <property name="nativeName">cancelflag</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">66</property>
+                    <property name="name">hsn_sno</property>
+                    <property name="nativeName">hsn_sno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">67</property>
+                    <property name="name">hsn_code</property>
+                    <property name="nativeName">hsn_code</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">68</property>
+                    <property name="name">hsn_type</property>
+                    <property name="nativeName">hsn_type</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">69</property>
+                    <property name="name">hsn_igst</property>
+                    <property name="nativeName">hsn_igst</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">70</property>
+                    <property name="name">hsn_cgst</property>
+                    <property name="nativeName">hsn_cgst</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">71</property>
+                    <property name="name">hsn_sgst</property>
+                    <property name="nativeName">hsn_sgst</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">72</property>
+                    <property name="name">cancelflag_72</property>
+                    <property name="nativeName">cancelflag</property>
+                    <property name="dataType">integer</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call sprep_stores_delivery_challan(?,?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>compcode</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>fincode</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>dctype</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>1</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>dcno</design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>10</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>NotNullable</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="10">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">7.541666666666667in</property>
+            <property name="dataSet">ds_delivery_challan</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">item_name</property>
+                    <text-property name="displayName">item_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["item_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">uom_short_name</property>
+                    <text-property name="displayName">uom_short_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["uom_short_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">dct_issqty</property>
+                    <text-property name="displayName">dct_issqty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dct_issqty"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">dct_rate</property>
+                    <text-property name="displayName">dct_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dct_rate"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">dct_purpose</property>
+                    <text-property name="displayName">dct_purpose</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dct_purpose"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">value</property>
+                    <text-property name="displayName">value</text-property>
+                    <expression name="expression" type="javascript">//row["dct_issqty"]*row["dct_rate"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_addr1</property>
+                    <text-property name="displayName">sup_addr1</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_addr1"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_addr2</property>
+                    <text-property name="displayName">sup_addr2</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_addr2"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_addr3</property>
+                    <text-property name="displayName">sup_addr3</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_addr3"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_city</property>
+                    <text-property name="displayName">sup_city</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_city"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">pincode</property>
+                    <text-property name="displayName">pincode</text-property>
+                    <expression name="expression" type="javascript">//"Pin Code : " + dataSetRow["sup_zip"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_state</property>
+                    <text-property name="displayName">sup_state</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_state"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">gst</property>
+                    <text-property name="displayName">gst</text-property>
+                    <expression name="expression" type="javascript">//"GST IN : " + dataSetRow["sup_gstin"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">dch_no</property>
+                    <text-property name="displayName">dch_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dch_no"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">dch_date</property>
+                    <text-property name="displayName">dch_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dch_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">dch_refno</property>
+                    <text-property name="displayName">dch_refno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dch_refno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">dch_refdate</property>
+                    <text-property name="displayName">dch_refdate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dch_refdate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">dch_truck</property>
+                    <text-property name="displayName">dch_truck</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dch_truck"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">dch_freight</property>
+                    <text-property name="displayName">dch_freight</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dch_freight"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="32">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="33">
+                <property name="width">2.5in</property>
+            </column>
+            <column id="34">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="35">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="36">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="49">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="37">
+                <property name="width">1.6in</property>
+            </column>
+            <header>
+                <row id="77">
+                    <cell id="78"/>
+                    <cell id="79"/>
+                    <cell id="80"/>
+                    <cell id="81"/>
+                    <cell id="82"/>
+                    <cell id="83"/>
+                    <cell id="84"/>
+                </row>
+                <row id="538">
+                    <cell id="539">
+                        <property name="colSpan">7</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="552">
+                            <column id="553">
+                                <property name="width">1.5in</property>
+                            </column>
+                            <column id="554"/>
+                            <row id="555">
+                                <cell id="556"/>
+                                <cell id="557">
+                                    <grid id="558">
+                                        <column id="559"/>
+                                        <row id="560">
+                                            <cell id="561">
+                                                <label id="568">
+                                                    <property name="fontSize">8pt</property>
+                                                    <text-property name="text">SRI RAMAJEYAM</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="562">
+                                            <cell id="563">
+                                                <label id="537">
+                                                    <property name="fontSize">14pt</property>
+                                                    <property name="fontWeight">bold</property>
+                                                    <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="564">
+                                            <cell id="565">
+                                                <label id="569">
+                                                    <text-property name="text">2/151, Keelanmarai Road Villaage, A.Lakshmiapuram Post, Sivakasi - 626127</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="566">
+                                            <cell id="567">
+                                                <grid id="570">
+                                                    <column id="571"/>
+                                                    <column id="572"/>
+                                                    <row id="573">
+                                                        <cell id="574">
+                                                            <label id="576">
+                                                                <property name="fontWeight">bold</property>
+                                                                <text-property name="text">GST IN : 33AALCS4958D1Z7</text-property>
+                                                            </label>
+                                                        </cell>
+                                                        <cell id="575">
+                                                            <label id="577">
+                                                                <text-property name="text">Email : - purchase@sriharipapers.com</text-property>
+                                                            </label>
+                                                        </cell>
+                                                    </row>
+                                                </grid>
+                                            </cell>
+                                        </row>
+                                    </grid>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="69">
+                    <cell id="70">
+                        <property name="colSpan">7</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="836">
+                            <column id="837"/>
+                            <column id="838"/>
+                            <row id="839">
+                                <cell id="840">
+                                    <grid id="842">
+                                        <column id="843"/>
+                                        <row id="844">
+                                            <cell id="845">
+                                                <label id="860">
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">TO</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="846">
+                                            <cell id="847">
+                                                <data id="861">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">sup_addr1</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="848">
+                                            <cell id="849">
+                                                <data id="862">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">sup_addr2</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="850">
+                                            <cell id="851">
+                                                <data id="863">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">sup_addr3</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="852">
+                                            <cell id="853">
+                                                <data id="864">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">sup_city</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="854">
+                                            <cell id="855">
+                                                <data id="865">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">pincode</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="856">
+                                            <cell id="857">
+                                                <data id="866">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">sup_state</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="858">
+                                            <cell id="859">
+                                                <data id="867">
+                                                    <property name="textAlign">left</property>
+                                                    <property name="resultSetColumn">gst</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                    </grid>
+                                </cell>
+                                <cell id="841">
+                                    <grid id="868">
+                                        <property name="height">1.6979166666666667in</property>
+                                        <column id="869"/>
+                                        <column id="870"/>
+                                        <row id="871">
+                                            <property name="height">0.40625in</property>
+                                            <cell id="872">
+                                                <property name="colSpan">2</property>
+                                                <property name="rowSpan">1</property>
+                                                <label id="880">
+                                                    <property name="fontSize">14pt</property>
+                                                    <property name="fontWeight">bold</property>
+                                                    <text-property name="text">RETURNABLE CHALLAN</text-property>
+                                                </label>
+                                            </cell>
+                                        </row>
+                                        <row id="874">
+                                            <property name="height">0.2708333333333333in</property>
+                                            <cell id="875">
+                                                <label id="881">
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">Challan Number</text-property>
+                                                </label>
+                                            </cell>
+                                            <cell id="876">
+                                                <data id="891">
+                                                    <property name="resultSetColumn">dch_no</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="877">
+                                            <property name="height">0.3020833333333333in</property>
+                                            <cell id="878">
+                                                <label id="882">
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">Challan Date</text-property>
+                                                </label>
+                                            </cell>
+                                            <cell id="879">
+                                                <data id="892">
+                                                    <property name="resultSetColumn">dch_date</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="883">
+                                            <property name="height">0.3541666666666667in</property>
+                                            <cell id="884">
+                                                <label id="889">
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">Ref. No</text-property>
+                                                </label>
+                                            </cell>
+                                            <cell id="885">
+                                                <data id="893">
+                                                    <property name="resultSetColumn">dch_refno</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                        <row id="886">
+                                            <property name="height">0.3645833333333333in</property>
+                                            <cell id="887">
+                                                <label id="890">
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">left</property>
+                                                    <text-property name="text">Ref. Date</text-property>
+                                                </label>
+                                            </cell>
+                                            <cell id="888">
+                                                <data id="894">
+                                                    <property name="resultSetColumn">dch_refdate</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                    </grid>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="11">
+                    <cell id="12">
+                        <label id="895">
+                            <text-property name="text">S.No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="13">
+                        <label id="38">
+                            <property name="paddingLeft">30pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Description </text-property>
+                        </label>
+                    </cell>
+                    <cell id="14">
+                        <label id="40">
+                            <text-property name="text">UOM</text-property>
+                        </label>
+                    </cell>
+                    <cell id="15">
+                        <label id="42">
+                            <text-property name="text">Quantity</text-property>
+                        </label>
+                    </cell>
+                    <cell id="16">
+                        <label id="44">
+                            <text-property name="text">Rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="46">
+                        <label id="896">
+                            <text-property name="text">Value</text-property>
+                        </label>
+                    </cell>
+                    <cell id="17">
+                        <label id="50">
+                            <property name="paddingLeft">10pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Purpose</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="18">
+                    <cell id="19"/>
+                    <cell id="20">
+                        <data id="39">
+                            <property name="resultSetColumn">item_name</property>
+                        </data>
+                    </cell>
+                    <cell id="21">
+                        <data id="41">
+                            <property name="resultSetColumn">uom_short_name</property>
+                        </data>
+                    </cell>
+                    <cell id="22">
+                        <data id="43">
+                            <property name="resultSetColumn">dct_issqty</property>
+                        </data>
+                    </cell>
+                    <cell id="23">
+                        <data id="45">
+                            <property name="resultSetColumn">dct_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="47">
+                        <data id="52">
+                            <property name="resultSetColumn">value</property>
+                        </data>
+                    </cell>
+                    <cell id="24">
+                        <data id="51">
+                            <property name="resultSetColumn">dct_purpose</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="25">
+                    <cell id="26">
+                        <property name="colSpan">7</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="913">
+                            <column id="914"/>
+                            <column id="915"/>
+                            <column id="916"/>
+                            <column id="917"/>
+                            <row id="918">
+                                <cell id="919">
+                                    <label id="924">
+                                        <text-property name="text">Vehicle Number</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="920">
+                                    <data id="925">
+                                        <property name="resultSetColumn">dch_truck</property>
+                                    </data>
+                                </cell>
+                                <cell id="921">
+                                    <label id="926">
+                                        <text-property name="text">Freight</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="922">
+                                    <data id="927">
+                                        <property name="resultSetColumn">dch_freight</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="950">
+                    <property name="height">0.5520833333333334in</property>
+                    <cell id="951">
+                        <label id="958"/>
+                    </cell>
+                    <cell id="952">
+                        <data id="968"/>
+                    </cell>
+                    <cell id="953"/>
+                    <cell id="954"/>
+                    <cell id="955"/>
+                    <cell id="956"/>
+                    <cell id="957"/>
+                </row>
+                <row id="905">
+                    <property name="height">0.4479166666666667in</property>
+                    <cell id="906"/>
+                    <cell id="907"/>
+                    <cell id="908"/>
+                    <cell id="909"/>
+                    <cell id="910">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <label id="959">
+                            <property name="paddingRight">7pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">For Sri Hari Venkateswara Paper Mills (P) Ltd</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="960">
+                    <property name="height">0.4479166666666667in</property>
+                    <cell id="961"/>
+                    <cell id="962"/>
+                    <cell id="963"/>
+                    <cell id="964"/>
+                    <cell id="965"/>
+                    <cell id="966"/>
+                    <cell id="967"/>
+                </row>
+                <row id="897">
+                    <cell id="898">
+                        <property name="colSpan">7</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="928">
+                            <column id="929"/>
+                            <column id="930"/>
+                            <column id="940"/>
+                            <column id="931"/>
+                            <row id="932">
+                                <cell id="933">
+                                    <label id="936">
+                                        <text-property name="text">(Store Keeper)</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="934">
+                                    <label id="937">
+                                        <text-property name="text">(Department Head)</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="939">
+                                    <label id="938">
+                                        <text-property name="text">(Purchase Head)</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="935">
+                                    <label id="941">
+                                        <text-property name="text">Authorised By</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="942">
+                    <cell id="943"/>
+                    <cell id="944"/>
+                    <cell id="945"/>
+                    <cell id="946"/>
+                    <cell id="947"/>
+                    <cell id="948"/>
+                    <cell id="949"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

@@ -222,6 +222,21 @@ Ext.onReady(function(){
 
 ]
 });
+
+function getNextFinYear(currentYear) {
+   if (!currentYear) return '';
+
+   var parts = currentYear.split('-'); // ["2025", "2026"]
+
+   if (parts.length !== 2) return '';
+
+   var start = parseInt(parts[0], 10);
+   var end   = parseInt(parts[1], 10);
+
+   return (start + 1) + '-' + (end + 1);
+}
+
+
  var FinanceYearCreationWindow = new Ext.Window({
 	height      : 350,
         width       : 400,
@@ -242,6 +257,9 @@ Ext.onReady(function(){
                  Ext.getCmp('CreateFinYear').setDisabled(true);
 
                  txtCurrentYear.setRawValue(GinFinYear);
+                 var nextYear = getNextFinYear(GinFinYear);
+                 txtNewYear.setRawValue(nextYear);
+/*
                  if (GinFinid == 22)
                     txtNewYear.setRawValue('2023-2024');
                  else    
@@ -250,6 +268,11 @@ Ext.onReady(function(){
                  else    
                     if (GinFinid == 24)
                         txtNewYear.setRawValue('2025-2026');
+                    else    
+                    if (GinFinid == 24)
+                        txtNewYear.setRawValue('2025-2026');                     
+
+*/                    
            }
              }
             });

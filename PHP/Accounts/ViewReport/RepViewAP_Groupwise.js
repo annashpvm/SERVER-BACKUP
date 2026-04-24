@@ -7,9 +7,9 @@ Ext.onReady(function() {
 
    var Gincompcode = localStorage.getItem('gincompcode');
    var GinFinid = localStorage.getItem('ginfinid');
-var usertype = localStorage.getItem('ginuser');
-var UserName = localStorage.getItem('ginusername');
-var UserId   = localStorage.getItem('ginuserid');
+   var usertype = localStorage.getItem('ginuser');
+   var UserName = localStorage.getItem('ginusername');
+   var UserId   = localStorage.getItem('ginuserid');
    var finstartdate = localStorage.getItem('gfinstdate');
    var finenddate  = localStorage.getItem('gfineddate');
 
@@ -69,6 +69,16 @@ var UserId   = localStorage.getItem('ginuserid');
    var printtype='PDF';
 
    var repopt ='Bills';
+
+
+   const formatter = new Intl.NumberFormat('en-IN', {
+    //  style: 'currency',
+      currency: 'inr',
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    }); 
+
+    
 
    var txtFrom1 = new Ext.form.NumberField({
         fieldLabel  : '',
@@ -414,6 +424,24 @@ var optRepOpt = new Ext.form.FieldSet({
     });
 
 
+    var loadAPGroupDatastore = new Ext.data.Store({
+        id: 'loadAPGroupDatastore',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsViewStatements.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task:"loadPayableGroup"}, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id' 
+        },[ 'subgrp2', 'grp_name','closing','debit','credit'
+  
+  
+        ]),
+      });    
+
  var loadTBGrp2DetailsDatastore = new Ext.data.Store({
       id: 'loadTBGrp2DetailsDatastore',
       proxy: new Ext.data.HttpProxy({
@@ -654,7 +682,12 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
         style : "font-size:14px;font-weight:bold",
-        decimalPrecision: 3,
+        decimalPrecision: 2,
+        style: {
+            'color':'#873e72',readOnly:true,'text-align': 'right',
+            'style': 'Helvetica',
+            'font-size': '12px','font-weight':'bold'
+        },
     });
 
 
@@ -667,7 +700,12 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
         style : "font-size:14px;font-weight:bold",
-        decimalPrecision: 3,
+        decimalPrecision: 2,
+        style: {
+            'color':'#873e72',readOnly:true,'text-align': 'right',
+            'style': 'Helvetica',
+            'font-size': '12px','font-weight':'bold'
+        },
     });
 
    var txtTotalDebit2 = new Ext.form.NumberField({
@@ -680,6 +718,11 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         tabindex : 2,
         style : "font-size:14px;font-weight:bold",
         decimalPrecision: 2,
+        style: {
+            'color':'#873e72',readOnly:true,'text-align': 'right',
+            'style': 'Helvetica',
+            'font-size': '12px','font-weight':'bold'
+        },
     });
 
 
@@ -693,6 +736,11 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         tabindex : 2,
         style : "font-size:14px;font-weight:bold",
         decimalPrecision: 2,
+        style: {
+            'color':'#873e72',readOnly:true,'text-align': 'right',
+            'style': 'Helvetica',
+            'font-size': '12px','font-weight':'bold'
+        },
     });
 
    var txtTotalDebitAmount = new Ext.form.NumberField({
@@ -705,6 +753,11 @@ labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         tabindex : 2,
         style : "font-size:14px;font-weight:bold",
         decimalPrecision: 2,
+        style: {
+            'color':'#873e72',readOnly:true,'text-align': 'right',
+            'style': 'Helvetica',
+            'font-size': '12px','font-weight':'bold'
+        },
     });
 
 
@@ -1224,8 +1277,11 @@ function grid_tot(){
 	      dr=Number(dr)+Number(sel[i].data.debit);
 	      cr=cr+Number(sel[i].data.credit);
          }
-        txtTotalDebit.setValue(Ext.util.Format.number(dr,"0.00"));
-        txtTotalCredit.setValue(Ext.util.Format.number(cr,"0.00"));
+
+         var Dr2 = formatter.format(dr);
+         var Cr2 = formatter.format(cr);
+        txtTotalDebit.setRawValue(Dr2);
+        txtTotalCredit.setRawValue(Cr2);
 
 }
 
@@ -1242,8 +1298,13 @@ function grid_tot(){
 	      dr=Number(dr)+Number(sel[i].data.debit);
 	      cr=cr+Number(sel[i].data.credit);
         }
-        txtTotalDebit2.setValue(Ext.util.Format.number(dr,"0.00"));
-        txtTotalCredit2.setValue(Ext.util.Format.number(cr,"0.00"));
+        var Dr2 = formatter.format(dr);
+        var Cr2 = formatter.format(cr);
+        txtTotalDebit2.setRawValue(Dr2);
+        txtTotalCredit2.setRawValue(Cr2);
+
+        //txtTotalDebit2.setValue(Ext.util.Format.number(dr,"0.00"));
+        //txtTotalCredit2.setValue(Ext.util.Format.number(cr,"0.00"));
 }
 
 
@@ -1269,9 +1330,14 @@ function grid_tot(){
               else
                  crbal = Number(crbal)+Number(sel[i].data.invbalamt);     
         }
-        txtTotalDebitAmount.setValue(Ext.util.Format.number(drbal,"0.00"));
-        txtTotalCreditAmount.setValue(Ext.util.Format.number(crbal,"0.00"));
-        txtTotalBalAmt.setValue(Ext.util.Format.number(drbal-crbal,"0.00"));
+
+        var Dr2 = formatter.format(drbal);
+        var Cr2 = formatter.format(crbal);
+        var Clo2 = formatter.format(drbal-crbal);  
+
+        txtTotalDebitAmount.setRawValue(Dr2);
+        txtTotalCreditAmount.setRawValue(Cr2);
+        txtTotalBalAmt.setRawValue(Clo2);
 }
 
 
@@ -1581,27 +1647,40 @@ var btnProcess = new Ext.Button({
                },
             }              
     });
-    var monthenddate = new Ext.form.DateField({
-	fieldLabel: 'To Date',
-        id: 'monthenddate',
-        labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	    format: 'd-m-Y',
-        value: new Date(),
-        enableKeyEvents: true,
-        listeners:{
-                 specialkey:function(f,e){
-                 if (e.getKey() == e.ENTER)
-                 {
-                    ProcessGroupData();
-                  }
-                },
-               blur:function(){
+
+    
+var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+var today = new Date();
+today.setHours(0,0,0,0);
+if (finEnd) finEnd.setHours(0,0,0,0);
+
+var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
+var monthenddate = new Ext.form.DateField({
+    fieldLabel: 'To Date',
+    id: 'monthenddate',
+    labelStyle: "font-size:14px;font-weight:bold;color:#fc9403",
+    format: 'd-m-Y',
+    value: defaultDate,
+    maxValue: finEnd,
+
+    listeners: {
+        afterrender: function(field) {
+            setTimeout(function(){
+                field.setValue(defaultDate);
+            }, 200);
+        },
+        specialkey:function(f,e){
+            if (e.getKey() == e.ENTER){
                 ProcessGroupData();
-               },
-            }           
-
-    });
-
+            }
+        },
+        blur:function(){
+            ProcessGroupData();
+        }
+    }
+});
 
 
 
@@ -1851,15 +1930,38 @@ style: {
     columns:
     [ 	 	
         {header: "GRP Code" , dataIndex: 'grpcode',sortable:false,width:50,align:'left', menuDisabled: true ,hidden : true},
-        {header: "Description " , dataIndex: 'grpname',sortable:false,width:280,align:'left', menuDisabled: true,
-},
-        {header: "Debit" , dataIndex: 'debit',sortable:false,width:100,align:'right', menuDisabled: true},
-        {header: "Credit"  , dataIndex: 'credit',sortable:false,width:100,align:'right', menuDisabled: true},
+        {header: "Description " , dataIndex: 'grpname',sortable:false,width:280,align:'left', menuDisabled: true,},
+        {header: "Debit" , dataIndex: 'debit',sortable:false,width:100,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                } 
+        },
+        {header: "Credit"  , dataIndex: 'credit',sortable:false,width:100,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }             
+        },
     ],
     store:[], // store: GetGridDetailsDatastore,
     listeners:{	
 
-       'cellclick': function (flxGroupwiseDue, rowIndex, cellIndex, e) {
+       'cellDblclick': function (flxGroupwiseDue, rowIndex, cellIndex, e) {
 		var sm = flxGroupwiseDue.getSelectionModel();
 		var selrow = sm.getSelected();
                 grpcode = selrow.get('grpcode');
@@ -1895,13 +1997,37 @@ style: {
         {header: "GRP Code" , dataIndex: 'grpcode',sortable:false,width:50,align:'left', menuDisabled: true,hidden:true},
         {header: "Supplier" , dataIndex: 'grpname',sortable:false,width:300,align:'left', menuDisabled: true,
 },
-        {header: "Debit" , dataIndex: 'debit',sortable:false,width:130,align:'right', menuDisabled: true},
-        {header: "Credit"  , dataIndex: 'credit',sortable:false,width:130,align:'right', menuDisabled: true},
+        {header: "Debit" , dataIndex: 'debit',sortable:false,width:130,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                }             
+        },
+        {header: "Credit"  , dataIndex: 'credit',sortable:false,width:130,align:'right', menuDisabled: true,
+            renderer: function (val, metaData, r){
+                if (val > 0) 
+                { 
+                return  parseFloat(val).toLocaleString('en-In', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+            //         style: 'currency',
+                    currency: 'INR',
+                    });
+                }
+                } 
+        },
     ],
     store:[], // store: GetGridDetailsDatastore,
     listeners:{	
 
-       'cellclick': function (flxGroupwiseDue, rowIndex, cellIndex, e) {
+       'cellDblclick': function (flxGroupwiseDue, rowIndex, cellIndex, e) {
 		var sm = flxSupplier.getSelectionModel();
 		var selrow = sm.getSelected();
          //       grpcode = selrow.get('grpcode');
@@ -2013,7 +2139,7 @@ var flxBillsDetails  = new Ext.grid.EditorGridPanel({
     y:100,
     height: 480,
     hidden:false,
-    width: 1000,
+    width: 1200,
     id: 'my-grid-font', 
 style: {
             'font-size': '12px','font-weight':'bold'
@@ -2029,10 +2155,11 @@ style: {
         {header: "Vou Amount" , dataIndex: 'acctrail_inv_value',sortable:false,width:130,align:'right', menuDisabled: true},
         {header: "Adj Amount"  , dataIndex: 'acctrail_adj_value',sortable:false,width:130,align:'right', menuDisabled: true},
         {header: "Balance"    , dataIndex: 'invbalamt',sortable:false,width:130,align:'right', menuDisabled: true},
-        {header: "Paymnt Terms", dataIndex: 'acctrail_crdays',sortable:false,width:130,align:'right', menuDisabled: true},
+        {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:50,align:'right'},
+        {header: "Paymnt Terms", dataIndex: 'acctrail_crdays',sortable:false,width:90,align:'right', menuDisabled: true},
         {header: "Due Date"   , dataIndex: 'duedate',sortable:false,width:100,align:'right', menuDisabled: true},
         {header: "OD Days"   , dataIndex: 'oddays',sortable:false,width:80,align:'right', menuDisabled: true},
-        {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:80,align:'right', menuDisabled: true},
+
 
 
     ],
@@ -2212,8 +2339,8 @@ style:{
 
 
 		    var p1 ="&compcode="+encodeURIComponent(compcode);      
-	            var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+	        var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
+            var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
 		    var p4 = "&ledcode="+encodeURIComponent(ledcode);
 		    var p5 = "&allopt="+encodeURIComponent('P');
         	    var p6 = "&ledname="+encodeURIComponent(ledname);
@@ -2222,7 +2349,9 @@ style:{
         	    var p8 = "&days2="+encodeURIComponent(0);
         	    var p9 = "&days3="+encodeURIComponent(0);
         	    var p10 = "&days4="+encodeURIComponent(0);
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+                var p11 = "&drcropt=" + encodeURIComponent('A');
+
+ 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11) ;
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else
@@ -2340,12 +2469,12 @@ style:{
             click: function () {
 
 
-                    var p1 = "&ledname=" + encodeURIComponent('G');
-		    var p2 ="&compcode="+encodeURIComponent(compcode);      
-                    var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	          
-                    var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                var p1 = "&ledname=" + encodeURIComponent('G');
+		        var p2 ="&compcode="+encodeURIComponent(compcode);      
+                var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	          
+                var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
 
-		    var p5 = "&ledcode="+encodeURIComponent(grpcode);
+		        var p5 = "&ledcode="+encodeURIComponent(grpcode);
        		    var p6 = "&allopt="+encodeURIComponent('A');
 
        		    var p7 = "&days1="+encodeURIComponent(0);
@@ -2353,7 +2482,9 @@ style:{
        		    var p9 = "&days3="+encodeURIComponent(0);
        		    var p10 = "&days4="+encodeURIComponent(0);
 
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+                var p11 = "&drcropt=" + encodeURIComponent('A');
+        
+                var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11);
 
 
  if (printtype == "PDF") 
@@ -2398,8 +2529,9 @@ style:{
        		    var p8 = "&days2="+encodeURIComponent(0);
        		    var p9 = "&days3="+encodeURIComponent(0);
        		    var p10 = "&days4="+encodeURIComponent(0);
-
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+                var p11 = "&drcropt=" + encodeURIComponent('A');
+        
+                   var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11);
  if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Partywise.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -2427,8 +2559,70 @@ style:{
 	},
         listeners: {
             click: function () {
+                var win = new Ext.Window({
+                    title: 'Select Balance Type',
+                    width: 300,
+                    height: 170,
+                    modal: true,
+                    layout: 'fit',
+        
+                    items: [{
+                        xtype: 'form',
+                        bodyStyle: 'padding:10px',
+                        items: [{
+                            xtype: 'radiogroup',
+                            id: 'rdDrcropt',
+                            columns: 1,
+                            vertical: true,
+                            items: [
+                                { boxLabel: 'All', name: 'drcropt', inputValue: 'A', checked: true },
+                                { boxLabel: 'Only Debit Balance', name: 'drcropt', inputValue: 'D' },
+                                { boxLabel: 'Only Credit Balance', name: 'drcropt', inputValue: 'C' },
+                                { boxLabel: 'UnAdjusted List', name: 'drcropt', inputValue: 'U' }                                
+                            ]
+                        }]
+                    }],
+        
+                    buttons: [{
+                        text: 'OK',
+                        handler: function () {
+        
+                            var drcropt = Ext.getCmp('rdDrcropt').getValue().inputValue;
+        
+                            var p1 = "&ledname=" + encodeURIComponent('G');
+                            var p2 = "&compcode=" + encodeURIComponent(compcode);
+                            var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));
+                            var p4 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+                            var p5 = "&ledcode=" + encodeURIComponent(grpcode);
+                            var p6 = "&allopt=" + encodeURIComponent('G');
+                            var p7 = "&days1=" + encodeURIComponent(0);
+                            var p8 = "&days2=" + encodeURIComponent(0);
+                            var p9 = "&days3=" + encodeURIComponent(0);
+                            var p10 = "&days4=" + encodeURIComponent(0);
+        
+                            var p11 = "&drcropt=" + encodeURIComponent(drcropt);
+        
+                            var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11);
+                                    win.close();
+        
+                            if (printtype == "PDF") 
+                                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign&__format=PDF&' + param, '_blank');
+                            else if (printtype == "XLS") 
+                                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_GroupwiseExcel.rptdesign&__format=XLSX&' + param, '_blank');
+                            else
+                                window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign' + param, '_blank');
+                        }
+                    },{
+                        text: 'Cancel',
+                        handler: function () {
+                            win.close();
+                        }
+                    }]
+                });
+        
+                win.show();                
 
-
+/*
             var p1 = "&ledname=" + encodeURIComponent('G');
 		    var p2 ="&compcode="+encodeURIComponent(compcode);      
             var p3 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));	          
@@ -2452,10 +2646,9 @@ style:{
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_GroupwiseExcel.rptdesign&__format=XLSX&' + param, '_blank');
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_Groupwise.rptdesign' + param, '_blank');	
-                /*    if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepPartywiseOutstanding.rptdesign&__format=pdf&' + param, '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepPartywiseOutstanding.rptdesign' + param, '_blank');	*/
+                
+*/
+
                 }
             }
 
@@ -2492,9 +2685,11 @@ style:{
        		    var p9 = "&agedays3="+encodeURIComponent(txtTo3.getValue());
        		    var p10 = "&agedays4="+encodeURIComponent(txtTo4.getValue());
 
+                   var p11 = "&drcropt=" + encodeURIComponent('A');
+        
+                   var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11);
 
 
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
  if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_GroupwiseAgeWise.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -2538,10 +2733,8 @@ style:{
        		    var p8 = "&agedays2="+encodeURIComponent(txtTo2.getValue());
        		    var p9 = "&agedays3="+encodeURIComponent(txtTo3.getValue());
        		    var p10 = "&agedays4="+encodeURIComponent(txtTo4.getValue());
-
-
-
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+         
+                   var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10);
  if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue_GroupwiseAgeWise_FromBillDate.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -2671,11 +2864,11 @@ if (printtype == "PDF")
         flxBillsDetails.getStore().removeAll();
 
         flxDetails.getStore().removeAll();
-	loadTBDetailsDatastore.removeAll();
-	loadTBDetailsDatastore.load({
-	 url: 'ClsViewStatements.php',
-                params: {
-	    	task: 'loadTBIIIgroup',
+        loadAPGroupDatastore.removeAll();
+        loadAPGroupDatastore.load({
+	    url: 'ClsViewStatements.php',
+        params: {
+	    sk: 'loadPayableGroup',
                 compcode:Gincompcode,
                 finid:GinFinid,
                 startdate: Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
@@ -2686,26 +2879,33 @@ if (printtype == "PDF")
 		scope:this,
 		callback:function()
        		{
-                   var cnt=loadTBDetailsDatastore.getCount();
+                   var cnt=loadAPGroupDatastore.getCount();
 
-                   
+                 
                    if(cnt>0)
                    {
                    for(var j=0; j<cnt; j++)
  		   { 
-                   if (loadTBDetailsDatastore.getAt(j).get('closing') != 0 )
+
+
+                   if (loadAPGroupDatastore.getAt(j).get('closing') != 0 )
                    {
 		           var dr = 0;
 		           var cr = 0;
-                       if (Number(loadTBDetailsDatastore.getAt(j).get('closing')) > 0)
-                           dr = Ext.util.Format.number(loadTBDetailsDatastore.getAt(j).get('closing'),"0.00");
-                       else
-                           cr = Ext.util.Format.number(Math.abs(loadTBDetailsDatastore.getAt(j).get('closing')),"0.00");
+                 
+//                       if (Number(loadTBDetailsDatastore.getAt(j).get('closing')) > 0)
+//                           dr = Ext.util.Format.number(loadTBDetailsDatastore.getAt(j).get('closing'),"0.00");
+//                       else
+//                           cr = Ext.util.Format.number(Math.abs(loadTBDetailsDatastore.getAt(j).get('closing')),"0.00");
+                        dr = Ext.util.Format.number(loadAPGroupDatastore.getAt(j).get('debit'),"0.00");
+                        cr = Ext.util.Format.number(Math.abs(loadAPGroupDatastore.getAt(j).get('credit')),"0.00");
+
+
                        flxGroupwiseDue.getStore().insert(
                        flxGroupwiseDue.getStore().getCount(),
                        new dgrecord({	
- 			   grpcode : loadTBDetailsDatastore.getAt(j).get('subgrp2'),
-			   grpname : loadTBDetailsDatastore.getAt(j).get('grp_name'),
+ 			   grpcode : loadAPGroupDatastore.getAt(j).get('subgrp2'),
+			   grpname : loadAPGroupDatastore.getAt(j).get('grp_name'),
 			   debit   : dr,
 			  credit   : cr ,
                         })
@@ -3142,7 +3342,7 @@ if (printtype == "PDF")
 			    xtype       : 'fieldset',
 			    title       : '',
 			    width       : 1100,
-			    height      :  350,
+			    height      :  370,
 			    x           : 550,
 			    y           : 90,
 			    border      : false,
@@ -3725,11 +3925,10 @@ onEsc:function(){
     listeners:{
       
         show:function(){
-             
+          
             txtFinYear.setRawValue(yearfin);
-	    Ext.getCmp('lblcompany').setText(millname);
+	        Ext.getCmp('lblcompany').setText(millname);
             Refreshdata();
-
 
         }
     }

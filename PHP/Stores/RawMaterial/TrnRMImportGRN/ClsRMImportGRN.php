@@ -11,6 +11,9 @@
 		case "loadsupplier":
 		getsupplier();
 		break;
+		case "loadNewsupplier":
+            getNewsupplier();
+            break;    		
 		case "loadthird":
 		getthird();
 		break;
@@ -758,5 +761,25 @@ function getpoitem()
 
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
+
+   
+    function getNewsupplier()
+    {
+         global $conn;
+	//$supplier_id = $_POST['supplierid'];
+
+	$sql = "select cust_name ,cust_code from  massal_customer where cust_type != 'G' group by cust_name ,cust_code order by cust_name ,cust_code";
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }
+
+
  
 ?>

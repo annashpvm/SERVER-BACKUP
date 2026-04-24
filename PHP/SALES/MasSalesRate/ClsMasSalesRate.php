@@ -319,7 +319,7 @@ var_groupcode = rate_pb_variety and rate_cust = cust_code and rate_vartype = var
     {
         global $conn;  
 
-	$sql = "select * from masprd_variety  where var_typecode = 14 order by var_desc";
+	$sql = "select * from masprd_variety  where var_typecode in (14,19) order by var_desc";
     $r = mysqli_query($conn, $sql);
 
 	$nrow = mysqli_num_rows($r);

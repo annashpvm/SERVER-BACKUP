@@ -291,10 +291,11 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
               $cdqty  =  0;
 
 
-
+          $adjdays1 = 0;
+          
           if ( $gridInvoice[$i]['invbalance'] ==  0)
           {
-  $querya8 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$cdvalue1' ,'$cdamount','0', '$cdcgst1','$cdsgst1','0','6','6','1646','1644','1645',0,0,0,0,0,'$cdround',0,0,$cdvalue1 ,  $invqty)";
+  $querya8 = "call acc_sp_insdbcrnotetrailer_invoice('$gindbcrseq','$invno','$invdate','$cdvalue1' ,'$cdamount','0', '$cdcgst1','$cdsgst1','0','6','6','1646','1644','1645',0,0,0,0,0,'$cdround',0,0,$cdvalue1 ,  $invqty,$adjdays1)";
 		$resulta8 = mysqli_query($conn, $querya8);   
 
 //echo  $querya8;	 
@@ -410,12 +411,17 @@ for ($i = 0; $i < $rowAdjust; $i++) {
 
 
 
-		$query3 = "insert into acc_adjustments (
-        ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values (        '$ginrefslno','$compcode','$finid',	'$invseqno','$invno','$invdate','$ref_docseqno','$vouno', '$invno','$invdate','$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'$adjvoudate','D');";
+//		$query3 = "insert into acc_adjustments (
+//        ef_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values (
+//       $ginrefslno','$compcode','$finid',	'$invseqno','$invno','$invdate','$ref_docseqno','$vouno', '$invno','$invdate','$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'$adjvoudate','D');";
 
-		$result3 = mysqli_query($conn, $query3);
+       $query3 = "insert into acc_adjustments (
+        ref_slno, ref_compcode, ref_finid, ref_docseqno, ref_docno, ref_docdate, ref_adjseqno, ref_adjvouno, ref_invno, ref_invdate, ref_adjamount, ref_adj_days, ref_adj_by, ref_adjusted_on,ref_paymt_terms,ref_ledcode,ref_adjvoutype,ref_adjvoudate,ref_adjvoutype_db_cr) values (
+       '$ginrefslno','$compcode','$finid',	'$ref_docseqno','$vouno','$adjvoudate','$invseqno','$invno', '$invno','$invdate','$cdamount1',$adjdays,'AUTO',curdate(),$payterms,'$ledcode','AU' ,'$invdate','D');";
 
-//echo  $querya9;	 
+       $result3 = mysqli_query($conn, $query3);
+
+//echo  $query3;	 
 //echo "<br>";   
 
           }  

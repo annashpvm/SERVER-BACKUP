@@ -11,6 +11,25 @@ var UserId   = localStorage.getItem('ginuserid');
    var finstartdate = localStorage.getItem('gfinstdate');
    var finenddate  = localStorage.getItem('gfineddate');
 
+
+
+// convert to Date
+var finEnd = new Date(finenddate);
+var today  = new Date();
+
+
+function clearTime(dt) {
+    return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+}
+
+finEnd = clearTime(finEnd);
+today  = clearTime(today);
+
+
+var finalDate = (today > finEnd) ? finEnd : today;
+
+
+
    var yr  = localStorage.getItem('gstyear');
 
    var yrfrom = yr.substr(0,4);  
@@ -31,8 +50,33 @@ var UserId   = localStorage.getItem('ginuserid');
 
    var repopt ='Over Due Bills Oustanding';
 
-  function MonthClick(){
 
+   var chkWithVouNo = new Ext.form.Checkbox({
+    fieldLabel : '',
+    boxLabel   : '<span style="color:#0000FF;font-weight:bold;">With Voucher No</span>',
+    id         : 'chkWithVouNo',
+    inputValue : '1',
+    checked    : true
+});
+
+var chkWithNarration = new Ext.form.Checkbox({
+    fieldLabel : '',
+    boxLabel   : '<span style="color:#0000FF;font-weight:bold;">With Narration</span>',
+    id         : 'chkWithNarration',
+    inputValue : '1',
+    checked    : true    
+});
+
+var chkWithBillAdjustments = new Ext.form.Checkbox({
+    fieldLabel : '',
+    boxLabel   : '<span style="color:#0000FF;font-weight:bold;">With Bill Adjustments</span>',
+    id         : 'chkWithBillAdjustments',
+    inputValue : '1',
+    checked    : true    
+});
+
+
+   function MonthClick(){
 
 
 	//	MonthClickVocDataStore.removeAll();
@@ -122,7 +166,6 @@ function find_dates(mmon)
 //    labelStyle  : "font-size:16px;font-weight:bold;color:#0080ff",
 
     rmon = ("0"+mmon).slice(-2);
-
 
 
     monthstartdate2.setValue(yr+"-"+rmon+"-01");
@@ -247,13 +290,26 @@ var optprinttype = new Ext.form.FieldSet({
  
     });
     var monthenddate = new Ext.form.DateField({
-	fieldLabel: 'To Date',
+        fieldLabel: 'To Date',
         id: 'monthenddate',
-        labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
-        value: new Date()   
-    });
+        labelStyle: "font-size:14px;font-weight:bold;color:#fc9403",
+        format: 'd-m-Y',
+        value: finalDate,        // ✅ set here
+        maxValue: finEnd ,
+        enableKeyEvents: true,
+        listeners:{
+           blur:function(){
 
+           },
+           keyup:function(){
+
+            },
+           change:function(){
+
+
+            },
+        }  	                
+    });
 
 
 
@@ -263,14 +319,40 @@ var optprinttype = new Ext.form.FieldSet({
 	format: 'd-m-Y',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
         value: new Date()   ,
-        readOnly : true,
+        enableKeyEvents: true,
+        listeners:{
+           blur:function(){
+            loadvoucherList();
+           },
+           keyup:function(){
+            loadvoucherList();
+            },
+           change:function(){
+            loadvoucherList();
+
+            },
+        }  	        
+     //   readOnly : true,
     });
     var monthenddate2 = new Ext.form.DateField({
 	fieldLabel: 'To Date',
         id: 'monthenddate2',
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
 	format: 'd-m-Y',
-        value: new Date()   
+        value: new Date()  ,
+        enableKeyEvents: true,
+        listeners:{
+           blur:function(){
+            loadvoucherList();
+           },
+           keyup:function(){
+            loadvoucherList();
+            },
+           change:function(){
+            loadvoucherList();
+
+            },
+        }  	 
     });
 
 
@@ -307,7 +389,12 @@ var optprinttype = new Ext.form.FieldSet({
         root: 'results',
         totalProperty: 'total',
         id: 'id' 
-      },['vouyear', 'voumonth', 'voumonthname', 'totnos', 'cancelnos' ]),
+      },['vouyear', 'voumonth', 'voumonthname', {
+        name: 'voumonthname',
+        convert: function(v) {
+            return v ? v.toUpperCase() : v;
+        }
+    }, 'totnos', 'cancelnos' ]),
     });
 
 
@@ -565,6 +652,9 @@ var btnBack = new Ext.Button({
 
 function loadvoucherList()
 {
+
+
+
     loadVouNoDataStore.removeAll();
     loadVouNoDataStore.load({
 	url: 'ClsViewStatements.php',
@@ -618,8 +708,22 @@ var flxVouTypeList = new Ext.grid.EditorGridPanel({
 		var selrow = sm.getSelected();
 
 //          	find_dates(selrow.get('cust_code'));
+
+
             vouchertype = selrow.get('voutype')
-     
+
+            if (vouchertype == "PAY")
+                vouchertype = "BKP,CHP";
+            
+            if (vouchertype == "REC")
+                vouchertype = "BKR,CHR";
+
+            if (vouchertype == "DNOTE")
+                vouchertype = "DNG,DNN,SDN";
+            
+            if (vouchertype == "CNOTE")
+                vouchertype = "CNG,CNN";
+
 
 	loadVouTypeMonthDataStore.removeAll();
 	loadVouTypeMonthDataStore.load({
@@ -654,7 +758,7 @@ var flxVouNoDetail = new Ext.grid.EditorGridPanel({
     scrollable: true,
     x:180,
     y:40,
-    height: 360,
+    height: 320,
     hidden:false,
     width: 880,
     id: 'my-grid',  
@@ -990,55 +1094,70 @@ var btnProcess = new Ext.Button({
         items: [
 
 
-			{
-			    xtype       : 'fieldset',
-			    title       : '',
-			    x           : 10,
-			    y           : 10,
-			    height      : 100,
-			    labelWidth  : 80,
-			    border      : false,
-			    items : [cmbMonth]
-			},
+                {
+                xtype       : 'fieldset',
+                title       : '',
+                x           : 10,
+                y           : 10,
+                height      : 100,
+                labelWidth  : 80,
+                border      : false,
+                items : [cmbMonth]
+                },
 
-			{ 
-                             xtype   : 'fieldset',
-                             title   : '',
-                             labelWidth  : 80,
-                             border  : false,
-		             x       : 400,
-			     y       : 10,
-                             items: [monthstartdate2]
-                        },
-			{ 
-                             xtype   : 'fieldset',
-                             title   : '',
-                             labelWidth  : 70,
-                             border  : false,
-		             x       : 600,
-			     y       : 10,
-                             items: [monthenddate2]
-                        },
+                { 
+                xtype   : 'fieldset',
+                title   : '',
+                labelWidth  : 80,
+                border  : false,
+                x       : 400,
+                y       : 10,
+                items: [monthstartdate2]
+                },
+                { 
+                xtype   : 'fieldset',
+                title   : '',
+                labelWidth  : 70,
+                border  : false,
+                x       : 600,
+                y       : 10,
+                items: [monthenddate2]
+                },
 
-			{ 
-                             xtype   : 'fieldset',
-                             title   : '',
-                             labelWidth  : 70,
-                             width       : 120,
-                             border  : false,
-		             x       : 800,
-			     y       : 10,
-                             items: [btnProcess]
-                        },
+                { 
+                xtype   : 'fieldset',
+                title   : '',
+                labelWidth  : 70,
+                width       : 120,
+                border  : false,
+                x       : 800,
+                y       : 10,
+                items: [btnProcess]
+                },
 
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     border  : false,
-	             x       : 10,
-		     y       : 60,
-                     items: [flxVouNoDetail]
+                { 
+                xtype   : 'fieldset',
+                title   : '',
+                border  : false,
+                x       : 10,
+                y       : 60,
+                items: [flxVouNoDetail]
                 },	
+
+                {
+                    xtype: 'fieldset',
+                    title: 'Display Options',
+                    layout: 'form',
+                    labelWidth : 1,
+                    x       : 950,
+                    y       : 60,   
+                    width   : 300,                 
+                    items: [
+                        chkWithVouNo,
+                        chkWithNarration,
+                        chkWithBillAdjustments
+                    ]
+                }
         ]
        }        
        ]       
@@ -1092,33 +1211,68 @@ var btnProcess = new Ext.Button({
 //                    var d2 =  tdate + " 00:00:00.000";
 
 
-             
 
-                    var vou = "&voutype="+encodeURIComponent(vouchertype);
-                    var fd = "&fmdate="+encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"));
-                    var td = "&tdate="+encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+
+                
+
+                    var withVouNo = Ext.getCmp('chkWithVouNo').getValue();
+                    var withNarration = Ext.getCmp('chkWithNarration').getValue();
+                    var withAdjustments = Ext.getCmp('chkWithBillAdjustments').getValue();
+
+
+             
+                    var vouchertype2 = vouchertype;
+
+                    if (vouchertype == "BKP,CHP")
+                        vouchertype2 = "PAY";
+                    
+                    if (vouchertype == "BKR,CHR")
+                        vouchertype2 = "REC";
+
+                    if (vouchertype == "DNG,DNN,SDN")
+                        vouchertype2 = "DNOTE";
+                    
+                    if (vouchertype == "CNG,CNN")
+                        vouchertype2 = "CNOTE";
+
+                    var vou = "&voutype="+encodeURIComponent(vouchertype2);
+                    var fd = "&fmdate="+encodeURIComponent(Ext.util.Format.date(monthstartdate2.getValue(),"Y-m-d"));
+                    var td = "&tdate="+encodeURIComponent(Ext.util.Format.date(monthenddate2.getValue(),"Y-m-d"));
                     var comp = "&comp="+encodeURIComponent(Gincompcode);
+                    var withvouno = "&withvouno="+encodeURIComponent(withVouNo);
+                    var withnarration = "&withnarration="+encodeURIComponent(withNarration);
+                    var withadjustments = "&withadjustments="+encodeURIComponent(withAdjustments);
+   
+                    var param = (vou+fd+td+comp+withvouno+withnarration+withadjustments) ;
 
-                    var param = (vou+fd+td+comp) ;
 
+                        if (printtype == "PDF") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouRegister_withAdjustments.rptdesign&__format=pdf&'+param,  '_blank' );
+                            else if (printtype == "XLS") 
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouRegister_withAdjustments.rptdesign&__format=XLS' + param, '_blank');
+                            else
+                            window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVouRegister_withAdjustments.rptdesign' + param, '_blank');	
 
-if  (optionselect == "P")
-             
+/*
+                    else if  (optionselect == "P")
+
+                        if (printtype == "PDF") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign&__format=pdf&'+param,  '_blank' );
+                        else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign&__format=XLS' + param, '_blank');
+                        else
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign' + param, '_blank');	
+                        else
                     if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign&__format=pdf&'+param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign&__format=XLS' + param, '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegisterParty.rptdesign' + param, '_blank');	
-else
-                    if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign&__format=pdf&'+param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign&__format=XLS' + param, '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign' + param, '_blank');
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign&__format=pdf&'+param,  '_blank' );
+                        else if (printtype == "XLS") 
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign&__format=XLS' + param, '_blank');
+                        else
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepVoucherRegister.rptdesign' + param, '_blank');
+*/
+		            }
 
-		}
+
                     }
                 },'-',                
                 {
@@ -1247,28 +1401,27 @@ else
     function Refreshdata()
     {
 
-      var dt_today = new Date();     
-      monthstartdate.setValue(Ext.util.Format.date(finstartdate,"Y-m-d"));
+        var dt_today = new Date();     
+        monthstartdate.setValue(Ext.util.Format.date(finstartdate,"Y-m-d"));
 
-	loadVouTypeListDataStore.removeAll();
-	loadVouTypeListDataStore.load({
-	 url: 'ClsViewStatements.php',
-                params: {
-	    	task: 'loadVouTypeList',
-                compcode:Gincompcode,
-                finid:GinFinid,
-                startdate: Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                enddate: Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
+        loadVouTypeListDataStore.removeAll();
+        loadVouTypeListDataStore.load({
+            url: 'ClsViewStatements.php',
+            params: {
+            task: 'loadVouTypeList',
+            compcode:Gincompcode,
+            finid:GinFinid,
+            startdate: Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
+            enddate: Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
+        },
 
-		},
-
-       	scope:this,
-		callback:function()
-		{
+        scope:this,
+        callback:function()
+        {
 
 
-		}
-	    });
+        }
+        });
 
     }  
    

@@ -477,8 +477,10 @@ function save_click()
                                 Ext.MessageBox.alert("Debit Note", "Select IGST Ledger Names");
                             } else if  (txtCgstvalue.getValue() > 0 && Number(txtCgstper.getValue()) == 0) {
                                 Ext.MessageBox.alert("Debit Note", "Select GST %");
-
                             } 
+                            else if  (txtNarration.getRawValue() == '') {
+                                Ext.MessageBox.alert("Debit Note", "Enter Remarks %");
+                            }                             
 			    else if (flxDetail.getStore().getCount()==0)
 			    {
 				Ext.Msg.alert('Debit Note','Grid should not be empty..');
@@ -3054,6 +3056,7 @@ listeners: {
                 {
 //save
                     text: 'Save',
+                    id: 'save',
                     style: 'text-align:center;',
                     tooltip: 'Save Details...',
                     height: 40,

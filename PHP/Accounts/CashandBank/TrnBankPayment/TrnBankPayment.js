@@ -1729,6 +1729,11 @@ txtTotAdjAmt.setValue('');
             }]
     });
 
+    function clearTime(dt) {
+        return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    }
+    
+
 
   function NewDateCheck()
   {
@@ -1751,9 +1756,24 @@ txtTotAdjAmt.setValue('');
 
         }
 
-    if(Ext.util.Format.date(dtpVouDate.getValue(),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d")){
-            Ext.MessageBox.alert("Alert","Document Date is not in current finance year. Please check");
-    }
+        var finStart = new Date(finstdate);
+        var finEnd   = new Date(finenddate);
+
+        dt_voucher    = clearTime(dt_voucher);
+        finStart = clearTime(finStart);
+        finEnd   = clearTime(finEnd);
+
+        if (gstFlag === "Add" && (dt_voucher < finStart || dt_voucher > finEnd))
+            {
+                alert(
+                    "Date must be between Financial Year: " + 
+                    Ext.util.Format.date(finStart,"d-m-Y") + " to " + 
+                    Ext.util.Format.date(finEnd,"d-m-Y")
+                );
+//                dtpVouDate.setValue(dt_today);
+dtpVouDate.focus();
+                return;
+            }
 
  }
 
@@ -1780,17 +1800,30 @@ txtTotAdjAmt.setValue('');
 
 
 
+ var finEnd = Date.parseDate(finenddate, 'Y-m-d');
+
+ var today = new Date();
+ today.setHours(0,0,0,0);
+ if (finEnd) finEnd.setHours(0,0,0,0);
+ 
+ var defaultDate = (finEnd && today > finEnd) ? finEnd : today;
+
 
     var dtpVouDate= new Ext.form.DateField({
         fieldLabel: '',
         id: 'dtpVouDate',
         name: '',
         format: 'd-m-Y',
-        value: new Date(),
+        value: defaultDate,
     	labelStyle	: "font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;  textTransform: uppercase ", 
        	enableKeyEvents: true,
         listeners:{
+            afterrender: function(field) {
+                setTimeout(function(){
+                    field.setValue(defaultDate);
+                }, 200);
+            },               
           specialkey:function(f,e){
 
              if (e.getKey() == e.ENTER)

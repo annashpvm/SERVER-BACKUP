@@ -190,21 +190,21 @@ function getQCNoList()
     }
 
  function getDNNumber()
-    {
+    {s
         global $conn;
         $ginfinid= $_POST['finid'];
         $gincompcode=$_POST['compcode'];
         $gsttype =$_POST['gsttype'];
 /*
         if ($gsttype == 'G')
-	   $r = mysql_query("select concat('DNG',ifnull(max(dbcr_no),0) + 1) as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+	   $r = mysqli_query("select concat('DNG',ifnull(max(dbcr_no),0) + 1) as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
         else
-	   $r = mysql_query("select concat('DNN',ifnull(max(dbcr_no),0) + 1) as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+	   $r = mysqli_query("select concat('DNN',ifnull(max(dbcr_no),0) + 1) as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
 */
         if ($gsttype == 'G')
-	   $r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+	   $r = mysqli_query("select ifnull(max(dbcr_no),0) + 1 as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
         else
-	   $r = mysql_query("select ifnull(max(dbcr_no),0) + 1 as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+	   $r = mysqli_query("select ifnull(max(dbcr_no),0) + 1 as vouno from tmpacc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';");
 
 
     $r = mysqli_query($conn, $sql);
@@ -224,9 +224,9 @@ function getQCNoList()
 	$finid    = $_POST['fincode'];
         $gsttype =$_POST['gsttype'];
         if ($gsttype == 'G')
-        $sql = "select max(dbcr_vouno) as vouno from tmpacc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNG' and  dbcr_vouno in (select qc_fuel_debitnote_no  from trn_qc_fuel_inspection where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' ) ";
+        $sql = "select max(dbcr_vouno) as vouno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNG' and  dbcr_vouno in (select qc_fuel_debitnote_no  from trn_qc_fuel_inspection where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' ) ";
         else
-        $sql = "select max(dbcr_vouno) as vouno from tmpacc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNN' and  dbcr_vouno in (select qc_fuel_debitnote_no  from trn_qc_fuel_inspection where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' ) ";
+        $sql = "select max(dbcr_vouno) as vouno from acc_dbcrnote_header where dbcr_comp_code = '$compcode' and dbcr_finid = '$finid' and dbcr_type = 'DNN' and  dbcr_vouno in (select qc_fuel_debitnote_no  from trn_qc_fuel_inspection where qc_fuel_compcode = '$compcode' and qc_fuel_fincode = '$finid' ) ";
 
 
 

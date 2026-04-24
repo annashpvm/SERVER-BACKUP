@@ -10,20 +10,20 @@
     $enddate   =  $_POST['enddate'];
 
 
-    mysqli_query($conn, "BEGIN");
+    mysqli_begin_transaction($conn);
 
     $query1= "select * from masfu_item_header order by itmh_code";
     $result11=mysqli_query($conn, $query1);
 
 //echo $query1;
-    while ($row = mysql_fetch_assoc($result11)) {
+    while ($row = mysqli_fetch_assoc($result11)) {
 
            $itemcode  = $row['itmh_code'];
 //echo $itemcode;
 
-           $query2   = mysql_query("select count(*) recfound from masfu_item_trailer where itmt_compcode= 1
+           $query2   = mysqli_query("select count(*) recfound from masfu_item_trailer where itmt_compcode= 1
 and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
-           $findrow  = mysql_fetch_row($query2);
+           $findrow  = mysqli_fetch_row($query2);
            if ($findrow[0]  == 0)
            {
 		$query1="insert into masfu_item_trailer values($itemcode,1, $nextfinid, 0, 0, 0, 0, 0);";
@@ -32,9 +32,9 @@ and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
            } 
       
 
-           $query2   = mysql_query("select count(*) recfound from masfu_item_trailer where itmt_compcode= 90
+           $query2   = mysqli_query("select count(*) recfound from masfu_item_trailer where itmt_compcode= 90
 and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
-           $findrow  = mysql_fetch_row($query2);
+           $findrow  = mysqli_fetch_row($query2);
            if ($findrow[0]  == 0)
            {
 		$query1="insert into masfu_item_trailer values($itemcode,90, $nextfinid, 0, 0, 0, 0, 0);";
@@ -52,7 +52,7 @@ and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
 
      if ($result11)
      {
-          mysqli_begin_transaction($conn);
+           mysqli_commit($conn);   
           echo '({"success":"true","msg":"' . $compcode . '"})';
      }
      else
@@ -62,7 +62,7 @@ and itmt_fincode = $nextfinid  and itmt_hdcode =  $itemcode");
 
          echo '({"success":"false","msg":"' . $compcode . '"})';
      }
-  //   while ($row = mysql_fetch_assoc($result11)) 
+  //   while ($row = mysqli_fetch_assoc($result11)) 
 //           $itemcode  = $row['item_code'];
   //         $itemcompcode  = $row['item_comp_code'];
 

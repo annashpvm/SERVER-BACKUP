@@ -323,7 +323,7 @@ if($dbSub)
     if ($noofrec > 0 ) {
 
 //        $query6 = "DELETE FROM trn_weighbridge_entry  WHERE t_wb_compcode = '$compcode' AND t_wb_year = '$yr' AND  ((t_wb_net_weight > 0 AND  t_wb_upd = 'Y') OR t_wb_upd = 'C') AND t_wb_type = 'Z' AND  t_wb_ticketno = $ticketno"; 
-        $query6 = "DELETE FROM trn_weighbridge_entry  WHERE t_wb_compcode = '$compcode' AND t_wb_year = '$yr' AND t_wb_type = 'Z' AND  t_wb_ticketno = $ticketno"; 
+        $query6 = "DELETE FROM trn_weighbridge_entry  WHERE t_wb_compcode = '$compcode' AND t_wb_year = '$yr' AND t_wb_type = 'Z' AND  t_wb_ticketno = $ticketno  AND DATE_ADD(t_wb_2nd_time, INTERVAL 10 MINUTE) < CURRENT_TIMESTAMP();"; 
         $result6 = mysqli_query($dbMain,$query6);
 
         $delupd = 1;

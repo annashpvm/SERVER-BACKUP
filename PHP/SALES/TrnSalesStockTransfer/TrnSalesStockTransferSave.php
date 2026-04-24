@@ -65,13 +65,13 @@ ordt_fin_wt  =  CASE
                      ELSE 0
                END
 
-where ordt_comp_code = '$compcode'  and ordt_sono =  $oldsono and ordt_var_code = $sizecode"; 
+where ordt_comp_code = '$compcode'  and ordt_sono =  $oldsono and ordt_var_code = $sizecode and ordt_fincode <= '$finid'"; 
 
 //echo $query4;
 //echo "<br>";
    $result4 = mysqli_query($conn, $query4); 
 
-   $query5  = "update trnsal_order_trailer set ordt_fin_wt  = ordt_fin_wt  + ($stkwt/1000)   where ordt_comp_code = '$compcode'  and ordt_sono =  $newsono and ordt_var_code = $sizecode"; 
+   $query5  = "update trnsal_order_trailer set ordt_fin_wt  = ordt_fin_wt  + ($stkwt/1000)   where ordt_comp_code = '$compcode'  and ordt_sono =  $newsono and ordt_var_code = $sizecode  and ordt_fincode <= '$finid'"; 
 
 //echo $query5;
    $result5 = mysqli_query($conn, $query5);    

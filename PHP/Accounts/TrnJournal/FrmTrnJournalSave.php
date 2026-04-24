@@ -204,8 +204,14 @@
                         $newvouno   = strtoupper(substr(trim($ledrefno),0,29));
                         $newvouDT = $ledrefdate;
                 }    
-		  $querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$newvouno', '$newvouDT', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
-		  $resulta3 = mysqli_query($conn, $querya3);
+                
+                if (empty($newvouDT) || $newvouDT == '0000-00-00' ||  $newvouDT == '0000-00-00 00:00:00' ||   strtotime($newvouDT) === false) 
+                {
+                    $newvouDT = $voudate;
+                }
+
+		$querya3 = "call acc_sp_trn_insacc_trail ('$ginaccrefseq','$slno','$newvouno', '$newvouDT', '$totamt' ,'$adjamt' ,'$ledseq' ,'$amtmode','0','0')";
+		$resulta3 = mysqli_query($conn, $querya3);
 
 //echo  $querya3;
 //echo "<br>";
@@ -278,8 +284,20 @@
 //echo  $adjquery2;
 //echo "<br>";
 
+//echo  $newvouno;
+//echo "<br>";
 
-        $adjquery3 = "update acc_trail set acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$newvouno' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
+
+if ($newvouno == '')
+   $newvouno2 = $vouno;
+
+if ($newvouno2 == '')
+   $newvouno2 = $vouno;
+   
+
+//        $adjquery3 = "update acc_trail set acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq' and acctrail_inv_no = '$newvouno2' and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
+        $adjquery3 = "update acc_trail set acctrail_adj_value = acctrail_adj_value + $adjamt where acctrail_accref_seqno = '$ginaccrefseq'  and  acctrail_led_code = '$ledgercode' and acctrail_amtmode = '$dc' ";
+
         $adjresult3 = mysqli_query($conn, $adjquery3);
 
 //echo  $adjquery3;
@@ -289,6 +307,8 @@
     }
 
    
+   
+    //exit;
 
 
    if ($flagtype == "Add")

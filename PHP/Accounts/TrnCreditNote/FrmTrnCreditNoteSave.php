@@ -61,6 +61,8 @@ $frtamt  = (float)$_REQUEST['frtamt'];
 $frtled  = (int)$_REQUEST['frtled'];
 $hsncode = $_REQUEST['hsncode'];
              
+$colldays = $_REQUEST['colldays'];
+$colldate = $_REQUEST['colldate'];
 
 if ($cgstval ==0)
    $cgstledcode = 0;
@@ -188,6 +190,12 @@ dbcr_qty = '$qty'  ,dbcr_reason = '$cdreason' ,dbcr_modifydate = '$today'  where
 
        $result5 = mysqli_query($conn, $query5);
 
+       $querya8 = "update  acc_dbcrnote_trailer3 set  dbcrt3_recept_date = '$colldate' , dbcrt3_adj_days = '$colldays'  where dbcrt3_seqno  = '$gindbcrseq'";
+
+//        echo  $querya8_2;
+//        echo "<br>";
+       $resulta8 = mysqli_query($conn, $querya8);
+
 }
 
 #Insert AccRef
@@ -274,13 +282,20 @@ $querya7 = "call acc_sp_insdbcrnotetrailer('$gindbcrseq','$invno','$invdate','$d
 
 //echo $querya7;
 //echo "<br>";
+
+$querya8 = "insert into  acc_dbcrnote_trailer3 values ('$gindbcrseq','$colldate','$colldays')";
+
+//        echo  $querya8_2;
+//        echo "<br>";
+$resulta8 = mysqli_query($conn, $querya8);
+
 }
 
 
 
 if ($savetype == 'Add')
 {
-	if ($resulta2 && $resulta4  && $resulta6 && $resulta7) 
+	if ($resulta2 && $resulta4  && $resulta6 && $resulta7 && $querya8) 
 	{
        mysqli_commit($conn);  
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';

@@ -6,8 +6,13 @@ Ext.onReady(function(){
     var fin      = localStorage.getItem('ginfinid');
     var usertype = localStorage.getItem('ginuser');
 
+    
+    var  invfin = localStorage.getItem('invfin');
+    
+
 var map = new Ext.KeyMap(document, [
 
+    
 
     {
         key: Ext.EventObject.F1,
@@ -43,6 +48,8 @@ var map = new Ext.KeyMap(document, [
            window.location.href=('http://10.0.0.251/SHVPM/Accounts/YearChange/yearChange.php');
         }
     },
+
+    
 ]);
 
     var tbgeneral = new Ext.Toolbar();
@@ -410,13 +417,6 @@ var map = new Ext.KeyMap(document, [
                                 }
                             },  
 
-                            {
-                                text: '<b>Bank Receipts - Old</b>',
-                                group: 'theme',
-                                handler: function(){
-                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceiptNew.php');
-                                }
-                            },  
 
                             {
                                 text: '<b>Bank Payments</b>',
@@ -432,8 +432,15 @@ var map = new Ext.KeyMap(document, [
                                     window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReconciliation/FrmTrnBankReconciliation.php');
                                 }
                             },
+                            {
+                                text: '<b>Bank Receipts - Old</b>',
+                                group: 'theme',
+                                handler: function(){
+                                    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceiptNew.php');
+                                }
+                            },  
 
-
+             /*
                             {
                                 text: '<b>Bank Receipts - Old Method </b>',
                                 group: 'theme',
@@ -441,6 +448,7 @@ var map = new Ext.KeyMap(document, [
                                     window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankReceipt/FrmTrnBankReceiptOldMethod.php');
                                 }
                             },  
+                            */
                         ]
                     }
                 },   
@@ -578,7 +586,7 @@ var map = new Ext.KeyMap(document, [
                     text: '<b> Ledger Group Balance Transfer - Journal Entry</b>',
                     group: 'theme',
                     handler: function(){
-                        window.location.href=('http://10.0.0.251/SHVPM/Accounts/TrnGroupTransferJournal/FrmTrnGrpTransferJournal.php');
+                        // window.location.href=('http://10.0.0.251/SHVPM/Accounts/TrnGroupTransferJournal/FrmTrnGrpTransferJournal.php');
                         
                     }
                 },
@@ -631,6 +639,13 @@ var map = new Ext.KeyMap(document, [
 			    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBilladjustment/FrmTrnBilladjustmentChange.php');
 			}
 	       },
+           {
+			text: '<b>Bill Adjustments - REVERSAL </b>',
+			group: 'theme',
+			handler: function(){
+			    window.location.href=('/SHVPM/Accounts/CashandBank/TrnBilladjustment/FrmTrnBilladjustmentREVERSAL.php');
+			}
+	       },
 
 	        {
 			text: '<b> Debit VS Credit Bill Adjustments  </b>',
@@ -662,7 +677,17 @@ var map = new Ext.KeyMap(document, [
                 text: '<b>Test-2 </b>',
                 group: 'theme',
                 handler: function(){
-                    window.location.href=('/SHVPM/Accounts/Test/AutoGrid.php');
+                    window.location.href=('/SHVPM/Accounts/Test/TrailBalance.php');
+//                   window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankPayment/FrmTrnBankPaymentNew.php');
+                        
+                }
+            },
+
+            {
+                text: '<b>Test-Columnar</b>',
+                group: 'theme',
+                handler: function(){
+                    window.location.href=('/SHVPM/Accounts/Columnar/Columnar.php');
 //                   window.location.href=('/SHVPM/Accounts/CashandBank/TrnBankPayment/FrmTrnBankPaymentNew.php');
                         
                 }
@@ -1440,6 +1465,14 @@ new Ext.Toolbar.SplitButton({
 
                                           }
                                 },
+                                {
+                                    text: '<b> Groupwise- Payables OutstandingNew</b>',
+                                    group: 'theme',
+                                    handler: function(){
+                    window.location.href=('http://10.0.0.251/SHVPM/Accounts/ViewReport/ViewReportAP_GroupwiseNew.php');
+     
+                                           }
+                                 },                                
 
                              ]
                           }, 
@@ -1569,14 +1602,27 @@ new Ext.Toolbar.SplitButton({
 
 
                                 {
-                                   text: '<b> UPLOAD GST CSV FILE </b>',
+                                   text: '<b> UPLOAD GSTR-2B CSV FILE </b>',
                                    group: 'theme',
                                    handler: function(){
-            window.location.href=('http://10.0.0.251/SHVPM/Accounts/RepGST/upload.php');
-  //        window.location.href=('http://10.0.0.251/SHVPM/Accounts/RepGST/gstr2bupload.html');
+//            window.location.href=('http://10.0.0.251/SHVPM/Accounts/RepGST/upload.php');
+                                    var invfinyear = invfin;                               
+                                    window.location.href = 'http://10.0.0.251/SHVPM/Accounts/RepGST/upload_CSVfile.php?invfin=' + encodeURIComponent(invfinyear);                                    
+
                                     }  
                                 },
 
+                                {
+                                    text: '<b> UPLOAD GSTR-2B EXCEL FILE </b>',
+                                    group: 'theme',
+                                    handler: function(){
+ //            window.location.href=('http://10.0.0.251/SHVPM/Accounts/RepGST/upload.php');
+                                     var invfinyear = invfin;                               
+                                     window.location.href = 'http://10.0.0.251/SHVPM/Accounts/RepGST/upload_EXCELfile.php?invfin=' + encodeURIComponent(invfinyear);                                    
+ 
+                                     }  
+                                 },
+ 
 
                                 {
                                    text: '<b> GSTR- 2 B </b>',
@@ -1701,7 +1747,6 @@ new Ext.Toolbar.SplitButton({
                     text: '<b>Trial Balance - View </b>',
                     group: 'theme',
                     handler: function(){
-                 //       window.location.href=('http://10.0.0.251/SHVPM/Accounts/ViewReport/ViewReportTrailBalance.php');  
 
                         window.location.href=('http://10.0.0.251/SHVPM/Accounts/RepFinance/RepViewTrailBalance.html');                
                     }
@@ -1745,6 +1790,8 @@ new Ext.Toolbar.SplitButton({
                     }
                 }, 
 
+
+
     		{
 
 
@@ -1755,6 +1802,16 @@ new Ext.Toolbar.SplitButton({
                         
                     }
                 }, 
+
+                {
+                    text: '<b>Trial Balance -  </b>',
+                    group: 'theme',
+                    handler: function(){
+                 //       window.location.href=('http://10.0.0.251/SHVPM/Accounts/ViewReport/ViewReportTrailBalance.php');  
+
+                        window.location.href=('http://10.0.0.251/SHVPM/Accounts/RepFinance/RepViewTrailBalanceOld.html');                
+                    }
+                },                 
     
            ]       
         },
@@ -1793,10 +1850,27 @@ new Ext.Toolbar.SplitButton({
          
 
     }),
- new Ext.Toolbar.SplitButton({
-                text: '<b></b>', id: 'finyear', style: 'background-color: #F1F5EA',
-                width: 130
-            }),
+    new Ext.Toolbar.SplitButton({
+        text: '<b>FIN YEAR</b>',
+        id: 'finyear',
+        style: 'background-color: #F1F5EA',
+        width: 130,
+    
+        handler: function () {
+            window.location.href = 'http://10.0.0.251/SHVPM/Accounts/YearChange/yearChange.php';
+        },
+    
+        menu: {
+            items: [
+                {
+                    text: 'Change Financial Year',
+                    handler: function () {
+                        window.location.href = 'http://10.0.0.251/SHVPM/Accounts/YearChange/yearChange.php';
+                    }
+                }
+            ]
+        }
+    }),
 			
  new Ext.Toolbar.SplitButton({
                 text: '<b></b>', id: 'comp', style: 'background-color: #F1F5EA',

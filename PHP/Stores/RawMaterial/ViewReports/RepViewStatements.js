@@ -990,6 +990,43 @@ var btnProcess = new Ext.Button({
     });
 
 
+    var btnAreaPartywisePrint = new Ext.Button({
+        style: 'text-align:center;',
+        text: "Area-Partywise",
+        width: 100,
+        id: 'btnAreaPartywisePrint',
+	border: 1,
+	style: {
+	borderColor: 'blue',
+	borderStyle: 'solid',
+
+	},
+        listeners: {
+            click: function () {
+
+
+
+		    var p1 ="&compcode="+encodeURIComponent(Gincompcode);      
+	            var p2 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
+                    var p3 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
+		    var p4 = "&itemcode="+encodeURIComponent(0);
+
+ 		    var param = (p1+p2+p3) ;
+ if (printtype == "PDF") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Rawmaterial/repRM_Area_PartywiseArrivals.rptdesign&__format=pdf&' + param, '_blank');
+                    else if (printtype == "XLS") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Rawmaterial/repRM_Area_PartywiseArrivals.rptdesign&__format=XLS&' + param, '_blank');
+                    else
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Rawmaterial/repRM_Area_PartywiseArrivals.rptdesign' + param, '_blank');		
+                  /*  if (printtype == "PDF") 
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Rawmaterial/repRM_PartywiseArrivals.rptdesign&__format=pdf&' + param, '_blank');
+                    else
+		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Rawmaterial/repRM_PartywiseArrivals.rptdesign' + param, '_blank');*/		
+                }
+            }
+
+    });
+
 
     var btnPartyMonthwisePrint = new Ext.Button({
         style: 'text-align:center;',
@@ -1397,6 +1434,19 @@ var flxItem = new Ext.grid.EditorGridPanel({
                     labelWidth  : 50,
 		    items : [btnAreaMonthwisePrint]
 		},
+
+        
+        {
+		    xtype       : 'fieldset',
+		    x           : 1170,
+		    y           : 40,
+		    border      : false,
+		    width       : 160,
+                    labelWidth  : 50,
+		    items : [btnAreaPartywisePrint]
+		},
+
+
         ],
     },
     {    

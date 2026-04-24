@@ -96,7 +96,9 @@
 		getCNVouType();
 		break;
 
-
+		case "loadINVBalance":
+            getINVBalance();
+            break;
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -578,5 +580,29 @@ $sql = "select count(*) as nos from  acc_dbcrnote_sales_purchase  where cn_compc
 
     echo json_encode(["total" => count($arr), "results" => $arr]);
     }
+
+
+
+    function getINVBalance()
+
+    {
+  	$fincode  = $_POST['fincode'];
+	$compcode = $_POST['compcode'];
+    $acseqno  = $_POST['acseqno'];
+    global $conn;
+
+    $sql = "select * ,  ROUND(acctrail_inv_value - acctrail_adj_value, 2) AS balamt  from acc_ref  join acc_trail on accref_seqno = acctrail_accref_seqno  where  accref_comp_code = $compcode and accref_seqno =  $acseqno";
+
+//echo $sql;
+
+    $r = mysqli_query($conn, $sql);
+
+    $arr = [];
+    while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+    }
+
+    echo json_encode(["total" => count($arr), "results" => $arr]);
+    }    
 
 ?>

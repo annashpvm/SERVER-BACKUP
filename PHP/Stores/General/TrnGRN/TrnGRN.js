@@ -17,10 +17,12 @@ Ext.onReady(function(){
     
     var NewDays = localStorage.getItem('newdays');
     var EditDays   = localStorage.getItem('editdays');
-    
+    var GinUserType = localStorage.getItem('ginusertype');
+    var  invfin = localStorage.getItem('invfin');
+ 
     
     var itemuom = 0;
-    
+    var dngsttype2 = "G";    
     
     var statecode = "T";
     var grnrounding = 0;
@@ -54,6 +56,8 @@ Ext.onReady(function(){
     var frtCGSTledcode = 0;
     var frtSGSTledcode = 0;
     var frtIGSTledcode = 0;
+
+    var dnamount = 0;
 
     new Ext.KeyMap( Ext.getBody(), [{
                 key: "s",
@@ -95,8 +99,342 @@ Ext.onReady(function(){
                 }
             }]);
     
+
+            var loadDNVouNoDatasore = new Ext.data.Store({
+                id: 'loadDNVouNoDatasore',
+                proxy: new Ext.data.HttpProxy({
+                          url: 'ClsGrn.php',      // File to connect to
+                          method: 'POST'
+                      }),
+                      baseParams:{task: "LoadDNNumber"}, // this parameter asks for listing
+                reader: new Ext.data.JsonReader({
+                            // we tell the datastore where to get his data from
+                  root: 'results',
+                  totalProperty: 'total',
+                  id: 'id'
+                },['vouno'])
+            });
+
+
+
+            var loadDNDateDatastore = new Ext.data.Store({
+                id: 'loadDNDateDatastore',
+                proxy: new Ext.data.HttpProxy({
+                          url: 'ClsGrn.php',      // File to connect to
+                          method: 'POST'
+                      }),
+                      baseParams:{task:"LoadDNDate"}, // this parameter asks for listing
+                reader: new Ext.data.JsonReader({
+                            // we tell the datastore where to get his data from
+                  root: 'results',
+                  totalProperty: 'total',
+                  id: 'id'
+                },[
+              'dnmaxdate'
+                ]),
+              });
+          
     
-    
+            var txtDNVouNo = new Ext.form.TextField({
+                fieldLabel  : 'DEBIT NOTE No.',
+                id          : 'txtDNVouNo',
+                name        : 'txtDNVouNo',
+                width       :  140,
+                style       :  {textTransform: "uppercase"},
+                readOnly : true,
+                labelStyle	: "font-size:12px;font-weight:bold;",
+            
+                style: {
+                        'color':'#900C3F ',readOnly:true,'text-align': 'left',
+                        'style': 'Helvetica','border-radius': '5px',
+                        'font-size': '14px','font-weight':'bold'
+                    },
+                enableKeyEvents: true, 
+                listeners:{
+            
+                }		
+            });
+            
+            
+            var dtpDNDate = new Ext.form.DateField({
+                fieldLabel : 'DEBIT NOTE Date',
+                id         : 'dtpDNDate',
+                name       : 'date',
+                labelStyle	: "font-size:12px;font-weight:bold;",
+            
+                style: {
+                        'color':'#900C3F ',readOnly:true,'text-align': 'left',
+                        'style': 'Helvetica','border-radius': '5px',
+                        'font-size': '14px','font-weight':'bold'
+                    },
+                format     : 'd-m-Y',
+                value      : new Date(),
+            //    anchor     : '100%',
+                width : 110,
+                readOnly: true,
+                enableKeyEvents: true,
+                listeners:{
+            
+                }  
+            });
+            
+            var txtNarration = new Ext.form.TextArea({
+                fieldLabel: 'Narration',
+                id: 'txtNarration',
+                width: 850,
+                height: 40,
+                name: 'Narration',
+                
+                listeners: {
+                    blur: function (field, newValue, oldValue) {
+                
+                    }
+                }
+            });
+
+
+            var lblBilled = new Ext.form.Label({
+                fieldLabel  : 'Billed',
+                id          : 'lblBilled',
+                width       :  250,
+                labelStyle : "font-size:14px;font-weight:bold;color:#cc00cc",
+            });
+            
+            
+            var lblPo = new Ext.form.Label({
+                fieldLabel  : 'As per PO',
+                id          : 'lblPo',
+                width       :  250,
+                labelStyle : "font-size:14px;font-weight:bold;color:#cc00cc",
+            });
+            
+            var lblDiff = new Ext.form.Label({
+                fieldLabel  : 'Differ',
+                id          : 'lblDiff',
+                width       :  250,
+                labelStyle : "font-size:14px;font-weight:bold;color:#cc00cc",
+            });
+
+
+
+        
+        var txtcgstvalBilled = new Ext.form.NumberField({
+                fieldLabel  : 'CGST AMOUNT',
+                id          : 'txtcgstvalBilled',
+                name        : 'txtcgstvalBilled',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true,
+            enableKeyEvents: true, 
+            listeners:{
+                keyup:function()
+                {
+                          txtsgstval.setValue(txtcgstval.getValue())
+                  findLandingCost();
+                },
+                change:function()
+                {
+                  findLandingCost();
+                },
+                blur:function()
+                {
+                  findLandingCost();
+                },
+            }
+        
+            });
+        
+        
+        var txtcgstvalGRN = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtcgstvalGRN',
+                name        : 'txtcgstvalGRN',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true,
+            enableKeyEvents: true, 
+            listeners:{
+                keyup:function()
+                {
+                          txtsgstval.setValue(txtcgstval.getValue())
+                  findLandingCost();
+                },
+                change:function()
+                {
+                  findLandingCost();
+                },
+                blur:function()
+                {
+                  findLandingCost();
+                },
+            }
+        
+            });
+        
+        var txtcgstvalDiff = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtcgstvalDiff',
+                name        : 'txtcgstvalDiff',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true,
+            enableKeyEvents: true, 
+            listeners:{
+                keyup:function()
+                {
+                          txtsgstval.setValue(txtcgstval.getValue())
+                  findLandingCost();
+                },
+                change:function()
+                {
+                  findLandingCost();
+                },
+                blur:function()
+                {
+                  findLandingCost();
+                },
+            }
+        
+            });
+      
+            
+            var txtigstvalDiff = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtigstvalDiff',
+                name        : 'txtigstvalDiff',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true,
+            enableKeyEvents: true, 
+            listeners:{
+                keyup:function()
+                {
+                          txtsgstval.setValue(txtcgstval.getValue())
+                  findLandingCost();
+                },
+                change:function()
+                {
+                  findLandingCost();
+                },
+                blur:function()
+                {
+                  findLandingCost();
+                },
+            }
+        
+            });
+        
+
+        
+        var txtsgstvalBilled = new Ext.form.NumberField({
+                fieldLabel  : 'SGST AMOUNT',
+                id          : 'txtsgstvalBilled',
+                name        : 'txtsgstvalBilled',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });
+        
+        var txtsgstvalGRN = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtsgstvalGRN',
+                name        : 'txtsgstvalGRN',
+                width       :  80,
+                labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });
+        
+        var txtsgstvalDiff = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtsgstvalDiff',
+                name        : 'txtsgstvalDiff',
+                width       :  80,
+                labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });
+        
+
+        var txtigstvalBilled = new Ext.form.NumberField({
+                fieldLabel  : 'IGST AMOUNT',
+                id          : 'txtigstvalBilled',
+                name        : 'txtigstvalBilled',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });
+        
+        
+        var txtigstvalGRN = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtigstvalGRN',
+                name        : 'txtigstvalGRN',
+                width       :  80,
+        labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });
+        
+        var txtValueBilled = new Ext.form.NumberField({
+                fieldLabel  : 'VALUE  ',
+                id          : 'txtValueBilled',
+                name        : 'txtValueBilled',
+                width       :  80,
+                labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });
+        
+            var txtValueGRN = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtValueGRN',
+                name        : 'txtValueGRN',
+                width       :  80,
+                labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+            });            
+            var txtValueDiff = new Ext.form.NumberField({
+                fieldLabel  : '',
+                id          : 'txtValueDiff',
+                name        : 'txtValueDiff',
+                width       :  80,
+                labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
+                style       :  {'text-align': 'right'},
+                allowBlank  :  false,
+            tabindex : 1,
+            readOnly : true
+        });  
+
     var txtNewGRNNo = new Ext.form.TextField({
             fieldLabel  : 'Change GRN Number As ',
             id          : 'txtNewGRNNo',
@@ -141,7 +479,23 @@ Ext.onReady(function(){
           id: 'id'
         },['cust_name'])
     });
+
     
+    var Load_DNOTE_Datasore = new Ext.data.Store({
+        id: 'Load_DNOTE_Datasore',
+        proxy: new Ext.data.HttpProxy({
+                  url: 'ClsGrn.php',      // File to connect to
+                  method: 'POST'
+              }),
+              baseParams:{task: "loadDNVoucherDetail"}, // this parameter asks for listing
+              reader: new Ext.data.JsonReader({
+                    // we tell the datastore where to get his data from
+          root: 'results',
+          totalProperty: 'total',
+          id: 'id'
+        },['dbcr_accseqno' , 'dbcr_seqno'])
+    });
+        
     
     function findGSTledgerName2(ledcode, callback) {
 
@@ -1073,7 +1427,7 @@ Ext.onReady(function(){
         fieldLabel  : 'Specifications',
         id          : 'txtItemSpec',
         name        : 'txtItemSpec',
-        width       :  355,
+        width       :  320,
              labelStyle : "font-size:14px;font-weight:bold;color:#0080ff",
             style      :"border-radius: 5px;textTransform: uppercase; ", 	
         enableKeyEvents: true,
@@ -1197,8 +1551,6 @@ Ext.onReady(function(){
     
     function save_click()
     {
-    
-
 
         var hasError = false;
         var Row= flxAccounts.getStore().getCount();  
@@ -1276,10 +1628,17 @@ Ext.onReady(function(){
                             else if (txtTruck.getRawValue() == "")
                             {
                                    Ext.Msg.alert('GRN','Truck Number cannot be Empty.....');
-                                   tabGRN.setActiveTab(1);
+                                   tabgrn.setActiveTab(1);
                                    Ext.getCmp('txtTruck').focus(false, 200);
                             }
-    
+                            else if (txtNarration.getRawValue() == "" && Number(txtValueDiff.getValue()) > 0)
+                                {
+                                       Ext.Msg.alert('GRN','Debit Note Narration cannot be Empty.....');
+                                       tabgrn.setActiveTab(1);
+                                       Ext.getCmp('txtTruck').focus(false, 200);
+                                }
+        
+                            
                             else if (txtGRNNo.getRawValue() == '')
                             {
                                    Ext.Msg.alert('GRN','GRN Number is empty');
@@ -1318,6 +1677,11 @@ Ext.onReady(function(){
                            accupdData.push(record.data);
                         });
     
+                        var accDNData = flxAccountsDNOTE.getStore().getRange();                                        
+                        var accDNupdData = new Array();
+                        Ext.each(accDNData, function (record) {
+                           accDNupdData.push(record.data);
+                        });
     
                                                    var vouno = txtGRNNo.getValue();
                                                    
@@ -1336,7 +1700,10 @@ Ext.onReady(function(){
                             griddet: Ext.util.JSON.encode(minupData),                                      
                             cnt:minDeta.length,
                             griddetacc      : Ext.util.JSON.encode(accupdData),                          
-                            cntacc		: accData.length,
+                            cntacc	    	: accData.length,
+                            griddetaccdn    : Ext.util.JSON.encode(accDNupdData),                          
+                            cntaccdn     	: accDNData.length,
+
                             savetype       : gstFlag,
                             grnflag        : grnflag,   
 
@@ -1376,9 +1743,9 @@ Ext.onReady(function(){
                             grnstatus      : grn_status,     
                             roundneed      : roundoff,
                             accseqno       : accseqno,
+                            dnaccseqno     : dnaccseqno,
+                            dnseqno        : dnseqno,
                             userid         : UserId,   
-
-
                             minhFrtAmt     : txtCommonFRTAmt.getValue(),
                             minhCGSTPer    : txtFRTCGSTPer.getValue(),
                             minhSGSTPer    : txtFRTSGSTPer.getValue(),
@@ -1392,6 +1759,16 @@ Ext.onReady(function(){
                             frtSGSTledcode : frtSGSTledcode,
                             frtIGSTledcode : frtIGSTledcode,  
 
+                            minhdnno       : txtDNVouNo.getRawValue(),
+                            minhdndate     : Ext.util.Format.date(dtpDNDate.getValue(),"Y-m-d"),
+                            minhdntaxable  : txtValueDiff.getRawValue(),
+                            minhdncgst     : txtcgstvalDiff.getRawValue(),
+                            minhdnsgst     : txtsgstvalDiff.getRawValue(),
+                            minhdnigst     : txtigstvalDiff.getRawValue(),
+                            dnremarks      : txtNarration.getRawValue(),
+                            finsuffix      : invfin,
+                            purledger       : cmbPurGroup.getValue(),
+                            vouno           : txtDNVouNo.getValue(),
 
                             
         //						minhseqno : '0'
@@ -1404,9 +1781,10 @@ Ext.onReady(function(){
                                     var grndisp = "Goods Receipt Note - Saved - No."; 
                             if (obj['success']==="true")
                             {                                
-                                                        Ext.MessageBox.alert( grndisp + obj['minno']);
+                                               Ext.MessageBox.alert( grndisp + obj['minno']);
     //			                            myFormPanel.getForm().reset();						
                                                         flxDetail.getStore().removeAll();
+                                                        
                                                         RefreshData();
                                                   }else
                             {
@@ -1431,7 +1809,7 @@ Ext.onReady(function(){
       }
     
     }
-     var accseqno = 0;
+     var accseqno = 0 , dnaccseqno = 0 , dnseqno = 0;
      var partyledcode = 0;
     
      var loadGSTLedgerDatastore = new Ext.data.Store({
@@ -1530,6 +1908,70 @@ Ext.onReady(function(){
                 'font-size': '14px','font-weight':'bold'
             },
        });
+
+
+
+       var flxAccountsDNOTE = new Ext.grid.EditorGridPanel({
+        frame: false,
+        sm: new Ext.grid.RowSelectionModel(),
+        stripeRows : true,
+        scrollable: true,
+        height: 170,
+        hidden:false,
+        width: 850,
+       id:'my-grid4',
+    scope: this,
+        columns:
+        [
+        {header: "S.No" ,       dataIndex: 'slno',sortable:true,width:60,align:'center'},
+        {header: "Led.Code",    dataIndex: 'ledcode',sortable:true,width:60,align:'left',hidden:false},
+        {header: "Ledger Name", dataIndex: 'ledname',sortable:true,width:360,align:'left'},
+        {header: "Dedit",       dataIndex: 'debit',sortable:true,width:100,align:'right'},
+        {header: "Credit",      dataIndex: 'credit',sortable:true,width:100,align:'right'},
+        {header: "Bill No",     dataIndex: 'billno',sortable:true,width:100,align:'left',hidden:true},
+        {header: "Bill Dt",     dataIndex: 'billdt',sortable:true,width:100,align:'left',hidden:true},
+        {header: "ledtype",     dataIndex: 'ledtype',sortable:true,width:100,align:'left'},
+        ],
+        store: [],
+        listeners:{	
+        }
+    
+    });
+    
+       var txttotDebitDN = new Ext.form.TextField({
+            fieldLabel  : 'Total Debit',
+            id          : 'txttotDebitDN',
+            name        : 'txttotDebitDN',
+            width       :  100,
+        readOnly : true,
+            tabindex : 2,
+            labelStyle   : "font-size:14px;font-weight:bold;color:#0080ff",
+    
+        style: {
+                'color':'#900C3F ',readOnly:true,'text-align': 'right',
+                'style': 'Helvetica',
+                'font-size': '14px','font-weight':'bold'
+            },
+    
+       });
+    
+       var txttotCreditDN = new Ext.form.TextField({
+            fieldLabel  : 'Total Credit',
+            id          : 'txttotCreditDN',
+            name        : 'txttotCreditDN',
+            width       :  100,
+        readOnly : true,
+            tabindex : 2,
+            labelStyle   : "font-size:14px;font-weight:bold;color:#0080ff",
+    
+        style: {
+                'color':'#900C3F ',readOnly:true,'text-align': 'right',
+                'style': 'Helvetica',
+                'font-size': '14px','font-weight':'bold'
+            },
+       });
+
+
 /*       
     
      var btnsave = new Ext.Button({
@@ -1716,7 +2158,7 @@ Ext.onReady(function(){
     'minh_gedate', 'minh_lrno', 'minh_lrdate', 'minh_accupd','mint_rebate', 'mint_machine','mint_tcs_per','mint_tcs_amt','mint_accept_qty','mint_otherspm', 'mint_purgroup','cust_name','minh_roundneeded','cust_ref','tax_cgstper', 'tax_sgstper', 'tax_igstper', 'tax_cgst_ledcode', 'tax_sgst_ledcode', 'tax_igst_ledcode', 'tax_cgst_ledname', 'tax_sgst_ledname', 'tax_igst_ledname','led_name', 'tax_gst','sup_led_code','minh_acc_seqno','cust_state','minh_cgst_pm','minh_sgst_pm','minh_igst_pm','minh_tot_tcs','minh_round_off',
     'mint_insurance','acctrail_adj_value','mint_recdqty_bill','mint_item_unit','minh_grn_status','mint_item_spec','mint_transport','mint_value_pm','mint_rebate2',
     'minh_freight_amount', 'minh_frt_cgstper', 'minh_frt_sgstper','minh_frt_igstper', 'minh_frt_cgstamt', 'minh_frt_sgstamt', 'minh_frt_igstamt',
-    'minh_frt_ledger', 'minh_frt_cgstledger', 'minh_frt_sgstledger', 'minh_frt_igstledger'
+    'minh_frt_ledger', 'minh_frt_cgstledger', 'minh_frt_sgstledger', 'minh_frt_igstledger' ,'mint_billrate', 'mint_povalue','minh_dnno','minh_dndate','minh_dnamount'
     
     
     
@@ -1904,14 +2346,23 @@ Ext.onReady(function(){
     });
     
     
-    var lblRate = new Ext.form.Label({
-        fieldLabel  : 'Rate',
-        id          : 'lblRate',
-        width       : 60,
+    var lblPORate = new Ext.form.Label({
+        fieldLabel  : 'PO Rate',
+        id          : 'lblPORate',
+        width       : 100,
         labelStyle  : "font-size:14px;font-weight:bold;color:#fc03db",
     });
     
     
+    
+    var lblBillRate = new Ext.form.Label({
+        fieldLabel  : 'Bill Rate',
+        id          : 'lblBillRate',
+        width       : 80,
+        labelStyle  : "font-size:14px;font-weight:bold;color:#fc03db",
+    });
+    
+        
     
     var lblPer = new Ext.form.Label({
         fieldLabel  : '%',
@@ -2078,6 +2529,24 @@ Ext.onReady(function(){
     
              txttotDebit.setValue(Ext.util.Format.number((dr*100/100),'0.00'));
              txttotCredit.setValue(Ext.util.Format.number((cr*100/100),'0.00'));
+  
+             dr = 0,cr=0;               
+             
+            var Row= flxAccountsDNOTE.getStore().getCount();
+    
+
+            for(var i=0;i<Row;i++)
+            {
+    
+                var rec = flxAccountsDNOTE.getStore().getAt(i);
+                dr = dr + Number(rec.get('debit'));
+                cr = cr + Number(rec.get('credit'));
+    
+             }
+     
+    
+             txttotDebitDN.setValue(Ext.util.Format.number((dr*100/100),'0.00'));
+             txttotCreditDN.setValue(Ext.util.Format.number((cr*100/100),'0.00'));
     
     
     
@@ -2106,8 +2575,28 @@ Ext.onReady(function(){
             var tcs =0;
             var ins =0;
             var transport =0;
-    
-//alert("TEst") ;           
+            var poValueActual =0;    
+//alert("TEst") ;      
+
+            var debitnoteremarks = 'BEING DEBITED TO YOUR ACCOUNT FOR THE ITEM  ';
+            txtValueBilled.setValue(0);  
+            txtValueGRN.setValue(0);
+            txtValueDiff.setValue(0);
+
+
+            txtcgstvalBilled.setValue(0);
+            txtcgstvalGRN.setValue(0);
+            txtcgstvalDiff.setValue(0);
+
+            txtsgstvalBilled.setValue(0);
+            txtsgstvalGRN.setValue(0);
+            txtsgstvalDiff.setValue(0);
+
+            txtigstvalBilled.setValue(0);
+            txtigstvalGRN.setValue(0);
+            txtigstvalDiff.setValue(0);
+
+
             txtgrossval.setValue(0);
             txttotdisc.setValue(0);
             txtTotPF.setValue(0);
@@ -2142,28 +2631,15 @@ Ext.onReady(function(){
                 transport  = transport  + Number(sel[i].data.transportation)  ;
     
     
-                value=value+ (Number(sel[i].data.mintinvqty) * Number(sel[i].data.mintunitrate))+Number(sel[i].data.valuepm);
-                value2=value2+ (Number(sel[i].data.mintinvqty) * Number(sel[i].data.mintunitrate))+Number(sel[i].data.valuepm);
+                poValueActual += Number(sel[i].data.povalue);
+                value=value+ (Number(sel[i].data.mintinvqty) * Number(sel[i].data.billrate))+Number(sel[i].data.valuepm);
+                value2=value2+ (Number(sel[i].data.mintinvqty) * Number(sel[i].data.billrate))+Number(sel[i].data.valuepm);
     
     
                 value = parseFloat(value.toFixed(2)); 
                 value2 = parseFloat(value2.toFixed(2)); 
     
     
-    
-         //      value  = value.toFixed(2);
-     //            value2 = value2.toFixed(2);
-    
-    
-    
-    //           value  = Number(sel[i].data.mintvalue));
-    //           value2 = Number(sel[i].data.mintvalue));
-    
-    
-    
-    
-          //      value  = value  + Number(sel[i].data.mintvalue) ;
-    // value2 = value2 + Number(sel[i].data.mintvalue);
     
     
                 disc = disc + Number(sel[i].data.mintdisamt);
@@ -2175,6 +2651,9 @@ Ext.onReady(function(){
                 rebate2 = rebate2 + Number(sel[i].data.rebate2);
                 tcs = Number(tcs) + Number(sel[i].data.minttcsval);
                 remarks = remarks + sel[i].data.itemname + ' Qty : ' + sel[i].data.mintacceptqty + ' @ ' + sel[i].data.mintunitrate ;
+                if (sel[i].data.billrate > sel[i].data.mintunitrate)
+                     debitnoteremarks = debitnoteremarks + sel[i].data.itemname + " RATE DIFFERENCE PO RATE : " +  sel[i].data.mintunitrate +  " BILL RATE : " +  sel[i].data.billrate; 
+
                 }
     
             }
@@ -2187,6 +2666,7 @@ Ext.onReady(function(){
     
 
              txtRemarks.setValue(remarks) ;
+ 
        
            // landing = value - disc + pf + frt + others + qcdev + inward + taxfrt + taxfrtgst + inward+ taxfrt + taxfrtgst ;
     
@@ -2225,6 +2705,13 @@ Ext.onReady(function(){
             txttotcgst.setValue(cgst.toFixed(2));
             txttotsgst.setValue(sgst.toFixed(2));
             txttotigst.setValue(igst.toFixed(2));
+
+
+            txtcgstvalBilled.setRawValue(cgst.toFixed(2));
+            txtsgstvalBilled.setRawValue(sgst.toFixed(2));
+            txtigstvalBilled.setRawValue(igst.toFixed(2));
+
+
             txtTotInsurance.setValue(ins.toFixed(2));
     
     
@@ -2242,6 +2729,54 @@ Ext.onReady(function(){
     
     
             txtgrossval.setValue(value.toFixed(2));
+            txtValueBilled.setRawValue(value.toFixed(2));
+            txtValueGRN.setRawValue(poValueActual.toFixed(2));
+            
+            var grncgst = 0, grnsgst = 0, grnigst = 0 , diffcgst = 0, diffsgst = 0, diffigst = 0 , diffvalue = 0;
+
+            if (cgst > 0 &&  Number(txtValueBilled.getValue()) >0 &&   Number(txtValueGRN.getValue()) > 0)
+               grncgst = cgst / Number(txtValueBilled.getValue()) *  Number(txtValueGRN.getValue());
+
+            if (sgst > 0 &&  Number(txtValueBilled.getValue()) >0 &&   Number(txtValueGRN.getValue()) > 0)
+                grnsgst = sgst / Number(txtValueBilled.getValue()) *  Number(txtValueGRN.getValue());
+ 
+            if (igst > 0 &&  Number(txtValueBilled.getValue()) >0 &&   Number(txtValueGRN.getValue()) > 0)
+                grnigst = igst / Number(txtValueBilled.getValue()) *  Number(txtValueGRN.getValue());
+
+/*
+            diffvalue = value - poValueActual;
+            diffcgst = cgst-grncgst;
+            diffsgst = sgst-grnsgst;
+            diffigst = igst-grnigst;
+*/
+
+            diffvalue = (value > poValueActual) ? (value - poValueActual) : 0;
+
+            diffcgst  = (cgst > grncgst) ? (cgst - grncgst) : 0;
+            diffsgst  = (sgst > grnsgst) ? (sgst - grnsgst) : 0;
+            diffigst  = (igst > grnigst) ? (igst - grnigst) : 0;
+    
+           txtcgstvalGRN.setRawValue(grncgst.toFixed(2)) 
+           txtsgstvalGRN.setRawValue(grnsgst.toFixed(2)) 
+           txtigstvalGRN.setRawValue(grnigst.toFixed(2)) 
+
+           txtcgstvalGRN.setRawValue(grncgst.toFixed(2)) 
+           txtsgstvalGRN.setRawValue(grnsgst.toFixed(2)) 
+           txtigstvalGRN.setRawValue(grnigst.toFixed(2)) 
+
+
+           txtValueDiff.setRawValue(diffvalue.toFixed(2)); 
+           txtcgstvalDiff.setRawValue(diffcgst.toFixed(2)); 
+           txtsgstvalDiff.setRawValue(diffsgst.toFixed(2)); 
+           txtigstvalDiff.setRawValue(diffigst.toFixed(2)) ;
+
+           var diffgst = Number(diffcgst)    + Number(diffsgst) +  Number(diffigst);
+
+           debitnoteremarks = debitnoteremarks + ", VALUE DIFFERENCE " + txtValueDiff.getRawValue() + " + GST : " + Ext.util.Format.number(diffgst,'0.00') 
+
+           txtNarration.setValue(debitnoteremarks) ;
+
+
             txttotdisc.setValue(disc.toFixed(2));
             txtTotPF.setValue(pf.toFixed(2));
             txttotfreight1.setValue(frt.toFixed(2));
@@ -2288,6 +2823,98 @@ Ext.onReady(function(){
               txtGRNValue.setRawValue(Ext.util.Format.number(totgrnvalue,"0.00"));
     
     
+
+            if (Number(diffvalue) > 0)
+            {
+                loadDNVouNoDatasore.load({
+                    url: 'ClsGrn.php',
+                    params:
+                    {	
+                    task    : 'LoadDNNumber',
+                    finid   : GinFinid,
+                    compcode: Gincompcode,
+                    gsttype : dngsttype2,  
+                    },
+                    callback: function(){
+                           var vno = " 00"+loadDNVouNoDatasore.getAt(0).get('vouno');   
+                           if (loadDNVouNoDatasore.getAt(0).get('vouno') < 10)
+                            {                                              
+                              vno = "00"+loadDNVouNoDatasore.getAt(0).get('vouno');
+                            }                                      
+                            else
+                            {  
+                                 if (loadDNVouNoDatasore.getAt(0).get('vouno') < 100) 
+                                 {                                              
+                                  vno = "0"+loadDNVouNoDatasore.getAt(0).get('vouno');                   
+                                 }
+                                 else 
+                                 {      
+                                   vno = loadDNVouNoDatasore.getAt(0).get('vouno');  
+                                 }
+                            } 
+                         vno =  vno.slice(-4);  
+                         vno =  vno.trim() +'/'+ invfin; 
+            
+                            if (dngsttype2 == "G")
+                            {                 
+                               vno = "DNG/"+vno;    
+                               dntype = 'DNG';    
+                            }   
+                            else
+                            {  
+                               vno = "DNN/"+vno;    
+                               dntype = 'DNN';
+                            }   
+            
+            
+                            
+                            if (gstFlag == "Add")
+                               txtDNVouNo.setValue(vno);
+                            else
+                               txtDNVouNo.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_dnno'));    
+            
+            
+                         }
+                    });
+            
+                    if (  gstFlag == "ADD")
+                    {
+                         loadDNDateDatastore.removeAll();
+                         loadDNDateDatastore.load({
+                         url:'ClsGrn.php',
+                         params:
+                         {
+                          task:"LoadDNDate",
+                          finid    : GinFinid,
+                          compcode : Gincompcode,
+                          gsttype  : dngsttype,  
+                         },
+                         callback:function()
+                         {  
+                              if(Ext.util.Format.date(loadDNDateDatastore.getAt(0).get('dnmaxdate'),"Y-m-d") > Ext.util.Format.date(finenddate,"Y-m-d"))
+                              {  
+                                 dtpDNDate.setValue(Ext.util.Format.date(finenddate),'d-m-Y');
+                              } 
+                              else
+                              {
+                                 dtpDNDate.setValue(Ext.util.Format.date(loadDNDateDatastore.getAt(0).get('dnmaxdate')),'d-m-Y'); 
+                              } 
+            
+                              var dtDN  = dtpDNDate.getValue();
+                              var dtGRN = dtpGRNDate.getValue();            
+                              var diffdays = dtGRN.getTime()-dtDN.getTime();             
+                              diffdays = Math.ceil(diffdays / (1000 * 60 * 60 * 24)); 
+                        //alert(diffdays);
+                               if (diffdays >= 0)
+                                dtpDNDate.setValue(dtpGRNDate.getValue());
+                        
+            
+                       }
+                       });
+                    }
+
+            
+            }    
     
     flxaccupdation();
     
@@ -2324,8 +2951,8 @@ Ext.onReady(function(){
             txtFRTSGSTAmt.setRawValue(Ext.util.Format.number(Number(txtCommonFRTAmt.getValue()) *  Number(txtFRTSGSTPer.getRawValue())/100,'0.00'));
             txtFRTIGSTAmt.setRawValue(Ext.util.Format.number(Number(txtCommonFRTAmt.getValue()) *  Number(txtFRTIGSTPer.getRawValue())/100,'0.00'));
 
-           value = Number(txtunitrate.getRawValue()) * Number(txtinvqty.getRawValue()) ; 
-           value2 = Number(txtunitrate.getRawValue()) * Number(txtinvqty.getRawValue()) ; 
+           value = Number(txtBillRate.getRawValue()) * Number(txtinvqty.getRawValue()) ; 
+           value2 = Number(txtBillRate.getRawValue()) * Number(txtinvqty.getRawValue()) ; 
     
            if (Number(value) >0) 
            {
@@ -2392,17 +3019,20 @@ Ext.onReady(function(){
                } 
     
                txtCGSTVal.setRawValue(cgst);
+               txtcgstvalBilled.setRawValue(cgst);
+               
     
                if (txtSGSTPer.getRawValue() > 0 && value > 0 )  {
                sgst =  Ext.util.Format.number(taxable *  Number(txtSGSTPer.getRawValue())/100,'0.00'); 
                } 
                txtSGSTVal.setRawValue(sgst);
-    
+               txtsgstvalBilled.setRawValue(sgst);
+
                if (txtIGSTPer.getRawValue() > 0 && value > 0 )  {
                igst =  Ext.util.Format.number(taxable *  Number(txtIGSTPer.getRawValue())/100,'0.00'); 
                } 
                txtIGSTVal.setRawValue(igst);
-     
+               txtigstvalBilled.setRawValue(igst);
     
     //       invitemvalue =  Number(taxable)+Number(cgst)+Number(sgst)+Number(igst)+Number(txtothers.getRawValue())+Number(txtothersPM.getRawValue())+Number(txtinward.getRawValue())+Number(txtclrfreight1.getRawValue());
     
@@ -2641,7 +3271,7 @@ Ext.onReady(function(){
                          });
     
     
-     
+                                 dnamount = 0;
                                  grntype = GRNdetailsLoadDataStore.getAt(0).get('minh_type');  
                                  if (GRNdetailsLoadDataStore.getAt(0).get('minh_type') == 'I')
                                  {
@@ -2658,12 +3288,14 @@ Ext.onReady(function(){
                                      Ext.getCmp('opt_GRN_Status').setValue(2);
                                      grn_status = "P";
                                      Ext.getCmp('opt_GRN_Status').setDisabled(false);
+                                     Ext.getCmp('txtSupplierName').setReadOnly(false);
                                  }
                                  else
                                  {
                                      Ext.getCmp('opt_GRN_Status').setValue(1);
                                      grn_status = "C";
                                      Ext.getCmp('opt_GRN_Status').setDisabled(true);
+                                     Ext.getCmp('txtSupplierName').setReadOnly(true);
     
                                  }  
     
@@ -2694,7 +3326,14 @@ Ext.onReady(function(){
                                  indno = GRNdetailsLoadDataStore.getAt(0).get('mint_pono');
                                  indfincode = GRNdetailsLoadDataStore.getAt(0).get('mint_ind_fin_code');
                                  txtpoindyr.setValue(GRNdetailsLoadDataStore.getAt(0).get('mint_ind_fin_code'));
+
+                      //           alert(GRNdetailsLoadDataStore.getAt(0).get('minh_dnno'));
+                                 txtDNVouNo.setValue(GRNdetailsLoadDataStore.getAt(0).get('minh_dnno'));
     
+                                 dtpDNDate.setRawValue(Ext.util.Format.date(GRNdetailsLoadDataStore.getAt(0).get('minh_dndate'),"d-m-Y"));
+
+                                 dnamount = GRNdetailsLoadDataStore.getAt(0).get('minh_dnamount');
+
                             if (GRNdetailsLoadDataStore.getAt(0).get('minh_roundneeded') == "Y")
                                Ext.getCmp("optRounding").setValue(1);
                             else if (GRNdetailsLoadDataStore.getAt(0).get('minh_roundneeded') == "N")
@@ -2823,6 +3462,8 @@ Ext.onReady(function(){
                                          transportation    : GRNdetailsLoadDataStore.getAt(j).get('mint_transport'),
                                          valuepm           : GRNdetailsLoadDataStore.getAt(j).get('mint_value_pm'),
                                          rebate2           : GRNdetailsLoadDataStore.getAt(j).get('mint_rebate2'),
+                                         billrate           : GRNdetailsLoadDataStore.getAt(j).get('mint_billrate'),
+                                         povalue           : GRNdetailsLoadDataStore.getAt(j).get('mint_povalue'),
     
                                          delrecord         : 'N',
                                        })
@@ -2853,8 +3494,10 @@ Ext.onReady(function(){
                                  } // for loop end
      grid_tot();
     
-                                 if (Number(GRNdetailsLoadDataStore.getAt(0).get('acctrail_adj_value')) > 0)
+
+                                 if (Number(GRNdetailsLoadDataStore.getAt(0).get('acctrail_adj_value')) > dnamount)
                                  {
+
                                  alert("Amount Already Adjusted.  You can't Modify..")
                                  Ext.getCmp('save').setDisabled(true);
 //                                 Ext.getCmp('save2').setDisabled(true);
@@ -2874,6 +3517,36 @@ Ext.onReady(function(){
    //                              Ext.getCmp('save2').setDisabled(true);
     
                                  }   
+
+                                 if (dnamount >0)
+                                 {
+                                    Load_DNOTE_Datasore.load({
+                                        url: 'ClsGrn.php',
+                                        params:
+                                        {	
+                                        task     : 'loadDNVoucherDetail',
+                                        fincode  : GinFinid,
+                                        compcode : Gincompcode,
+                                        dnvouno  : txtDNVouNo.getValue(),  
+                                        },
+                                        callback: function(){
+                                            var cnt=Load_DNOTE_Datasore.getCount();
+                                            dnaccseqno = 0; 
+                                            dnseqno = 0;
+                                            if(cnt>0)      
+                                            {                                                   
+                                                dnaccseqno = Load_DNOTE_Datasore.getAt(0).get('dbcr_accseqno'); 
+                                                dnseqno = Load_DNOTE_Datasore.getAt(0).get('dbcr_seqno'); 
+
+//alert(dnaccseqno);
+//alert(dnseqno);
+
+
+                                            }    
+                                
+                                        }
+                                    });        
+                                 } 
                                  editdatecheck();
     
     loadPOINDENTDetials();
@@ -2911,6 +3584,7 @@ Ext.onReady(function(){
             var tcs = 0;
     
             flxAccounts.getStore().removeAll();
+            flxAccountsDNOTE.getStore().removeAll();
         var Row= flxDetail.getStore().getCount();
         flxDetail.getSelectionModel().selectAll();
             var sel=flxDetail.getSelectionModel().getSelections();
@@ -3526,6 +4200,123 @@ Ext.onReady(function(){
                   }) 
             );
     }
+
+
+    var partydebit = Number(txtValueDiff.getValue()) + Number(txtcgstvalDiff.getValue()) + Number(txtsgstvalDiff.getValue()) + Number(txtigstvalDiff.getValue());
+
+    if (Number(txtValueDiff.getRawValue()) > 0)
+    {    
+        var Row= flxDetail.getStore().getCount();
+        flxDetail.getSelectionModel().selectAll();
+        var sel=flxDetail.getSelectionModel().getSelections();
+        var RowCnt1 = flxAccountsDNOTE.getStore().getCount() + 1;
+        flxAccountsDNOTE.getStore().insert(
+          flxAccountsDNOTE.getStore().getCount(),
+          new dgrecord({
+              slno      : RowCnt1,
+              ledcode   : partyledcode,
+              ledname   : txtSupplierName.getRawValue(),
+              debit     : Ext.util.Format.number(partydebit,'0.00'),
+              credit    : '',
+              billno    : txtBillNo.getRawValue(),
+              billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
+              ledtype   : "P",
+              }) 
+         );
+
+
+
+            if (Number(txtValueDiff.getRawValue()) > 0)
+            {    
+                var Row= flxDetail.getStore().getCount();
+                flxDetail.getSelectionModel().selectAll();
+                var sel=flxDetail.getSelectionModel().getSelections();
+                var RowCnt1 = flxAccountsDNOTE.getStore().getCount() + 1;
+                flxAccountsDNOTE.getStore().insert(
+                flxAccountsDNOTE.getStore().getCount(),
+                new dgrecord({
+                    slno      : RowCnt1,
+                    ledcode   : purlcode,
+                    ledname   : purlname,
+                    debit     : '0',
+                    credit    : Ext.util.Format.number(txtValueDiff.getRawValue(),'0.00'),
+                    billno    : txtBillNo.getRawValue(),
+                    billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
+                    ledtype   : "G",
+                    }) 
+                );
+            }  
+
+
+            if (Number(txtcgstvalDiff.getRawValue()) > 0)
+                {    
+                    var Row= flxDetail.getStore().getCount();
+                    flxDetail.getSelectionModel().selectAll();
+                    var sel=flxDetail.getSelectionModel().getSelections();
+                    var RowCnt1 = flxAccountsDNOTE.getStore().getCount() + 1;
+                    flxAccountsDNOTE.getStore().insert(
+                    flxAccountsDNOTE.getStore().getCount(),
+                    new dgrecord({
+                        slno      : RowCnt1,
+                        ledcode   : cgstlcode,
+                        ledname   : cgstlname,
+                        debit     : '0',
+                        credit    : Ext.util.Format.number(txtcgstvalDiff.getRawValue(),'0.00'),
+                        billno    : txtBillNo.getRawValue(),
+                        billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
+                        ledtype   : "G",
+                        }) 
+                    );
+                }  
+    
+
+
+                if (Number(txtsgstvalDiff.getRawValue()) > 0)
+                    {    
+                        var Row= flxDetail.getStore().getCount();
+                        flxDetail.getSelectionModel().selectAll();
+                        var sel=flxDetail.getSelectionModel().getSelections();
+                        var RowCnt1 = flxAccountsDNOTE.getStore().getCount() + 1;
+                        flxAccountsDNOTE.getStore().insert(
+                        flxAccountsDNOTE.getStore().getCount(),
+                        new dgrecord({
+                            slno      : RowCnt1,
+                            ledcode   : sgstlcode,
+                            ledname   : sgstlname,
+                            debit     : '0',
+                            credit    : Ext.util.Format.number(txtsgstvalDiff.getRawValue(),'0.00'),
+                            billno    : txtBillNo.getRawValue(),
+                            billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
+                            ledtype   : "G",
+                            }) 
+                        );
+                    }  
+
+    
+
+
+                    if (Number(txtigstvalDiff.getRawValue()) > 0)
+                        {    
+                            var Row= flxDetail.getStore().getCount();
+                            flxDetail.getSelectionModel().selectAll();
+                            var sel=flxDetail.getSelectionModel().getSelections();
+                            var RowCnt1 = flxAccountsDNOTE.getStore().getCount() + 1;
+                            flxAccountsDNOTE.getStore().insert(
+                            flxAccountsDNOTE.getStore().getCount(),
+                            new dgrecord({
+                                slno      : RowCnt1,
+                                ledcode   : igstlcode,
+                                ledname   : igstlname,
+                                debit     : '0',
+                                credit    : Ext.util.Format.number(txtigstvalDiff.getRawValue(),'0.00'),
+                                billno    : txtBillNo.getRawValue(),
+                                billdt    : Ext.util.Format.date(dtpBill.getValue(),"Y-m-d"),
+                                ledtype   : "G",
+                                }) 
+                            );
+                        }                      
+
+    }
                 grid_tot2();
                 var diff = 0;
                 diff =  txttotDebit.getRawValue()-txttotCredit.getRawValue(); 
@@ -3818,11 +4609,11 @@ Ext.onReady(function(){
     });
     
     
-       var txtunitrate = new Ext.form.NumberField({
+       var txtPORate = new Ext.form.NumberField({
             fieldLabel  : '',
-            id          : 'txtunitrate',
+            id          : 'txtPORate',
             width       : 75,
-            name        : 'txtunitrate',
+            name        : 'txtPORate',
             labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
             enableKeyEvents: true,
             decimalPrecision: 4,
@@ -3847,7 +4638,37 @@ Ext.onReady(function(){
        }); 
     
     
+
+       var txtBillRate = new Ext.form.NumberField({
+            fieldLabel  : '',
+            id          : 'txtBillRate',
+            width       : 75,
+            name        : 'txtBillRate',
+            labelStyle  : "font-size:14px;font-weight:bold;color:#0080ff",
+            enableKeyEvents: true,
+            decimalPrecision: 2,
+            readOnly : true,
+            listeners:{
+    specialkey:function(f,e){
+                 if (e.getKey() == e.ENTER)
+                 {
+                      cmbtype.focus();
+                 }
+           },
+            change:function(){
+             calculateItemValue();
+            },
+            keyup:function(){
+             calculateItemValue();
+            },
+            blur:function(){
+             calculateItemValue();
+            }
+          }
     
+       }); 
+    
+           
     
        var txtBillNo = new Ext.form.TextField({
             fieldLabel  : 'Bill No.',
@@ -5307,7 +6128,7 @@ Ext.onReady(function(){
             flxLedger.hide();
                     txtBillNo.focus();
                     txtAcceptQty.show();
-            txtunitrate.show();
+            txtPORate.show();
             cmbtype.show();
             lblIGST.show();
             lblTCS.show();
@@ -5506,7 +6327,7 @@ Ext.onReady(function(){
             keyup: function () {
     
             txtAcceptQty.hide();
-            txtunitrate.hide();
+            txtPORate.hide();
             cmbtype.hide();
             lblIGST.hide();
             lblTCS.hide();
@@ -5890,7 +6711,8 @@ Ext.onReady(function(){
                                                 txtuom.setRawValue(loaditemdetailsDatastore.getAt(0).get('uom_short_name'));   
                                                 itemuom = loaditemdetailsDatastore.getAt(0).get('uom_code'); 
                                                 txtordqty.setValue(loaditemdetailsDatastore.getAt(0).get('ptr_ord_qty')-loaditemdetailsDatastore.getAt(0).get('ptr_rec_qty'));
-                                                txtunitrate.setValue(loaditemdetailsDatastore.getAt(0).get('ptr_unit_rate'));      
+                                                txtPORate.setValue(loaditemdetailsDatastore.getAt(0).get('ptr_unit_rate'));     
+                                                txtBillRate.setValue(loaditemdetailsDatastore.getAt(0).get('ptr_unit_rate'));     
                                                 if (loaditemdetailsDatastore.getAt(0).get('ptr_discount') > 0) {
                                                    txtdisper.setRawValue(loaditemdetailsDatastore.getAt(0).get('ptr_discount'));
                                                 }
@@ -6309,10 +7131,30 @@ Ext.onReady(function(){
     //        myFormPanel.getForm().reset();
             flxDetail.getStore().removeAll();
             flxAccounts.getStore().removeAll();
+            flxAccountsDNOTE.getStore().removeAll();
             flxLedger.hide();
             btnDelete.hide();
             btnGRNNoChange.hide();
             btnBillNoChange.hide();
+            txtNarration.setRawValue('');
+
+            txtValueBilled.setValue(0);  
+            txtValueGRN.setValue(0);
+            txtValueDiff.setValue(0);
+
+
+            txtcgstvalBilled.setValue(0);
+            txtcgstvalGRN.setValue(0);
+            txtcgstvalDiff.setValue(0);
+
+            txtsgstvalBilled.setValue(0);
+            txtsgstvalGRN.setValue(0);
+            txtsgstvalDiff.setValue(0);
+
+            txtigstvalBilled.setValue(0);
+            txtigstvalGRN.setValue(0);
+            txtigstvalDiff.setValue(0);
+            txtDNVouNo.setRawValue('');
     
             gstFlag = "Add";
             identflag="P";
@@ -6334,7 +7176,7 @@ Ext.onReady(function(){
                                             Ext.getCmp('txtSGSTPer').setDisabled(true);                      
                                             Ext.getCmp('txtSGSTVal').setDisabled(true);   
                                             Ext.getCmp('txtIGSTPer').setDisabled(true);                      
-                                            Ext.getCmp('txtunitrate').setDisabled(true);
+                                            Ext.getCmp('txtPORate').setDisabled(true);
     
     
     
@@ -6391,7 +7233,10 @@ Ext.onReady(function(){
             txtFRTIGSTPer.setValue('');  
             txtFRTCGSTAmt.setValue('');
             txtFRTIGSTAmt.setValue('');  
-            
+            txttotDebit.setValue('');
+            txttotCredit.setValue('');
+            txttotDebitDN.setValue('');
+            txttotCreditDN.setValue('');
             
         txtpoindyr.setValue(GinFinid);
     
@@ -6467,43 +7312,44 @@ Ext.onReady(function(){
     
     
     function refresh() {
-      txtValue.setRawValue('');      
-      txtValuePM.setRawValue('');                               
-      txtRcvdQty.setRawValue('');                               
-      txtinvqty.setRawValue('');                              
-      txtAcceptQty.setRawValue('');                            
-      txtStockQty.setRawValue('');
-      txtunitrate.setRawValue('');                            
-      txtordqty.setRawValue('');
-      txtdisper.setRawValue('');
-      txtdisval.setRawValue('');
-      txtpfper.setRawValue('');
-      txtpfval.setRawValue('');
-    //  txtIGSTPer.setRawValue('');  
-      txtIGSTVal.setRawValue('');
-    //  txtSGSTPer.setRawValue('');
-      txtSGSTVal.setRawValue('');
-    //  txtCGSTPer.setRawValue('');
-      txtCGSTVal.setRawValue('');
-      txtothers.setRawValue('');
-      txtRebate.setValue('');
-      txtRebate2.setValue('');
-      txtfreight.setRawValue('');
-      txtinward.setRawValue('');
-      txtothersPM.setRawValue('');
-      txtclrfreight1.getRawValue(''),
-      txtfreightparty.setRawValue('');
-      txtitemvalue.setRawValue('');
-      txtiteminvvalue.setRawValue('');
-    
-      txtclrfreight1.setRawValue('');
-    
-      txtTCSPer.setValue('');
-      txtTCSVal.setValue('');
+        txtValue.setRawValue('');      
+        txtValuePM.setRawValue('');                               
+        txtRcvdQty.setRawValue('');                               
+        txtinvqty.setRawValue('');                              
+        txtAcceptQty.setRawValue('');                            
+        txtStockQty.setRawValue('');
+        txtPORate.setRawValue('');                            
+        txtordqty.setRawValue('');
+        txtdisper.setRawValue('');
+        txtdisval.setRawValue('');
+        txtpfper.setRawValue('');
+        txtpfval.setRawValue('');
+        //  txtIGSTPer.setRawValue('');  
+        txtIGSTVal.setRawValue('');
+        //  txtSGSTPer.setRawValue('');
+        txtSGSTVal.setRawValue('');
+        //  txtCGSTPer.setRawValue('');
+        txtCGSTVal.setRawValue('');
+        txtothers.setRawValue('');
+        txtRebate.setValue('');
+        txtRebate2.setValue('');
+        txtfreight.setRawValue('');
+        txtinward.setRawValue('');
+        txtothersPM.setRawValue('');
+        txtclrfreight1.getRawValue(''),
+        txtfreightparty.setRawValue('');
+        txtitemvalue.setRawValue('');
+        txtiteminvvalue.setRawValue('');
+
+        txtclrfreight1.setRawValue('');
+
+        txtTCSPer.setValue('');
+        txtTCSVal.setValue('');
         txtCGSTPM.setValue('');
         txtSGSTPM.setValue('');
         txtIGSTPM.setValue('');
         txtTransport.setValue('');
+        txtBillRate.setValue('');
     
     }
     
@@ -6529,6 +7375,27 @@ Ext.onReady(function(){
     var igstledname = '';
     
     
+        
+    var btnAllowRateChange = new Ext.Button({
+        id  :'btnAllowRateChange',
+    text: 'Allow Rate Change',
+    width: 3,
+    height: 3,
+
+    icon:'../GRN/icons/download.gif',
+        border: 1,
+        style: {
+          borderColor: 'blue',
+          borderStyle: 'solid',
+
+        },
+
+    listeners:{
+        click: function(){ 
+            Ext.getCmp('txtBillRate').setReadOnly(false);
+        }
+    }
+});           
     
      var btnPORefresh = new Ext.Button({
             id  :'btnPORefresh',
@@ -6650,6 +7517,10 @@ Ext.onReady(function(){
                  pitemcode = cmbItem.getValue();
              }       
       
+ 
+            var purvalue =  Number(txtPORate.getRawValue()) * Number(txtAcceptQty.getRawValue());
+
+
 
             var tax =   Number(txtCGSTPer.getValue()) +Number(txtSGSTPer.getValue())+Number(txtIGSTPer.getValue());  
                      loadGSTLedgerDatastore.removeAll(); 
@@ -6770,7 +7641,7 @@ Ext.onReady(function(){
                 sel[idx].set('mintinvqty'  , Number(txtinvqty.getRawValue()));
                 sel[idx].set('mintrcvdqty' , Number(txtRcvdQty.getValue()));
                 sel[idx].set('mintacceptqty' , Number(txtAcceptQty.getValue()));
-                sel[idx].set('mintunitrate', Number(txtunitrate.getValue()));
+                sel[idx].set('mintunitrate', Number(txtPORate.getValue()));
                 sel[idx].set('mintdiscount', Number(txtdisper.getValue()));
                 sel[idx].set('mintdisamt'  , Number(txtdisval.getValue()));
                 sel[idx].set('mintpfper'   , Number(txtpfper.getValue()));
@@ -6789,7 +7660,7 @@ Ext.onReady(function(){
                 sel[idx].set('mintCostvalue', Number(txtitemvalue.getValue()));
                 sel[idx].set('minttcsper', Number(txtTCSPer.getValue()));
                 sel[idx].set('minttcsval', Number(txtTCSVal.getValue()));
-                          sel[idx].set('mintrebate', Number(txtRebate.getValue()));
+                sel[idx].set('mintrebate', Number(txtRebate.getValue()));
                 sel[idx].set('mintindentno', indno);
                 sel[idx].set('mintfincode', indfincode);
                 sel[idx].set('tol', Number(txttolerance.getValue()));
@@ -6807,19 +7678,21 @@ Ext.onReady(function(){
                 sel[idx].set('cgstpm'   , '0');
                 sel[idx].set('sgstpm'   , '0');
                 sel[idx].set('igstpm'   , '0');
-                         sel[idx].set('mintitemcode'   , pitemcode);
-                          sel[idx].set('insurance', Number(txtInsurance.getValue()));
-                          sel[idx].set('mintstockqty', Number(txtStockQty.getValue()));
-                               sel[idx].set('uomcode', Number(itemuom));
-                          sel[idx].set('itemspec', txtItemSpec.getValue());
-                          sel[idx].set('transportation', Number(txtTransport.getValue()));
-                          sel[idx].set('valuepm', Number(txtValuePM.getValue()));
-                          sel[idx].set('rebate2', Number(txtRebate2.getValue()));
-    
+                sel[idx].set('mintitemcode'   , pitemcode);
+                sel[idx].set('insurance', Number(txtInsurance.getValue()));
+                sel[idx].set('mintstockqty', Number(txtStockQty.getValue()));
+                sel[idx].set('uomcode', Number(itemuom));
+                sel[idx].set('itemspec', txtItemSpec.getValue());
+                sel[idx].set('transportation', Number(txtTransport.getValue()));
+                sel[idx].set('valuepm', Number(txtValuePM.getValue()));
+                sel[idx].set('rebate2', Number(txtRebate2.getValue()));
+                sel[idx].set('billrate', Number(txtBillRate.getRawValue()));
+                sel[idx].set('povalue', Number(purvalue));
+
                 flxDetail.getSelectionModel().clearSelections();
-    
-                          refresh(); 
-                          grid_tot();     
+
+                refresh(); 
+                grid_tot();     
     
     
             }//if(gridedit === "true")
@@ -6830,81 +7703,83 @@ Ext.onReady(function(){
     
                     {
     //alert(indno);
-    //alert(txtItemSpec.getValue());
+
     
                             var RowCnt = flxDetail.getStore().getCount() + 1;
                             flxDetail.getStore().insert(
                             flxDetail.getStore().getCount(),
                             new dgrecord({
-                               sno:RowCnt,
-                               pono:cmbPONO.getRawValue(),
-                               podate: Ext.util.Format.date(dtppo.getValue(),"Y-m-d"),
-                   itemname:pitemname,
-                   uom:  txtuom.getRawValue(), 
-                   pobalqty: Number(txtordqty.getValue()), 
-                   mintinvqty: Number(txtinvqty.getRawValue()),
-                   mintrcvdqty   :Number(txtRcvdQty.getValue()),
-                       mintacceptqty :Number(txtAcceptQty.getValue()),
-                   mintunitrate:Number(txtunitrate.getRawValue()),
-                   mintdiscount:Number(txtdisper.getRawValue()),
-                   mintdisamt:Number(txtdisval.getRawValue()),
-                   mintpfper:Number(txtpfper.getRawValue()),
-                    mintpfamt:Number(txtpfval.getRawValue()),
-                               mintothers:Number(txtothers.getRawValue()),
-    
-                   mintcgstper:Number(txtCGSTPer.getRawValue()),
-                   mintsgstper:Number(txtSGSTPer.getRawValue()),
-                   mintigstper:Number(txtIGSTPer.getRawValue()),
-                   mintsgstamt:Number(txtCGSTVal.getRawValue()),
-                   mintcgstamt:Number(txtSGSTVal.getRawValue()),
-                   mintigstamt:Number(txtIGSTVal.getRawValue()),
-                   mintfreight:Number(txtfreight.getRawValue()),
-                           mintotherpm:Number(txtothersPM.getValue()),
-                               mintcrstatus:cmbtype.getRawValue(),  	
-                               mintvalue: Number(txtitemvalue.getValue()),
-                               mintCostvalue: Number(txtitemvalue.getValue()),
-    
-                               tol: Number(txttolerance.getValue()),
-                               mintrebate:Number(txtRebate.getValue()),
-    
-                               mintitemcode : pitemcode,//  itemcode,
-                               mintgrpcode :  itemgrpcode,
-                   ledcode:'0',
-         
-                               mintindentno : indno,
-                               mintfincode :indfincode,
-    
-                   stock:'0',	
-                   tot:'0',
-                   totqty:'0',
+                            sno:RowCnt,
+                            pono:cmbPONO.getRawValue(),
+                            podate: Ext.util.Format.date(dtppo.getValue(),"Y-m-d"),
+                            itemname:pitemname,
+                            uom:  txtuom.getRawValue(), 
+                            pobalqty: Number(txtordqty.getValue()), 
+                            mintinvqty: Number(txtinvqty.getRawValue()),
+                            mintrcvdqty   :Number(txtRcvdQty.getValue()),
+                            mintacceptqty :Number(txtAcceptQty.getValue()),
+                            mintunitrate:Number(txtPORate.getRawValue()),
+                            mintdiscount:Number(txtdisper.getRawValue()),
+                            mintdisamt:Number(txtdisval.getRawValue()),
+                            mintpfper:Number(txtpfper.getRawValue()),
+                            mintpfamt:Number(txtpfval.getRawValue()),
+                            mintothers:Number(txtothers.getRawValue()),
+
+                            mintcgstper:Number(txtCGSTPer.getRawValue()),
+                            mintsgstper:Number(txtSGSTPer.getRawValue()),
+                            mintigstper:Number(txtIGSTPer.getRawValue()),
+                            mintsgstamt:Number(txtCGSTVal.getRawValue()),
+                            mintcgstamt:Number(txtSGSTVal.getRawValue()),
+                            mintigstamt:Number(txtIGSTVal.getRawValue()),
+                            mintfreight:Number(txtfreight.getRawValue()),
+                            mintotherpm:Number(txtothersPM.getValue()),
+                            mintcrstatus:cmbtype.getRawValue(),  	
+                            mintvalue: Number(txtitemvalue.getValue()),
+                            mintCostvalue: Number(txtitemvalue.getValue()),
+
+                            tol: Number(txttolerance.getValue()),
+                            mintrebate:Number(txtRebate.getValue()),
+
+                            mintitemcode : pitemcode,//  itemcode,
+                            mintgrpcode :  itemgrpcode,
+                            ledcode:'0',
+
+                            mintindentno : indno,
+                            mintfincode :indfincode,
+
+                            stock:'0',	
+                            tot:'0',
+                            totqty:'0',
                             itc:'N',
-                               oldgrnqty : '0',
-                               oldgrnval : '0',
-                   minttcsper: Number(txtTCSPer.getValue()),
-                   minttcsval: Number(txtTCSVal.getValue()),
-    
-                                purgrpname:cmbPurGroup.getRawValue(),
-                                purgrpcode:cmbPurGroup.getValue(),
-    
-                                cgstled       : cgstledcode,
-                                sgstled       : sgstledcode,
-                                igstled       : igstledcode,
-                                cgstledname   : cgstledname,
-                                sgstledname   : sgstledname,
-                                igstledname   : igstledname,
-                                othledname    : 'OTHER CHARGES',
-                                othledcode    : '2019',
-                                cgstpm        : '0',
-                                sgstpm        : '0',
-                                igstpm        : '0',
-                                insurance     : Number(txtInsurance.getValue()),
-                                mintstockqty  : Number(txtStockQty.getValue()),
-                                uomcode       : Number(itemuom),
-                                itemspec      : txtItemSpec.getValue(),
-                                delrecord     : 'N',
-                                transportation : Number(txtTransport.getValue()),
-                                valuepm : Number(txtValuePM.getValue()),
-                                rebate2 : Number(txtRebate2.getValue()),
+                            oldgrnqty : '0',
+                            oldgrnval : '0',
+                            minttcsper: Number(txtTCSPer.getValue()),
+                            minttcsval: Number(txtTCSVal.getValue()),
+
+                            purgrpname:cmbPurGroup.getRawValue(),
+                            purgrpcode:cmbPurGroup.getValue(),
+
+                            cgstled       : cgstledcode,
+                            sgstled       : sgstledcode,
+                            igstled       : igstledcode,
+                            cgstledname   : cgstledname,
+                            sgstledname   : sgstledname,
+                            igstledname   : igstledname,
+                            othledname    : 'OTHER CHARGES',
+                            othledcode    : '2019',
+                            cgstpm        : '0',
+                            sgstpm        : '0',
+                            igstpm        : '0',
+                            insurance     : Number(txtInsurance.getValue()),
+                            mintstockqty  : Number(txtStockQty.getValue()),
+                            uomcode       : Number(itemuom),
+                            itemspec      : txtItemSpec.getValue(),
+                            delrecord     : 'N',
+                            transportation : Number(txtTransport.getValue()),
+                            valuepm : Number(txtValuePM.getValue()),                            
+                            rebate2 : Number(txtRebate2.getValue()),
+                            billrate : Number(txtBillRate.getRawValue()),
+                            povalue : Number(purvalue),                            
                             }) 
                         );
                         grid_tot();     
@@ -6963,55 +7838,55 @@ Ext.onReady(function(){
         width: 1295,
         columns:
         [            
-                    {dataIndex:'sno',header: "S.no",width: 40,align: 'center',sortable: true,hidden: false},
-                    {dataIndex:'pono',header: "PO.no",width: 40,align: 'center',sortable: true,hidden: false},
-                    {dataIndex:'podate',header: "PO.Date",width: 90,align: 'center',sortable: true,hidden: false},
-                 {dataIndex:'itemname',header: "Item Name",width: 250,align: 'left',sortable: true},
+            {dataIndex:'sno',header: "S.no",width: 40,align: 'center',sortable: true,hidden: false},
+            {dataIndex:'pono',header: "PO.no",width: 40,align: 'center',sortable: true,hidden: false},
+            {dataIndex:'podate',header: "PO.Date",width: 90,align: 'center',sortable: true,hidden: false},
+            {dataIndex:'itemname',header: "Item Name",width: 250,align: 'left',sortable: true},
             {dataIndex:'uom',header: "UOM",width: 100,align: 'center',sortable: true},
             {dataIndex:'pobalqty',header: " Pend.Qty",width: 60,align: 'center',sortable: true},
             {dataIndex:'mintinvqty',header: "Invo. Qty", width: 60, align: 'center',sortable: true},
             {dataIndex:'mintrcvdqty',header: "Recd. Qty", width: 100, align: 'center',sortable: true},
             {dataIndex:'mintacceptqty',header: "Accept. Qty", width: 100, align: 'center',sortable: true},
             {dataIndex:'mintstockqty',header: "Stock. Qty", width: 100, align: 'center',sortable: true},
-            {dataIndex:'mintunitrate',header: "Unit rate", width: 60, align: 'center',sortable: true},
+            {dataIndex:'mintunitrate',header: "PO Rate", width: 80, align: 'center',sortable: true},
             {dataIndex:'mintdiscount', header: "Dis (%)",width: 60,align: 'center',sortable: true},
             {dataIndex:'mintdisamt', header: "Dis Value",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintpfper', header: "PF (%)",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintpfamt', header: "PF Value",width: 60,align: 'center',sortable: true},
-                   {dataIndex:'mintothers',header: "Others(+)",width: 60,align: 'center',sortable: true },
-             {dataIndex:'mintcgstper', header: "CGST %",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintcgstamt', header: "CGST Value",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintpfper', header: "PF (%)",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintpfamt', header: "PF Value",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintothers',header: "Others(+)",width: 60,align: 'center',sortable: true },
+            {dataIndex:'mintcgstper', header: "CGST %",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintcgstamt', header: "CGST Value",width: 60,align: 'center',sortable: true},
             {dataIndex:'mintsgstper', header: "SGST %",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintsgstamt', header: "SGST Value",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintsgstamt', header: "SGST Value",width: 60,align: 'center',sortable: true},
             {dataIndex:'mintigstper', header: "IGST %",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintigstamt', header: "IGST Value",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintfreight', header: "Freight",width: 60,align: 'center',sortable: true},
-    //		{dataIndex:'mintqcreq', header: "QC Req",width: 60,align: 'center',sortable: true},
-        //	{dataIndex:'mintinward', header: "Inward",width: 60,align: 'center',sortable: true},
-                    {dataIndex:'mintotherpm',header: "Others +/-)",width: 60,align: 'center',sortable: true},
-             {dataIndex:'mintvalue', header: "Value",width: 70,align: 'center',sortable: true},
-             {dataIndex:'mintCostvalue', header: "Cost Value",width: 70,align: 'center',sortable: true},
+            {dataIndex:'mintigstamt', header: "IGST Value",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintfreight', header: "Freight",width: 60,align: 'center',sortable: true},
+            //		{dataIndex:'mintqcreq', header: "QC Req",width: 60,align: 'center',sortable: true},
+            //	{dataIndex:'mintinward', header: "Inward",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintotherpm',header: "Others +/-)",width: 60,align: 'center',sortable: true},
+            {dataIndex:'mintvalue', header: "Value",width: 70,align: 'center',sortable: true},
+            {dataIndex:'mintCostvalue', header: "Cost Value",width: 70,align: 'center',sortable: true},
             {dataIndex:'minttcsper', header: "TCS PER",width: 50,align: 'center',sortable: true},
             {dataIndex:'minttcsval', header: "TCS AMT",width: 50,align: 'center',sortable: true},   
             {dataIndex:'mintrebate', header: "Rebate",width: 50,align: 'center',sortable: true},   
-    //		{dataIndex:'mintclrfreight1', header: " CLR1 Freight",width: 60,align: 'center',sortable: true},
-    //		{dataIndex:'mintclr1cgstper', header: "CLR1 CGST",width: 60,align: 'center',sortable: true},
-    //		{dataIndex:'mintclr1sgstper', header: "CLR1 SGST",width: 60,align: 'center',sortable: true},
-    //		{dataIndex:'mintclr1igstper', header: "CLR1 IGST",width: 60,align: 'center',sortable: true},
-    //		{dataIndex:'mintclr1transport', header: "CLR1 Part",width: 60,align: 'center',sortable: true},
-    
-    //		{dataIndex:'mintclrfreight2', header: "CLR2 Freight2",width: 60,align: 'center',sortable: true},
-    //                {dataIndex:'mintclr2cgstper', header: "CLR2 CGST",width: 6,align: 'center',sortable: true},
-    //	{dataIndex:'mintclr2sgstper', header: "CLR2 SGST",width: 6,align: 'center',sortable: true},
-    //	        /{dataIndex:'mintclr2igstper', header: "CLR2 IGST",width: 6,align: 'center',sortable: true},
-    //		{dataIndex:'mintclr2transport', header: "CLR2 PART",width: 6,align: 'center',sortable: true},
-    
+            //		{dataIndex:'mintclrfreight1', header: " CLR1 Freight",width: 60,align: 'center',sortable: true},
+            //		{dataIndex:'mintclr1cgstper', header: "CLR1 CGST",width: 60,align: 'center',sortable: true},
+            //		{dataIndex:'mintclr1sgstper', header: "CLR1 SGST",width: 60,align: 'center',sortable: true},
+            //		{dataIndex:'mintclr1igstper', header: "CLR1 IGST",width: 60,align: 'center',sortable: true},
+            //		{dataIndex:'mintclr1transport', header: "CLR1 Part",width: 60,align: 'center',sortable: true},
+
+            //		{dataIndex:'mintclrfreight2', header: "CLR2 Freight2",width: 60,align: 'center',sortable: true},
+            //                {dataIndex:'mintclr2cgstper', header: "CLR2 CGST",width: 6,align: 'center',sortable: true},
+            //	{dataIndex:'mintclr2sgstper', header: "CLR2 SGST",width: 6,align: 'center',sortable: true},
+            //	        /{dataIndex:'mintclr2igstper', header: "CLR2 IGST",width: 6,align: 'center',sortable: true},
+            //		{dataIndex:'mintclr2transport', header: "CLR2 PART",width: 6,align: 'center',sortable: true},
+
             {dataIndex:'mintcrstatus', header: "C/R Status",width: 60,align: 'center',sortable: true},
             {dataIndex:'cgstled', header: "CGST LED",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'sgstled', header: "SGST LED",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'igstled', header: "IGST LED",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'mintitemcode', header: "Item Code",width: 60,align: 'center',sortable: true,hidden:true},
-                {dataIndex:'mintgrpcode', header: "Group Code",width: 60,align: 'center',sortable: true,hidden:true},
+            {dataIndex:'mintgrpcode', header: "Group Code",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'ledcode', header: "Led Code",width: 60,align: 'center',sortable: true,hidden:false},
             {dataIndex:'mintindentno', header: "Indent No",width: 60,align: 'center',sortable: true},
             {dataIndex:'mintfincode', header: "I.FinCode",width: 60,align: 'center',sortable: true},
@@ -7020,14 +7895,14 @@ Ext.onReady(function(){
             {dataIndex:'totqty', header: "Tot Qty",width: 60,align: 'center',sortable: true},
             {dataIndex:'itc', header: "ITC",width: 0,align: 'center',sortable: true,hidden:true},
             {dataIndex:'oldgrnqty', header: "OLD.GRNQTY",width: 50,align: 'center',sortable: true},
-             {dataIndex:'oldgrnval', header: "OLD.GRNVAL",width: 50,align: 'center',sortable: true} ,
-                    {header: "Pur.GrpName", dataIndex: 'purgrpname',sortable:true,width:100,align:'left',hidden:false},
-                    {header: "Pur.Grpcode", dataIndex: 'purgrpcode',sortable:true,width:100,align:'left',hidden:false},
+            {dataIndex:'oldgrnval', header: "OLD.GRNVAL",width: 50,align: 'center',sortable: true} ,
+            {header: "Pur.GrpName", dataIndex: 'purgrpname',sortable:true,width:100,align:'left',hidden:false},
+            {header: "Pur.Grpcode", dataIndex: 'purgrpcode',sortable:true,width:100,align:'left',hidden:false},
             {dataIndex:'cgstledname', header: "CGST LEDNAME",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'sgstledname', header: "SGST LEDNAME",width: 60,align: 'center',sortable: true,hidden:true},
             {dataIndex:'igstledname', header: "IGST LEDNAME",width: 60,align: 'center',sortable: true,hidden:true},
-                    {header: "Other LedName", dataIndex: 'othledname',sortable:true,width:100,align:'left',hidden:true},
-                    {header: "Other Ledcode", dataIndex: 'othledcode',sortable:true,width:100,align:'left',hidden:true}, 
+            {header: "Other LedName", dataIndex: 'othledname',sortable:true,width:100,align:'left',hidden:true},
+            {header: "Other Ledcode", dataIndex: 'othledcode',sortable:true,width:100,align:'left',hidden:true}, 
             {dataIndex:'cgstpm', header: "CGST PM",width: 60,align: 'center',sortable: true},
             {dataIndex:'sgstpm', header: "SGST PM",width: 60,align: 'center',sortable: true},
             {dataIndex:'igstpm', header: "IGST PM",width: 60,align: 'center',sortable: true},       
@@ -7037,6 +7912,8 @@ Ext.onReady(function(){
             {dataIndex:'itemspec', header: "Specifications",width: 300,align: 'left',sortable: true}, 
             {dataIndex:'valuepm', header: "VALUE +/",width: 80,align: 'left',sortable: true}, 
             {dataIndex:'rebate2', header: "Rebate-2",width: 80,align: 'left',sortable: true}, 
+            {dataIndex:'billrate', header: "Bill Rate",width: 80,align: 'left',sortable: true}, 
+            {dataIndex:'povalue', header: "PO VALUE",width: 80,align: 'left',sortable: true}, 
             {dataIndex:'delrecord', header: "Delete",width: 100,align: 'center',sortable: true}, 
          ],
         store: [],
@@ -7110,104 +7987,105 @@ Ext.onReady(function(){
                      msg: 'Press YES to Modify   -  NO to Delete - CANCEL to EXIT',
     
                        
-     
-                 fn: function(btn){
-    
-                if (btn === 'yes'){
-    
-                var sm = flxDetail.getSelectionModel();
-                var selrow = sm.getSelected();
-                     gridedit = "true";
-                editrow = selrow;
-    //alert(selrow.get('mintfincode'));
-    
-    
-    
-                            cmbPONO.setValue(selrow.get('pono'));
-                            dtppo.setValue(Ext.util.Format.date(selrow.get('podate'),"Y-m-d"));
-                            cmbItem.setValue(selrow.get('mintitemcode'));
-                            cmbItem.setRawValue(selrow.get('itemname'));
-    
-                            txtuom.setValue(selrow.get('uom'));
-                            txtinvqty.setValue(selrow.get('mintinvqty'));
-                            txtRcvdQty.setValue(selrow.get('mintrcvdqty'));
-                            txtAcceptQty.setValue(selrow.get('mintacceptqty'));
-                            txtStockQty.setValue(selrow.get('mintstockqty'));
-                           if (selrow.get('pobalqty') > 0)
-                            {  
-                               txtordqty.setValue(selrow.get('pobalqty'));
-                            }
-                            else
-                            {  
-                               txtordqty.setValue(selrow.get('mintinvqty'));
-                            }
-    
+
+                    fn: function(btn){
+
+                        if (btn === 'yes'){
+
+                        var sm = flxDetail.getSelectionModel();
+                        var selrow = sm.getSelected();
+                        gridedit = "true";
+                        editrow = selrow;
+                        //alert(selrow.get('mintfincode'));
+
+
+
+                        cmbPONO.setValue(selrow.get('pono'));
+                        dtppo.setValue(Ext.util.Format.date(selrow.get('podate'),"Y-m-d"));
+                        cmbItem.setValue(selrow.get('mintitemcode'));
+                        cmbItem.setRawValue(selrow.get('itemname'));
+
+                        txtuom.setValue(selrow.get('uom'));
+                        txtinvqty.setValue(selrow.get('mintinvqty'));
+                        txtRcvdQty.setValue(selrow.get('mintrcvdqty'));
+                        txtAcceptQty.setValue(selrow.get('mintacceptqty'));
+                        txtStockQty.setValue(selrow.get('mintstockqty'));
+                        if (selrow.get('pobalqty') > 0)
+                        {  
+                        txtordqty.setValue(selrow.get('pobalqty'));
+                        }
+                        else
+                        {  
+                        txtordqty.setValue(selrow.get('mintinvqty'));
+                        }
+
                         itemuom  = selrow.get('uomcode');
-    
-    
-                         txtunitrate.setValue(selrow.get('mintunitrate'));
-                    txtdisper.setValue(selrow.get('mintdiscount'));
-                    txtdisval.setValue(selrow.get('mintdisamt'));
-                txtpfper.setValue(selrow.get('mintpfper'));
-                 txtpfval.setValue(selrow.get('mintpfamt'));
-                            txtothers.setValue(selrow.get('mintothers'));
-                            txtCGSTPer.setValue(selrow.get('mintcgstper'));
-                    txtSGSTPer.setValue(selrow.get('mintsgstper'));
-                txtIGSTPer.setValue(selrow.get('mintigstper'));
-                            txtCGSTVal.setValue(selrow.get('mintsgstamt'));
-                txtSGSTVal.setValue(selrow.get('mintcgstamt'));
-                txtIGSTVal.setValue(selrow.get('mintigstamt'));
-                txtfreight.setValue(selrow.get('mintfreight'));
-    //			txtinward.setValue(selrow.get('mintinward'));
-                            txtothersPM.setValue(selrow.get('mintotherpm'));
-    //			txtclrfreight1.setValue(selrow.get('mintclrfreight1'));
-    
-                            cmbtype.setValue(selrow.get('mintcrstatus'));
-    //			expirydate.setValue(Ext.util.Format.date(selrow.get('mintexpirydate'),"Y-m-d"));
-    //                        cmbrcm.setValue(selrow.get('mintrcm'));                      
-          
-                            txtitemvalue.setValue(selrow.get('mintvalue'));
-                            txtInsurance.setValue(selrow.get('insurance'));
-                            txtTCSPer.setValue(selrow.get('minttcsper'));
-                txtTCSVal.setValue(selrow.get('mintcsamt')); 
-                txtRebate.setValue(selrow.get('mintrebate')); 
-    //			cmbPurGroup.setRawValue(selrow.get('purgrpname'));
-                cmbPurGroup.setValue(selrow.get('purgrpcode'));    
-    
-    
-    //                        frtpartycode = selrow.get('mintclr1transport');
-    //                        frtcgst = selrow.get('mintclr1cgstper');
-    //                        frtsgst = selrow.get('mintclr1sgstper');
-    //                        frtigst = selrow.get('mintclr1igstper');
-    
-                            cmbindno.setValue(selrow.get('mintindentno'));
-    
-                txtItemSpec.setValue(selrow.get('itemspec'));
-                txtTransport.setValue(selrow.get('transportation'));
+
+
+                        txtPORate.setValue(selrow.get('mintunitrate'));
+                        txtdisper.setValue(selrow.get('mintdiscount'));
+                        txtdisval.setValue(selrow.get('mintdisamt'));
+                        txtpfper.setValue(selrow.get('mintpfper'));
+                        txtpfval.setValue(selrow.get('mintpfamt'));
+                        txtothers.setValue(selrow.get('mintothers'));
+                        txtCGSTPer.setValue(selrow.get('mintcgstper'));
+                        txtSGSTPer.setValue(selrow.get('mintsgstper'));
+                        txtIGSTPer.setValue(selrow.get('mintigstper'));
+                        txtCGSTVal.setValue(selrow.get('mintsgstamt'));
+                        txtSGSTVal.setValue(selrow.get('mintcgstamt'));
+                        txtIGSTVal.setValue(selrow.get('mintigstamt'));
+                        txtfreight.setValue(selrow.get('mintfreight'));
+                        //			txtinward.setValue(selrow.get('mintinward'));
+                        txtothersPM.setValue(selrow.get('mintotherpm'));
+                        //			txtclrfreight1.setValue(selrow.get('mintclrfreight1'));
+
+                        cmbtype.setValue(selrow.get('mintcrstatus'));
+                        //			expirydate.setValue(Ext.util.Format.date(selrow.get('mintexpirydate'),"Y-m-d"));
+                        //                        cmbrcm.setValue(selrow.get('mintrcm'));                      
+
+                        txtitemvalue.setValue(selrow.get('mintvalue'));
+                        txtInsurance.setValue(selrow.get('insurance'));
+                        txtTCSPer.setValue(selrow.get('minttcsper'));
+                        txtTCSVal.setValue(selrow.get('mintcsamt')); 
+                        txtRebate.setValue(selrow.get('mintrebate')); 
+                        //			cmbPurGroup.setRawValue(selrow.get('purgrpname'));
+                        cmbPurGroup.setValue(selrow.get('purgrpcode'));    
+
+
+                        //                        frtpartycode = selrow.get('mintclr1transport');
+                        //                        frtcgst = selrow.get('mintclr1cgstper');
+                        //                        frtsgst = selrow.get('mintclr1sgstper');
+                        //                        frtigst = selrow.get('mintclr1igstper');
+
+                        cmbindno.setValue(selrow.get('mintindentno'));
+
+                        txtItemSpec.setValue(selrow.get('itemspec'));
+                        txtTransport.setValue(selrow.get('transportation'));
                         txtValuePM.setValue(selrow.get('valuepm'));
-    
+
                         txtRebate2.setValue(selrow.get('rebate2'));
-    
-                flxDetail.getSelectionModel().clearSelections();
-                }
-                       else if (btn === 'no'){
-    //Modified on 25/02/2024
-                            if (gstFlag === 'Add') //if (viewopt == 0)
-                            { 
-                                var sm = flxDetail.getSelectionModel();
-                                var selrow = sm.getSelected();
-                                flxDetail.getStore().remove(selrow);
-                                flxDetail.getSelectionModel().selectAll();
-                            }  
-                            else
-                            {
-                                alert("In GRN EDIT option - you cannot delete the Row..");
-                            }   
-                 
-                       }
-                       calculateItemValue();
-                       grid_tot();
-                 }
+                        txtBillRate.setValue(selrow.get('billrate'));
+
+                        flxDetail.getSelectionModel().clearSelections();
+                        }
+                        else if (btn === 'no'){
+                        //Modified on 25/02/2024
+                        if (gstFlag === 'Add') //if (viewopt == 0)
+                        { 
+                        var sm = flxDetail.getSelectionModel();
+                        var selrow = sm.getSelected();
+                        flxDetail.getStore().remove(selrow);
+                        flxDetail.getSelectionModel().selectAll();
+                        }  
+                        else
+                        {
+                        alert("In GRN EDIT option - you cannot delete the Row..");
+                        }   
+
+                        }
+                        calculateItemValue();
+                        grid_tot();
+                    }
             });         
         }
      }
@@ -7257,7 +8135,7 @@ Ext.onReady(function(){
                                             Ext.getCmp('txtSGSTVal').setDisabled(true);   
                                             Ext.getCmp('txtIGSTPer').setDisabled(true);                      
                                             Ext.getCmp('txtIGSTVal').setDisabled(true);   
-                                            Ext.getCmp('txtunitrate').setDisabled(true);  
+                                            Ext.getCmp('txtPORate').setDisabled(true);  
                      //                       Ext.getCmp('cmbindno').setDisabled(false);  
                                             cmbindno.setValue('');
                                             cmbindno.setRawValue('');
@@ -7304,7 +8182,7 @@ Ext.onReady(function(){
                                             Ext.getCmp('txtSGSTVal').setDisabled(true);   
                                             Ext.getCmp('txtIGSTPer').setDisabled(false);                      
                                             Ext.getCmp('txtIGSTVal').setDisabled(true);   
-                                            Ext.getCmp('txtunitrate').setDisabled(false);   
+                                            Ext.getCmp('txtPORate').setDisabled(false);   
                          //                   Ext.getCmp('cmbindno').setDisabled(true);  
                                             cmbindno.setValue('');
                                             cmbindno.setRawValue('');
@@ -7350,7 +8228,7 @@ Ext.onReady(function(){
                                             Ext.getCmp('txtSGSTVal').setDisabled(false);   
                                             Ext.getCmp('txtIGSTPer').setDisabled(false);                      
                                             Ext.getCmp('txtIGSTVal').setDisabled(false);   
-                                            Ext.getCmp('txtunitrate').setDisabled(false);   
+                                            Ext.getCmp('txtPORate').setDisabled(false);   
                                             Ext.getCmp('cmbindno').setDisabled(false);  
                                             Ext.getCmp('cmbPONO').setDisabled(false); 
     
@@ -7360,7 +8238,7 @@ Ext.onReady(function(){
                                             Ext.getCmp('txtothersPM').setDisabled(false);  
                                             Ext.getCmp('txtInsurance').setDisabled(false);  
                                             Ext.getCmp('txtRebate').setDisabled(true);  
-                                            Ext.getCmp('txtunitrate').setDisabled(false);          
+                                            Ext.getCmp('txtPORate').setDisabled(false);          
       
     
     
@@ -7370,6 +8248,18 @@ Ext.onReady(function(){
                                             cmbPONO.setRawValue('');
                                             cmbPONO.label.update('PO No');                          
     
+    
+                                            loadPurchaseGroupDatasore.load({
+                                                url: 'ClsPo.php',
+                                                        params: {
+                                                                task: 'loadPurGroup',
+                                                                          statecode:statecode, 
+                                                        },
+                                                              callback:function()
+                                                              {
+                                    //	alert(loadtaxlistdatastore.getAt(0).get('tax_state'));		
+                                                              }
+                                                     });                                            
                                   }
                             }
                             }},
@@ -7464,6 +8354,1798 @@ Ext.onReady(function(){
                ]
     
     });
+
+    var tabgrn = new Ext.TabPanel({
+        id          : 'GRN',
+        xtype       : 'tabpanel',
+        bodyStyle:{"background-color":"#ebebdf"},
+        activeTab   : 0,
+        height      : 670,
+        width       : 1320,
+        x           : 2,
+        y           : 0, 
+            listeners: {
+    
+                'tabchange': function(tabPanel, tab) {
+                 var activeTab = tabgrn.getActiveTab();
+                 if (activeTab.id == 'tab2' || activeTab.id == 'tab3' )
+                 {
+                    grid_tot();
+    
+                 }
+                }
+    
+            },
+        items  : [
+            {
+                xtype: 'panel',
+                title: 'GRN - Item Details',
+                width: 200,
+                id : 'tab1',
+                height: 300,
+                layout: 'absolute',
+                items: [
+                    {
+                    xtype: 'fieldset',
+                    title: 'GRN Details',
+                    border: true,
+                    height:  99,
+                    width: 210,
+                   layout: 'absolute',
+            //        labelWidth:80,
+                    x: 0,  
+                    y: 0,
+                    items: [
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : 0,
+                            y           : -5,
+                            border      : false,
+                            items: [txtGRNNo]
+                        },  
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : 0,
+                            y           : -5,
+                            border      : false,
+                            items: [cmbGRNNo]
+                        },  
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 200,
+                            x           : 0,
+                            y           : 30,
+                            border      : false,
+                            items: [dtpgrn]
+                        },                         
+// txtGRNNo,dtpgrn
+                    ]
+
+                    },
+//anna
+                    {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : '',
+                            width       : 350,
+                            x           : 200,
+                            y           : -11,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [opt_select]
+                     },
+                    {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : '',
+                            width       : 400,
+                            x           : 330,
+                            y           : -11,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [opt_year]
+                     },
+
+                     {
+                    xtype: 'fieldset',
+                    title: 'Supplier',
+                    border: true,
+                    height: 57,
+                    width: 450,
+                    labelWidth:60,
+                    x: 480,  
+                    y: 0,
+                   items: [txtSupplierName]
+                    }, 
+
+
+                    {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: true,
+                    height: 45,
+                    width: 450,
+                    labelWidth:60,
+                    x: 480,  
+                    y: 50,
+                   items: [txtSearchItemName]
+                    }, 
+
+
+                    {
+                    xtype: 'fieldset',
+                    title: 'Bill Details',
+                    border: true,
+                    height: 99,
+                    width: 230,
+                    labelWidth:80,
+                    x: 930,  
+                    y: 0,
+                    items: [
+                      txtBillNo, dtpBill
+                    ]
+                    },
+
+
+                    {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : '',
+                            width       : 400,
+                            x           : 1170,
+                            y           : -11,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [opt_GRN_Status]
+                     },
+
+
+
+                    {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: true,
+                    height: 235,
+                    width: 1310,
+                    labelWidth:50,
+                    layout: 'absolute',
+                    x: 0,  
+                    y: 98,
+                    items: [
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : -10,
+                            y           : -5,
+                            border      : false,
+                            items: [cmbPONO]
+                        },
+
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 60,
+                            x           : -10,
+                            y           : 17,
+                            border      : false,
+                            items: [btnPORefresh]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 150,
+                            x           : 130,
+                            y           : -5,
+                            border      : false,
+                            items: [dtppo]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 40,
+                            width       : 380,
+                            x           : 245,
+                            y           : -5,
+                            border      : false,
+                            items: [cmbindno]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 90,
+                            width       : 500,
+                            x           : 380,
+                            y           : -5,
+                            border      : false,
+                            items: [cmbItem]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 90,
+                            width       : 500,
+                            x           : 380,
+                            y           : -5,
+                            border      : false,
+                            items: [txtItemName]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 50,
+             //               width       : 420,
+                            x           : 850,
+                            y           : -5,
+                            border      : false,
+                            items: [btnItemRefresh]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 40,
+                            width       : 300,
+                            x           : 910,
+                            y           : -5,
+                            border      : false,
+                            items: [txtuom]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : 1020,
+                            y           : -5,
+                            border      : false,
+                            items: [txtordqty]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 70,
+                            width       : 380,
+                            x           : 1150,
+                            y           : -5,
+                            border      : false,
+                            items: [txttolerance]
+                        },
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 120,
+                            width       : 600,
+                            x           : -10,
+                            y           : 40,
+                            border      : false,
+                            items: [txtItemSpec]
+                        },
+
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 100,
+                            x           : 460,
+                            y           : 25,
+                            border      : false,
+                            items: [lblInvQty]
+                        },
+
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 100,
+                            x           : 560,
+                            y           : 25,
+                            border      : false,
+                            items: [lblRecdQty]
+                        },
+
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 100,
+                            x           : 660,
+                            y           : 25,
+                            border      : false,
+                            items: [lblAcceptedQty]
+                        },
+
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 100,
+                            x           : 780,
+                            y           : 25,
+                            border      : false,
+                            items: [lblStockQty]
+                        },
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 100,
+                            width       : 120,
+                            x           : 880,
+                            y           : 25,
+                            border      : false,
+                            items: [lblPORate]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 100,
+                            width       : 120,
+                            x           : 970,
+                            y           : 25,
+                            border      : false,
+                            items: [lblBillRate]
+                        },
+                            
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 150,
+                            width       : 150,
+                            x           : 1070,
+                            y           : 25,
+                            border      : false,
+                            items: [lblValuePM]
+                        },
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 100,
+                            x           : 1180,
+                            y           : 25,
+                            border      : false,
+                            items: [lblValue1]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 450,
+                            y           : 45,
+                            border      : false,
+                            items: [txtinvqty]
+                        },
+
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 550,
+                            y           : 45,
+                            border      : false,
+                            items: [txtRcvdQty]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 660,
+                            y           : 45,
+                            border      : false,
+                            items: [txtAcceptQty]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 770,
+                            y           : 45,
+                            border      : false,
+                            items: [txtStockQty]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 870,
+                            y           : 45,
+                            border      : false,
+                            items: [txtPORate]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 960,
+                            y           : 45,
+                            border      : false,
+                            items: [txtBillRate]
+                        },
+
+
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 1065,
+                            y           : 45,
+                            border      : false,
+                            items: [txtValuePM]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 200,
+                            x           : 1170,
+                            y           : 45,
+                            border      : false,
+                            items: [txtValue]
+                        },
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 120,
+                            width       : 500,
+                            x           : -10,
+                            y           : 85,
+                            border      : false,
+                            items: [cmbPurGroup]
+                        },
+
+
+                      {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : 550,
+                            y           : 85,
+                            border      : false,
+                            items: [cmbtype]
+                        },
+
+                      {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : 760,
+                            y           : 85,
+                            border      : false,
+                            items: [txtRebate]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 60,
+                            width       : 380,
+                            x           : 910,
+                            y           : 85,
+                            border      : false,
+                            items: [txtRebate2]
+                        },            
+
+             {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 70,
+                            width       : 500,
+                            x           : 1080,
+                            y           : 85,
+                            border      : false,
+                            items: [txtInsurance]
+                        },
+
+                {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 5,
+                            y           : 140,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblPer]
+                        },
+
+              {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 5,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblAmt]
+                        },
+
+              {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 70,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblDiscount]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 60,
+                            y           : 140,
+                            border      : false,
+                            items: [txtdisper]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 60,
+                            y           : 170,
+                            border      : false,
+                            items: [txtdisval]
+                        },
+
+
+              {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 160,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblPF]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 145,
+                            y           : 140,
+                            border      : false,
+                            items: [txtpfper]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 145,
+                            y           : 170,
+                            border      : false,
+                            items: [txtpfval]
+                        },
+
+              {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 240,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblCGST]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 230,
+                            y           : 140,
+                            border      : false,
+                            items: [txtCGSTPer]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 230,
+                            y           : 170,
+                            border      : false,
+                            items: [txtCGSTVal]
+                        },
+
+
+              {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 335,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblSGST]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 320,
+                            y           : 140,
+                            border      : false,
+                            items: [txtSGSTPer]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 320,
+                            y           : 170,
+                            border      : false,
+                            items: [txtSGSTVal]
+                        },
+
+
+              {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 420,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblIGST]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 410,
+                            y           : 140,
+                            border      : false,
+                            items: [txtIGSTPer]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 410,
+                            y           : 170,
+                            border      : false,
+                            items: [txtIGSTVal]
+                        },
+
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 510,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblTCS]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 500,
+                            y           : 140,
+                            border      : false,
+                            items: [txtTCSPer]
+                        },
+
+
+
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 500,
+                            y           : 170,
+                            border      : false,
+                            items: [txtTCSVal]
+                        },
+
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 595,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblFreight]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 590,
+                            y           : 170,
+                            border      : false,
+                            items: [txtfreight]
+                        },
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 690,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblOthers]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 680,
+                            y           : 170,
+                            border      : false,
+                            items: [txtothers]
+                        },
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 770,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblOthersPM]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 765,
+                            y           : 170,
+                            border      : false,
+                            items: [txtothersPM]
+                        },
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 855,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblTransport]
+                        },
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 850,
+                            y           : 170,
+                            border      : false,
+                            items: [txtTransport]
+                        },
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 955,
+                            y           : 110,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblValue]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 950,
+                            y           : 170,
+                            border      : false,
+                            items: [txtiteminvvalue]
+                        },
+
+            {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 1055,
+                            y           : 120,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblLanding]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 1050,
+                            y           : 170,
+                            border      : false,
+                            items: [txtitemvalue]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 1,
+                            width       : 380,
+                            x           : 1200,
+                            y           : 155,
+                            border      : false,
+                            items: [btnsubmit]
+                        },
+
+        
+
+                    ],
+                    },
+
+ /*
+
+                     {
+                    xtype: 'fieldset',
+                    title: 'Freight (Bill Raised / Tax Paid)',
+                    id   : 'frtexp',
+                    border: true,
+                    height: 10,
+                    width: 30,
+                    labelWidth:75,
+                    layout      : 'absolute',
+                    x:640,  
+                    y:140,
+                    items: [
+                           {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 50,
+                            width       : 150,
+                            x           : 5,
+                            y           : -10,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [txtclrfreight1]
+                          },
+                           {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 50,
+                            width       : 150,
+                            x           : 140,
+                            y           : -10,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [txtinward]
+                          },
+                         {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 80,
+                            width       : 250,
+                            x           : 5,
+                            y           : 17,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [cmbrcm]
+                          },   
+                       {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 80,
+                            width       : 350,
+                            x           : 5,
+                            y           : 40,
+                            defaultType : 'textfield',
+                            border      : false,
+                            items: [txtfreightparty]
+                          },
+//                      txtclrfreight1,txtinward,txtfreightparty,cmbrcm
+                    ]
+                    },
+*/
+                    flxDetail,
+                flxItem,flxItemSearch,
+
+                     {
+                    xtype: 'fieldset',
+                    border: false,
+                    width: 465,
+                    labelWidth:60,
+                    x: 500,  
+                    y: 50,
+                   items: [flxLedger]
+                    },
+                            
+
+                ]
+            },
+            {
+                xtype: 'panel',
+                title: 'General / Overall Details',
+                width: 383,
+                height: 200,
+                id : 'tab2',
+                layout: 'absolute',
+
+
+                items: [
+
+
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+                    height: 135,
+                    width: 250,
+                    labelWidth:120,
+                    x:0 ,  
+                    y:0 ,
+                    items: [txtTruck]
+                 },
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+                    height: 135,
+                    width: 250,
+                    labelWidth:110,
+                    x:250,  
+                    y:0 ,
+                    items: [cmbgateentryno]
+                 },
+
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+                    height: 135,
+                    width: 250,
+                    labelWidth:110,
+                    x:460,  
+                    y:0 ,
+                    items: [gentrydate]
+                 },
+
+
+//txtRemarks,txtPayTerms
+                                  
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+                    height: 135,
+                    width: 500,
+                    labelWidth:90,
+                    x:700 ,  
+                    y:0 ,
+                    items: [txtlrnumber]
+                 },
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+                    height: 135,
+                    width: 300,
+                    labelWidth:90,
+                    x:880 ,  
+                    y:0 ,
+                    items: [LRdate]
+                 },
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+                    height: 135,
+                    width: 250,
+                    labelWidth:120,
+                    x:0 ,  
+                    y:40 ,
+                    items: [txtPayTerms]
+                 },
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: false,
+//                    height: 80,
+                    width: 900,
+                    labelWidth:110,
+                    x:250,  
+                    y:40 ,
+                    items: [txtRemarks]
+                 },
+
+
+                 {
+                    xtype: 'fieldset',
+                    title: 'FREIGHT DETAILS',
+                    border: true	,
+                    height: 180	,
+                    width: 185,
+                    labelWidth:40,
+                    x:0 ,  
+                    y:95 ,
+                    layout      : 'absolute',
+                    items: [
+
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:70,
+                            x:0 ,  
+                            y:5 ,
+                            items: [txtCommonFRTAmt]
+                        },  
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 47,
+                            y           : 32,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblFrtPer]
+                        },
+
+                        {
+                            xtype       : 'fieldset',
+                            title       : '',
+                            width       : 120,
+                            x           : 98,
+                            y           : 32,
+                            defaultType : 'Label',
+                            border      : false,
+                            items: [lblFrtAmt]
+                        },
+                                                            
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:40,
+                            x:0 ,  
+                            y:50 ,
+                            items: [txtFRTCGSTPer]
+                        },  
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:1,
+                            x:90 ,  
+                            y:50 ,
+                            items: [txtFRTCGSTAmt]
+                        },                              
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:40,
+                            x:0 ,  
+                            y:80 ,
+                            items: [txtFRTSGSTPer]
+                        },    
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:1,
+                            x:90 ,  
+                            y:80 ,
+                            items: [txtFRTSGSTAmt]
+                        },                               
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:40,
+                            x:0 ,  
+                            y:110 ,
+                            items: [txtFRTIGSTPer]
+                        },    
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false,
+                            width: 300,
+                            labelWidth:1,
+                            x:90 ,  
+                            y:110 ,
+                            items: [txtFRTIGSTAmt]
+                        },                                                                                   
+                        /*
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false	,
+                            height: 80	,
+                            width: 150,
+                            labelWidth:40,
+                            x:0 ,  
+                            y:75 ,
+                            items: [txtFRTSGSTPer]
+                        }    ,
+                        {
+                            xtype: 'fieldset',
+                            title: '',
+                            border: false	,
+                            height: 80	,
+                            width: 150,
+                            labelWidth:40,
+                            x:0 ,  
+                            y:90 ,
+                            items: [txtFRTIGSTPer]
+                        }    ,
+                                */                    
+
+                    ]
+                },
+
+                   {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: true,
+                    height: 180	,
+                    width: 1100,
+                    labelWidth:90,
+                    x:200 ,  
+                    y:95 ,
+                    items: [
+                    txtTotInsurance,txtgrossval,txttotdisc,txtTotPF,txttotfreight1,txttotothval
+                    ]
+                 },
+
+                 
+
+
+                   {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false	,
+                    height: 80	,
+                    width: 150,
+                    labelWidth:40,
+                    x:380 ,  
+                    y:119 ,
+                    items: [
+                    txtTotValuePM
+                    ]
+                 },
+
+                  {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 180,
+                    width: 855,
+                    labelWidth:90,
+                    x:500 ,  
+                    y:95 ,
+                    items: [
+                   txttotcgst,txttotsgst,txttotigst,txttottcs,txtTotOthersPM,txtTotTransport
+//,txttotinward
+                    ]
+                 },
+
+
+ {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 150,
+                    width: 350,
+                    labelWidth:25,
+                    x:680 ,  
+                    y:95 ,
+                    items: [
+                    txtCGSTPM,txtSGSTPM,txtIGSTPM
+//,txttotinward
+                    ]
+                 },
+/*
+
+                 {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 150,
+                    width: 855,
+                    labelWidth:120,
+                    x:400 ,  
+                    y:150 ,
+                    items: [
+                   txttottaxfrt1,txttottaxgst1 ,txttaxfri3,txtaxgst2
+                    ]
+                 },
+*/
+
+
+                {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    width: 300,
+                    labelWidth:120,
+                    x:780 ,  
+                    y:90 ,
+                    items: [txtTotRebate1]
+                },
+
+                {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    width: 300,
+                    labelWidth:120,
+                    x:1050 ,  
+                    y:90 ,
+                    items: [txtTotRebate2]
+                },
+
+
+                   {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 150,
+                    width: 855,
+                    labelWidth:120,
+                    x:780 ,  
+                    y:120 ,
+                    items: [
+                   txtroundoff,txtlandvalue,txtGRNValue
+                    ]
+                 },
+
+                   {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 150,
+                    width: 770,
+                    labelWidth:120,
+                    x:1000 ,  
+                    y:120 ,
+                    items: [optTCSCalc]
+                 },
+                   {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 150,
+                    width: 180,
+                    labelWidth:1,
+                    x:1150 ,  
+                    y:120 ,
+                    items: [
+                   optRounding
+                    ]
+                 },
+/*                     
+                   {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: false,
+                    height: 150,
+                    width: 855,
+                    labelWidth:120,
+                    x:1220 ,  
+                    y:200 ,
+                    items: [btnsave]
+                 },
+*/
+
+                 {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: true,
+                    height: 192,
+                    width: 1100,
+                    labelWidth:85,
+                    x:10 ,  
+                    y:285 ,
+                    items: [flxAccounts]
+                 },
+
+              {  xtype       : 'fieldset',
+                 title       : '',
+                 width       : 400,
+                 x           : 880,
+                 y           : 300,
+                 border      : false,
+                 items:[txttotDebit],
+                       },
+              {  xtype       : 'fieldset',
+                 title       : '',
+                 width       : 400,
+                 x           : 880,
+                 y           : 350,
+                 border      : false,
+                 items:[txttotCredit],
+                       },
+
+/*
+                 {
+                    xtype: 'fieldset',
+                    title: 'Tax Rounding Off',
+                    border: true,
+                    height: 45,
+                    width: 200,
+                    x:550 ,  
+                    y:350 ,
+                    items: [
+                   
+                    ]
+                 },roundno1  //,roundyes1
+*/
+
+
+                ]
+            },
+
+            {
+                xtype: 'panel',
+                id   : 'tab3', 
+                title: 'DEBIT NOTE DETAILS',bodyStyle:{"background-color":"#ffffcc"},
+                layout: 'absolute',
+                items: [
+
+
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 60,
+                        width       : 200,
+                        x           : 1150,
+                        y           : 17,
+                        border      : false,
+                        items: [btnAllowRateChange]
+                    },
+
+
+
+                    {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 250,
+                        x           : 210,
+                        y           : 15,
+                        defaultType : 'Label',
+                        border      : false,
+                        items: [lblBilled]
+                    },
+
+                   {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 250,
+                        x           : 310,
+                        y           : 15,
+                        defaultType : 'Label',
+                        border      : false,
+                        items: [lblPo]
+                    },
+
+                   {
+                        xtype       : 'fieldset',
+                        title       : '',
+                        width       : 250,
+                        x           : 435,
+                        y           : 15,
+                        defaultType : 'Label',
+                        border      : false,
+                        items: [lblDiff]
+                    },
+
+
+                    { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 120,
+                        width       : 500,
+                        x           : 60 ,
+                        y           : 50,
+                        border      : false,
+                        items: [txtValueBilled]
+                },
+
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 305,
+                        y           : 50,
+                            border      : false,
+                        items: [txtValueGRN]
+                },
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 420,
+                        y           : 50,
+                            border      : false,
+                        items: [txtValueDiff]
+                },                            
+
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 120,
+                        width       : 320,
+                        x           : 60 ,
+                        y           : 100,
+                            border      : false,
+                        items: [txtcgstvalBilled]
+                },
+
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 305,
+                        y           : 100,
+                            border      : false,
+                        items: [txtcgstvalGRN]
+                },
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 420,
+                        y           : 100,
+                            border      : false,
+                        items: [txtcgstvalDiff]
+                },
+
+{ 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 120,
+                        width       : 320,
+                        x           : 60,
+                        y           : 130,
+                            border      : false,
+                        items: [txtsgstvalBilled]
+                },
+
+
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 305,
+                        y           : 130,
+                            border      : false,
+                        items: [txtsgstvalGRN]
+                },
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 420,
+                        y           : 130,
+                            border      : false,
+                        items: [txtsgstvalDiff]
+                },
+
+{ 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 120,
+                        width       : 320,
+                        x           : 60,
+                        y           : 160,
+                            border      : false,
+                        items: [txtigstvalBilled]
+                },
+
+
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 305,
+                        y           : 160,
+                            border      : false,
+                        items: [txtigstvalGRN]
+                },
+               { 
+                        xtype       : 'fieldset',
+                        title       : '',
+                        labelWidth  : 1,
+                        width       : 320,
+                        x           : 420,
+                        y           : 160,
+                            border      : false,
+                        items: [txtigstvalDiff]
+                },
+
+                { 
+                    xtype       : 'fieldset',
+                    title       : '',
+                    labelWidth  : 130,
+                    width       : 320,
+                    x           : 700,
+                    y           : 50,
+                    border      : false,
+                    items: [txtDNVouNo]
+            },                    
+
+
+            { 
+                xtype       : 'fieldset',
+                title       : '',
+                labelWidth  : 130,
+                width       : 320,
+                x           : 700,
+                y           : 80,
+                border      : false,
+                items: [dtpDNDate]
+        },                    
+                {
+                    xtype: 'fieldset',
+                    title: ' ',
+                    border: true,
+                    height: 255,
+                    width: 1100,
+                    labelWidth:85,
+                    x:10 ,  
+                    y:205    ,
+                    items: [flxAccountsDNOTE]
+                 },
+
+              {  xtype       : 'fieldset',
+                 title       : '',
+                 width       : 400,
+                 x           : 880,
+                 y           : 270,
+                 border      : false,
+                 items:[txttotDebitDN],
+                       },
+              {  xtype       : 'fieldset',
+                 title       : '',
+                 width       : 400,
+                 x           : 880,
+                 y           : 310,
+                 border      : false,
+                 items:[txttotCreditDN],
+                       },                    
+
+                {  xtype       : 'fieldset',
+                title       : '',
+                width       : 1100,
+                x           : 10,
+                y           : 400,
+                border      : false,
+                items:[txtNarration],
+                },      
+
+                ]
+            },                        
+        {
+            xtype: 'panel',
+            id   : 'tab4', 
+            title: '',bodyStyle:{"background-color":"#ffffcc"},
+            layout: 'absolute',
+            items: [
+                   { 
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 190,
+                            width       : 320,
+                            x           : 50,
+                            y           : 40,
+                                border      : false,
+                            items: [txtNewGRNNo]
+                    },
+
+
+
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 100,
+                width: 300,
+                x: 380,
+                y: 40,
+                defaultType: 'textfield',
+                border: false,
+                items: [btnGRNNoChange]
+            }, 
+
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 100,
+                width: 300,
+                x: 500,
+                y: 40,
+                defaultType: 'textfield',
+                border: false,
+                items: [txtPassword]
+            }, 
+
+
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 150,
+                width: 300,
+                x: 800,
+                y: 40,
+                defaultType: 'textfield',
+                border: false,
+                items: [txtPassword2]
+            }, 
+
+
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 100,
+                width: 300,
+                x: 1100,
+                y: 40,
+                defaultType: 'textfield',
+                border: false,
+                items: [btnDelete]
+            }, 
+
+                    {
+                    xtype: 'fieldset',
+                    title: '',
+                    border: true,
+                    height: 250,
+                    width: 500,
+                    labelWidth:90,
+                    x:50 ,  
+                    y:95 ,
+                    items: [
+
+                   { 
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 190,
+                            width       : 500,
+                            x           : 50,
+                            y           : 80,
+                                border      : false,
+                            items: [txtNewBillNo]
+                    },
+
+                   { 
+                            xtype       : 'fieldset',
+                            title       : '',
+                            labelWidth  : 190,
+                            width       : 500,
+                            x           : 50,
+                            y           : 110,
+                                border      : false,
+                            items: [dtpNewBill]
+                    },
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 190,
+                width: 300,
+                x: 400,
+                y: 80,
+                defaultType: 'textfield',
+                border: false,
+                items: [txtPassword3]
+            }, 
+
+
+
+            {
+                xtype: 'fieldset',
+                title: '',
+                labelWidth: 100,
+                width: 300,
+                x: 400,
+                y: 110,
+                defaultType: 'textfield',
+                border: false,
+                items: [btnBillNoChange]
+            }, 
+
+                    ]
+                  },
+            ]
+         }     
+            
+        ]
+    });        
+
     var myFormPanel = new Ext.form.FormPanel({
             width        :  1320, 
             title        : 'Goods Receipt Note',
@@ -7484,1533 +10166,9 @@ Ext.onReady(function(){
                          {},
                            
                       ]),
-            items        : [
+            items        : [tabgrn],
             
-                {
-                xtype: 'tabpanel',
-                activeTab: 0,
-                id : 'tabGRN',
-                height: 520,
-                width: 1320,
-                x: 0,
-                y: 5,
-            listeners: {
-    /*
-                'tabchange': function(tabPanel, tab) {
-                 var activeTab = tabGRN.getActiveTab();
-                 if (activeTab.id == 'tab2')
-                 {
-                    flxaccupdation(); 
-                 }
-                }
-    */
-            },
-    
-                items: [
-                {
-                    xtype: 'panel',
-                    title: 'GRN - Item Details',
-                    width: 200,
-                    id : 'tab1',
-                    height: 300,
-                    layout: 'absolute',
-                    items: [
-                        {
-                        xtype: 'fieldset',
-                        title: 'GRN Details',
-                        border: true,
-                        height:  99,
-                        width: 210,
-                       layout: 'absolute',
-                //        labelWidth:80,
-                        x: 0,  
-                        y: 0,
-                        items: [
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : 0,
-                                y           : -5,
-                                border      : false,
-                                items: [txtGRNNo]
-                            },  
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : 0,
-                                y           : -5,
-                                border      : false,
-                                items: [cmbGRNNo]
-                            },  
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 200,
-                                x           : 0,
-                                y           : 30,
-                                border      : false,
-                                items: [dtpgrn]
-                            },                         
-    // txtGRNNo,dtpgrn
-                        ]
-    
-                        },
-    //anna
-                        {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : '',
-                                width       : 350,
-                                x           : 200,
-                                y           : -11,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [opt_select]
-                         },
-                        {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : '',
-                                width       : 400,
-                                x           : 330,
-                                y           : -11,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [opt_year]
-                         },
-    
-                         {
-                        xtype: 'fieldset',
-                        title: 'Supplier',
-                        border: true,
-                        height: 57,
-                        width: 450,
-                        labelWidth:60,
-                        x: 480,  
-                        y: 0,
-                       items: [txtSupplierName]
-                        }, 
-    
-    
-                        {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: true,
-                        height: 45,
-                        width: 450,
-                        labelWidth:60,
-                        x: 480,  
-                        y: 50,
-                       items: [txtSearchItemName]
-                        }, 
-    
-    
-                        {
-                        xtype: 'fieldset',
-                        title: 'Bill Details',
-                        border: true,
-                        height: 99,
-                        width: 230,
-                        labelWidth:80,
-                        x: 930,  
-                        y: 0,
-                        items: [
-                          txtBillNo, dtpBill
-                        ]
-                        },
-    
-    
-                        {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : '',
-                                width       : 400,
-                                x           : 1170,
-                                y           : -11,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [opt_GRN_Status]
-                         },
-    
-    
-    
-                        {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: true,
-                        height: 235,
-                        width: 1310,
-                        labelWidth:50,
-                        layout: 'absolute',
-                        x: 0,  
-                        y: 98,
-                        items: [
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : -10,
-                                y           : -5,
-                                border      : false,
-                                items: [cmbPONO]
-                            },
-    
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 60,
-                                x           : -10,
-                                y           : 17,
-                                border      : false,
-                                items: [btnPORefresh]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 150,
-                                x           : 130,
-                                y           : -5,
-                                border      : false,
-                                items: [dtppo]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 40,
-                                width       : 380,
-                                x           : 245,
-                                y           : -5,
-                                border      : false,
-                                items: [cmbindno]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 90,
-                                width       : 500,
-                                x           : 380,
-                                y           : -5,
-                                border      : false,
-                                items: [cmbItem]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 90,
-                                width       : 500,
-                                x           : 380,
-                                y           : -5,
-                                border      : false,
-                                items: [txtItemName]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 50,
-                 //               width       : 420,
-                                x           : 850,
-                                y           : -5,
-                                border      : false,
-                                items: [btnItemRefresh]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 40,
-                                width       : 300,
-                                x           : 910,
-                                y           : -5,
-                                border      : false,
-                                items: [txtuom]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : 1020,
-                                y           : -5,
-                                border      : false,
-                                items: [txtordqty]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 70,
-                                width       : 380,
-                                x           : 1150,
-                                y           : -5,
-                                border      : false,
-                                items: [txttolerance]
-                            },
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 120,
-                                width       : 600,
-                                x           : -10,
-                                y           : 40,
-                                border      : false,
-                                items: [txtItemSpec]
-                            },
-    
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 100,
-                                x           : 500,
-                                y           : 25,
-                                border      : false,
-                                items: [lblInvQty]
-                            },
-    
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 100,
-                                x           : 610,
-                                y           : 25,
-                                border      : false,
-                                items: [lblRecdQty]
-                            },
-    
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 100,
-                                x           : 720,
-                                y           : 25,
-                                border      : false,
-                                items: [lblAcceptedQty]
-                            },
-    
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 100,
-                                x           : 830,
-                                y           : 25,
-                                border      : false,
-                                items: [lblStockQty]
-                            },
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 100,
-                                x           : 940,
-                                y           : 25,
-                                border      : false,
-                                items: [lblRate]
-                            },
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 150,
-                                width       : 150,
-                                x           : 1050,
-                                y           : 25,
-                                border      : false,
-                                items: [lblValuePM]
-                            },
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 100,
-                                x           : 1160,
-                                y           : 25,
-                                border      : false,
-                                items: [lblValue1]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 490,
-                                y           : 45,
-                                border      : false,
-                                items: [txtinvqty]
-                            },
-    
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 600,
-                                y           : 45,
-                                border      : false,
-                                items: [txtRcvdQty]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 710,
-                                y           : 45,
-                                border      : false,
-                                items: [txtAcceptQty]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 820,
-                                y           : 45,
-                                border      : false,
-                                items: [txtStockQty]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 930,
-                                y           : 45,
-                                border      : false,
-                                items: [txtunitrate]
-                            },
-    
-    
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 1055,
-                                y           : 45,
-                                border      : false,
-                                items: [txtValuePM]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 200,
-                                x           : 1150,
-                                y           : 45,
-                                border      : false,
-                                items: [txtValue]
-                            },
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 120,
-                                width       : 500,
-                                x           : -10,
-                                y           : 85,
-                                border      : false,
-                                items: [cmbPurGroup]
-                            },
-    
-    
-                          {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : 550,
-                                y           : 85,
-                                border      : false,
-                                items: [cmbtype]
-                            },
-    
-                          {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : 760,
-                                y           : 85,
-                                border      : false,
-                                items: [txtRebate]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 60,
-                                width       : 380,
-                                x           : 910,
-                                y           : 85,
-                                border      : false,
-                                items: [txtRebate2]
-                            },            
-    
-                 {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 70,
-                                width       : 500,
-                                x           : 1080,
-                                y           : 85,
-                                border      : false,
-                                items: [txtInsurance]
-                            },
-    
-                    {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 5,
-                                y           : 140,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblPer]
-                            },
-    
-                  {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 5,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblAmt]
-                            },
-    
-                  {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 70,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblDiscount]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 60,
-                                y           : 140,
-                                border      : false,
-                                items: [txtdisper]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 60,
-                                y           : 170,
-                                border      : false,
-                                items: [txtdisval]
-                            },
-    
-    
-                  {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 160,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblPF]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 145,
-                                y           : 140,
-                                border      : false,
-                                items: [txtpfper]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 145,
-                                y           : 170,
-                                border      : false,
-                                items: [txtpfval]
-                            },
-    
-                  {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 240,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblCGST]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 230,
-                                y           : 140,
-                                border      : false,
-                                items: [txtCGSTPer]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 230,
-                                y           : 170,
-                                border      : false,
-                                items: [txtCGSTVal]
-                            },
-    
-    
-                  {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 335,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblSGST]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 320,
-                                y           : 140,
-                                border      : false,
-                                items: [txtSGSTPer]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 320,
-                                y           : 170,
-                                border      : false,
-                                items: [txtSGSTVal]
-                            },
-    
-    
-                  {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 420,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblIGST]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 410,
-                                y           : 140,
-                                border      : false,
-                                items: [txtIGSTPer]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 410,
-                                y           : 170,
-                                border      : false,
-                                items: [txtIGSTVal]
-                            },
-    
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 510,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblTCS]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 500,
-                                y           : 140,
-                                border      : false,
-                                items: [txtTCSPer]
-                            },
-    
-    
-    
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 500,
-                                y           : 170,
-                                border      : false,
-                                items: [txtTCSVal]
-                            },
-    
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 595,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblFreight]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 590,
-                                y           : 170,
-                                border      : false,
-                                items: [txtfreight]
-                            },
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 690,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblOthers]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 680,
-                                y           : 170,
-                                border      : false,
-                                items: [txtothers]
-                            },
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 770,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblOthersPM]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 765,
-                                y           : 170,
-                                border      : false,
-                                items: [txtothersPM]
-                            },
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 855,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblTransport]
-                            },
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 850,
-                                y           : 170,
-                                border      : false,
-                                items: [txtTransport]
-                            },
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 955,
-                                y           : 110,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblValue]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 950,
-                                y           : 170,
-                                border      : false,
-                                items: [txtiteminvvalue]
-                            },
-    
-                {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 1055,
-                                y           : 120,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblLanding]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 1050,
-                                y           : 170,
-                                border      : false,
-                                items: [txtitemvalue]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 1,
-                                width       : 380,
-                                x           : 1200,
-                                y           : 155,
-                                border      : false,
-                                items: [btnsubmit]
-                            },
-    
-            
-    
-                        ],
-                        },
-    
-     /*
-    
-                         {
-                        xtype: 'fieldset',
-                        title: 'Freight (Bill Raised / Tax Paid)',
-                        id   : 'frtexp',
-                        border: true,
-                        height: 10,
-                        width: 30,
-                        labelWidth:75,
-                        layout      : 'absolute',
-                        x:640,  
-                        y:140,
-                        items: [
-                               {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 50,
-                                width       : 150,
-                                x           : 5,
-                                y           : -10,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [txtclrfreight1]
-                              },
-                               {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 50,
-                                width       : 150,
-                                x           : 140,
-                                y           : -10,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [txtinward]
-                              },
-                             {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 80,
-                                width       : 250,
-                                x           : 5,
-                                y           : 17,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [cmbrcm]
-                              },   
-                           {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 80,
-                                width       : 350,
-                                x           : 5,
-                                y           : 40,
-                                defaultType : 'textfield',
-                                border      : false,
-                                items: [txtfreightparty]
-                              },
-    //                      txtclrfreight1,txtinward,txtfreightparty,cmbrcm
-                        ]
-                        },
-    */
-                        flxDetail,
-                    flxItem,flxItemSearch,
-    
-                         {
-                        xtype: 'fieldset',
-                        border: false,
-                        width: 465,
-                        labelWidth:60,
-                        x: 500,  
-                        y: 50,
-                       items: [flxLedger]
-                        },
-                                
-    
-                    ]
-                },
-                {
-                    xtype: 'panel',
-                    title: 'General / Overall Details',
-                    width: 383,
-                    height: 200,
-                    id : 'tab2',
-                    layout: 'absolute',
-    
-    
-                    items: [
-    
-    
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-                        height: 135,
-                        width: 250,
-                        labelWidth:120,
-                        x:0 ,  
-                        y:0 ,
-                        items: [txtTruck]
-                     },
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-                        height: 135,
-                        width: 250,
-                        labelWidth:110,
-                        x:250,  
-                        y:0 ,
-                        items: [cmbgateentryno]
-                     },
-    
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-                        height: 135,
-                        width: 250,
-                        labelWidth:110,
-                        x:460,  
-                        y:0 ,
-                        items: [gentrydate]
-                     },
-    
-    
-    //txtRemarks,txtPayTerms
-                                      
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-                        height: 135,
-                        width: 500,
-                        labelWidth:90,
-                        x:700 ,  
-                        y:0 ,
-                        items: [txtlrnumber]
-                     },
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-                        height: 135,
-                        width: 300,
-                        labelWidth:90,
-                        x:880 ,  
-                        y:0 ,
-                        items: [LRdate]
-                     },
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-                        height: 135,
-                        width: 250,
-                        labelWidth:120,
-                        x:0 ,  
-                        y:40 ,
-                        items: [txtPayTerms]
-                     },
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: false,
-    //                    height: 80,
-                        width: 900,
-                        labelWidth:110,
-                        x:250,  
-                        y:40 ,
-                        items: [txtRemarks]
-                     },
-    
-    
-                     {
-                        xtype: 'fieldset',
-                        title: 'FREIGHT DETAILS',
-                        border: true	,
-                        height: 180	,
-                        width: 185,
-                        labelWidth:40,
-                        x:0 ,  
-                        y:95 ,
-                        layout      : 'absolute',
-                        items: [
 
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:70,
-                                x:0 ,  
-                                y:5 ,
-                                items: [txtCommonFRTAmt]
-                            },  
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 47,
-                                y           : 32,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblFrtPer]
-                            },
-    
-                            {
-                                xtype       : 'fieldset',
-                                title       : '',
-                                width       : 120,
-                                x           : 98,
-                                y           : 32,
-                                defaultType : 'Label',
-                                border      : false,
-                                items: [lblFrtAmt]
-                            },
-                                                                
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:40,
-                                x:0 ,  
-                                y:50 ,
-                                items: [txtFRTCGSTPer]
-                            },  
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:1,
-                                x:90 ,  
-                                y:50 ,
-                                items: [txtFRTCGSTAmt]
-                            },                              
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:40,
-                                x:0 ,  
-                                y:80 ,
-                                items: [txtFRTSGSTPer]
-                            },    
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:1,
-                                x:90 ,  
-                                y:80 ,
-                                items: [txtFRTSGSTAmt]
-                            },                               
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:40,
-                                x:0 ,  
-                                y:110 ,
-                                items: [txtFRTIGSTPer]
-                            },    
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false,
-                                width: 300,
-                                labelWidth:1,
-                                x:90 ,  
-                                y:110 ,
-                                items: [txtFRTIGSTAmt]
-                            },                                                                                   
-                            /*
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false	,
-                                height: 80	,
-                                width: 150,
-                                labelWidth:40,
-                                x:0 ,  
-                                y:75 ,
-                                items: [txtFRTSGSTPer]
-                            }    ,
-                            {
-                                xtype: 'fieldset',
-                                title: '',
-                                border: false	,
-                                height: 80	,
-                                width: 150,
-                                labelWidth:40,
-                                x:0 ,  
-                                y:90 ,
-                                items: [txtFRTIGSTPer]
-                            }    ,
-                                    */                    
-
-                        ]
-                    },
-
-                       {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: true,
-                        height: 180	,
-                        width: 1100,
-                        labelWidth:90,
-                        x:200 ,  
-                        y:95 ,
-                        items: [
-                        txtTotInsurance,txtgrossval,txttotdisc,txtTotPF,txttotfreight1,txttotothval
-                        ]
-                     },
-
-                     
-
-    
-                       {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false	,
-                        height: 80	,
-                        width: 150,
-                        labelWidth:40,
-                        x:380 ,  
-                        y:119 ,
-                        items: [
-                        txtTotValuePM
-                        ]
-                     },
-    
-                      {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 180,
-                        width: 855,
-                        labelWidth:90,
-                        x:500 ,  
-                        y:95 ,
-                        items: [
-                       txttotcgst,txttotsgst,txttotigst,txttottcs,txtTotOthersPM,txtTotTransport
-    //,txttotinward
-                        ]
-                     },
-    
-    
-     {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 150,
-                        width: 350,
-                        labelWidth:25,
-                        x:680 ,  
-                        y:95 ,
-                        items: [
-                        txtCGSTPM,txtSGSTPM,txtIGSTPM
-    //,txttotinward
-                        ]
-                     },
-    /*
-    
-                     {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 150,
-                        width: 855,
-                        labelWidth:120,
-                        x:400 ,  
-                        y:150 ,
-                        items: [
-                       txttottaxfrt1,txttottaxgst1 ,txttaxfri3,txtaxgst2
-                        ]
-                     },
-    */
-    
-    
-                    {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        width: 300,
-                        labelWidth:120,
-                        x:780 ,  
-                        y:90 ,
-                        items: [txtTotRebate1]
-                    },
-    
-                    {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        width: 300,
-                        labelWidth:120,
-                        x:1050 ,  
-                        y:90 ,
-                        items: [txtTotRebate2]
-                    },
-    
-    
-                       {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 150,
-                        width: 855,
-                        labelWidth:120,
-                        x:780 ,  
-                        y:120 ,
-                        items: [
-                       txtroundoff,txtlandvalue,txtGRNValue
-                        ]
-                     },
-    
-                       {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 150,
-                        width: 770,
-                        labelWidth:120,
-                        x:1000 ,  
-                        y:120 ,
-                        items: [optTCSCalc]
-                     },
-                       {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 150,
-                        width: 180,
-                        labelWidth:1,
-                        x:1150 ,  
-                        y:120 ,
-                        items: [
-                       optRounding
-                        ]
-                     },
-/*                     
-                       {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: false,
-                        height: 150,
-                        width: 855,
-                        labelWidth:120,
-                        x:1220 ,  
-                        y:200 ,
-                        items: [btnsave]
-                     },
-    */
-    
-                     {
-                        xtype: 'fieldset',
-                        title: ' ',
-                        border: true,
-                        height: 192,
-                        width: 1100,
-                        labelWidth:85,
-                        x:10 ,  
-                        y:285 ,
-                        items: [flxAccounts]
-                     },
-    
-                  {  xtype       : 'fieldset',
-                     title       : '',
-                     width       : 400,
-                     x           : 880,
-                     y           : 300,
-                     border      : false,
-                     items:[txttotDebit],
-                           },
-                  {  xtype       : 'fieldset',
-                     title       : '',
-                     width       : 400,
-                     x           : 880,
-                     y           : 350,
-                     border      : false,
-                     items:[txttotCredit],
-                           },
-    
-    /*
-                     {
-                        xtype: 'fieldset',
-                        title: 'Tax Rounding Off',
-                        border: true,
-                        height: 45,
-                        width: 200,
-                        x:550 ,  
-                        y:350 ,
-                        items: [
-                       
-                        ]
-                     },roundno1  //,roundyes1
-    */
-    
-    
-                    ]
-                },
-    
-            {
-                xtype: 'panel',
-                id   : 'tab3', 
-                title: '',bodyStyle:{"background-color":"#ffffcc"},
-                layout: 'absolute',
-                items: [
-                       { 
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 190,
-                                width       : 320,
-                                x           : 50,
-                                y           : 40,
-                                    border      : false,
-                                items: [txtNewGRNNo]
-                        },
-    
-    
-    
-    
-                {
-                    xtype: 'fieldset',
-                    title: '',
-                    labelWidth: 100,
-                    width: 300,
-                    x: 380,
-                    y: 40,
-                    defaultType: 'textfield',
-                    border: false,
-                    items: [btnGRNNoChange]
-                }, 
-    
-    
-                {
-                    xtype: 'fieldset',
-                    title: '',
-                    labelWidth: 100,
-                    width: 300,
-                    x: 500,
-                    y: 40,
-                    defaultType: 'textfield',
-                    border: false,
-                    items: [txtPassword]
-                }, 
-    
-    
-    
-                {
-                    xtype: 'fieldset',
-                    title: '',
-                    labelWidth: 150,
-                    width: 300,
-                    x: 800,
-                    y: 40,
-                    defaultType: 'textfield',
-                    border: false,
-                    items: [txtPassword2]
-                }, 
-    
-    
-    
-                {
-                    xtype: 'fieldset',
-                    title: '',
-                    labelWidth: 100,
-                    width: 300,
-                    x: 1100,
-                    y: 40,
-                    defaultType: 'textfield',
-                    border: false,
-                    items: [btnDelete]
-                }, 
-    
-                        {
-                        xtype: 'fieldset',
-                        title: '',
-                        border: true,
-                        height: 250,
-                        width: 500,
-                        labelWidth:90,
-                        x:50 ,  
-                        y:95 ,
-                        items: [
-    
-                       { 
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 190,
-                                width       : 500,
-                                x           : 50,
-                                y           : 80,
-                                    border      : false,
-                                items: [txtNewBillNo]
-                        },
-    
-                       { 
-                                xtype       : 'fieldset',
-                                title       : '',
-                                labelWidth  : 190,
-                                width       : 500,
-                                x           : 50,
-                                y           : 110,
-                                    border      : false,
-                                items: [dtpNewBill]
-                        },
-    
-                {
-                    xtype: 'fieldset',
-                    title: '',
-                    labelWidth: 190,
-                    width: 300,
-                    x: 400,
-                    y: 80,
-                    defaultType: 'textfield',
-                    border: false,
-                    items: [txtPassword3]
-                }, 
-    
-    
-    
-                {
-                    xtype: 'fieldset',
-                    title: '',
-                    labelWidth: 100,
-                    width: 300,
-                    x: 400,
-                    y: 110,
-                    defaultType: 'textfield',
-                    border: false,
-                    items: [btnBillNoChange]
-                }, 
-    
-                        ]
-                      },
-                ]
-             }     
-                
-                ]
-            } ,
-        
-                 
-            
-            ],
-     
             tbar: {
                 xtype: 'toolbar',
                 width: 539,
@@ -9043,7 +10201,7 @@ Ext.onReady(function(){
                                gstFlag = "Edit";
                                txtGRNNo.hide();
                                cmbGRNNo.show();
-                               Ext.getCmp('txtSupplierName').setReadOnly(true);
+//                               Ext.getCmp('txtSupplierName').setReadOnly(true);
                             loadGRNListDatasore.removeAll();
                             loadGRNListDatasore.load({
                                 url:'Clsrn.php',
@@ -9078,8 +10236,33 @@ Ext.onReady(function(){
                         icon: '../icons/save.png',
                         listeners:{
                         click:function() {
+              
+
+                  
+                                if (Number(txtValueDiff.getValue()) > 0) {
+                            
+                                    Ext.Msg.show({
+                                        title   : 'Confirmation',
+                                        msg     : 'DEBIT NOTE is generated against this GRN. Do you want to continue?',
+                                        buttons : Ext.Msg.YESNO,
+                                        icon    : Ext.Msg.QUESTION,
+                                        fn      : function (btn) {
+                                            if (btn === 'yes') {
+                                                save_click();   // ✅ ONLY here save happens
+                                            }
+                                            // btn === 'no' → nothing → save stops
+                                        }
+                                    });
+                            
+                                    return; // 🚨 VERY IMPORTANT: stop save_click here
+                            
+                               }  
+                               else
+                               {
+                                save_click(); 
+                               }                             
     
-                      save_click();	
+          
                         } 
                        } 
                                        
@@ -9175,17 +10358,7 @@ Ext.onReady(function(){
                         callback:function()
                         {
 
-    
-    /*
-    //				Ext.getCmp('dtpgrn').focus(false, 0);	
-    
-                    const input = document.getElementById('dtpgrn');
-                    const end = input.value.length;
-    
-                    input.setSelectionRange(0,0);
-                    input.focus();
-    
-    */
+
     
         // Delay to ensure DOM is fully available
         setTimeout(() => {

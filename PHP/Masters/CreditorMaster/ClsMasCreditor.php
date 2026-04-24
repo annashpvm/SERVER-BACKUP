@@ -329,9 +329,19 @@ function getissdetail()
         global $conn; 
 
 
-        $party     = $_POST['ledger'];
-//        $sql = "select * from massal_customer where cust_type = 'S' and  cust_ref like '%$party%' order by cust_name";
-		$sql = "select * from massal_customer where left(cust_name,2) != 'zz' and  cust_type = 'S' and replace(replace(cust_name,' ','')  ,'.','')  like '%$party%' order by cust_name";
+//        $party     = $_POST['ledger'];
+//		$sql = "select * from massal_customer where left(cust_name,2) != 'zz' and  cust_type = 'S' and replace(replace(cust_name,' ','')  ,'.','')  like '%$party%' order by cust_name";
+
+
+        $ledname = strtoupper($_POST['ledger']);
+        $ledname = trim(str_replace(" ", "", $ledname)); 
+        $ledname = trim(str_replace(".", "", $ledname)); 
+        $ledname = trim(str_replace("-", "", $ledname));
+
+//       $sql = "select * from massal_customer where left(cust_name,2) != 'zz' and replace(replace(replace(cust_name,' ','')  ,'.',''),'-','')   like '%$ledname%' order by cust_name";
+      $sql = "SELECT * FROM massal_customer WHERE cust_name NOT LIKE 'zz%'  and cust_type = 'S' and  REGEXP_REPLACE(cust_ref, '[ .-]', '')  LIKE '%$ledname%' ORDER BY cust_name;";
+ //echo $sql;
+
         $r=mysqli_query($conn, $sql);
     $r = mysqli_query($conn, $sql);
 

@@ -26,7 +26,7 @@ $party = $_REQUEST['party'];
 $partyledcode = $_REQUEST['partyledcode'];
 
 
-$refno = $_REQUEST['refno'];
+$refno   = strtoupper($_REQUEST['refno']);
 $refdate = $_REQUEST['refdate'];
 
 
@@ -107,16 +107,16 @@ else
 
 
 
-	$query1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
+	      $query1 = "delete from acc_trail  where acctrail_accref_seqno = '$ginaccrefseq'";
         $result1 = mysqli_query($conn, $query1);
 
 //echo $query1;
 //echo "</br>";
-	$query2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
+	      $query2 = "delete from acc_tran  where acctran_accref_seqno = '$ginaccrefseq'";
         $result2 = mysqli_query($conn, $query2);
 
 
-	$query3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
+	      $query3 = "delete from acc_ref  where accref_seqno ='$ginaccrefseq' and accref_comp_code='$compcode' and accref_finid ='$finid'";
         $result3 = mysqli_query($conn, $query3);
 
 
@@ -192,7 +192,7 @@ if ($conval > 0) {
 
 
 
-    $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate','$voutype', '','','$conval', '$voudate','$narration');";
+    $querya2 = "call acc_sp_trn_insacc_ref('$ginaccrefseq','$vouno','$compcode','$finid','$voudate','$voutype', '','','$refno', '$refdate','$narration');";
     $resulta2 = mysqli_query($conn, $querya2);
 
 //echo $querya2;
@@ -254,7 +254,19 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 }
 
 
+$query = "SELECT  (SELECT COUNT(*) FROM acc_expenses_header WHERE eh_seqno = '$ginaccrefseq') AS invcount,
+ (SELECT COUNT(*) FROM acc_ref WHERE accref_seqno = '$ginaccrefseq' and accref_vouno = '$vouno') AS refcount,
+ (SELECT COUNT(*) FROM acc_tran WHERE acctran_accref_seqno = '$ginaccrefseq') AS trancount,
+ (SELECT COUNT(*) FROM acc_trail WHERE acctrail_accref_seqno = '$ginaccrefseq') AS trailcount";
 
+$result = mysqli_query($conn, $query);
+
+$row = mysqli_fetch_assoc($result);
+
+$invcount   = intval($row['invcount']);
+$refcount   = intval($row['refcount']);
+$trancount  = intval($row['trancount']);
+$trailcount = intval($row['trailcount']);
 
 
 
@@ -264,7 +276,7 @@ $cresulta3 = mysqli_query($conn, $cquerya3);
 
 if ($savetype == 'Add')
 {
-	if ($result1 &&  $result2 && $resulta2  && $resulta4 ) 
+	if ($result1 &&  $result2 && $resulta2  && $resulta4  && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0) 
 	{
       mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';
@@ -277,7 +289,7 @@ if ($savetype == 'Add')
 }
 else
 {
-	if ($result1  &&  $result2 &&  $result3 &&  $result4 &&  $result5  && $resulta2  && $resulta4 )  
+	if ($result1  &&  $result2 &&  $result3 &&  $result4 &&  $result5  && $resulta2  && $resulta4   && $invcount > 0 && $refcount >0 && $trancount > 0 &&  $trailcount > 0)  
 	{
       mysqli_commit($conn);
 	    echo '({"success":"true","vouno":"' . $vouno . '"})';

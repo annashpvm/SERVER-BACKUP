@@ -74,6 +74,19 @@
             getGSTLedgerName2();
             break;
             
+            case "LoadDNNumber":
+                getDNNumber();
+            break;
+    
+            case "LoadDNDate":
+                getDNDate();
+            break;
+
+            case "loadDNVoucherDetail":
+                getDNVoucherDetail();
+            break;
+            
+
 		default:
         	echo "{failure:true}";  // Simple 1-dim JSON array to tell Ext the request failed.
         	break;
@@ -576,5 +589,72 @@ function getPurGroup()
     
         exit;
     }
-        
+
+
+    
+ function getDNNumber()
+ {
+      global $conn;
+     $ginfinid= $_POST['finid'];
+     $gincompcode=$_POST['compcode'];
+     $gsttype =$_POST['gsttype'];
+
+     if ($gsttype == 'G')
+    $sql = "select ifnull(max(dbcr_no),0) + 1 as vouno from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+     else
+    $sql = "select ifnull(max(dbcr_no),0) + 1 as vouno from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode';";
+
+ $r = mysqli_query($conn, $sql);
+
+ $arr = [];
+ while ($re = mysqli_fetch_assoc($r)) {
+     $arr[] = $re;
+ }
+
+ echo json_encode(["total" => count($arr), "results" => $arr]);
+ }
+
+
+function getDNDate()
+ {
+     global $conn;
+     $ginfinid= $_POST['finid'];
+     $gincompcode=$_POST['compcode'];
+     $gsttype =$_POST['gsttype'];
+
+     if ($gsttype == 'G')
+    $sql = "select case when max(dbcr_date) IS NULL then curdate() else  max(dbcr_date)  end as dnmaxdate  from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode'";
+     else
+    $sql = "select case when max(dbcr_date) IS NULL then curdate() else  max(dbcr_date)  end as dnmaxdate  from acc_dbcrnote_header where dbcr_type = 'DNN' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode'";
+
+
+//	   $r = "select * from (select if(max(dbcr_date) is null, curdate(), max(dbcr_date)) as maxdate from acc_dbcrnote_header where dbcr_type = 'DNG' and dbcr_finid = '$ginfinid' and dbcr_comp_code = '$gincompcode')a1";
+//echo $r;
+
+
+ $r = mysqli_query($conn, $sql);
+
+ $arr = [];
+ while ($re = mysqli_fetch_assoc($r)) {
+     $arr[] = $re;
+ }
+
+ echo json_encode(["total" => count($arr), "results" => $arr]);
+ }
+  
+ function getDNVoucherDetail()
+ {
+     global $conn;
+     $ginfinid    = $_POST['fincode'];
+     $gincompcode = $_POST['compcode'];
+     $dnvouno     = $_POST['dnvouno'];
+     $sql = "select dbcr_accseqno ,dbcr_seqno from acc_dbcrnote_header where dbcr_comp_code = $gincompcode and dbcr_finid = $ginfinid and dbcr_vouno = '$dnvouno'";
+     $r = mysqli_query($conn, $sql);
+
+     $arr = [];
+     while ($re = mysqli_fetch_assoc($r)) {
+        $arr[] = $re;
+     }
+     echo json_encode(["total" => count($arr), "results" => $arr]);
+ } 
 ?>

@@ -37,12 +37,11 @@ mysqli_set_charset($conn, "utf8");
     {
   	$fincode  = $_POST['fincode'];
 	$compcode = $_POST['compcode'];
-       	$vouno    = $_POST['vouno'];
-       	$headled    = $_POST['headled'];
+   	$vouno    = $_POST['vouno'];
+   	$headled    = $_POST['headled'];
 
-        global $conn;
-
-$sql = "select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code   where tran.acctran_led_code <> $headled and  accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode";
+    global $conn;
+    $sql = "select * from acc_ref ref  join acc_tran tran on  tran.acctran_accref_seqno = ref.accref_seqno   join massal_customer mas on  tran.acctran_led_code = mas.cust_code   where tran.acctran_led_code <> $headled and  accref_vouno = '$vouno' and  accref_comp_code = $compcode and accref_finid = $fincode";
 
     $r = mysqli_query($conn, $sql);
 

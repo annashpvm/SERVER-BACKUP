@@ -1,0 +1,3263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="author">a</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.7.0.v201706222054</property>
+    <text-property name="title">Purchase PO</text-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="pono" id="14">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="finid" id="15">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="compcode" id="16">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="SRIHARI" id="12">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://10.0.0.251/shvpm</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">UEBzc3cwckQ=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="DSPurPurchaseOrder" id="13">
+            <list-property name="columnHints"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">phdpono</property>
+                    <property name="paramName">pono</property>
+                    <property name="nativeName">phdpono</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">phdfincode</property>
+                    <property name="paramName">finid</property>
+                    <property name="nativeName">phdfincode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">2</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">phdcompcode</property>
+                    <property name="paramName">compcode</property>
+                    <property name="nativeName">phdcompcode</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">3</property>
+                    <property name="allowNull">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">phd_comp_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">phd_pono</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">phd_podate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">phd_fin_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">phd_credit_days</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">phd_dely_point</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">phd_dely_sch</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">phd_spl_instruction</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">phd_prepared_by</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">phd_roundoff</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">phd_total</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">phd_amnd_status</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">phd_bank</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">phd_party_refno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">phd_party_refdate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">ptr_slno</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">ptr_unit_rate</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">ptr_ord_qty</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">ptr_discount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">ptr_pf_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">ptr_freight_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">ptr_oth_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">ptr_ind_no</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">ptr_disval</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">ptr_pfval</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">ptr_cgst_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">ptr_cgst_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">ptr_sgst_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">ptr_sgst_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">ptr_igst_per</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">ptr_igst_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">ptr_frt2</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">33</property>
+                        <property name="name">sup_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">34</property>
+                        <property name="name">sup_addr1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
+                        <property name="name">sup_addr2</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">sup_addr3</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">sup_city</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">sup_zip</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
+                        <property name="name">sup_panno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">sup_gstin</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">41</property>
+                        <property name="name">carr_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">42</property>
+                        <property name="name">company_code</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">43</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">44</property>
+                        <property name="name">company_gst</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">45</property>
+                        <property name="name">term_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">46</property>
+                        <property name="name">item_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">47</property>
+                        <property name="name">ind_remarks</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">48</property>
+                        <property name="name">state_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">49</property>
+                        <property name="name">state_codeno</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
+                        <property name="name">dept_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">51</property>
+                        <property name="name">uom_short_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">52</property>
+                        <property name="name">item_hsncode</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">53</property>
+                        <property name="name">ptr_remarks</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">54</property>
+                        <property name="name">phd_duedate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">SRIHARI</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">phd_comp_code</property>
+                    <property name="nativeName">phd_comp_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">phd_pono</property>
+                    <property name="nativeName">phd_pono</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">phd_podate</property>
+                    <property name="nativeName">phd_podate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">phd_fin_code</property>
+                    <property name="nativeName">phd_fin_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">phd_credit_days</property>
+                    <property name="nativeName">phd_credit_days</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">phd_dely_point</property>
+                    <property name="nativeName">phd_dely_point</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">phd_dely_sch</property>
+                    <property name="nativeName">phd_dely_sch</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">phd_spl_instruction</property>
+                    <property name="nativeName">phd_spl_instruction</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">phd_prepared_by</property>
+                    <property name="nativeName">phd_prepared_by</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">phd_roundoff</property>
+                    <property name="nativeName">phd_roundoff</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">phd_total</property>
+                    <property name="nativeName">phd_total</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">phd_amnd_status</property>
+                    <property name="nativeName">phd_amnd_status</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">phd_bank</property>
+                    <property name="nativeName">phd_bank</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">phd_party_refno</property>
+                    <property name="nativeName">phd_party_refno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">phd_party_refdate</property>
+                    <property name="nativeName">phd_party_refdate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">ptr_slno</property>
+                    <property name="nativeName">ptr_slno</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">ptr_unit_rate</property>
+                    <property name="nativeName">ptr_unit_rate</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">ptr_ord_qty</property>
+                    <property name="nativeName">ptr_ord_qty</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">ptr_discount</property>
+                    <property name="nativeName">ptr_discount</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">ptr_pf_per</property>
+                    <property name="nativeName">ptr_pf_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">ptr_freight_amt</property>
+                    <property name="nativeName">ptr_freight_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">ptr_oth_amt</property>
+                    <property name="nativeName">ptr_oth_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">ptr_ind_no</property>
+                    <property name="nativeName">ptr_ind_no</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">ptr_disval</property>
+                    <property name="nativeName">ptr_disval</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">ptr_pfval</property>
+                    <property name="nativeName">ptr_pfval</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">ptr_cgst_per</property>
+                    <property name="nativeName">ptr_cgst_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">ptr_cgst_amt</property>
+                    <property name="nativeName">ptr_cgst_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">ptr_sgst_per</property>
+                    <property name="nativeName">ptr_sgst_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">ptr_sgst_amt</property>
+                    <property name="nativeName">ptr_sgst_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">ptr_igst_per</property>
+                    <property name="nativeName">ptr_igst_per</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">ptr_igst_amt</property>
+                    <property name="nativeName">ptr_igst_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">ptr_frt2</property>
+                    <property name="nativeName">ptr_frt2</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">33</property>
+                    <property name="name">sup_name</property>
+                    <property name="nativeName">sup_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">34</property>
+                    <property name="name">sup_addr1</property>
+                    <property name="nativeName">sup_addr1</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
+                    <property name="name">sup_addr2</property>
+                    <property name="nativeName">sup_addr2</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
+                    <property name="name">sup_addr3</property>
+                    <property name="nativeName">sup_addr3</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">sup_city</property>
+                    <property name="nativeName">sup_city</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">38</property>
+                    <property name="name">sup_zip</property>
+                    <property name="nativeName">sup_zip</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">39</property>
+                    <property name="name">sup_panno</property>
+                    <property name="nativeName">sup_panno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">40</property>
+                    <property name="name">sup_gstin</property>
+                    <property name="nativeName">sup_gstin</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">41</property>
+                    <property name="name">carr_name</property>
+                    <property name="nativeName">carr_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">42</property>
+                    <property name="name">company_code</property>
+                    <property name="nativeName">company_code</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">43</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">44</property>
+                    <property name="name">company_gst</property>
+                    <property name="nativeName">company_gst</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">45</property>
+                    <property name="name">term_name</property>
+                    <property name="nativeName">term_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">46</property>
+                    <property name="name">item_name</property>
+                    <property name="nativeName">item_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">47</property>
+                    <property name="name">ind_remarks</property>
+                    <property name="nativeName">ind_remarks</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">48</property>
+                    <property name="name">state_name</property>
+                    <property name="nativeName">state_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">49</property>
+                    <property name="name">state_codeno</property>
+                    <property name="nativeName">state_codeno</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">50</property>
+                    <property name="name">dept_name</property>
+                    <property name="nativeName">dept_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">51</property>
+                    <property name="name">uom_short_name</property>
+                    <property name="nativeName">uom_short_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">52</property>
+                    <property name="name">item_hsncode</property>
+                    <property name="nativeName">item_hsncode</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">53</property>
+                    <property name="name">ptr_remarks</property>
+                    <property name="nativeName">ptr_remarks</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">54</property>
+                    <property name="name">phd_duedate</property>
+                    <property name="nativeName">phd_duedate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[call sppur_rep_purchaseorder(?,?,?) ]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="TOC-level-0" id="1615">
+            <property name="textLineThrough">none</property>
+            <property name="textOverline">none</property>
+            <property name="textUnderline">none</property>
+        </style>
+        <style name="remk" id="1616">
+            <property name="canShrink">true</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1px</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1px</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1px</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1px</property>
+            <property name="headerHeight">0.2in</property>
+            <property name="footerHeight">1in</property>
+            <page-footer>
+                <grid id="1915">
+                    <property name="height">0.5416666666666666in</property>
+                    <column id="1916">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1917">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1918">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1928">
+                        <property name="width">2in</property>
+                    </column>
+                    <column id="1919"/>
+                    <row id="1940">
+                        <property name="verticalAlign">top</property>
+                        <property name="height">0.5416666666666666in</property>
+                        <cell id="1941"/>
+                        <cell id="1942"/>
+                        <cell id="1943"/>
+                        <cell id="1944"/>
+                        <cell id="1945">
+                            <label id="1946">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">for Sri Hari Venkateswara Paper Mills (P) Ltd.,</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="1947">
+                        <property name="verticalAlign">top</property>
+                        <property name="height">0.2604166666666667in</property>
+                        <cell id="1948">
+                            <data id="2344">
+                                <property name="paddingLeft">10pt</property>
+                                <property name="textAlign">left</property>
+                                <property name="dataSet">DSPurPurchaseOrder</property>
+                                <list-property name="boundDataColumns">
+                                    <structure>
+                                        <property name="name">phd_prepared_by</property>
+                                        <text-property name="displayName">phd_prepared_by</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["phd_prepared_by"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">phd_prepared_by</property>
+                            </data>
+                        </cell>
+                        <cell id="1949"/>
+                        <cell id="1950"/>
+                        <cell id="1951"/>
+                        <cell id="1952">
+                            <label id="1953"/>
+                        </cell>
+                    </row>
+                    <row id="1920">
+                        <property name="verticalAlign">top</property>
+                        <property name="height">0.5416666666666666in</property>
+                        <cell id="1921">
+                            <label id="1925">
+                                <text-property name="text">(PREPARED BY)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1922">
+                            <label id="1926">
+                                <text-property name="text">(CHECKED BY)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1923">
+                            <label id="1929">
+                                <text-property name="text">(DEPARTMENT HEAD)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1927">
+                            <label id="1930">
+                                <text-property name="text">(PURCHASE HEAD)</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1924">
+                            <label id="1931">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">(Authorized Signatory)</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="18">
+            <property name="verticalAlign">middle</property>
+            <property name="pageBreakInside">avoid</property>
+            <property name="dataSet">DSPurPurchaseOrder</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">ptr_ind_no</property>
+                    <text-property name="displayName">ptr_ind_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_ind_no"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">item_name</property>
+                    <text-property name="displayName">item_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["item_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_ord_qty</property>
+                    <text-property name="displayName">ptr_ord_qty</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_ord_qty"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">uom_short_name</property>
+                    <text-property name="displayName">uom_short_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["uom_short_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_unit_rate</property>
+                    <text-property name="displayName">ptr_unit_rate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_unit_rate"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_disval</property>
+                    <text-property name="displayName">ptr_disval</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_disval"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_pfval</property>
+                    <text-property name="displayName">ptr_pfval</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_pfval"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_freight_amt</property>
+                    <text-property name="displayName">ptr_freight_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_freight_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_cgst_per</property>
+                    <text-property name="displayName">ptr_cgst_per</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_cgst_per"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_cgst_amt</property>
+                    <text-property name="displayName">ptr_cgst_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_cgst_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_sgst_amt</property>
+                    <text-property name="displayName">ptr_sgst_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_sgst_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_sgst_per</property>
+                    <text-property name="displayName">ptr_sgst_per</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_sgst_per"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_igst_per</property>
+                    <text-property name="displayName">ptr_igst_per</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_igst_per"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_igst_amt</property>
+                    <text-property name="displayName">ptr_igst_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_igst_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_oth_amt</property>
+                    <text-property name="displayName">ptr_oth_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_oth_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_total</property>
+                    <text-property name="displayName">phd_total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_total"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_name</property>
+                    <text-property name="displayName">sup_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_addr1</property>
+                    <text-property name="displayName">sup_addr1</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_addr1"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_addr2</property>
+                    <text-property name="displayName">sup_addr2</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_addr2"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_addr3</property>
+                    <text-property name="displayName">sup_addr3</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_addr3"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_city</property>
+                    <text-property name="displayName">sup_city</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_city"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_zip</property>
+                    <text-property name="displayName">sup_zip</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sup_zip"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">City</property>
+                    <text-property name="displayName">City</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat(dataSetRow["sup_city"], "	 PIN: 	",dataSetRow["sup_zip"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">SupGSTno</property>
+                    <text-property name="displayName">SupGSTno</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("GSTIN	: ", dataSetRow["sup_gstin"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">supPANNo</property>
+                    <text-property name="displayName">supPANNo</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("PAN		: 		", dataSetRow["sup_panno"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">supState</property>
+                    <text-property name="displayName">supState</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("State	:	", dataSetRow["state_name"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">supStateCode</property>
+                    <text-property name="displayName">supStateCode</text-property>
+                    <expression name="expression" type="javascript">BirtStr.concat("State Code	:	", dataSetRow["state_codeno"])</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">company_name</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["company_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">compGST</property>
+                    <text-property name="displayName">compCIN</text-property>
+                    <expression name="expression" type="javascript">"CIN : U21012TN2006PTC060296"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">CompPAN</property>
+                    <text-property name="displayName">CompPAN</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["phd_comp_code"] == 1 || dataSetRow["phd_comp_code"] == 5 || dataSetRow["phd_comp_code"] == 90 )
+ BirtStr.concat("PAN : AAACD7352D")
+else
+   if (dataSetRow["phd_comp_code"] == 3 &amp;&amp; dataSetRow["phd_podate"] &lt; new Date(2019,1,1) )
+     BirtStr.concat("PAN : ABWPR6810L ")
+   else
+     BirtStr.concat("PAN : AHFPS4020C")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">HeadPONo</property>
+                    <text-property name="displayName">HeadPONo</text-property>
+                    <expression name="expression" type="javascript">1&#13;
+</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_podate</property>
+                    <text-property name="displayName">phd_podate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_podate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_party_refno</property>
+                    <text-property name="displayName">phd_party_refno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_party_refno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Partydt</property>
+                    <text-property name="displayName">Partydt</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["phd_party_refno"] != "") 
+Formatter.format(dataSetRow["phd_party_refdate"], "dd/MM/yyyy")</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totcgst</property>
+                    <text-property name="displayName">totcgst</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ptr_cgst_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totsgst</property>
+                    <text-property name="displayName">totsgst</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ptr_sgst_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totigst</property>
+                    <text-property name="displayName">totigst</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ptr_igst_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">totval</property>
+                    <text-property name="displayName">totval</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["itemval"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_credit_days</property>
+                    <text-property name="displayName">phd_credit_days</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_credit_days"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">creditdays</property>
+                    <text-property name="displayName">creditdays</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["phd_credit_days"] > 0)
+"Days"</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">carr_name</property>
+                    <text-property name="displayName">carr_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["carr_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_dely_sch</property>
+                    <text-property name="displayName">phd_dely_sch</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_dely_sch"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">disc</property>
+                    <text-property name="displayName">disc</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["ptr_disval"]> "0") {
+Formatter.format(dataSetRow["ptr_disval"] ,"0.00")
+} else {
+0
+}</expression>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">pfval</property>
+                    <text-property name="displayName">pfval</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["ptr_pfval"]> "0.00") {
+Formatter.format(dataSetRow["ptr_pfval"] ,"0.00")
+} else {
+0
+}</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">freight</property>
+                    <text-property name="displayName">freight</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["ptr_freight_amt"] > "0.00") {
+dataSetRow["ptr_freight_amt"]
+} else {
+0
+}</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Rsword</property>
+                    <text-property name="displayName">Rsword</text-property>
+                    <expression name="expression" type="javascript">function Euronumber2text(value) {
+    var fraction = Math.round(frac(value)*100);
+    var f_text  = "";
+
+    if(fraction > 0) {
+        f_text = "AND "+convert_number(fraction)+" CENTS";
+    }
+
+    return convert_number(value)+" EURO "+f_text+" ONLY";
+}
+   
+   
+      function Dollernumber2text(value) {
+    var fraction = Math.round(frac(value)*100);
+    var f_text  = "";
+
+    if(fraction > 0) {
+        f_text = "AND "+convert_number(fraction)+" CENTS";
+    }
+
+    return convert_number(value)+" DOLLARS "+f_text+" ONLY";
+}
+   
+   
+   function number2text(value) {
+    var fraction = Math.round(frac(value)*100);
+    var f_text  = "";
+
+    if(fraction > 0) {
+        f_text = "AND "+convert_number(fraction)+" PAISE";
+    }
+
+    return "Amount in Words	 :  " + convert_number(value)+" RUPEE "+f_text+" ONLY";
+}
+
+function frac(f) {
+    return f % 1;
+}
+
+function convert_number(number)
+{
+    if ((number &lt; 0) || (number > 999999999)) 
+    { 
+        return "NUMBER OUT OF RANGE!";
+    }
+    var Gn = Math.floor(number / 10000000);  /* Crore */ 
+    number -= Gn * 10000000; 
+    var kn = Math.floor(number / 100000);     /* lakhs */ 
+    number -= kn * 100000; 
+    var Hn = Math.floor(number / 1000);      /* thousand */ 
+    number -= Hn * 1000; 
+    var Dn = Math.floor(number / 100);       /* Tens (deca) */ 
+    number = number % 100;               /* Ones */ 
+    var tn= Math.floor(number / 10); 
+    var one=Math.floor(number % 10); 
+    var res = ""; 
+
+    if (Gn>0) 
+    { 
+        res += (convert_number(Gn) + " CRORE"); 
+    } 
+    if (kn>0) 
+    { 
+            res += (((res=="") ? "" : " ") + 
+            convert_number(kn) + " LAKH"); 
+    } 
+    if (Hn>0) 
+    { 
+        res += (((res=="") ? "" : " ") +
+            convert_number(Hn) + " THOUSAND"); 
+    } 
+
+    if (Dn) 
+    { 
+        res += (((res=="") ? "" : " ") + 
+            convert_number(Dn) + " HUNDRED"); 
+    } 
+
+
+    var ones = Array("", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX","SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN","FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN","NINETEEN"); 
+var tens = Array("", "", "TWENTY", "THIRTY", "FOURTY", "FIFTY", "SIXTY","SEVENTY", "EIGHTY", "NINETY"); 
+
+    if (tn>0 || one>0) 
+    { 
+        if (!(res=="")) 
+        { 
+            res += " AND "; 
+        } 
+        if (tn &lt; 2) 
+        { 
+            res += ones[tn * 10 + one]; 
+        } 
+        else 
+        { 
+
+            res += tens[tn];
+            if (one>0) 
+            { 
+                res += ("-" + ones[one]); 
+            } 
+        } 
+    }
+
+    if (res=="")
+    { 
+        res = "zero"; 
+    } 
+    return res;
+}
+        number2text(BirtMath.round(row["totval"],0));</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">itemval</property>
+                    <text-property name="displayName">itemval</text-property>
+                    <expression name="expression" type="javascript">Formatter.format((dataSetRow["ptr_ord_qty"]*dataSetRow["ptr_unit_rate"]),"0.00") - row["disc"] + row["pfval"] + dataSetRow["ptr_oth_amt"] + dataSetRow["ptr_freight_amt"] + dataSetRow["ptr_cgst_amt"] + dataSetRow["ptr_sgst_amt"]+ dataSetRow["ptr_igst_amt"]</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_pono</property>
+                    <text-property name="displayName">phd_pono</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_pono"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">cntrcd</property>
+                    <text-property name="displayName">cntrcd</text-property>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>pono</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">RUNNINGCOUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ptr_ind_no"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">state_codeno</property>
+                    <text-property name="displayName">state_codeno</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["state_codeno"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">company_gst</property>
+                    <text-property name="displayName">company_gst</text-property>
+                    <expression name="expression" type="javascript">"GST : " + dataSetRow["company_gst"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_dely_point</property>
+                    <text-property name="displayName">phd_dely_point</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_dely_point"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_spl_instruction</property>
+                    <text-property name="displayName">phd_spl_instruction</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_spl_instruction"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">formillname</property>
+                    <text-property name="displayName">formillname</text-property>
+                    <expression name="expression" type="javascript">"for " +dataSetRow["company_name"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_party_refdate</property>
+                    <text-property name="displayName">phd_party_refdate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_party_refdate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">sup_heading</property>
+                    <expression name="expression" type="javascript">"Supplier (Bill from)   : " + row["sup_name"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">spl_ins</property>
+                    <text-property name="displayName">spl_ins</text-property>
+                    <expression name="expression" type="javascript">"Special Instruction : " + row["phd_spl_instruction"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">item_hsncode</property>
+                    <text-property name="displayName">item_hsncode</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["item_hsncode"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">ptr_remarks</property>
+                    <text-property name="displayName">ptr_remarks</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ptr_remarks"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_duedate</property>
+                    <text-property name="displayName">phd_duedate</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_duedate"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">phd_bank</property>
+                    <text-property name="displayName">phd_bank</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["phd_bank"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="repeatHeader">true</property>
+            <property name="pageBreakInterval">7</property>
+            <column id="73">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="74">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="75">
+                <property name="width">1.8in</property>
+            </column>
+            <column id="76">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="77">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="78">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="79">
+                <property name="fontSize">x-small</property>
+                <property name="width">0.55in</property>
+            </column>
+            <column id="80">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="81">
+                <property name="width">0.65in</property>
+            </column>
+            <column id="82">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="83">
+                <property name="width">0.65in</property>
+            </column>
+            <column id="84">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="85">
+                <property name="width">0.65in</property>
+            </column>
+            <column id="86">
+                <property name="width">0.4in</property>
+            </column>
+            <column id="87">
+                <property name="width">0.65in</property>
+            </column>
+            <column id="88">
+                <property name="width">1in</property>
+            </column>
+            <column id="89">
+                <property name="width">1in</property>
+            </column>
+            <header>
+                <row id="1237">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.3229166666666667in</property>
+                    <cell id="1238">
+                        <property name="colSpan">17</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1255">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">PURCHASE ORDER</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="1669">
+                    <property name="fontSize">x-small</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="height">0.299in</property>
+                    <cell id="1670">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1744">
+                            <property name="fontSize">10pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">INVOICE TO</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1998">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">11</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <grid id="2253">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="height">2.9270833333333335in</property>
+                            <column id="2254">
+                                <property name="width">1.8in</property>
+                            </column>
+                            <column id="2255"/>
+                            <row id="2256">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">1px</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">1px</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">1px</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">1px</property>
+                                <property name="height">0.3125in</property>
+                                <cell id="2257">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="1264">
+                                        <property name="fontFamily">serif</property>
+                                        <property name="fontSize">12pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">justify</property>
+                                        <text-property name="text">PO No.</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2258">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="1617">
+                                        <property name="fontSize">12pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="resultSetColumn">phd_pono</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2259">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.3020833333333333in</property>
+                                <cell id="2260">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="1265">
+                                        <property name="fontFamily">serif</property>
+                                        <property name="fontSize">12pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">justify</property>
+                                        <text-property name="text">PO Date</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2261">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="2286">
+                                        <property name="fontWeight">bold</property>
+                                        <structure name="dateTimeFormat">
+                                            <property name="category">Custom</property>
+                                            <property name="pattern">dd/MM/yyyy</property>
+                                        </structure>
+                                        <property name="resultSetColumn">phd_podate</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2265">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.3020833333333333in</property>
+                                <cell id="2266">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="2287">
+                                        <property name="fontFamily">serif</property>
+                                        <text-property name="text">Your Ref. No</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2267">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="2251">
+                                        <property name="resultSetColumn">phd_party_refno</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2268">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.3020833333333333in</property>
+                                <cell id="2269">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="2288">
+                                        <property name="fontFamily">serif</property>
+                                        <text-property name="text">Your Ref. Date</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2270">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="2343">
+                                        <structure name="dateTimeFormat">
+                                            <property name="category">Custom</property>
+                                            <property name="pattern">dd/MM/yyyy</property>
+                                        </structure>
+                                        <property name="resultSetColumn">phd_party_refdate</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2271">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.3020833333333333in</property>
+                                <cell id="2272">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="2289">
+                                        <property name="fontFamily">serif</property>
+                                        <text-property name="text">Despatch Through</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2273">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="1350">
+                                        <property name="fontFamily">serif</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">carr_name</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2274">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.3020833333333333in</property>
+                                <cell id="2275">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="1892">
+                                        <property name="fontFamily">serif</property>
+                                        <property name="fontSize">12pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">justify</property>
+                                        <text-property name="text">Destination</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2276">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="1893">
+                                        <property name="resultSetColumn">phd_dely_point</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2277">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.3125in</property>
+                                <cell id="2278">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="1897">
+                                        <property name="fontFamily">serif</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">justify</property>
+                                        <text-property name="text">Mode/Terms of payment</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2279">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="1899">
+                                        <property name="paddingRight">5pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">phd_credit_days</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2283">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.2708333333333333in</property>
+                                <cell id="2284">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="1389">
+                                        <property name="fontFamily">serif</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <text-property name="text">DELIVERY SCHEDULE</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2285">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="1408">
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="resultSetColumn">phd_dely_sch</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2367">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.2708333333333333in</property>
+                                <cell id="2368">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="2370">
+                                        <property name="fontSize">10pt</property>
+                                        <text-property name="text">DUE DATE</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2369">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="2371">
+                                        <property name="fontSize">10pt</property>
+                                        <structure name="dateTimeFormat">
+                                            <property name="category">Custom</property>
+                                            <property name="pattern">dd/MM/yyyy</property>
+                                        </structure>
+                                        <property name="resultSetColumn">phd_duedate</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="2372">
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="height">0.2708333333333333in</property>
+                                <cell id="2373">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="2375">
+                                        <text-property name="text">Bank Details</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="2374">
+                                    <property name="fontSize">12pt</property>
+                                    <property name="textAlign">left</property>
+                                    <data id="2376">
+                                        <property name="resultSetColumn">phd_bank</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="1727">
+                    <property name="fontSize">x-small</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.25in</property>
+                    <cell id="1728">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1763">
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">SRI HARI VENKATESWARA PAPER MILLS (P) LTD.,</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="1745">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.2604166666666667in</property>
+                    <cell id="1746">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1782">
+                            <property name="fontSize">10pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">2/151 , KEELANMARAI NADU VILLAGE, A.LAKSHMIAPURAM POST, SIVAKASI - 626127</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="2233">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.2in</property>
+                    <cell id="2234">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1784">
+                            <property name="fontSize">10pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">State Name : Tamil Nadu                     State Code : 33</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="1797">
+                    <property name="fontSize">x-small</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">medium</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.2916666666666667in</property>
+                    <cell id="1798">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="2023">
+                            <column id="2024"/>
+                            <column id="2025"/>
+                            <column id="2026"/>
+                            <row id="2028">
+                                <property name="verticalAlign">middle</property>
+                                <cell id="2029">
+                                    <data id="1795">
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">company_gst</property>
+                                    </data>
+                                </cell>
+                                <cell id="2030">
+                                    <data id="1216">
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="marginTop">3pt</property>
+                                        <property name="textAlign">justify</property>
+                                        <property name="resultSetColumn">compGST</property>
+                                    </data>
+                                </cell>
+                                <cell id="2031">
+                                    <label id="1796">
+                                        <property name="fontSize">10pt</property>
+                                        <text-property name="text">E-Mail : purchase@sriharipapers.com</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="2071">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.2708333333333333in</property>
+                    <cell id="2072">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="2341">
+                            <property name="fontSize">11pt</property>
+                            <property name="resultSetColumn">sup_heading</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2053">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.25in</property>
+                    <cell id="2054">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="2342">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="paddingLeft">1.46in</property>
+                            <property name="resultSetColumn">sup_addr1</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2107">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.25in</property>
+                    <cell id="2108">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="1204">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="paddingLeft">1.46in</property>
+                            <property name="textAlign">justify</property>
+                            <property name="resultSetColumn">sup_addr2</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2089">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.25in</property>
+                    <cell id="2090">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="1205">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="paddingLeft">1.46in</property>
+                            <property name="textAlign">justify</property>
+                            <property name="resultSetColumn">sup_addr3</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2179">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.25in</property>
+                    <cell id="2180">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <data id="1209">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="paddingLeft">1.46in</property>
+                            <property name="textAlign">justify</property>
+                            <property name="resultSetColumn">City</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2161">
+                    <property name="fontSize">x-small</property>
+                    <property name="height">0.25in</property>
+                    <cell id="2162">
+                        <property name="colSpan">12</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">left</property>
+                        <grid id="2303">
+                            <column id="2304"/>
+                            <column id="2305"/>
+                            <column id="2306"/>
+                            <row id="2307">
+                                <cell id="2308">
+                                    <data id="1210">
+                                        <property name="backgroundAttachment">scroll</property>
+                                        <property name="backgroundPositionX">0%</property>
+                                        <property name="backgroundPositionY">0%</property>
+                                        <property name="backgroundRepeat">repeat</property>
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="fontStyle">normal</property>
+                                        <property name="fontVariant">normal</property>
+                                        <property name="color">black</property>
+                                        <property name="textLineThrough">none</property>
+                                        <property name="textOverline">none</property>
+                                        <property name="textUnderline">none</property>
+                                        <property name="borderBottomColor">black</property>
+                                        <property name="borderBottomStyle">none</property>
+                                        <property name="borderBottomWidth">medium</property>
+                                        <property name="borderLeftColor">black</property>
+                                        <property name="borderLeftStyle">none</property>
+                                        <property name="borderLeftWidth">medium</property>
+                                        <property name="borderRightColor">black</property>
+                                        <property name="borderRightStyle">none</property>
+                                        <property name="borderRightWidth">medium</property>
+                                        <property name="borderTopColor">black</property>
+                                        <property name="borderTopStyle">none</property>
+                                        <property name="borderTopWidth">medium</property>
+                                        <property name="marginTop">0pt</property>
+                                        <property name="marginLeft">0pt</property>
+                                        <property name="marginBottom">0pt</property>
+                                        <property name="marginRight">0pt</property>
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="paddingBottom">1pt</property>
+                                        <property name="paddingRight">1pt</property>
+                                        <property name="textAlign">justify</property>
+                                        <property name="letterSpacing">normal</property>
+                                        <property name="lineHeight">normal</property>
+                                        <property name="orphans">2</property>
+                                        <property name="textTransform">none</property>
+                                        <property name="whiteSpace">normal</property>
+                                        <property name="widows">2</property>
+                                        <property name="wordSpacing">normal</property>
+                                        <property name="display">block</property>
+                                        <property name="pageBreakAfter">auto</property>
+                                        <property name="pageBreakBefore">auto</property>
+                                        <property name="pageBreakInside">auto</property>
+                                        <property name="showIfBlank">false</property>
+                                        <property name="canShrink">false</property>
+                                        <property name="overflow">hidden</property>
+                                        <property name="resultSetColumn">SupGSTno</property>
+                                    </data>
+                                </cell>
+                                <cell id="2309">
+                                    <data id="1212">
+                                        <property name="backgroundAttachment">scroll</property>
+                                        <property name="backgroundPositionX">0%</property>
+                                        <property name="backgroundPositionY">0%</property>
+                                        <property name="backgroundRepeat">repeat</property>
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="fontStyle">normal</property>
+                                        <property name="fontVariant">normal</property>
+                                        <property name="color">black</property>
+                                        <property name="textLineThrough">none</property>
+                                        <property name="textOverline">none</property>
+                                        <property name="textUnderline">none</property>
+                                        <property name="borderBottomColor">black</property>
+                                        <property name="borderBottomStyle">none</property>
+                                        <property name="borderBottomWidth">medium</property>
+                                        <property name="borderLeftColor">black</property>
+                                        <property name="borderLeftStyle">none</property>
+                                        <property name="borderLeftWidth">medium</property>
+                                        <property name="borderRightColor">black</property>
+                                        <property name="borderRightStyle">none</property>
+                                        <property name="borderRightWidth">medium</property>
+                                        <property name="borderTopColor">black</property>
+                                        <property name="borderTopStyle">none</property>
+                                        <property name="borderTopWidth">medium</property>
+                                        <property name="marginTop">0pt</property>
+                                        <property name="marginLeft">0pt</property>
+                                        <property name="marginBottom">0pt</property>
+                                        <property name="marginRight">0pt</property>
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="paddingBottom">1pt</property>
+                                        <property name="paddingRight">1pt</property>
+                                        <property name="textAlign">justify</property>
+                                        <property name="letterSpacing">normal</property>
+                                        <property name="lineHeight">normal</property>
+                                        <property name="orphans">2</property>
+                                        <property name="textTransform">none</property>
+                                        <property name="whiteSpace">normal</property>
+                                        <property name="widows">2</property>
+                                        <property name="wordSpacing">normal</property>
+                                        <property name="display">block</property>
+                                        <property name="pageBreakAfter">auto</property>
+                                        <property name="pageBreakBefore">auto</property>
+                                        <property name="pageBreakInside">auto</property>
+                                        <property name="showIfBlank">false</property>
+                                        <property name="canShrink">false</property>
+                                        <property name="overflow">hidden</property>
+                                        <property name="resultSetColumn">supState</property>
+                                    </data>
+                                </cell>
+                                <cell id="2310">
+                                    <data id="1213">
+                                        <property name="backgroundAttachment">scroll</property>
+                                        <property name="backgroundPositionX">0%</property>
+                                        <property name="backgroundPositionY">0%</property>
+                                        <property name="backgroundRepeat">repeat</property>
+                                        <property name="fontFamily">monospace</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="fontStyle">normal</property>
+                                        <property name="fontVariant">normal</property>
+                                        <property name="color">black</property>
+                                        <property name="textLineThrough">none</property>
+                                        <property name="textOverline">none</property>
+                                        <property name="textUnderline">none</property>
+                                        <property name="borderBottomColor">black</property>
+                                        <property name="borderBottomStyle">none</property>
+                                        <property name="borderBottomWidth">medium</property>
+                                        <property name="borderLeftColor">black</property>
+                                        <property name="borderLeftStyle">none</property>
+                                        <property name="borderLeftWidth">medium</property>
+                                        <property name="borderRightColor">black</property>
+                                        <property name="borderRightStyle">none</property>
+                                        <property name="borderRightWidth">medium</property>
+                                        <property name="borderTopColor">black</property>
+                                        <property name="borderTopStyle">none</property>
+                                        <property name="borderTopWidth">medium</property>
+                                        <property name="marginTop">0pt</property>
+                                        <property name="marginLeft">0pt</property>
+                                        <property name="marginBottom">0pt</property>
+                                        <property name="marginRight">0pt</property>
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="paddingBottom">1pt</property>
+                                        <property name="paddingRight">1pt</property>
+                                        <property name="textAlign">justify</property>
+                                        <property name="letterSpacing">normal</property>
+                                        <property name="lineHeight">normal</property>
+                                        <property name="orphans">2</property>
+                                        <property name="textTransform">none</property>
+                                        <property name="whiteSpace">normal</property>
+                                        <property name="widows">2</property>
+                                        <property name="wordSpacing">normal</property>
+                                        <property name="display">block</property>
+                                        <property name="pageBreakAfter">auto</property>
+                                        <property name="pageBreakBefore">auto</property>
+                                        <property name="pageBreakInside">auto</property>
+                                        <property name="showIfBlank">false</property>
+                                        <property name="canShrink">false</property>
+                                        <property name="overflow">hidden</property>
+                                        <property name="resultSetColumn">supStateCode</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="19">
+                    <property name="backgroundColor">#C8C8C8</property>
+                    <property name="fontFamily">"FreeSerif"</property>
+                    <property name="fontSize">small</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <cell id="20">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="964">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">HSN Code</text-property>
+                        </label>
+                    </cell>
+                    <cell id="21">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1139">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">7pt</property>
+                            <text-property name="text">Indent No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="22">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="899">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Description of Goods</text-property>
+                        </label>
+                    </cell>
+                    <cell id="23">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="901">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Qty</text-property>
+                        </label>
+                    </cell>
+                    <cell id="24">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="986">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">UOM</text-property>
+                        </label>
+                    </cell>
+                    <cell id="25">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="903">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Rate</text-property>
+                        </label>
+                    </cell>
+                    <cell id="26">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1123">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Discount Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="27">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1125">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">P &amp; F Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="28">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1126">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Freight Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="29">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="178">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">CGST</text-property>
+                        </label>
+                    </cell>
+                    <cell id="31">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="179">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">SGST</text-property>
+                        </label>
+                    </cell>
+                    <cell id="33">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="180">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">IGST</text-property>
+                        </label>
+                    </cell>
+                    <cell id="35">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1146">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Others</text-property>
+                        </label>
+                    </cell>
+                    <cell id="36">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">2</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="122">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Value</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="160">
+                    <property name="backgroundColor">#C8C8C8</property>
+                    <property name="fontFamily">"FreeSerif"</property>
+                    <property name="fontSize">small</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">none</property>
+                    <property name="height">0.17708333333333334in</property>
+                    <cell id="170">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1140">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">%</text-property>
+                        </label>
+                    </cell>
+                    <cell id="171">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1141">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="172">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1142">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">%</text-property>
+                        </label>
+                    </cell>
+                    <cell id="173">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1143">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="174">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1144">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">%</text-property>
+                        </label>
+                    </cell>
+                    <cell id="175">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">1px</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">1px</property>
+                        <label id="1145">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">Amount</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="1570">
+                <property name="groupName">pono</property>
+                <property name="interval">interval</property>
+                <expression name="keyExpr" type="javascript">row["phd_pono"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["phd_pono"]</expression>
+                </structure>
+                <property name="repeatHeader">false</property>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="1571">
+                        <property name="height">0.03125in</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="1572"/>
+                        <cell id="1573"/>
+                        <cell id="1574"/>
+                        <cell id="1575">
+                            <data id="1612">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr" type="javascript">true</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="resultSetColumn">cntrcd</property>
+                            </data>
+                        </cell>
+                        <cell id="1576"/>
+                        <cell id="1577"/>
+                        <cell id="1578"/>
+                        <cell id="1579"/>
+                        <cell id="1580"/>
+                        <cell id="1581"/>
+                        <cell id="1582"/>
+                        <cell id="1583"/>
+                        <cell id="1584"/>
+                        <cell id="1585"/>
+                        <cell id="1586"/>
+                        <cell id="1587"/>
+                        <cell id="1588"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="1589">
+                        <property name="masterPage">Simple MasterPage</property>
+                        <property name="pageBreakAfter">auto</property>
+                        <property name="pageBreakBefore">auto</property>
+                        <property name="pageBreakInside">auto</property>
+                        <cell id="1590">
+                            <property name="colSpan">8</property>
+                            <property name="rowSpan">1</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <data id="1491">
+                                <property name="fontSize">10pt</property>
+                                <property name="paddingRight">3pt</property>
+                                <property name="resultSetColumn">Rsword</property>
+                            </data>
+                        </cell>
+                        <cell id="1598">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <label id="1292">
+                                <property name="fontFamily">monospace</property>
+                                <property name="fontSize">8pt</property>
+                                <property name="fontWeight">normal</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">TOTAL</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1599">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
+                        <cell id="1600">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <data id="1293">
+                                <property name="fontFamily">monospace</property>
+                                <property name="fontSize">9pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">totcgst</property>
+                            </data>
+                        </cell>
+                        <cell id="1601">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
+                        <cell id="1602">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <data id="1294">
+                                <property name="fontFamily">monospace</property>
+                                <property name="fontSize">9pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">totsgst</property>
+                            </data>
+                        </cell>
+                        <cell id="1603">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
+                        <cell id="1604">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <data id="1295">
+                                <property name="fontFamily">monospace</property>
+                                <property name="fontSize">9pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">totigst</property>
+                            </data>
+                        </cell>
+                        <cell id="1605">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                        </cell>
+                        <cell id="1606">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">1px</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">1px</property>
+                            <data id="1296">
+                                <property name="backgroundAttachment">scroll</property>
+                                <property name="backgroundPositionX">0%</property>
+                                <property name="backgroundPositionY">0%</property>
+                                <property name="backgroundRepeat">repeat</property>
+                                <property name="fontFamily">monospace</property>
+                                <property name="fontSize">9pt</property>
+                                <property name="fontWeight">normal</property>
+                                <property name="fontStyle">normal</property>
+                                <property name="fontVariant">normal</property>
+                                <property name="color">black</property>
+                                <property name="textLineThrough">none</property>
+                                <property name="textOverline">none</property>
+                                <property name="textUnderline">none</property>
+                                <property name="borderBottomColor">black</property>
+                                <property name="borderBottomStyle">none</property>
+                                <property name="borderBottomWidth">medium</property>
+                                <property name="borderLeftColor">black</property>
+                                <property name="borderLeftStyle">none</property>
+                                <property name="borderLeftWidth">medium</property>
+                                <property name="borderRightColor">black</property>
+                                <property name="borderRightStyle">none</property>
+                                <property name="borderRightWidth">medium</property>
+                                <property name="borderTopColor">black</property>
+                                <property name="borderTopStyle">none</property>
+                                <property name="borderTopWidth">medium</property>
+                                <property name="marginTop">0pt</property>
+                                <property name="marginLeft">0pt</property>
+                                <property name="marginBottom">0pt</property>
+                                <property name="marginRight">0pt</property>
+                                <property name="paddingTop">1pt</property>
+                                <property name="paddingLeft">1pt</property>
+                                <property name="paddingBottom">1pt</property>
+                                <property name="paddingRight">3pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Fixed</property>
+                                    <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="letterSpacing">normal</property>
+                                <property name="lineHeight">normal</property>
+                                <property name="orphans">2</property>
+                                <property name="textTransform">none</property>
+                                <property name="whiteSpace">normal</property>
+                                <property name="widows">2</property>
+                                <property name="wordSpacing">normal</property>
+                                <property name="display">block</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
+                                <property name="pageBreakInside">auto</property>
+                                <property name="showIfBlank">false</property>
+                                <property name="canShrink">false</property>
+                                <property name="overflow">hidden</property>
+                                <property name="resultSetColumn">totval</property>
+                            </data>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="37">
+                    <property name="fontSize">x-small</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1px</property>
+                    <property name="pageBreakAfter">auto</property>
+                    <property name="pageBreakBefore">auto</property>
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.28125in</property>
+                    <cell id="38">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="2347">
+                            <property name="fontFamily">monospace</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">item_hsncode</property>
+                        </data>
+                    </cell>
+                    <cell id="39">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="93">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">ptr_ind_no</property>
+                        </data>
+                    </cell>
+                    <cell id="40">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="95">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="resultSetColumn">item_name</property>
+                        </data>
+                    </cell>
+                    <cell id="41">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="97">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.000{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ptr_ord_qty</property>
+                        </data>
+                    </cell>
+                    <cell id="42">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="99">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">uom_short_name</property>
+                        </data>
+                    </cell>
+                    <cell id="43">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="101">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="marginLeft">0pt</property>
+                            <property name="marginRight">5pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ptr_unit_rate</property>
+                        </data>
+                    </cell>
+                    <cell id="44">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="1486">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["ptr_disval"] > 0)
+false
+else
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">disc</property>
+                        </data>
+                    </cell>
+                    <cell id="45">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="1487">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["ptr_pfval"]>0)
+false
+else
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">pfval</property>
+                        </data>
+                    </cell>
+                    <cell id="46">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="1488">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["ptr_freight_amt"] > 0)
+false
+else
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">freight</property>
+                        </data>
+                    </cell>
+                    <cell id="47">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="109">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.0</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">ptr_cgst_per</property>
+                        </data>
+                    </cell>
+                    <cell id="48">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="111">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ptr_cgst_amt</property>
+                        </data>
+                    </cell>
+                    <cell id="49">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="115">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.0</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">ptr_sgst_per</property>
+                        </data>
+                    </cell>
+                    <cell id="50">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="113">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ptr_sgst_amt</property>
+                        </data>
+                    </cell>
+                    <cell id="51">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="117">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">#0.0</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["ptr_igst_per"]  == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">ptr_igst_per</property>
+                        </data>
+                    </cell>
+                    <cell id="52">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="119">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">if (row["ptr_igst_per"]  == 0)&#13;
+true</expression>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">ptr_igst_amt</property>
+                        </data>
+                    </cell>
+                    <cell id="53">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="121">
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">ptr_oth_amt</property>
+                        </data>
+                    </cell>
+                    <cell id="54">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="1494">
+                            <property name="backgroundAttachment">scroll</property>
+                            <property name="backgroundPositionX">0%</property>
+                            <property name="backgroundPositionY">0%</property>
+                            <property name="backgroundRepeat">repeat</property>
+                            <property name="fontFamily">monospace</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="fontWeight">normal</property>
+                            <property name="fontStyle">normal</property>
+                            <property name="fontVariant">normal</property>
+                            <property name="color">black</property>
+                            <property name="textLineThrough">none</property>
+                            <property name="textOverline">none</property>
+                            <property name="textUnderline">none</property>
+                            <property name="borderBottomColor">black</property>
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderBottomWidth">medium</property>
+                            <property name="borderLeftColor">black</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderLeftWidth">medium</property>
+                            <property name="borderRightColor">black</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderRightWidth">medium</property>
+                            <property name="borderTopColor">black</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="borderTopWidth">medium</property>
+                            <property name="marginTop">0pt</property>
+                            <property name="marginLeft">0pt</property>
+                            <property name="marginBottom">0pt</property>
+                            <property name="marginRight">0pt</property>
+                            <property name="paddingTop">1pt</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingBottom">1pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="letterSpacing">normal</property>
+                            <property name="lineHeight">normal</property>
+                            <property name="orphans">2</property>
+                            <property name="textTransform">none</property>
+                            <property name="whiteSpace">normal</property>
+                            <property name="widows">2</property>
+                            <property name="wordSpacing">normal</property>
+                            <property name="display">block</property>
+                            <property name="pageBreakAfter">auto</property>
+                            <property name="pageBreakBefore">auto</property>
+                            <property name="pageBreakInside">auto</property>
+                            <property name="showIfBlank">false</property>
+                            <property name="canShrink">false</property>
+                            <property name="overflow">hidden</property>
+                            <property name="resultSetColumn">itemval</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="2348">
+                    <property name="fontSize">x-small</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">1px</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1px</property>
+                    <property name="pageBreakAfter">auto</property>
+                    <property name="pageBreakBefore">auto</property>
+                    <property name="pageBreakInside">auto</property>
+                    <property name="height">0.25in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">if (row["ptr_remarks"] == "")&#13;
+true</expression>
+                        </structure>
+                    </list-property>
+                    <cell id="2349">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2350">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2351">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="2366">
+                            <property name="resultSetColumn">ptr_remarks</property>
+                        </data>
+                    </cell>
+                    <cell id="2377">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2378">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2379">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2380">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2381">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2357">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2358">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2359">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2360">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2361">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2362">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2363">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2364">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                    <cell id="2365">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">1px</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">1px</property>
+                        <property name="borderTopStyle">none</property>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="1315">
+                    <cell id="1316">
+                        <property name="colSpan">9</property>
+                        <property name="rowSpan">1</property>
+                        <data id="2345">
+                            <property name="fontSize">11pt</property>
+                            <property name="resultSetColumn">spl_ins</property>
+                        </data>
+                    </cell>
+                    <cell id="1325"/>
+                    <cell id="1326">
+                        <property name="fontWeight">bold</property>
+                    </cell>
+                    <cell id="1327">
+                        <property name="colSpan">6</property>
+                        <property name="rowSpan">1</property>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

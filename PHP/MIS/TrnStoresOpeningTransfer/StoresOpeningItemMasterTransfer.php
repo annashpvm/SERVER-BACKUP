@@ -32,7 +32,7 @@ mysqli_begin_transaction($conn);
     $resultMas = mysqli_query($conn, $queryMas);
 
 //echo $queryMas;
-    while ($row = mysql_fetch_assoc($resultMas)) {
+    while ($row = mysqli_fetch_assoc($resultMas)) {
            $itemcode  = $row['item_code'];
            $queryTrail = "select * from maspur_item_trailer where item_comp_code = $compcode and item_fin_code =   $finid    and item_code =  $itemcode";
 
@@ -41,7 +41,7 @@ mysqli_begin_transaction($conn);
 
 
            $resultTrail = mysqli_query($conn, $queryTrail);
-            while ($subrow = mysql_fetch_assoc($resultTrail)) {
+            while ($subrow = mysqli_fetch_assoc($resultTrail)) {
 
 
                   if ($subrow['item_lpur_date'] === NULL)
@@ -67,34 +67,38 @@ mysqli_begin_transaction($conn);
            $query2   = "select count(*) recfound from maspur_item_trailer where item_comp_code=  $compcode
 and item_fin_code = $nextfinid  and item_code =  $itemcode";
 
+
 //echo $query2;
 //echo "<br>";
+           $query2   = mysqli_query($conn,$query2);
+           $findrow  = mysqli_fetch_row($query2);
 
 
-           $query2   = mysql_query("select count(*) recfound from maspur_item_trailer where item_comp_code=  $compcode
-and item_fin_code = $nextfinid  and item_code =  $itemcode");
-           $findrow  = mysql_fetch_row($query2);
 
+//echo $findrow[0];
+//echo "<br>";
 
 
            if ($findrow[0]  == 0)
            {
-		$query1="insert into maspur_item_trailer values(1, $nextfinid,$itemcode ,  '$cloqty' ,  '$clo_rate', 0, '$cloqty' ,  '$clo_val' , '$purdate','$issdate');";
-
-//echo $query1;
-//echo "<br>";
-
-
-		$result1=mysqli_query($conn, $query1);  
-
-              $cnnt =  $cnnt + 1;       
+            $query1="insert into maspur_item_trailer values(1, $nextfinid,$itemcode ,  '$cloqty' ,  '$clo_rate', 0, '$cloqty' ,  '$clo_val' , '$purdate','$issdate',  '$clo_val' );";
+    //echo $query1;
+    //echo "<br>";
+            $result1=mysqli_query($conn, $query1);  
+            $cnnt =  $cnnt + 1;       
 
             } 
 
             else
             {
-             $update = $pdo->prepare("update maspur_item_trailer  set item_stock = $cloqty ,item_avg_rate = $clo_rate,item_yr_opqty = $cloqty , item_yr_opval = $clo_val ,item_lpur_date = '$purdate' , item_liss_date = '$issdate'
-where item_comp_code= $compcode and item_fin_code = $nextfinid  and item_code =  $itemcode");
+                $qry = "update maspur_item_trailer  set item_stock = $cloqty ,item_avg_rate = $clo_rate,item_yr_opqty = $cloqty , item_yr_opval = $clo_val ,item_lpur_date = '$purdate' , item_liss_date = '$issdate', item_stockvalue = $clo_val 
+                where item_comp_code= $compcode and item_fin_code = $nextfinid  and item_code =  $itemcode";
+     //echo $qry;
+    //echo "<br>";        
+
+             $update = $pdo->prepare($qry);
+
+
 		    if ($update->execute()) {
 			$cnnt=$cnnt+1;
 		    }
@@ -109,7 +113,7 @@ where item_comp_code= $compcode and item_fin_code = $nextfinid  and item_code = 
 //echo "<br>";
 
            $resultTrail = mysqli_query($conn, $queryTrail);
-            while ($subrow = mysql_fetch_assoc($resultTrail)) {
+            while ($subrow = mysqli_fetch_assoc($resultTrail)) {
 
 
                   if ($subrow['item_lpur_date'] === NULL)
@@ -132,9 +136,9 @@ where item_comp_code= $compcode and item_fin_code = $nextfinid  and item_code = 
            $clo_val   =  $subrow['item_avg_rate'] * $subrow['item_stock'];
 
 
-           $query2   = mysql_query("select count(*) recfound from maspur_item_trailer where item_comp_code= 90
+           $query2   = mysqli_query("select count(*) recfound from maspur_item_trailer where item_comp_code= 90
 and item_fin_code = $nextfinid  and item_code =  $itemcode");
-           $findrow  = mysql_fetch_row($query2);
+           $findrow  = mysqli_fetch_row($query2);
            if ($findrow[0]  == 0)
            {
 		$query1="insert into maspur_item_trailer values(90, $nextfinid,$itemcode ,  '$cloqty' ,  '$clo_rate', 0, '$cloqty' ,  '$clo_val' , '$purdate','$issdate');";

@@ -20,12 +20,17 @@ Ext.onReady(function() {
    var yrfrom = yr.substr(0,4);  
    var yrto  = yr.substr(5,4);  
 
+   var grid = null;
+   var store = null;
+   var allData = [];
+   var voutype = '';
+   var vouseqno = 0;
 
    var mailheader = '';
    var mailtrailer = '';
    var mailmessage = '';    
   var email = '';
-
+  var SubLedgerName  = '';
    var printtype='PDF';
    var yearfinid=0;
    var totdb,totcr;
@@ -71,6 +76,26 @@ function columnWrap(val){
 }
 
 
+const formatter = new Intl.NumberFormat('en-IN', {
+    //  style: 'currency',
+      currency: 'inr',
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    }); 
+
+    
+
+var lblLedgerName = new Ext.form.Label({
+    fieldLabel  : '',
+    id          : 'lblLedgerName',
+    name        : 'lblLedgerName',
+style: {
+        'color':'#ff0000',readOnly:true,
+        'style': 'Helvetica',
+        'font-size': '15px','font-weight':'bold'
+    },
+    width       : 550
+});
 
 
      var loadAddressDatastore = new Ext.data.Store({
@@ -88,657 +113,6 @@ function columnWrap(val){
             totalProperty: 'total',
             id: 'id'
         },['cust_ref','cust_add1','cust_add2','cust_add3','cust_city','state_name','cust_zip','cust_contact','cust_phone','cust_email'
-
-])
-    });
-
-
-     var loadSalesGSTDatastore = new Ext.data.Store({
-        id: 'loadSalesGSTDatastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','GST SALES @ 12%','GST SALES @ 12%','CGST','SGST','FREIGHT COLLECTED-GST','TCS @01% COLLECTED','ROUNDED OFF','FLY ASH SALES-GST'
-//,'GST SALES @ 12%(BLUE BOARD)','GST SALES 12% (DUPLEX)','GST SALES@12%(PBL)'
-])
-    });
-
-
-    var loadSalesIGSTDatastore = new Ext.data.Store({
-        id: 'loadSalesIGSTDatastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','IGST SALES @ 12%','IGST@12% COLLECTED','FREIGHT COLLECTED-IGST','FREIGHT COLLECTED-IGST','TCS @01% COLLECTED','ROUNDED OFF','FLY ASH SALES-IGST','IGST @5%'
-
-])
-    });
-
-
-     var loadCGSTDatastore = new Ext.data.Store({
-        id: 'loadCGSTDatastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','GST SALES @ 12%','GST SALES @ 12%','GST SALES @ 12%(BLUE BOARD)','GST SALES 12% (DUPLEX)',
-'GST SALES@12%(PBL)','GST SALES RETURN 12%','FLY ASH SALES-GST','ELECTRICAL WASTE SALES GST 18%','WASTE SALES GST 18%',
-'CGST','SGST',"TCS @01% COLLECTED",'ROUNDED OFF','FLY ASH SALES-GST'
-
-])
-    });
-
-
-
-     var loadBioFuelExemptDatastore = new Ext.data.Store({
-        id: 'loadBioFuelExemptDatastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','BIO FUEL EXEMPT', 'ROUNDED OFF'
-
-])
-    });
-
-
-
-     var loadBioFuelGST12Datastore = new Ext.data.Store({
-        id: 'loadBioFuelGST12Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','BIO FUEL GST 12%','INPUT -CGST @ 6%', 'INPUT -SGST @ 6%' , 'ROUNDED OFF'
-
-])
-    });
-
-
-     var loadBioFuelGST_5Per_Datastore = new Ext.data.Store({
-        id: 'loadBioFuelGST_5Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','BIO FUEL GST -5%','INPUT CGST@205%','INPUT SGST@205%',  'ROUNDED OFF'
-
-])
-    });
-
-     var loadCOGEN_Elect_Maint_18Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_Elect_Maint_18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN ELECTRICAL MAITENANCE-18%', 'INPUT CGST @9%', 'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    });
-
-
-     var loadCOGEN_Elect_Maint_28Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_Elect_Maint_28Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN ELECTRICAL MAITENANCE-18%', 'INPUT CGST @9%', 'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    });
-
-
-
-     var loadPACKING_GST18_Datastore = new Ext.data.Store({
-        id: 'loadPACKING_GST18_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','PACKING -GST 18%', 'INPUT CGST @9%', 'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-
-     var loadPACKING_IGST18_Datastore = new Ext.data.Store({
-        id: 'loadPACKING_IGST18_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','PACKING-IGST 18%', 'INPUT IGST @18%', 'FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-
-     var loadWASTE_PAPER_GST5_Datastore = new Ext.data.Store({
-        id: 'loadWASTE_PAPER_GST5_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','WASTE PAPER -GST', 'INPUT CGST@205%', 'INPUT SGST@205%',  'TCS PAID-PURCHASE', 'ROUNDED OFF'
-])
-    })
-
-
-     var loadWASTE_PAPER_IGST5_Datastore = new Ext.data.Store({
-        id: 'loadWASTE_PAPER_IGST5_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','WASTE PAPER-IGST', 'INPUT -IGST@5%','TCS PAID-PURCHASE', 'ROUNDED OFF'
-])
-    })
-
-
-
-     var loadWASTE_PAPER_IMPORT_Datastore = new Ext.data.Store({
-        id: 'loadWASTE_PAPER_IMPORT_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','WASTE PAPER PURCHASE-IMPORT',  'ROUNDED OFF'
-])
-    })
-
-
-     var loadELECTRICAL_WASTE_Datastore = new Ext.data.Store({
-        id: 'loadELECTRICAL_WASTE_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','ELECTRICAL WASTE SALES GST 18%','CGST','SGST','ROUNDED OFF'
-])
-    })
-
-
-     var loadCOGEN_Elect_Maint_IGST18Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_Elect_Maint_IGST18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN ELECTRICAL MAITENANCE-18%', 'INPUT CGST @9%', 'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-
-
-     var loadCOGEN_MC_Maint_GST18Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_MC_Maint_GST18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN MACHINERY MAINTENANCE-GST 18%', 'INPUT CGST @9%' , 'INPUT SGST @9%','CO GEN MACHINERY MAINTENANCE-GST 12%','INPUT -CGST @ 6%', 'INPUT -SGST @ 6%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-     var loadCOGEN_MC_Maint_GST28Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_MC_Maint_GST28Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN MACHINERY MAINTENANCE-GST 18%', 'INPUT CGST @9%' , 'INPUT SGST @9%','CO GEN MACHINERY MAINTENANCE-GST 12%','INPUT -CGST @ 6%', 'INPUT -SGST @ 6%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-
-     var loadCOGEN_MC_Maint_GST12Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_MC_Maint_GST12Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN MACHINERY MAINTENANCE-GST 12%','INPUT -CGST @ 6%', 'INPUT -SGST @ 6%','CO GEN MACHINERY MAINTENANCE-GST 18%', 'INPUT CGST @9%' , 'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-
-     var loadCOGEN_MC_Maint_IGST18Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_MC_Maint_IGST18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO GEN MACHINERY MAINTENANCE-IGST 18%','INPUT IGST @18%','FREIGHT INWARD - IGST',  'PACKING CHARGES - IGST', 'OTHER CHARGES', 'ROUNDED OFF'
-])
-    })
-
-
-     var loadCOGEN_CHEMICAL_GST12Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_CHEMICAL_GST12Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO-GEN CHEMICAL GST 12%','INPUT -CGST @ 6%', 'INPUT -SGST @ 6%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'])
-    })
-
-
-     var loadCOGEN_CHEMICAL_GST18Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_CHEMICAL_GST18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO-GEN CHEMICAL GST 18%','INPUT CGST @9%' , 'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'])
-    })
-
-     var loadCOGEN_CHEMICAL_GST5Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_CHEMICAL_GST5Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO-GEN CHEMICAL GST 5%','INPUT CGST@205%','INPUT SGST@205%', 'FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES', 'ROUNDED OFF'])
-    })
-
-
-     var loadCOGEN_COAL_GST5Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_COAL_GST5Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO-GEN COAL-GST 5%', 'INPUT CGST@205%',  'INPUT SGST@205%','COMPENSATION CESS @400/ PER/MTS', 'HANDLING CHARGES-GST 18%', 'INPUT CGST @9%', 'INPUT SGST @9%','ROUNDED OFF'])
-    })
-
-
-     var loadCHEMICAL_GST12Per_Datastore = new Ext.data.Store({
-        id: 'loadCHEMICAL_GST12Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CHEMICAL-GST 12%', 'INPUT -CGST @ 6%',  'INPUT -SGST @ 6%',
-'FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES','ROUNDED OFF'])
-    })
-
-
-     var loadCHEMICAL_IGST12Per_Datastore = new Ext.data.Store({
-        id: 'loadCHEMICAL_IGST12Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CHEMICAL-IGST 12%', 'INPUT -IGST @ 12%',
-'FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES','ROUNDED OFF'])
-    })
-
-
-
-
-     var loadIMPORT_CLEARING_Datastore = new Ext.data.Store({
-        id: 'loadIMPORT_CLEARING_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','INPUT -IGST@5%', 'IMPORT CLEARING CHARGES',
-'IMPORT CLEARING CHARGES-GST 18%',  'INPUT CGST @9%', 'INPUT SGST @9%','BCD ON IMPORT PURCHASE','ROUNDED OFF'])
-    })
-
-
-
-     var loadIMPORT_CLEARING_GST18_Datastore = new Ext.data.Store({
-        id: 'loadIMPORT_CLEARING_GST18_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','IMPORT CLEARING CHARGES-GST 18%',  'INPUT CGST @9%', 'INPUT SGST @9%',
- 'IMPORT CLEARING CHARGES','BCD ON IMPORT PURCHASE','ROUNDED OFF'])
-    })
-
-
-     var loadCHEMICAL_IGST18Per_Datastore = new Ext.data.Store({
-        id: 'loadCHEMICAL_IGST18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CHEMICAL-IGST 18%', 'INPUT IGST @18%',
-'FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES','ROUNDED OFF'])
-    })
-
-
-
-     var loadCHEMICAL_GST18Per_Datastore = new Ext.data.Store({
-        id: 'loadCHEMICAL_GST18Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CHEMICAL-GST 18%', 'INPUT CGST @9%',  'INPUT SGST @9%','FREIGHT INWARD -GST',  'PACKING CHARGES-GST', 'OTHER CHARGES','ROUNDED OFF'])
-    })
-
-
-
-     var loadCOGEN_COAL_IGST5Per_Datastore = new Ext.data.Store({
-        id: 'loadCOGEN_ICOAL_GST5Per_Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','CO-GEN COAL - IGST 5%', 'INPUT -IGST@5%','COMPENSATION CESS @400/ PER/MTS',  'TCS PAID-PURCHASE','ROUNDED OFF'])
-    })
-
-
-
-     var loadIGSTDatastore = new Ext.data.Store({
-        id: 'loadIGSTDatastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','IGST SALES @ 12%', 'IGST SALES @ 12%(PBL)', 'FLY ASH SALES-IGST', 'IGST SALES RETURN 12%', 'FREIGHT COLLECTED-IGST','IGST@12% COLLECTED', 'TCS @01% COLLECTED', 'ROUNDED OFF'
-
-])
-    });
-
-     var loadMMGST18Datastore = new Ext.data.Store({
-        id: 'loadMMGST18Datastore',
-        proxy: new Ext.data.HttpProxy({
-            url: 'ClsViewStatements.php',  // File to connect to
-            method: 'POST'
-        }),
-        baseParams:{
-                     task:"find_column_Ledger"
-        }, // this parameter asks for listing
-        reader: new Ext.data.JsonReader({
-            // we tell the datastore where to get his data from
-            root: 'results',
-            totalProperty: 'total',
-            id: 'id'
-        },['accref_seqno','accref_voudate','accrefvoudate','cust_ref','accref_vou_type','accref_vouno','vou_refno','cust_gstin','Qty','uom',
-'rate','value1','invamt','MACHINERY MAINTENANCE-GST 18%','INPUT CGST @9%', 'INPUT SGST @9%', 'MACHINERY MAINTENANCE GST-12%','INPUT -CGST @ 6%', 'INPUT -SGST @ 6%' , 'FREIGHT INWARD -GST', 'FREIGHT INWARD RCM GST', 'OTHER CHARGES', 'PACKING CHARGES-GST', 'ROUNDED OFF'
 
 ])
     });
@@ -837,6 +211,616 @@ url: '/SHVPM/Accounts/RepReceivables/RepPaymentPerformance/ClsPaymentPerformance
         },['cust_ref', ,'accref_vouno','acctrail_led_code','accref_voudate', 'acctrail_inv_no','acctrail_inv_date', 'acctrail_inv_value', 'acctrail_adj_value', 'acctrail_crdays', 'duedate', 'oddays','acctrail_amtmode' ,'adjamt' ])
     });
 
+
+
+
+var fields = [];
+var columns = [];
+
+
+store = new Ext.data.JsonStore({
+    fields:fields,
+    data:[]
+});
+
+    function loadData(){
+        var grid = Ext.getCmp('columnGrid');
+    
+        // Clear existing data
+        if(grid && grid.getStore()){
+            grid.getStore().removeAll();
+        }
+    
+    Ext.Ajax.request({
+    
+        url:'/SHVPM/ColumnData.php',
+        method:'POST',
+    
+        params:{
+            ledcode: ledcode,
+            fromdate: Ext.util.Format.date(monthstartdate3.getValue(),"Y-m-d"),
+            todate: Ext.util.Format.date(monthenddate3.getValue(),"Y-m-d"),
+            millcode:compcode,
+            fincode:finid
+        },
+    
+        success:function(resp){
+    
+            var obj = Ext.decode(resp.responseText);
+            var data = obj.data || [];
+    
+            if(data.length==0){
+                Ext.Msg.alert('Info','No data found');
+                return;
+            }
+    
+            var fields=[{name:'__isTotal'}];   // IMPORTANT FIX
+            var columns=[];
+            var totals={};
+    
+            Ext.iterate(data[0],function(key,value){
+    
+                fields.push({name:key});
+    
+                var keyUpper = key.toUpperCase();
+    
+                var keyUpper = key.toUpperCase();
+    
+                var nonAmount =
+                keyUpper.indexOf('UOM')!=-1 ||
+                keyUpper.indexOf('NO')!=-1 ||
+                keyUpper.indexOf('DATE')!=-1 ||
+                keyUpper.indexOf('GSTIN')!=-1 ||
+                keyUpper.indexOf('SEQ')!=-1;
+    
+                var numericValue =
+                value!==null &&
+                value!=='' &&
+                !isNaN(value);
+    
+                var isAmount = numericValue && !nonAmount;
+                columns.push({
+    
+    
+                    header:keyUpper.replace(/_/g,' '),
+                    dataIndex:key,
+                    width:120,
+                    //align:isAmount?'right':'left',
+                    align:(isAmount || keyUpper.indexOf('CREDIT')!=-1)?'right':'left',
+                    isAmount:isAmount,
+                    hidden:(keyUpper=='ACCREF_SEQNO' || keyUpper=='ACCREF_VOU_TYPE'),
+                    renderer:function(v){
+    
+                        if(v===null || v===''){
+                            return '&nbsp;';
+                        }
+                        if(isAmount){
+
+                            var num = parseFloat(v);
+                
+                            if(key.toUpperCase().indexOf('QTY')!=-1){
+                
+                                return new Intl.NumberFormat('en-IN',{
+                                    minimumFractionDigits:3,
+                                    maximumFractionDigits:3
+                                }).format(num);
+                
+                            }else{
+                
+                                return new Intl.NumberFormat('en-IN',{
+                                    minimumFractionDigits:2,
+                                    maximumFractionDigits:2
+                                }).format(num);
+                
+                            }
+                        }                
+                
+                        return v;
+    
+                    }
+    
+                });
+    
+                if((isAmount && keyUpper.indexOf('RATE')==-1) || keyUpper.indexOf('CREDIT')!=-1){
+                    totals[key]=0;
+                }
+    
+            });
+    
+            /* CALCULATE TOTAL */
+    
+            Ext.each(data,function(row){
+    
+                Ext.iterate(totals,function(key){
+    
+                    var v=parseFloat(row[key]);
+    
+                    if(!isNaN(v)){
+                        totals[key]+=v;
+                    }
+    
+                });
+    
+            });
+    
+            /* CREATE TOTAL ROW */
+    
+            var totalRow={};
+            var labelPlaced=false;
+    
+            Ext.each(columns,function(col){
+    
+                if(col.hidden){
+                   return;
+                }
+    
+                if(col.dataIndex=='Voucher_No'){
+                   totalRow[col.dataIndex]='GRAND TOTAL';
+                }
+                else if(totals[col.dataIndex]!==undefined){
+    
+    
+                var name = col.dataIndex.toUpperCase();
+                if(name.indexOf('QTY')!=-1){
+                    totalRow[col.dataIndex]=totals[col.dataIndex].toFixed(3);
+                }
+                else{
+                    totalRow[col.dataIndex]=totals[col.dataIndex].toFixed(2);
+                }
+    
+                }
+                else{
+    
+                    totalRow[col.dataIndex]='';
+    
+                }
+    
+            });
+    
+            totalRow['__isTotal']=true;
+    
+            data.push(totalRow);
+    
+            var newStore = new Ext.data.JsonStore({
+                fields:fields,
+                data:data
+            });
+    
+            var grid = Ext.getCmp('columnGrid');
+    
+            grid.reconfigure(newStore,new Ext.grid.ColumnModel(columns));
+    
+            grid.getView().refresh();
+    
+        }
+    
+    });
+    
+    }
+    
+    
+    var columnGrid = new Ext.grid.GridPanel({
+    
+    id:'columnGrid',
+    store:store,
+    colModel:new Ext.grid.ColumnModel([]), 
+    x:20,
+    y:80,
+    width:1250,
+    height:470,
+    
+    autoScroll:true,
+    stripeRows:true,
+    viewConfig:{
+        getRowClass:function(record){
+            if(record.get('__isTotal')===true){
+                return 'grid-grand-total';
+            }
+        }
+    },
+    listeners:{
+            rowdblclick:function(grid,rowIndex,e){
+    
+                var rec = grid.getStore().getAt(rowIndex);
+    
+                // Prevent action for GRAND TOTAL row
+                if(rec.get('__isTotal') === true){
+                    return;
+                }
+    
+                var data = rec.data;
+                var voucherno = data.Voucher_No;
+    //            alert(voucherno);
+                vouseqno = data.accref_seqno;
+      //          alert(vouseqno);
+                voutype = data.accref_vou_type;
+    //            alert(voutype);
+                cmbvoc.setValue(voucherno);
+                cmbvoc.setRawValue(voucherno);
+      
+                VoucherClick();
+                var tabPanel = Ext.getCmp('tabOverall');
+                tabPanel.setActiveTab('tab3'); 
+            }
+        },
+
+    tbar:[
+    
+        {
+            text:'Export Excel',
+            iconCls:'icon-excel',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+                exportColumnGrid('excel','A4');
+            }
+        },
+    
+        '-',
+ 
+        {
+            text:'Export PDF',
+            iconCls:'icon-pdf',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+    
+                Ext.Msg.show({
+    
+                    title:'Paper Size',
+                    msg:'Select Paper Size',
+    
+                    buttons:{
+                        ok:'A4',
+                        yes:'LEGAL'
+                    },
+    
+                    fn:function(btn){
+    
+                        var paper = (btn=='yes') ? 'LEGAL' : 'A4';
+    
+                        exportColumnGrid('pdf',paper);
+    
+                    }
+    
+                });
+    
+            }
+        }
+ 
+/*
+        {
+            text:'Export PDF',
+            iconCls:'icon-pdf',
+            handler:function(){
+        
+                new Ext.Window({
+                    title:'Select Paper Size',
+                    width:280,
+                    height:130,
+                    modal:true,
+                    layout:'fit',
+                    bodyStyle:'padding:15px;text-align:center;',
+                    html:'Select Paper Size',
+                    buttons:[
+                        {
+                            text:'A4',
+                            handler:function(btn){
+                                btn.ownerCt.ownerCt.close();
+                                exportColumnGrid('pdf','A4');
+                            }
+                        },
+                        {
+                            text:'LEGAL',
+                            handler:function(btn){
+                                btn.ownerCt.ownerCt.close();
+                                exportColumnGrid('pdf','LEGAL');
+                            }
+                        },
+                        {
+                            text:'A3',
+                            handler:function(btn){
+                                btn.ownerCt.ownerCt.close();
+                                exportColumnGrid('pdf','A3');
+                            }
+                        }
+                    ]
+                }).show();
+        
+            }
+                
+        }
+        */
+    ]
+    
+    });
+    
+    
+    function exportColumnGrid(type,paper){
+
+    
+
+    var millname="SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
+
+    var heading="COLUMNAR FOR LEDGER : "+txtAccountName.getRawValue() ;
+    
+    var fromdate=Ext.util.Format.date(monthstartdate3.getValue(),"d-m-Y");
+    
+    var todate=Ext.util.Format.date(monthenddate3.getValue(),"d-m-Y");        
+
+    var grid = Ext.getCmp('columnGrid');
+    
+    var store = grid.getStore();
+    
+    var cm = grid.getColumnModel();
+    
+    var columns=[];
+    var data=[];
+    
+    /* ===== GET VISIBLE COLUMNS ===== */
+    
+    for(var i=0;i<cm.getColumnCount();i++){
+    
+        if(!cm.isHidden(i)){
+    
+            var c=cm.getColumnAt(i);
+    
+            columns.push({
+    
+                header:c.header,
+                dataIndex:c.dataIndex,
+                align:c.align||'left'
+    
+            });
+    
+        }
+    
+    }
+    
+    /* ===== GET GRID DATA ===== */
+    
+    store.each(function(rec){
+    
+        data.push(rec.data);
+    
+    });
+    
+    /* ===== CREATE FORM ===== */
+    
+    var form=document.createElement("form");
+    
+    form.method="POST";
+    
+    form.action="/SHVPM/export_"+type+".php";
+    
+    if(type=='pdf'){
+        form.setAttribute("target","_blank");
+    }
+    
+    
+    function addField(name,value){
+    
+        var input=document.createElement("input");
+    
+        input.type="hidden";
+    
+        input.name=name;
+    
+        input.value=value;
+    
+        form.appendChild(input);
+    
+    }
+    
+    addField("columns",Ext.encode(columns));
+    addField("data",Ext.encode(data));
+    addField("fname","columnar_report");
+    addField("paper",paper||'A4');
+    addField("millname",millname);
+    addField("heading",heading);
+    addField("fromdate",fromdate);
+    addField("todate",todate);
+
+    
+    document.body.appendChild(form);
+    
+    form.submit();
+    
+    document.body.removeChild(form);
+    
+    }
+    
+    
+    function exportColumnGrid(type,paper){
+
+    
+
+    var millname="SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
+
+    var heading="COLUMNAR FOR LEDGER : "+txtAccountName.getRawValue() ;
+    
+    var fromdate=Ext.util.Format.date(monthstartdate3.getValue(),"d-m-Y");
+    
+    var todate=Ext.util.Format.date(monthenddate3.getValue(),"d-m-Y");        
+
+    var grid = Ext.getCmp('columnGrid');
+    
+    var store = grid.getStore();
+    
+    var cm = grid.getColumnModel();
+    
+    var columns=[];
+    var data=[];
+    
+    /* ===== GET VISIBLE COLUMNS ===== */
+    
+    for(var i=0;i<cm.getColumnCount();i++){
+    
+        if(!cm.isHidden(i)){
+    
+            var c=cm.getColumnAt(i);
+    
+            columns.push({
+    
+                header:c.header,
+                dataIndex:c.dataIndex,
+                align:c.align||'left'
+    
+            });
+    
+        }
+    
+    }
+    
+    /* ===== GET GRID DATA ===== */
+    
+    store.each(function(rec){
+    
+        data.push(rec.data);
+    
+    });
+    
+    /* ===== CREATE FORM ===== */
+    
+    var form=document.createElement("form");
+    
+    form.method="POST";
+    
+    form.action="/SHVPM/export_"+type+".php";
+    
+    if(type=='pdf'){
+        form.setAttribute("target","_blank");
+    }
+    
+    
+    function addField(name,value){
+    
+        var input=document.createElement("input");
+    
+        input.type="hidden";
+    
+        input.name=name;
+    
+        input.value=value;
+    
+        form.appendChild(input);
+    
+    }
+    
+    addField("columns",Ext.encode(columns));
+    addField("data",Ext.encode(data));
+    addField("fname","columnar_report");
+    addField("paper",paper||'A4');
+    addField("millname",millname);
+    addField("heading",heading);
+    addField("fromdate",fromdate);
+    addField("todate",todate);
+
+    
+    document.body.appendChild(form);
+    
+    form.submit();
+    
+    document.body.removeChild(form);
+    
+    }
+    
+        
+    function exportColumnGrid2(type,paper){
+
+    
+
+        var millname="SRI HARI VENKATESWARA PAPER MILLS (P) LTD";
+    
+        var heading="LEDGER : "+txtAccountName.getRawValue() ;
+        
+        var fromdate=Ext.util.Format.date(monthstartdate3.getValue(),"d-m-Y");
+        
+        var todate=Ext.util.Format.date(monthenddate3.getValue(),"d-m-Y");        
+    
+        var grid = Ext.getCmp('my-grid2');
+        
+        var store = grid.getStore();
+        
+        var cm = grid.getColumnModel();
+        
+        var columns=[];
+        var data=[];
+        
+        /* ===== GET VISIBLE COLUMNS ===== */
+        
+        for(var i=0;i<cm.getColumnCount();i++){
+        
+            if(!cm.isHidden(i)){
+        
+                var c=cm.getColumnAt(i);
+        
+                columns.push({
+        
+                    header:c.header,
+                    dataIndex:c.dataIndex,
+                    align:c.align||'left'
+        
+                });
+        
+            }
+        
+        }
+        
+        /* ===== GET GRID DATA ===== */
+        
+        store.each(function(rec){
+        
+            data.push(rec.data);
+        
+        });
+        
+        /* ===== CREATE FORM ===== */
+        
+        var form=document.createElement("form");
+        
+        form.method="POST";
+        
+        form.action="/SHVPM/export_"+type+".php";
+        
+        if(type=='pdf'){
+            form.setAttribute("target","_blank");
+        }
+        
+        
+        function addField(name,value){
+        
+            var input=document.createElement("input");
+        
+            input.type="hidden";
+        
+            input.name=name;
+        
+            input.value=value;
+        
+            form.appendChild(input);
+        
+        }
+        
+        addField("columns",Ext.encode(columns));
+        addField("data",Ext.encode(data));
+        addField("fname","columnar_report");
+        addField("paper",paper||'A4');
+        addField("millname",millname);
+        addField("heading",heading);
+        addField("fromdate",fromdate);
+        addField("todate",todate);
+    
+        
+        document.body.appendChild(form);
+        
+        form.submit();
+        
+        document.body.removeChild(form);
+        
+        }
+        
+        
 var repopt ='All Outstanding';
 var optRepOpt = new Ext.form.FieldSet({
     xtype: 'fieldset',
@@ -890,13 +874,6 @@ var optRepOpt = new Ext.form.FieldSet({
 });
 
 
-
-const formatter = new Intl.NumberFormat('en-IN', {
-//  style: 'currency',
-  currency: 'inr',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-}); 
 
 
    var txttotCollection = new Ext.form.NumberField({
@@ -991,48 +968,251 @@ style: {
     });
 
 
-    var btnLedgerPrint = new Ext.Button({
-        style: 'text-align:center;',
-        text: " Ledger Print",
-        width: 60,
-        id: 'btnLedgerPrint',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
 
-	},
+
+    
+    var btnLedgerPrintNew = new Ext.Button({
+        text: "Ledger Print",
+        width: 100,
+        id: 'btnLedgerPrintNew',
+        border: 1,
+        style: {
+            borderColor: 'blue',
+            borderStyle: 'solid'
+        },        
         listeners: {
             click: function () {
+        
+                var win = new Ext.Window({
+                    title: 'Ledger Print Options',
+                    width: 320,
+                    height: 180,
+                    modal: true,
+                    resizable: false,
+                    layout: 'fit',
+        
+                    items: [{
+                        xtype: 'form',
+                        bodyStyle: 'padding:10px',
+                        labelWidth: 10,
+                        items: [
+                            {
+                                xtype: 'checkbox',
+                                boxLabel: '<b style="color:blue;">With Narration</b>',
+                                id: 'chkWithNarrationWin',
+                                checked: true
+                            },
+                            {
+                                xtype: 'checkbox',
+                                boxLabel: '<b style="color:blue;">With Bill Adjustments</b>',
+                                id: 'chkWithBillAdjWin',
+                                checked: true
+                            },
 
-		    var p1 = "&ledcode="+encodeURIComponent(ledcode);                
-		    var p2 ="&compcode="+encodeURIComponent(compcode);      
-		    var p3 = "&finid=" + encodeURIComponent(finid);
+                            
+                        ]
+                    }],
+        
+                    buttons: [
+                        {
+                            text: 'Print',
+                            handler: function () {
+        
+                                var withRemakrs   = Ext.getCmp('chkWithNarrationWin').getValue() ? 'Y' : 'N';
+                                var withBillAdj   = Ext.getCmp('chkWithBillAdjWin').getValue() ? 'Y' : 'N';
+        
+                                var emailpdf = 'Y';   
+                                var p1 = "&ledcode=" + encodeURIComponent(ledcode);
+                                var p2 = "&compcode=" + encodeURIComponent(compcode);
+                                var p3 = "&finid=" + encodeURIComponent(finid);
+                                var p4 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(), "Y-m-d"));
+                                var p5 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(), "Y-m-d"));
+                                var p6 = "&ledname=" + encodeURIComponent(txtAccountName.getRawValue());
+                                var p7 = "&ledtype=" + encodeURIComponent(ledtype);
+                                var p8 = "&withNarration=" + withRemakrs;
+                                var p9 = "&withBillAdjustment=" + withBillAdj;
+                                var p10 = "&EMailpdf=" + emailpdf;
+                                var param = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9+p10;
 
-	            var p4 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	
-                    var p5 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p6 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
-       		    var p7 = "&ledtype="+encodeURIComponent(ledtype);
-
- 		    var param = (p1+p2+p3+p4+p5+p6+p7) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf&'+param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=xls' + param, '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');
-       /*
-                    if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf&' + param, '_blank');	
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');*/	
-
-                }
+                                if (printtype == "PDF") {
+                                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedgerWithAdjustments.rptdesign&__format=pdf' + param, '_blank');                                    
+                                } else if (printtype == "XLS") {
+                                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedgerWithAdjustments.rptdesign&__format=XLS' + param, '_blank');
+                                } else {
+                                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedgerWithAdjustments.rptdesign' + param, '_blank');
+                                }
+        
+                                win.close();
+                            }
+                        },
+                        {
+                            text: 'SEND EMAIL',
+                            handler: function () {
+                        
+                                loadAddressDatastore.removeAll();
+                        
+                                loadAddressDatastore.load({
+                                    url: 'ClsViewStatements.php',
+                                    params: {
+                                        task: 'find_Address',
+                                        ledcode: ledcode
+                                    },
+                                    scope: this,
+                        
+                                    callback: function () {
+                        
+                                        if (loadAddressDatastore.getCount() == 0) {
+                                            Ext.Msg.alert('Error', 'Customer details not found');
+                                            return;
+                                        }
+                        
+                                        var rec = loadAddressDatastore.getAt(0);
+                        
+                                        var custemail = rec.get('cust_email') || '';
+                        
+                                        // ✅ EMAIL CONFIRM WINDOW
+                                        var emailWin = new Ext.Window({
+                                            title: 'Confirm Email',
+                                            width: 350,
+                                            height: 150,
+                                            modal: true,
+                                            layout: 'fit',
+                        
+                                            items: [{
+                                                xtype: 'form',
+                                                bodyStyle: 'padding:10px',
+                        
+                                                items: [{
+                                                    xtype: 'textfield',
+                                                    fieldLabel: 'Email ID',
+                                                    id: 'txtConfirmEmail',
+                                                    value: custemail,
+                                                    width: 220,
+                                                    allowBlank: false
+                                                }]
+                                            }],
+                        
+                                            buttons: [
+                                                {
+                                                    text: 'OK',
+                                                    handler: function (btn) {
+                                                        btn.setDisabled(true);
+                                                        var email = Ext.getCmp('txtConfirmEmail').getValue();
+                        
+                                                        if (!email) {
+                                                            Ext.Msg.alert('Error', 'Please enter email');
+                                                            return;
+                                                        }
+                        
+                                                        // ✅ PARAMETERS
+                                                        var withRemakrs = Ext.getCmp('chkWithNarrationWin').getValue() ? 'Y' : 'N';
+                                                        var withBillAdj = Ext.getCmp('chkWithBillAdjWin').getValue() ? 'Y' : 'N';
+                        
+                                                        // ✅ CALL PHP (SEND EMAIL)
+                                                        Ext.Ajax.request({
+                                                            url: 'TrnLedgerEmailPDF.php',
+                                                            method: 'POST',
+                        
+                                                            params: {
+                                                                ledcode: ledcode,
+                                                                compcode: compcode,
+                                                                finid: finid,
+                                                                fromdate: Ext.util.Format.date(monthstartdate.getValue(), "Y-m-d"),
+                                                                todate: Ext.util.Format.date(monthenddate.getValue(), "Y-m-d"),
+                                                                ledname: txtAccountName.getRawValue(),
+                                                                ledtype: ledtype,
+                                                                withNarration: withRemakrs,
+                                                                withBillAdjustment: withBillAdj,
+                        
+                                                                idemail: email,
+                                                                mailmessage: 'Please find attached Ledger Report'
+                                                            },
+                        
+                                                            success: function () {
+                                                                Ext.Msg.alert('Success', 'Email Sent Successfully');
+                                                                emailWin.close();
+                                                            },
+                                                            failure: function () {
+                                                                Ext.getBody().unmask();
+                                                                Ext.Msg.alert('Error', 'Email Sending Failed');
+                                                
+                                                                // 🔴 Enable again only on failure
+                                                                btn.setDisabled(false);
+                                                            }
+                                                        });
+                                                    }
+                                                },
+                                                {
+                                                    text: 'Cancel',
+                                                    handler: function () {
+                                                        emailWin.close();
+                                                    }
+                                                }
+                                            ]
+                                        });
+                        
+                                        emailWin.show();
+                                    }
+                                });
+                            }
+                        },                      
+                        {
+                            text: 'Cancel',
+                            handler: function () {
+                                win.close();
+                            }
+                        }
+                    ]
+                });
+        
+                win.show();
             }
+        }
     });
 
+    var btnLedgerPrint = new Ext.Button({
+        text: "Ledger Print",
+        width: 100,
+        id: 'btnLedgerPrint',
+        border: 1,
+        style: {
+            borderColor: 'blue',
+            borderStyle: 'solid'
+        },
+        listeners: {
+            click: function () {
+    
+                Ext.Msg.confirm('Confirmation', 'Print with Narration?', function (btn) {
+    
+                    var withNarration = (btn === 'yes') ? 'Y' : 'N';
+    
+                    var p1 = "&ledcode=" + encodeURIComponent(ledcode);                
+                    var p2 = "&compcode=" + encodeURIComponent(compcode);      
+                    var p3 = "&finid=" + encodeURIComponent(finid);
+                    var p4 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(), "Y-m-d"));	
+                    var p5 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(), "Y-m-d"));
+                    var p6 = "&ledname=" + encodeURIComponent(txtAccountName.getRawValue());
+                    var p7 = "&ledtype=" + encodeURIComponent(ledtype);
+                    var p8 = "&withnarration=" + withNarration;   // <-- NEW PARAM
+    
+                    var param = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8;
+    
+                    if (printtype == "PDF") {
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf' + param, '_blank');
+                    } else if (printtype == "XLS") {
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=XLS' + param, '_blank');
+                    } else {
+                        window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');
+                    }
+    
+                });
+            }
+        }
+    });   
+    
+    
 
-
+/*
 
     var btnColumnPrint = new Ext.Button({
         style: 'text-align:center;',
@@ -1063,1177 +1243,17 @@ if (printtype == "PDF")
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Column.rptdesign'+ param , '_blank');
                     else
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRep_Column.rptdesign'+ param , '_blank');
-       /*
-                    if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf&' + param, '_blank');	
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');*/	
+
 
                 }
             }
     });
 
-
-    var btnColumnPrint_CGST = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_CGST',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CGST.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CGST.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CGST.rptdesign'+ param , '_blank');
-       /*
-                    if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf&' + param, '_blank');	
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');*/	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_IGST = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_IGST',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IGST.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IGST.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IGST.rptdesign'+ param , '_blank');
-       /*
-                    if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf&' + param, '_blank');	
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');*/	
-
-                }
-            }
-    });
-
-
-
-
-    var btnColumnPrint_MMGST18 = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_IGST',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_MMGST18.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_MMGST18.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_MMGST18.rptdesign'+ param , '_blank');
-       /*
-                    if (printtype == "PDF") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign&__format=pdf&' + param, '_blank');	
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepLedger.rptdesign' + param, '_blank');*/	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_GSTSales = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_GSTSales',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_GST_SALES12Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_GST_SALES12Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_GST_SALES12Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_BIO_FUEL_EXEMPT = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_BIO_FUEL_EXEMPT',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_EXEMPT.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_EXEMPT.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_EXEMPT.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-    var btnColumnPrint_BIO_FUEL_GST12 = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_BIO_FUEL_GST12',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_GST12.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_GST12.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_GST12.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_BIO_FUEL_GST5Per = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_BIO_FUEL_GST5Per',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_GST5Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_GST5Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_BIOFUEL_GST5Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_COGEN_ELEC_MAINT_18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_ELEC_MAINT_18 ',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_COGEN_ELEC_MAINT_28 = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_ELEC_MAINT_28',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_28Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_28Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-    var btnColumnPrint_COGEN_ELEC_MAINT_IGST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_ELEC_MAINT_IGST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_IGST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_IGST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_IGST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-    var btnColumnPrint_COGEN_MC_MAINT_IGST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_MC_MAINT_IGST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_IGST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_IGST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_IGST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_COGEN_CHEMICAL_GST12  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_CHEMICAL_GST12',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST12Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST12Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST12Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-
-    var btnColumnPrint_COGEN_COAL_GST5  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_COAL_GST5',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_COAL_GST5Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_COAL_GST5Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_COAL_GST5Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_CHEMICAL_GST12  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_CHEMICAL_GST12',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_GST12Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_GST12Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_GST12Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_CHEMICAL_GST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_CHEMICAL_GST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_GST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_GST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_GST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_CHEMICAL_IGST12  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_CHEMICAL_IGST12',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_IGST12Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_IGST12Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_IGST12Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_IMPORT_CLEARING  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_IMPORT_CLEARING',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IMPORT_CLEARING_CHARGES.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IMPORT_CLEARING_CHARGES.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IMPORT_CLEARING_CHARGES.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_PACKING_GST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_PACKING_GST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_PACKING_GST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_PACKING_GST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_PACKING_GST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_PACKING_IGST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_PACKING_IGST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_PACKING_IGST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_PACKING_IGST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_PACKING_IGST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnWASTE_PAPER_GST5  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnWASTE_PAPER_GST5',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_GST5Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_GST5Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_GST5Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnWASTE_PAPER_IGST5  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnWASTE_PAPER_IGST5',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IGST5Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IGST5Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IGST5Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnWASTE_PAPER_IMPORT  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnWASTE_PAPER_IMPORT',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IMPORT.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IMPORT.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IMPORT.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnELECTRICAL_WASTE_SALES_GST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnELECTRICAL_WASTE_SALES_GST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IMPORT.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IMPORT.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_WASTEPAPER_IMPORT.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnFLY_ASH_SALES_GST  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnFLY_ASH_SALES_GST',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_FLY ASH SALES-GST.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_FLY ASH SALES-GST.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_FLY ASH SALES-GST.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnFLY_ASH_SALES_IGST  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnFLY_ASH_SALES_IGST',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_FLY ASH SALES-IGST.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_FLY ASH SALES-IGST.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_FLY ASH SALES-IGST.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-    var btnColumnPrint_IMPORT_CLEARING_GST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_IMPORT_CLEARING_GST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IMPORT_CLEARING_CHARGES_GST18.rptdesign&__format=pdf&'+ param,  '_blank' );
-
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IMPORT_CLEARING_CHARGES_GST18.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IMPORT_CLEARING_CHARGES_GST18.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
- 
-
-
-
-    var btnColumnPrint_CHEMICAL_IGST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_CHEMICAL_IGST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_IGST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_IGST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_CHEMICAL_IGST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_COGEN_COAL_IGST5  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_COAL_IGST5',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_COAL_IGST5Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_COAL_IGST5Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_COAL_IGST5Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_COGEN_CHEMICAL_GST5  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_CHEMICAL_GST5',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST5Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST5Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST5Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_COGEN_CHEMICAL_GST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_CHEMICAL_GST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_CHEMICAL_GST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_COGEN_MC_MAINT_GST5  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_MC_MAINT_GST5',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_IGST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_IGST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_ELECT_MAINT_IGST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_COGEN_MC_MAINT_GST12  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_MC_MAINT_GST12',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST12Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST12Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST12Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_COGEN_MC_MAINT_GST18  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_MC_MAINT_GST18',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST18Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST18Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST18Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-    var btnColumnPrint_COGEN_MC_MAINT_GST28  = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_COGEN_MC_MAINT_GST28',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST28Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST28Per.rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_COGEN_MC_MAINT_GST28Per.rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
-
-    var btnColumnPrint_IGSTSales = new Ext.Button({
-        style: 'text-align:center;',
-        text: " PRINT",
-        width: 60,
-        id: 'btnColumnPrint_GSTSales',
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
-        listeners: {
-            click: function () {
-
-
-	            var p1 = "&fromdate=" + encodeURIComponent(Ext.util.Format.date(monthstartdate.getValue(),"Y-m-  d"));	   
-                    var p2 = "&todate=" + encodeURIComponent(Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"));
-		    var p3 = "&ledname="+encodeURIComponent(txtAccountName.getRawValue());
- 		    var param = (p1+p2+p3) ;
-if (printtype == "PDF") 
-                    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IGST_SALES12Per.rptdesign&__format=pdf&'+ param,  '_blank' );
-		    else if (printtype == "XLS") 
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IGST_SALES12Per .rptdesign&__format=xls'+ param , '_blank');
-                    else
-		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/Rep_Column_IGST_SALES12Per .rptdesign'+ param , '_blank');
-	
-
-                }
-            }
-    });
-
-
+*/
+  
     var btnColumnSelect = new Ext.Button({
         style: 'text-align:center;',
-        text: " Columnar New",
+        text: " Columnar",
         width: 60,
         id: 'btnColumnSelect',
 	border: 1,
@@ -2245,2071 +1265,16 @@ if (printtype == "PDF")
         listeners: {
 
             click: function () {
-
-		    var tabPanel = Ext.getCmp('tabOverall');
-
-                    var table_name = "";
-
-
-                    if (ledcode == 1644 || ledcode == 1645) 
-                    {
-                	tabPanel.unhideTabStripItem(6); 
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        tabPanel.setActiveTab(6);
-
-
-                        table_name = "temp_column_cgst"; 
- 		        loadCGSTDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'S',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }     
-                    else if  (ledcode == 1646)
-                    {
-                	tabPanel.hideTabStripItem(6); 
-                	tabPanel.unhideTabStripItem(7); 
-                        tabPanel.setActiveTab(7);
-                	tabPanel.unhideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_igst"; 
- 		        loadIGSTDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'S',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-                
-                    else if  (ledcode == 1767)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.unhideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                	tabPanel.hideTabStripItem(10); 
-                        tabPanel.setActiveTab(8);
-
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_MMGST18"; 
- 		        loadMMGST18Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-
-                    else if  (ledcode == 1741  )
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(10); 
-                	tabPanel.unhideTabStripItem(9); 
-                        tabPanel.setActiveTab(9);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_SALES_GST"; 
- 		        loadSalesGSTDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'S',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-                    else if  (ledcode == 1743)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                	tabPanel.unhideTabStripItem(10); 
-                        tabPanel.setActiveTab(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-
-                        table_name = "temp_column_SALES_IGST"; 
- 		        loadSalesIGSTDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'S',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-                   else if  (ledcode == 1745)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10); 
-                	tabPanel.unhideTabStripItem(11); 
-                        tabPanel.setActiveTab(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_BIO_FUEL_EXEMPT"; 
- 		        loadBioFuelExemptDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-                   else if  (ledcode == 3826)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);  
-                	tabPanel.unhideTabStripItem(12); 
-
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        tabPanel.setActiveTab(12);
-                        table_name = "temp_column_BIO_FUEL_GST12Per"; 
- 		        loadBioFuelGST12Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-                   else if  (ledcode == 1746)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.unhideTabStripItem(13); 
-                        tabPanel.setActiveTab(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_BIO_FUEL_GST5Per"; 
- 		        loadBioFuelGST_5Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-//alert(loadBioFuelGST_5Per_Datastore.getAt(0).get('BIO  FUEL GST -5%'));
-			  }
-                        });
-                    }
-                   else if  (ledcode == 1747)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);  
-                	tabPanel.unhideTabStripItem(14); 
-                        tabPanel.setActiveTab(14);
-
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-
-                        table_name = "temp_column_COGEN_ELEC_MAINT_18"; 
- 		        loadCOGEN_Elect_Maint_18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-//alert(loadBioFuelGST_5Per_Datastore.getAt(0).get('BIO  FUEL GST -5%'));
-			  }
-                        });
-                    }
-                   else if  (ledcode == 2775)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.unhideTabStripItem(15); 
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        tabPanel.setActiveTab(15);
-                        table_name = "temp_column_COGEN_ELEC_MAINT_28"; 
- 		        loadCOGEN_Elect_Maint_28Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-//alert(loadBioFuelGST_5Per_Datastore.getAt(0).get('BIO  FUEL GST -5%'));
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 2523)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);  
-                	tabPanel.unhideTabStripItem(16); 
-                        tabPanel.setActiveTab(16);
-                	tabPanel.unhideTabStripItem(15); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-
-                        table_name = "temp_column_COGEN_ELEC_MAINT_IGST18"; 
- 		        loadCOGEN_Elect_Maint_IGST18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-//alert(loadBioFuelGST_5Per_Datastore.getAt(0).get('BIO  FUEL GST -5%'));
-			  }
-                        });
-                    }
-
-
-
-                   else if  (ledcode == 1749)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17); 
-                        tabPanel.unhideTabStripItem(17); 
-                        tabPanel.setActiveTab(17);
-
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_MC_Maint_GST18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-                   else if  (ledcode == 1750)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                        tabPanel.unhideTabStripItem(18); 
-                        tabPanel.setActiveTab(18);
- 
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_MC_Maint_GST28Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-                   else if  (ledcode == 2117)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                        tabPanel.unhideTabStripItem(19); 
-                        tabPanel.setActiveTab(19);
- 
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_MC_Maint_GST12Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 1751)
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                        tabPanel.unhideTabStripItem(21); 
-                        tabPanel.setActiveTab(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
- 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_MC_Maint_IGST18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 2772)   //CO-GEN CHEMICAL GST 12%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                        tabPanel.unhideTabStripItem(22); 
-                        tabPanel.setActiveTab(22);
-
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
- 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_CHEMICAL_GST12Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-                   else if  (ledcode == 1754)   //CO-GEN CHEMICAL GST 18%
-                    {
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                        tabPanel.unhideTabStripItem(23); 
-                        tabPanel.setActiveTab(23);
-
-                	
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
- 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_CHEMICAL_GST18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-                   else if  (ledcode == 1755)   //CO-GEN CHEMICAL GST 5%
-                    {
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                        tabPanel.unhideTabStripItem(24); 
-                        tabPanel.setActiveTab(24);
-
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
- 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_CHEMICAL_GST5Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-                   else if  (ledcode == 1756)   //CO-GEN COAL-GST 5%
-                    {
-
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                        tabPanel.unhideTabStripItem(25); 
-                        tabPanel.setActiveTab(25);
-
-                	
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
- 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_COAL_GST5Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-                   else if  (ledcode == 2664)   //'CO-GEN COAL - IGST 5%'
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                        tabPanel.unhideTabStripItem(26); 
-                        tabPanel.setActiveTab(26);
-
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCOGEN_COAL_IGST5Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-                   else if  (ledcode == 1776)   //'CHEMICAL-GST 12%
-                    {
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                        tabPanel.unhideTabStripItem(27); 
-                        tabPanel.setActiveTab(27);
-
-
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCHEMICAL_GST12Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-
-                   else if  (ledcode == 1777)   //'CHEMICAL-GST 18%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                        tabPanel.unhideTabStripItem(28); 
-                        tabPanel.setActiveTab(28);
-
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
- 
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadCHEMICAL_GST18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-
-                   else if  (ledcode == 2649)   //CHEMICAL-IGST 12%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-
-                        tabPanel.unhideTabStripItem(29); 
-                        tabPanel.setActiveTab(29);
- 
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadCHEMICAL_IGST12Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-                   else if  (ledcode == 1779)   //CHEMICAL-IGST 18%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                        tabPanel.unhideTabStripItem(30); 
-                        tabPanel.setActiveTab(30);
-
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
- 
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadCHEMICAL_IGST18Per_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-
-                   else if  (ledcode == 1780)   //IMPORT CLEARING CHARGES
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                        tabPanel.unhideTabStripItem(31); 
-                        tabPanel.setActiveTab(31);
-
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadIMPORT_CLEARING_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-
-                   else if  (ledcode == 1781)   //IMPORT CLEARING CHARGES-GST 18%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-
-                        tabPanel.unhideTabStripItem(32); 
-                        tabPanel.setActiveTab(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadIMPORT_CLEARING_GST18_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 1782)   //PACKING -GST 18%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                        tabPanel.unhideTabStripItem(33); 
-                        tabPanel.setActiveTab(33);
-
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadPACKING_GST18_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-                   else if  (ledcode == 2229)   //PACKING -IGST 18%
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                        tabPanel.unhideTabStripItem(34); 
-                        tabPanel.setActiveTab(34);
-
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadPACKING_IGST18_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 1783)   //WASTE PAPER -GST
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                        tabPanel.unhideTabStripItem(35); 
-                        tabPanel.setActiveTab(35);
-
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadWASTE_PAPER_GST5_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 1784)   //WASTE PAPER - IGST
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                        tabPanel.unhideTabStripItem(36); 
-                        tabPanel.setActiveTab(36);
-
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadWASTE_PAPER_IGST5_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-
-                   else if  (ledcode == 1785)   //WASTE PAPER - IMPORT
-                    {
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                        tabPanel.unhideTabStripItem(37); 
-
-
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39); 
-                        tabPanel.setActiveTab(37);
-                        table_name = "temp_column_COGEN_MC_MAINT";
- 		        loadWASTE_PAPER_IMPORT_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 4827)   //ELECTRICAL WASTE SALES GST 18%
-                    {
-
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                        tabPanel.unhideTabStripItem(38); 
-                        tabPanel.setActiveTab(38);
-
-                       	tabPanel.hideTabStripItem(39); 
-
-                        table_name = "temp_column_COGEN_MC_MAINT";
-
-
- 		        loadELECTRICAL_WASTE_Datastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'P',        
-                                     	
-			  },
-			  callback:function(){
-
-			
-
-			  }
-                        });
-                    }
-
-                   else if  (ledcode == 1740)   //FLY ASH SALES-GST
-                    {
-
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                        tabPanel.unhideTabStripItem(39); 
-                        tabPanel.setActiveTab(39);
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadSalesGSTDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'S',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-                   else if  (ledcode == 1610)   //FLY ASH SALES-IGST
-                    {
-                	tabPanel.hideTabStripItem(7); 
-                	tabPanel.hideTabStripItem(8); 
-                	tabPanel.hideTabStripItem(9); 
-                       	tabPanel.hideTabStripItem(10);
-                	tabPanel.hideTabStripItem(11);
-                	tabPanel.hideTabStripItem(12);  
-                	tabPanel.hideTabStripItem(13);
-                	tabPanel.hideTabStripItem(14);  
-                	tabPanel.hideTabStripItem(15);
-                	tabPanel.hideTabStripItem(16); 
-                	tabPanel.hideTabStripItem(17);
-                	tabPanel.hideTabStripItem(18);
-                	tabPanel.hideTabStripItem(19);
-                      	tabPanel.hideTabStripItem(20);
-                      	tabPanel.hideTabStripItem(21);
-                      	tabPanel.hideTabStripItem(22);
-                      	tabPanel.hideTabStripItem(23);
-                      	tabPanel.hideTabStripItem(24);
-                      	tabPanel.hideTabStripItem(25);
-                      	tabPanel.hideTabStripItem(26);
-                      	tabPanel.hideTabStripItem(27);
-                      	tabPanel.hideTabStripItem(28);
-                      	tabPanel.hideTabStripItem(29);
-                      	tabPanel.hideTabStripItem(30);
-                      	tabPanel.hideTabStripItem(31);
-                      	tabPanel.hideTabStripItem(32);
-                      	tabPanel.hideTabStripItem(33);
-                      	tabPanel.hideTabStripItem(34);
-                      	tabPanel.hideTabStripItem(35);
-                     	tabPanel.hideTabStripItem(36);
-                   	tabPanel.hideTabStripItem(37);
-                       	tabPanel.hideTabStripItem(38);
-                       	tabPanel.hideTabStripItem(39);
-                        tabPanel.unhideTabStripItem(40); 
-                        tabPanel.setActiveTab(40);
-                        table_name = "temp_column_COGEN_MC_MAINT"; 
- 		        loadSalesIGSTDatastore.load({
-			   url: 'ClsViewStatements.php',  
-			   params:
-			   {
-				    task:"find_column_Ledger",
-				    fcompcode : compcode,
-				    finid     : finid,
-                                    startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                                    enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                                    ledcode   : ledcode,
-                                    tablename : table_name,
-                                    sp        : 'S',        
-                                     	
-			  },
-			  callback:function(){
-			
-			  }
-                        });
-                    }
-//ANNADURAI
-
-
+                    
+                var tabPanel = Ext.getCmp('tabOverall');
+
+                tabPanel.unhideTabStripItem(6)
+                var tab = tabPanel.getComponent('ColumnAr');
+                tabPanel.setActiveTab(tab);
+                tab.setTitle('COLUMNAR Report For : - ' + SubLedgerName);
+
+                lblLedgerName.setText("Details for : " + SubLedgerName);
+                loadData();
                 }
             }
     });
@@ -4389,13 +1354,27 @@ if (printtype == "PDF")
         value: new Date()   
 
     });
+
     var monthenddate3 = new Ext.form.DateField({
-	fieldLabel: 'To Date',
-        id: 'monthenddate3',
-        labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
-	format: 'd-m-Y',
-        value: new Date()   
-    });
+        fieldLabel: 'To Date',
+            id: 'monthenddate3',
+            labelStyle  : "font-size:14px;font-weight:bold;color:#fc9403",
+            format: 'd-m-Y',
+            value: new Date()  ,
+            enableKeyEvents: true,
+            listeners:{
+                 specialkey:function(f,e){
+                 if (e.getKey() == e.ENTER)
+                 {
+                    loadData();
+                  }
+                },
+               blur:function(){
+                  loadData();
+               },
+            }        
+        });  
+
 
     var monthstartdate4 = new Ext.form.DateField({
 	fieldLabel: 'From Date',
@@ -4419,9 +1398,10 @@ if (printtype == "PDF")
         id          : 'txtOpening_Debit',
         name        : 'txtOpening_Debit',
         width       :  120,
-	readOnly : true,
+	    readOnly : true,
         labelStyle      : "font-size:13px;font-weight:bold;color:#0080ff",
         tabindex : 2,
+        disabled    : true,  
 //        style : "font-size:14px;font-weight:bold;text-align: 'right';",
 style: {
             'color':'#873e72',readOnly:true,'text-align': 'right',
@@ -4437,6 +1417,7 @@ style: {
         name        : 'txtOpening_Credit',
         width       :  120,
 	readOnly : true,
+    disabled    : true,  
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
 style: {
@@ -4455,6 +1436,7 @@ style: {
         name        : 'txtClosing_Debit',
         width       :  120,
 	readOnly : true,
+    disabled    : true,  
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
 style: {
@@ -4472,8 +1454,10 @@ style: {
         name        : 'txtClosing_Credit',
         width       :  120,
 	readOnly : true,
+    disabled    : true,  
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
+
 style: {
             'color':'#873e72',readOnly:true,'text-align': 'right',
             'style': 'Helvetica',
@@ -4490,6 +1474,7 @@ style: {
         name        : 'txtLedgerDebit',
         width       :  120,
 	readOnly : true,
+    disabled    : true,  
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
 style: {
@@ -4506,7 +1491,8 @@ style: {
         id          : 'txtLedgerCredit',
         name        : 'txtLedgerCredit',
         width       :  120,
-	readOnly : true,
+	     readOnly : true,
+         disabled    : true,  
         labelStyle      : "font-size:14px;font-weight:bold;color:#0080ff",
         tabindex : 2,
 style: {
@@ -4539,8 +1525,8 @@ style:{
 
         enableKeyEvents: true,
         columns: [
-            {header: "Date of Bill", dataIndex: 'refpartyinvdate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,             },
-            {header: "Invoice No.", dataIndex: 'refpartyinvno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,
+            {header: "Date of Bill", dataIndex: 'refpartyinvdate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,             },
+            {header: "Invoice No.", dataIndex: 'refpartyinvno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,
 		renderer : function(value, meta ,record) {
 		    var vou=record.get('refpartyinvno');
 		    if(vou!=='') {
@@ -4551,14 +1537,14 @@ style:{
 		    return value;
 		  }
              },
-            {header: "Invoice Amt.", dataIndex: 'acctran_totamt',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true, },
-            {header: "Receipt Date", dataIndex: 'accref_voudate',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Receipt Amt.", dataIndex: 'refamount',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
+            {header: "Invoice Amt.", dataIndex: 'acctran_totamt',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false, },
+            {header: "Receipt Date", dataIndex: 'accref_voudate',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'center'},
+            {header: "Receipt Amt.", dataIndex: 'refamount',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'center'},
 
-            {header: "Paymt Terms", dataIndex: 'acctrail_crdays',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "No of Days", dataIndex: 'noofdays',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
+            {header: "Paymt Terms", dataIndex: 'acctrail_crdays',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,},
+            {header: "No of Days", dataIndex: 'noofdays',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,},
 
-            {header: "No of Days fr Duedate", dataIndex: 'daysfromduedate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
+            {header: "No of Days fr Duedate", dataIndex: 'daysfromduedate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,},
          ],
          listeners :{
 
@@ -4610,3780 +1596,6 @@ style:{
             },
 
         }
-    });
-
-
-
-
-
-    var grid_COGEN_MC_MAINT_GST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN ELECTRICAL MAITENANCE-18%", dataIndex: 'CO GEN ELECTRICAL MAITENANCE-18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_Elect_Maint_IGST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_COGEN_MC_MAINT_GST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN ELECTRICAL MAITENANCE-18%", dataIndex: 'CO GEN ELECTRICAL MAITENANCE-18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_Elect_Maint_IGST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-    var grid_COGEN_MC_MAINT_GST12 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "CO GEN MACHINERY MAINTENANCE-GST 12%", dataIndex: 'CO GEN MACHINERY MAINTENANCE-GST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "CO GEN MACHINERY MAINTENANCE-GST 18%", dataIndex: 'CO GEN MACHINERY MAINTENANCE-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-
-
-         ],
-
-
-
-         store:loadCOGEN_MC_Maint_GST12Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-  var grid_PACKING_IGST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "PACKING -GST 18%", dataIndex: 'PACKING -GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadPACKING_IGST18_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-  var grid_WASTE_PAPER_GST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "WASTE PAPER -GST", dataIndex: 'WASTE PAPER -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "INPUT CGST@2.5%", dataIndex: 'INPUT CGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT SGST@2.5%", dataIndex: 'INPUT SGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "TCS PAID-PURCHASE", dataIndex: 'TCS PAID-PURCHASE',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadWASTE_PAPER_GST5_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-  var grid_ELECTRICAL_WASTE_SALES_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "ELECTRICAL WASTE SALES GST 18%", dataIndex: 'ELECTRICAL WASTE SALES GST 18%', width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-},
-            {header: "CGST", dataIndex: 'CGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "SGST", dataIndex: 'SGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadELECTRICAL_WASTE_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_ELECTRICAL_WASTE_SALES_GST18.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_ELECTRICAL_WASTE_SALES_GST18,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_ELECTRICAL_WASTE_SALES_GST18.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-  var grid_FLY_ASH_SALES_GST = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-           {header: "FLY ASH SALES-GST", dataIndex: 'FLY ASH SALES-GST', width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',},
-            {header: "CGST", dataIndex: 'CGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "SGST", dataIndex: 'SGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadSalesGSTDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_ELECTRICAL_WASTE_SALES_GST18.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_ELECTRICAL_WASTE_SALES_GST18,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_ELECTRICAL_WASTE_SALES_GST18.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-    });
-
-  var grid_FLY_ASH_SALES_IGST = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-           {header: "FLY ASH SALES-IGST", dataIndex: 'FLY ASH SALES-IGST', width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',},
-            {header: "IGST @5%", dataIndex: 'IGST @5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadSalesIGSTDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_ELECTRICAL_WASTE_SALES_GST18.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_ELECTRICAL_WASTE_SALES_GST18,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_ELECTRICAL_WASTE_SALES_GST18.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-//ANNADURAI 
-
-    });
-
-  var grid_WASTE_PAPER_IMPORT = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "WASTE PAPER PURCHASE-IMPORT", dataIndex: 'WASTE PAPER PURCHASE-IMPORT',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadWASTE_PAPER_IMPORT_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-  var grid_WASTE_PAPER_IGST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "WASTE PAPER-IGST", dataIndex: 'WASTE PAPER-IGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "INPUT -IGST@5%", dataIndex: 'INPUT -IGST@5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "TCS PAID-PURCHASE", dataIndex: 'TCS PAID-PURCHASE',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadWASTE_PAPER_IGST5_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-    var grid_PACKING_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "PACKING -GST 18%", dataIndex: 'PACKING -GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadPACKING_GST18_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_COGEN_MC_MAINT_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN MACHINERY MAINTENANCE-GST 18%", dataIndex: 'CO GEN MACHINERY MAINTENANCE-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "CO GEN MACHINERY MAINTENANCE-GST 12%", dataIndex: 'CO GEN MACHINERY MAINTENANCE-GST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_MC_Maint_GST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-    var grid_COGEN_MC_MAINT_GST28 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN MACHINERY MAINTENANCE-GST 28%", dataIndex: 'CO GEN MACHINERY MAINTENANCE-GST 28%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST@14%", dataIndex: 'INPUT CGST@14%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST@14%", dataIndex: 'INPUT SGST@14%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_MC_Maint_GST28Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_COGEN_MC_MAINT_IGST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN MACHINERY MAINTENANCE-IGST 18%", dataIndex: 'CO GEN MACHINERY MAINTENANCE-IGST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT IGST @18%", dataIndex: 'INPUT IGST @18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD - IGST", dataIndex: 'FREIGHT INWARD - IGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES - IGST", dataIndex: 'PACKING CHARGES - IGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_MC_Maint_IGST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-    var grid_COGEN_ELEC_MAINT_IGST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN ELECTRICAL MAITENANCE-18%", dataIndex: 'CO GEN ELECTRICAL MAITENANCE-18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_Elect_Maint_IGST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-    var grid_COGEN_CHEMICAL_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO-GEN CHEMICAL GST 18%", dataIndex: 'CO-GEN CHEMICAL GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_CHEMICAL_GST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-    var grid_COGEN_CHEMICAL_GST12 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO-GEN CHEMICAL GST 12%", dataIndex: 'CO-GEN CHEMICAL GST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_CHEMICAL_GST12Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_COGEN_CHEMICAL_GST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO-GEN CHEMICAL GST 5%", dataIndex: 'CO-GEN CHEMICAL GST 5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST@205%", dataIndex: 'INPUT CGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT SGST@205%", dataIndex: 'INPUT SGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_CHEMICAL_GST5Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_COGEN_COAL_GST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO-GEN COAL-GST 5%", dataIndex: 'CO-GEN COAL-GST 5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST@2.5%", dataIndex: 'INPUT CGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT SGST@2.5%", dataIndex: 'INPUT SGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "COMPENSATION CESS @400/ PER/MTS", dataIndex: 'COMPENSATION CESS @400/ PER/MTS',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "HANDLING CHARGES-GST 18%", dataIndex: 'HANDLING CHARGES-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_COAL_GST5Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-
-var grid_CHEMICAL_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CHEMICAL-GST 12%", dataIndex: 'CHEMICAL-GST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadCHEMICAL_GST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-var grid_CHEMICAL_GST12 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CHEMICAL-GST 12%", dataIndex: 'CHEMICAL-GST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadCHEMICAL_GST12Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-var grid_CHEMICAL_IGST12 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CHEMICAL-IGST 12%", dataIndex: 'CHEMICAL-IGST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -IGST @ 12%", dataIndex: 'INPUT -IGST @ 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadCHEMICAL_IGST12Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-var grid_IMPORT_CLEARING_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-
-            {header: "IMPORT CLEARING CHARGES-GST 18%", dataIndex: 'IMPORT CLEARING CHARGES-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "BCD ON IMPORT PURCHASE", dataIndex: 'BCD ON IMPORT PURCHASE',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT -IGST@5%", dataIndex: 'INPUT -IGST@5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "IMPORT CLEARING CHARGES", dataIndex: 'IMPORT CLEARING CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadIMPORT_CLEARING_GST18_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-var grid_IMPORT_CLEARING = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "INPUT -IGST@5%", dataIndex: 'INPUT -IGST@5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "IMPORT CLEARING CHARGES", dataIndex: 'IMPORT CLEARING CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "IMPORT CLEARING CHARGES-GST 18%", dataIndex: 'IMPORT CLEARING CHARGES-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "BCD ON IMPORT PURCHASE", dataIndex: 'BCD ON IMPORT PURCHASE',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadIMPORT_CLEARING_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-
-var grid_CHEMICAL_IGST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CHEMICAL-IGST 18%", dataIndex: 'CHEMICAL-IGST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT IGST @18%", dataIndex: 'INPUT IGST @18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadCHEMICAL_IGST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-var grid_CHEMICAL_GST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CHEMICAL-GST 18%", dataIndex: 'CHEMICAL-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "INPUT SGST @9%,", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-         store:loadCHEMICAL_GST18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-var grid_COGEN_COAL_IGST5 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO-GEN COAL - IGST 5%", dataIndex: 'CO-GEN COAL - IGST 5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -IGST@5%", dataIndex: 'INPUT -IGST@5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-
-            {header: "COMPENSATION CESS @400/ PER/MTS", dataIndex: 'COMPENSATION CESS @400/ PER/MTS',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "TCS PAID-PURCHASE", dataIndex: 'TCS PAID-PURCHASE',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-
-
-
-         store:loadCOGEN_COAL_IGST5Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-    });
-
-
-    var grid_COGEN_ELEC_MAINT_28 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN ELECTRICAL MAITENANCE-18%", dataIndex: 'CO GEN ELECTRICAL MAITENANCE-18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_Elect_Maint_28Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_COGEN_ELEC_MAINT_18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "CO GEN ELECTRICAL MAITENANCE-18%", dataIndex: 'CO GEN ELECTRICAL MAITENANCE-18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCOGEN_Elect_Maint_18Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-
-    var grid_BIO_FUEL_GST_5Per = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   id: 'my-grid', 
-
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "BIO FUEL GST -5%", dataIndex: 'BIO FUEL GST -5%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT CGST@2.5%", dataIndex: ['INPUT CGST@205%'],width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT SGST@2.5%", dataIndex: 'INPUT SGST@205%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadBioFuelGST_5Per_Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_BIO_FUEL_GST12 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "BIO FUEL GST 12%", dataIndex: 'BIO FUEL GST 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadBioFuelGST12Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-    var grid_BIO_FUEL_EXEMPT = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "BIO FUEL EXEMPT", dataIndex: 'BIO FUEL EXEMPT',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  },
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadBioFuelExemptDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-    var grid_IGSTSALES = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "IGST SALES @ 12%", dataIndex: 'IGST SALES @ 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  
-},
-
-            {header: "IGST SALES @ 12%", dataIndex: 'IGST SALES @ 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT COLLECTED-IGST", dataIndex: 'FREIGHT COLLECTED-IGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "TCS @.1% COLLECTED", dataIndex: 'TCS @01% COLLECTED',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadSalesIGSTDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_GSTSALES = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "GST SALES @ 12%", dataIndex: 'GST SALES @ 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  
-},
-
-            {header: "CGST", dataIndex: 'CGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "SGST", dataIndex: 'SGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "FREIGHT COLLECTED-GST", dataIndex: 'FREIGHT COLLECTED-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "TCS @.1% COLLECTED", dataIndex: 'TCS @01% COLLECTED',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadSalesGSTDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-    var grid_CGST = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "GST SALES @ 12%", dataIndex: 'GST SALES @ 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  
-},
-            {header: "GST SALES @ 12%(BLUE BOARD)", dataIndex: 'GST SALES @ 12%(BLUE BOARD)',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "GST SALES @12% (DUPLEX)", dataIndex: 'GST SALES @12% (DUPLEX)',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "GST SALES@12%(PBL)", dataIndex: 'GST SALES@12%(PBL)',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "GST SALES RETURN 12%", dataIndex: 'GST SALES RETURN 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "FLY ASH SALES-GST", dataIndex: 'FLY ASH SALES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "ELECTRICAL WASTE SALES GST 18%", dataIndex: 'ELECTRICAL WASTE SALES GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "WASTE SALES GST 18%", dataIndex: 'WASTE SALES GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "FREIGHT COLLECTED-GST", dataIndex: 'FREIGHT COLLECTED-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-
-            {header: "CGST", dataIndex: 'CGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "SGST", dataIndex: 'SGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "TCS @.1% COLLECTED", dataIndex: 'TCS @01% COLLECTED',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadCGSTDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_CGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_CGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_CGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-grid_CGST.getStore().on('load',function(store, records, options) {
-    var total = 0;
-    for(var i=0;i<store.getCount(); i++) {
-        total =  Number(total)+Number(grid_CGST.store.getAt(i).get('CGST'));
-    }
-    alert(total);
-},this);
-
-
-
-
-    var grid_IGST = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "IGST SALES @ 12%", dataIndex: 'IGST SALES @ 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  
-},
-            {header: "IGST SALES @ 12%(PBL)", dataIndex: 'IGST SALES @ 12%(PBL)',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "FLY ASH SALES-IGST", dataIndex: 'FLY ASH SALES-IGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "IGST SALES RETURN 12%", dataIndex: 'IGST SALES RETURN 12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "FREIGHT COLLECTED-IGST", dataIndex: 'FREIGHT COLLECTED-IGST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "IGST@12% COLLECTED", dataIndex: 'IGST@12% COLLECTED',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "TCS @0.1% COLLECTED", dataIndex: 'TCS @01% COLLECTED',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadIGSTDatastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_IGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_IGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_IGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_IGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
-    });
-
-
-
-
-    var grid_MMGST18 = new Ext.grid.EditorGridPanel({
-        frame: false,
-        store: [],
-        sm: new Ext.grid.RowSelectionModel(),
-        autoShow: true,
-        scrollable: true,
-	stripeRows: true,
- //   id: 'my-grid-font', 
-   features: [{
-        ftype: 'summary'
-    }],
-
-style:{
-             color: 'DarkBlue' ,
-             backgroundColor:'White'
-	     
-        },
-        columnLines: true,
-        height: 450,
-        width: 1290,
-        border:false,
-
-
-        enableKeyEvents: true,
-        columns: [
-
-            {header: "Seqno", dataIndex: 'accref_seqno',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true },
-
-            {header: "Date", dataIndex: 'accref_voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,hidden : true},
-
-            {header: "Date", dataIndex: 'accrefvoudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Particulars", dataIndex: 'cust_ref',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Vou Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true },
-
-            {header: "Voucher No", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref No", dataIndex: 'vou_refno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "GST IN", dataIndex: 'cust_gstin',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-
-            {header: "Qty", dataIndex: 'Qty',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "UOM", dataIndex: 'uom',width:110,align:'center',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "Rate", dataIndex: 'rate',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-  //          {header: "Value", dataIndex: 'value1',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "Gross Total", dataIndex: 'invamt',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,summaryType: 'sum',
-
-},
-            {header: "MACHINERY MAINTENANCE-GST 18%", dataIndex: 'MACHINERY MAINTENANCE-GST 18%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true, renderer: columnWrap  
-},
-            {header: "INPUT CGST @9%", dataIndex: 'INPUT CGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "INPUT SGST @9%", dataIndex: 'INPUT SGST @9%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "MACHINERY MAINTENANCE GST-12%", dataIndex: 'MACHINERY MAINTENANCE GST-12%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "INPUT -CGST @ 6%", dataIndex: 'INPUT -CGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-
-            {header: "INPUT -SGST @ 6%", dataIndex: 'INPUT -SGST @ 6%',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT INWARD -GST", dataIndex: 'FREIGHT INWARD -GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "FREIGHT INWARD RCM GST", dataIndex: 'FREIGHT INWARD RCM GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-            {header: "OTHER CHARGES", dataIndex: 'OTHER CHARGES',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "PACKING CHARGES-GST", dataIndex: 'PACKING CHARGES-GST',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-            {header: "ROUNDED OFF", dataIndex: 'ROUNDED OFF',width:110,align:'right',sortable: false,defaultSortable: false,menuDisabled: true,},
-
-         ],
-
-
-
-         store:loadMMGST18Datastore,
-         listeners :{
-
-
-            'rowDblClick' : function(grid_IGST,rowIndex,cellIndex,e){
-                tabOverall.setActiveTab(2);
-                var selerow =grid_IGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-            'rowselect' : function(grid_IGST,rowIndex,cellIndex,e){
-
-                tabOverall.setActiveTab(2);
-                var selerow =grid_IGST.getSelectionModel().getSelections();
-                for(var i=0; i<selerow.length; i++)
-                {
-                     b =selerow[i].get('accref_vouno');
-                }
-                cmbvoc.setRawValue(b);
-                VoucherClick();
-	        flxld.getSelectionModel().selectAll();
-            },
-
-        },
-
-
-
     });
 
 
@@ -8661,7 +1873,7 @@ function LedgerChangeRefresh()
         sm: new Ext.grid.RowSelectionModel(),
         autoShow: true,
         scrollable: true,
-        menuDisabled: true,
+        menuDisabled: false,
 	stripeRows: true,
 	style:{
              color: 'DarkBlue' ,
@@ -8674,13 +1886,13 @@ function LedgerChangeRefresh()
         border:false,
   
         columns: [
-        {header: "Vou Date" , dataIndex: 'accref_voudate',sortable:false,width:100,align:'center', menuDisabled: true},
-        {header: "Vou No" , dataIndex: 'accref_vouno',sortable:false,width:100,align:'center', menuDisabled: true,
+        {header: "Vou Date" , dataIndex: 'accref_voudate',sortable:false,width:100,align:'center', menuDisabled: false},
+        {header: "Vou No" , dataIndex: 'accref_vouno',sortable:false,width:100,align:'center', menuDisabled: false,
 },
-        {header: "Collection Amount" , dataIndex: 'acctran_cramt',sortable:false,width:150,align:'right', menuDisabled: true},
-        {header: "Inv. No"  , dataIndex: 'refpartyinvno',sortable:false,width:130,align:'right', menuDisabled: true},
-        {header: "Inv.Date"    , dataIndex: 'refpartyinvdate',sortable:false,width:130,align:'right', menuDisabled: true},
-        {header: "Adjusted"   , dataIndex: 'refamount',sortable:false,width:100,align:'right', menuDisabled: true,
+        {header: "Collection Amount" , dataIndex: 'acctran_cramt',sortable:false,width:150,align:'right', menuDisabled: false},
+        {header: "Inv. No"  , dataIndex: 'refpartyinvno',sortable:false,width:130,align:'right', menuDisabled: false},
+        {header: "Inv.Date"    , dataIndex: 'refpartyinvdate',sortable:false,width:130,align:'right', menuDisabled: false},
+        {header: "Adjusted"   , dataIndex: 'refamount',sortable:false,width:100,align:'right', menuDisabled: false,
             renderer: function (val, metaData, r){
                 if (val > 0) 
                 { 
@@ -8693,7 +1905,7 @@ function LedgerChangeRefresh()
                 }
                 }  
         },
-        {header: "Advance "   , dataIndex: 'advance',sortable:false,width:80,align:'right', menuDisabled: true,
+        {header: "Advance "   , dataIndex: 'advance',sortable:false,width:80,align:'right', menuDisabled: false,
             renderer: function (val, metaData, r){
                 if (val > 0) 
                 { 
@@ -8813,6 +2025,9 @@ function LedgerChangeRefresh()
 				ledtype  = selrow.get('cust_type');
                 suptype  = selrow.get('cust_type');
                                 txtAccountName.setRawValue(selrow.get('cust_ref'));   
+                                SubLedgerName = selrow.get('cust_ref');   
+
+//alert(SubLedgerName);                                
                                 flxLedger.hide();   
 
                                 if (ledtype == "C")
@@ -8898,14 +2113,14 @@ function LedgerChangeRefresh()
         autoShow: true,
         stripeRows : true,
         scrollable: true,
-	id:'my-grid3',
+	//id:'my-grid3',
         width: 600,
         height: 250,
     	labelStyle :"font-size:12px;font-weight:bold;",
     	style      :"border-radius: 5px;textTransform: uppercase; ",  
         columns: [   
-		{header: "Inv/Doc No.", dataIndex: 'ref_invno',width:120,align:'left'},   
-		{header: "Date", dataIndex: 'voudate',width:110,align:'left'},   
+		{header: "Inv/Doc No.", dataIndex: 'ref_invno',width:130,align:'left'},   
+		{header: "Date", dataIndex: 'voudate',width:100,align:'left'},   
 		{header: "Pay.Terms", dataIndex: 'ref_paymt_terms',width:90,align:'center'},   
 		{header: "Adj. Amount", dataIndex: 'ref_adjamount',width:120,align:'right',
             renderer: function (val, metaData, r){
@@ -9016,8 +2231,9 @@ function LedgerChangeRefresh()
        		    var p8 = "&days2="+encodeURIComponent(0);
        		    var p9 = "&days3="+encodeURIComponent(0);
        		    var p10 = "&days4="+encodeURIComponent(0);
+                   var p11 = "&drcropt=" + encodeURIComponent('A');
 
- 		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+                   var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11);
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -9089,7 +2305,9 @@ function LedgerChangeRefresh()
        		    var p8 = "&days2="+encodeURIComponent(0);
        		    var p9 = "&days3="+encodeURIComponent(0);
        		    var p10 = "&days4="+encodeURIComponent(0);
-		    var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10) ;
+                var p11 = "&drcropt=" + encodeURIComponent('A');
+                var param = (p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11);
+
                     if (printtype == "PDF") 
 		    window.open('http://10.0.0.251:8080/birt/frameset?__report=Accounts/AccRepAPBillwiseDue.rptdesign&__format=pdf&' + param, '_blank');
                     else if (printtype == "XLS") 
@@ -9796,8 +3014,11 @@ grid_tot_trans();
         var sele=flxDetails.getSelectionModel().getSelections();
         for(var i=0;i<Row1;i++)
         {
+            if (sele[i].data.row_type == 'DATA')
+            {    
             totdb=Number(totdb)+Number(sele[i].data.acctran_dbamt);
             totcr=Number(totcr)+Number(sele[i].data.acctran_cramt);
+            }
         }
 
         ledger_debit = totdb;
@@ -10090,7 +3311,29 @@ txtBalanceAmount.setRawValue('');
             id: 'id'
         },[
 
-'curbal_led_code', 'curbal_obdbamt', 'curbal_obcramt', 'acctran_led_code', 'trn_opdr', 'trn_opcr', 'accref_seqno', 'accref_vouno', 'accref_vou_type', 'accref_voudate', 'accref_payref_no', 'accref_payref_date', 'accref_narration', 'acctran_led_code', 'acctran_dbamt', 'acctran_cramt', 'acctran_accref_seqno', 'acctran_serialno', 'ledgercode', 'ledgername', 'partyledger', 'cust_code'
+'curbal_led_code', 'curbal_obdbamt', 'curbal_obcramt', 'acctran_led_code', 'trn_opdr', 'trn_opcr', 'accref_seqno', 'accref_vouno', 'accref_vou_type', 'accref_voudate', 'accref_payref_no', 'accref_payref_date', 'accref_narration', 'acctran_led_code', 'acctran_dbamt', 'acctran_cramt', 'acctran_accref_seqno', 'acctran_serialno', 'ledgercode', 'ledgername', 'partyledger', 'cust_code', 'accref_narration','cust_name','cust_type','row_type'
+
+        ])
+    });
+
+
+    var MonthClickVocDataStoreEmail = new Ext.data.Store({
+        id: 'MonthClickVocDataStoreEmail',
+        proxy: new Ext.data.HttpProxy({
+            url: 'ClsViewStatements.php',  // File to connect to
+            method: 'POST'
+        }),
+        baseParams:{
+                     task:"load_Ledger_DetailsEmail"
+        }, // this parameter asks for listing
+        reader: new Ext.data.JsonReader({
+            // we tell the datastore where to get his data from
+            root: 'results',
+            totalProperty: 'total',
+            id: 'id'
+        },[
+
+'curbal_led_code', 'curbal_obdbamt', 'curbal_obcramt', 'acctran_led_code', 'trn_opdr', 'trn_opcr', 'accref_seqno', 'accref_vouno', 'accref_vou_type', 'accref_voudate', 'accref_payref_no', 'accref_payref_date', 'accref_narration', 'acctran_led_code', 'acctran_dbamt', 'acctran_cramt', 'acctran_accref_seqno', 'acctran_serialno', 'ledgercode', 'ledgername', 'partyledger', 'cust_code', 'accref_narration','cust_name','cust_type','row_type'
 
         ])
     });
@@ -10447,6 +3690,27 @@ function find_dates(mmon)
 
 
 
+
+   var startDate = yr+"-"+rmon+"-01";
+   var endDate = yr+"-"+rmon+"-"+mdays;
+
+   // Current Date
+   var today = new Date();
+   var todayStr = today.getFullYear()+"-"+("0"+(today.getMonth()+1)).slice(-2)+"-"+("0"+today.getDate()).slice(-2);
+
+   // If endDate > today then use today
+   if(new Date(endDate) > today){
+       endDate = todayStr;
+   }
+   monthstartdate.setValue(startDate);
+   monthenddate.setValue(endDate);
+   monthstartdate2.setValue(startDate);
+   monthenddate2.setValue(endDate);
+   monthstartdate3.setValue(startDate);
+   monthenddate3.setValue(endDate);
+   monthstartdate4.setValue(startDate);
+   monthenddate4.setValue(endDate);
+/*
     monthstartdate.setValue(yr+"-"+rmon+"-01");
     monthenddate.setValue(yr+"-"+rmon+"-"+mdays);
 
@@ -10462,7 +3726,7 @@ function find_dates(mmon)
     monthenddate4.setValue(yr+"-"+rmon+"-"+mdays);
 
 
-/*
+
     var dt_today = new Date();
     var dtvou = DateFind.getValue();
 
@@ -10519,6 +3783,7 @@ alert(m2);
                    if(cnt>0)
                    {
 
+                    /*
                     opamt =  Number(MonthClickVocDataStore.getAt(0).get('curbal_obdbamt'))+Number(MonthClickVocDataStore.getAt(0).get('trn_opdr')) - Number(MonthClickVocDataStore.getAt(0).get('curbal_obcramt')) - Number(MonthClickVocDataStore.getAt(0).get('trn_opcr')) ;
  
                    var opamt2 = formatter.format(Math.abs(opamt));
@@ -10529,31 +3794,54 @@ alert(m2);
                     else
                        txtOpening_Credit.setRawValue(opamt2);
  
-
+*/
                    for(var j=0; j<cnt; j++)
- 		   { 
+ 		           { 
 
-                       var displedname = '';
+/*                  
+                        var displedname = '';
                        if (MonthClickVocDataStore.getAt(j).get('ledgername') == null)
                             displedname = MonthClickVocDataStore.getAt(j).get('partyledger');
                        else
                             displedname = MonthClickVocDataStore.getAt(j).get('ledgername');
+  */
+                      if (MonthClickVocDataStore.getAt(j).get('cust_name') == "OPENING BALANCE")
+                      {  
+                           if (MonthClickVocDataStore.getAt(j).get('acctran_dbamt') > 0)      
+                                txtOpening_Debit.setRawValue(formatter.format(MonthClickVocDataStore.getAt(j).get('acctran_dbamt')));
+                           else
+                               txtOpening_Credit.setRawValue(formatter.format(MonthClickVocDataStore.getAt(j).get('acctran_cramt')));
+                      } 
+
+                      if (MonthClickVocDataStore.getAt(j).get('cust_name') == "CLOSING BALANCE")
+                        {  
+                             if (MonthClickVocDataStore.getAt(j).get('acctran_dbamt') > 0)      
+                                txtClosing_Debit.setRawValue(formatter.format(MonthClickVocDataStore.getAt(j).get('acctran_dbamt')));
+                             else
+                                 txtClosing_Credit.setRawValue(formatter.format(MonthClickVocDataStore.getAt(j).get('acctran_cramt')));
+                        } 
   
 
+                        
+
+
+  
                        flxDetails.getStore().insert(
                        flxDetails.getStore().getCount(),
                        new dgrecord({
                            sno          : j+1,	
 // 			   voudate  : MonthClickVocDataStore.getAt(j).get('accref_voudate'),
-                           voudate  : Ext.util.Format.date(MonthClickVocDataStore.getAt(j).get('accref_voudate'),"d-m-Y"),
-			   cust_ref : displedname,
- 	                   acctran_dbamt : MonthClickVocDataStore.getAt(j).get('acctran_dbamt'),
- 			   acctran_cramt  : MonthClickVocDataStore.getAt(j).get('acctran_cramt'),
-                           accref_payref_no : MonthClickVocDataStore.getAt(j).get('accref_payref_no'),
- 			   accref_vouno  : MonthClickVocDataStore.getAt(j).get('accref_vouno'),
-                           accref_vou_type : MonthClickVocDataStore.getAt(j).get('accref_vou_type'),
-			   accref_seqno : MonthClickVocDataStore.getAt(j).get('accref_seqno'),
-			   led_code : MonthClickVocDataStore.getAt(j).get('acctran_led_code'),
+                            voudate  : Ext.util.Format.date(MonthClickVocDataStore.getAt(j).get('accref_voudate'),"d-m-Y"),
+                            cust_name : MonthClickVocDataStore.getAt(j).get('cust_name'),
+                            acctran_dbamt : MonthClickVocDataStore.getAt(j).get('acctran_dbamt'),
+                            acctran_cramt  : MonthClickVocDataStore.getAt(j).get('acctran_cramt'),
+                            accref_payref_no : MonthClickVocDataStore.getAt(j).get('accref_payref_no'),
+                            accref_vouno  : MonthClickVocDataStore.getAt(j).get('accref_vouno'),
+                            accref_vou_type : MonthClickVocDataStore.getAt(j).get('accref_vou_type'),
+                            accref_seqno : MonthClickVocDataStore.getAt(j).get('accref_seqno'),
+                            led_code : MonthClickVocDataStore.getAt(j).get('acctran_led_code'),
+                            accref_narration : MonthClickVocDataStore.getAt(j).get('accref_narration'),
+                            row_type : MonthClickVocDataStore.getAt(j).get('row_type'),
 
                         })
                        );
@@ -10562,7 +3850,7 @@ alert(m2);
                    } 
                    grid_tot2();  
 
-
+/*
                   cloamt = opamt + ledger_debit - ledger_credit ;
 
 
@@ -10576,7 +3864,7 @@ alert(m2);
                        txtClosing_Credit.setRawValue(cloamt2);
 
                     }   
-                   
+*/                   
 
 
                 }         
@@ -11382,7 +4670,7 @@ var txtAccountName = new Ext.form.TextField({
         sm: new Ext.grid.RowSelectionModel(),
         autoShow: true,
         scrollable: true,
-        menuDisabled: true,
+        menuDisabled: false,
 	stripeRows: true,
 	style:{
              color: 'DarkBlue' ,
@@ -11396,7 +4684,7 @@ var txtAccountName = new Ext.form.TextField({
         x: 370,
         y: 70,
         columns: [
-            {header: "Month", dataIndex: 'month',width:260,align:'left', sortable: false,defaultSortable: false,menuDisabled: true,
+            {header: "Month", dataIndex: 'month',width:260,align:'left', sortable: false,defaultSortable: false,menuDisabled: false,
 		renderer : function(value, meta ,record) {
 		    var monthcolor=record.get('month');
 		    if(monthcolor=='JANUARY') {
@@ -11427,7 +4715,7 @@ var txtAccountName = new Ext.form.TextField({
 		    return value;
 		  }
 	    },
-            {header: "Debit", dataIndex: 'debit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Debit", dataIndex: 'debit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                             renderer: function (val, metaData, r){
                 if (val > 0) 
                 { 
@@ -11440,7 +4728,7 @@ var txtAccountName = new Ext.form.TextField({
                 }
                 }  
             },
-            {header: "Credit", dataIndex: 'credit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Credit", dataIndex: 'credit',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                 renderer: function (val, metaData, r){
                     if (val > 0) 
                     { 
@@ -11453,7 +4741,7 @@ var txtAccountName = new Ext.form.TextField({
                     }
                     }  
             },
-            {header: "Balance", dataIndex: 'balance',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Balance", dataIndex: 'balance',width:140,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                 renderer: function (val, metaData, r) {
                     if (val == null || val === '') return '';
             
@@ -11467,7 +4755,7 @@ var txtAccountName = new Ext.form.TextField({
                     return '<span style="color:#f5276c; font-weight:600;">' + formattedVal + '</span>';
                 }
         },
-	    {header: "Type", dataIndex: 'type',width:80,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'}
+	    {header: "Type", dataIndex: 'type',width:80,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'center'}
         ],
          listeners :{
             'rowDblClick' : function(flxMonth,rowIndex,cellIndex,e){
@@ -11540,12 +4828,61 @@ style:{
         border:false,
         x: 370,
         y: 40,
+        viewConfig: {
+            getRowClass: function(record) {
+                var type = record.get('row_type');
+    
+                if (type === 'OPENING') {
+                    return 'row-opening';
+                }
+                if (type === 'TRANSACTION TOTAL') {
+                    return 'row-total';
+                }
+                if (type === 'CLOSING') {
+                    return 'row-closing';
+                }
+            }
+        },        
+    tbar: [
+        {
+            text:'Export Excel',
+            iconCls:'icon-excel',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+                exportColumnGrid2('excel','A4');
+            }
+        },
+        '-',
+        {
+            text:'Export PDF',
+            iconCls:'icon-pdf',
+            cls:'report-btn',
+            scale:'medium',
+            handler:function(){
+
+                Ext.Msg.show({
+                    title:'Paper Size',
+                    msg:'Select Paper Size',
+                    buttons:{
+                        ok:'A4',
+                        yes:'LEGAL'
+                    },
+                    fn:function(btn){
+                        var paper = (btn=='yes') ? 'LEGAL' : 'A4';
+                        exportColumnGrid2('pdf',paper);
+                    }
+                });
+
+            }
+        }
+    ],        
         columns: [
             {header: "S.No", dataIndex: 'sno',width:50,align:'left', sortable: false,defaultSortable: false,menuDisabled: false,},
-            {header: "Date ", dataIndex: 'voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,             },
-            {header: "Description", dataIndex: 'cust_ref',width:300,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,
+            {header: "Date ", dataIndex: 'voudate',width:110,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,},
+            {header: "Description", dataIndex: 'cust_name',width:300,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,
 		renderer : function(value, meta ,record) {
-		    var vou=record.get('cust_ref');
+		    var vou=record.get('cust_name');
 		    if(vou!=='') {
 			meta.style = "background-color:#FFDEAD;";
 		    }else{
@@ -11554,11 +4891,11 @@ style:{
 		    return value;
 		  }
              },
-          {header: "Voucher Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center',hidden : true},
-            {header: "Vou. No.", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
-            {header: "Ref. No.", dataIndex: 'accref_payref_no',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'center'},
+          {header: "Voucher Type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'center',hidden : true},
+            {header: "Vou. No.", dataIndex: 'accref_vouno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'center'},
+            {header: "Doc. No.", dataIndex: 'accref_payref_no',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'center'},
 
-            {header: "Debit", dataIndex: 'acctran_dbamt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Debit", dataIndex: 'acctran_dbamt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                 renderer: function (val, metaData, r){
                     if (val > 0) 
                     { 
@@ -11571,7 +4908,7 @@ style:{
                     }
                     }  
             },
-            {header: "Credit", dataIndex: 'acctran_cramt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Credit", dataIndex: 'acctran_cramt',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                 renderer: function (val, metaData, r){
                     if (val > 0) 
                     { 
@@ -11584,10 +4921,14 @@ style:{
                     }
                     }  
             },
-            {header: "Inv type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',hidden : 'true'},
-            {header: "Seq. No.", dataIndex: 'accref_seqno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',hidden : 'true'},
-            {header: "Led Code", dataIndex: 'cust_code',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',hidden : 'true'},
+            
+            {header: "Narration", dataIndex: 'accref_narration',width:250,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'left',hidden : 'true'},
+            {header: "Inv type", dataIndex: 'accref_vou_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden : 'true'},
+            {header: "Seq. No.", dataIndex: 'accref_seqno',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden : 'true'},
+            {header: "Led Code", dataIndex: 'cust_code',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden : 'true'},
+            {header: "row type", dataIndex: 'row_type',width:120,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',hidden : 'false'},            
         ],
+        
          listeners :{
             'rowDblClick' : function(flxDetails,rowIndex,cellIndex,e){
 
@@ -11604,7 +4945,7 @@ style:{
         autoShow: true,
 	id:'my-grid3',
         scrollable: true,
-        menuDisabled: true,
+        menuDisabled: false,
 	stripeRows: true,
 style:{
              color: 'DarkBlue' ,
@@ -11618,7 +4959,7 @@ style:{
         x: 370,
         y: 40,
         columns: [
-            {header: "Ledger Name", dataIndex: 'ledger',width:340,align:'left', sortable: false,defaultSortable: false,menuDisabled: true,
+            {header: "Ledger Name", dataIndex: 'ledger',width:340,align:'left', sortable: false,defaultSortable: false,menuDisabled: false,
             renderer : function(value, meta ,record) {
 		    var deb=record.get('debit');
 		    var cre=record.get('credit');
@@ -11630,7 +4971,7 @@ style:{
 		    return value;
 		  }
 	   },
-            {header: "Debit", dataIndex: 'debit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Debit", dataIndex: 'debit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                 renderer: function (val, metaData, r){
                     if (val > 0) 
                     { 
@@ -11643,7 +4984,7 @@ style:{
                     }
                     }  
 	    },
-            {header: "Credit", dataIndex: 'credit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'right',
+            {header: "Credit", dataIndex: 'credit',width:130,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'right',
                 renderer: function (val, metaData, r){
                     if (val > 0) 
                     { 
@@ -11656,7 +4997,7 @@ style:{
                     }
                     }  
             },
-            {header: "ledtype", dataIndex: 'ledtype',width:30,align:'left',sortable: false,defaultSortable: false,menuDisabled: true,align: 'left'}
+            {header: "ledtype", dataIndex: 'ledtype',width:30,align:'left',sortable: false,defaultSortable: false,menuDisabled: false,align: 'left'}
         ]
     });
     
@@ -11778,37 +5119,31 @@ style: {
         width   : 100,id:'btnview',
         x       : 10,
         y       : 10,
-	border: 1,
-	style: {
-	borderColor: 'blue',
-	borderStyle: 'solid',
-
-	},
+        border: 1,
+        style: {
+        borderColor: 'blue',
+        borderStyle: 'solid',
+        },
         listeners: {
             click: function(){
 
+                var voutype2 = cmbvoc.getRawValue().substring(0,2);     
+                var invno = txtvouref.getValue();
+                var p1 = "&compcode=" + encodeURIComponent(compcode);
+                var p2 = "&fincode=" + encodeURIComponent(finid);
+                var p3 = "&invno=" + encodeURIComponent(invno);
 
-    //             var columnCount = flxdetails.getColumnModel().getColumnCount(true);
-//                   var voutype = cmbvoc.getRawValue().substring(0,3);                
+                i1 = "ORIGINAL FOR BUYER";
+                var p4 = "&displayword=" + encodeURIComponent(i1);
 
+                var p5 = "&vouno="+encodeURIComponent(cmbvoc.getRawValue());
 
-                   var voutype2 = cmbvoc.getRawValue().substring(0,2);     
-                   var invno = txtvouref.getValue();
-	           var p1 = "&compcode=" + encodeURIComponent(compcode);
-		   var p2 = "&fincode=" + encodeURIComponent(finid);
-		   var p3 = "&invno=" + encodeURIComponent(invno);
+                var p6 = "&seqno="+encodeURIComponent(vouseqno);
 
-                   i1 = "ORIGINAL FOR BUYER";
-         	   var p4 = "&displayword=" + encodeURIComponent(i1);
+                var param = (p1 + p2 + p3 + p4 ); 
 
-           	   var p5 = "&vouno="+encodeURIComponent(cmbvoc.getRawValue());
-
-           	   var p6 = "&seqno="+encodeURIComponent(vouseqno);
-
- 	 	   var param = (p1 + p2 + p3 + p4 ); 
-
- 	 	   var param2 = (p1 + p2 + p5 ); 
-	 	   var param3 = (p1 + p2 + p6 ); 
+                var param2 = (p1 + p2 + p5 ); 
+                var param3 = (p1 + p2 + p6 ); 
   
 
 
@@ -12056,13 +5391,13 @@ style: {
 	columnLines: true,
     columns:
     [ 	 	
-        {header: "Vouno" , dataIndex: 'accref_vouno',sortable:false,width:80,align:'left', menuDisabled: true,hidden:false},
-        {header: "Vou Date" , dataIndex: 'accref_voudate',sortable:false,width:80,align:'left', menuDisabled: true,hidden:false},
+        {header: "Vouno" , dataIndex: 'accref_vouno',sortable:false,width:80,align:'left', menuDisabled: false,hidden:false},
+        {header: "Vou Date" , dataIndex: 'accref_voudate',sortable:false,width:80,align:'left', menuDisabled: false,hidden:false},
 
-        {header: "Inv Date" , dataIndex: 'acctrail_inv_date',sortable:false,width:80,align:'left', menuDisabled: true},
-        {header: "Inv No" , dataIndex: 'acctrail_inv_no',sortable:false,width:100,align:'left', menuDisabled: true,
+        {header: "Inv Date" , dataIndex: 'acctrail_inv_date',sortable:false,width:80,align:'left', menuDisabled: false},
+        {header: "Inv No" , dataIndex: 'acctrail_inv_no',sortable:false,width:100,align:'left', menuDisabled: false,
 },
-        {header: "Vou Amount" , dataIndex: 'acctrail_inv_value',sortable:false,width:90,align:'right', menuDisabled: true,
+        {header: "Vou Amount" , dataIndex: 'acctrail_inv_value',sortable:false,width:90,align:'right', menuDisabled: false,
             renderer: function (val, metaData, r){
                 if (val > 0) 
                 { 
@@ -12075,7 +5410,7 @@ style: {
                 }
                 }  
         },
-        {header: "Adjusted"  , dataIndex: 'acctrail_adj_value',sortable:false,width:90,align:'right', menuDisabled: true,
+        {header: "Adjusted"  , dataIndex: 'acctrail_adj_value',sortable:false,width:90,align:'right', menuDisabled: false,
             renderer: function (val, metaData, r){
                 if (val > 0) 
                 { 
@@ -12088,7 +5423,7 @@ style: {
                 }
                 }  
         },
-        {header: "Balance"    , dataIndex: 'invbalamt',sortable:false,width:90,align:'right', menuDisabled: true,
+        {header: "Balance"    , dataIndex: 'invbalamt',sortable:false,width:90,align:'right', menuDisabled: false,
             renderer: function (val, metaData, r){
                 if (val > 0) 
                 { 
@@ -12101,10 +5436,10 @@ style: {
                 }
                 }  
         },
-        {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:50,align:'right', menuDisabled: true},        
-        {header: "Paymnt Terms", dataIndex: 'acctrail_crdays',sortable:false,width:70,align:'right', menuDisabled: true},
-        {header: "Due Date"   , dataIndex: 'duedate',sortable:false,width:80,align:'right', menuDisabled: true},
-        {header: "OD Days"   , dataIndex: 'oddays',sortable:false,width:80,align:'right', menuDisabled: true},
+        {header: "DB/CR"   , dataIndex: 'acctrail_amtmode',sortable:false,width:50,align:'right', menuDisabled: false},        
+        {header: "Paymnt Terms", dataIndex: 'acctrail_crdays',sortable:false,width:70,align:'right', menuDisabled: false},
+        {header: "Due Date"   , dataIndex: 'duedate',sortable:false,width:80,align:'right', menuDisabled: false},
+        {header: "OD Days"   , dataIndex: 'oddays',sortable:false,width:80,align:'right', menuDisabled: false},
 
 
 
@@ -12115,9 +5450,9 @@ style: {
        'cellDblclick': function (flxBillsDetails, rowIndex, cellIndex, e) {
 
 
-txtVoucherAmount.setRawValue('');
-txttotAjusted.setRawValue('');
-txtBalanceAmount.setRawValue('');
+txtVoucherAmount2.setValue('');
+txttotAjusted2.setValue('');
+txtBalanceAmount2.setValue('');
                                
 
 
@@ -12349,286 +5684,319 @@ var btnProcessPayment = new Ext.Button({
         width: 100, id: 'btnLedgerEmail',
         x: 10,
         y: 200,
-          style: {
-              borderColor: 'blue',
-              borderStyle: 'solid',
-              fontSize  : '14px',
+        style: {
+        borderColor: 'blue',
+        borderStyle: 'solid',
+        fontSize  : '14px',
 
-          },
+        },
         listeners: {
-            click: function () {
+        click: function () {
+            loadAddressDatastore.removeAll();
+            loadAddressDatastore.load({
+            url: 'ClsViewStatements.php',
+            params: {
+            task: 'find_Address',
+            ledcode   : ledcode,
+            },
+            scope:this,
+            callback:function()
+            {
+            custname   =  loadAddressDatastore.getAt(0).get('cust_ref');
+            custadd1   =  loadAddressDatastore.getAt(0).get('cust_add1');
+            custadd2   =  loadAddressDatastore.getAt(0).get('cust_add2');
+            custadd3   =  loadAddressDatastore.getAt(0).get('cust_add3');
+            custcity   =  loadAddressDatastore.getAt(0).get('cust_city');
+            statename  =  loadAddressDatastore.getAt(0).get('state_name');
+            custemail  =  loadAddressDatastore.getAt(0).get('cust_email');
+
+            custzip    =  "Pin : " + loadAddressDatastore.getAt(0).get('cust_zip');
+            custcontact=  "Contact Person : Mr." + loadAddressDatastore.getAt(0).get('cust_contact');
+            custphone  =  "Phone          : " + loadAddressDatastore.getAt(0).get('cust_phone');
+
+            repperiod  = "Preiod from : " + Ext.util.Format.date(monthstartdate.getValue(),"d-m-Y") + " to " +  Ext.util.Format.date(monthenddate.getValue(),"d-m-Y") 
 
 
-	loadAddressDatastore.removeAll();
-	loadAddressDatastore.load({
-	 url: 'ClsViewStatements.php',
-                params: {
-	    	task: 'find_Address',
-                ledcode   : ledcode,
-		},
-		scope:this,
-		callback:function()
-       		{
-			   custname   =  loadAddressDatastore.getAt(0).get('cust_ref');
-			   custadd1   =  loadAddressDatastore.getAt(0).get('cust_add1');
-			   custadd2   =  loadAddressDatastore.getAt(0).get('cust_add2');
-			   custadd3   =  loadAddressDatastore.getAt(0).get('cust_add3');
-			   custcity   =  loadAddressDatastore.getAt(0).get('cust_city');
-			   statename  =  loadAddressDatastore.getAt(0).get('state_name');
-			   custemail  =  loadAddressDatastore.getAt(0).get('cust_email');
+            MonthClickVocDataStoreEmail.removeAll();
+            MonthClickVocDataStoreEmail.load({
+            url: 'ClsViewStatements.php',
+            params: {
+            task: 'load_Ledger_DetailsEmail',
+            compcode  : compcode,
+            finid     : finid,
+            startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
+            enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
+            ledcode   : ledcode,
+            ledgertype   : ledtype,
+            },
+            scope:this,
+            callback:function()
+            {
+            var cnt=MonthClickVocDataStoreEmail.getCount();
+            if(cnt>0)
+            {
+            
+            ledgerNameDisplay = txtAccountName.getRawValue();
+            email  = MonthClickVocDataStoreEmail.getAt(0).get('email');
+            opamt =  Number(MonthClickVocDataStoreEmail.getAt(0).get('curbal_obdbamt'))+Number(MonthClickVocDataStoreEmail.getAt(0).get('trn_opdr')) - Number(MonthClickVocDataStoreEmail.getAt(0).get('curbal_obcramt')) - Number(MonthClickVocDataStoreEmail.getAt(0).get('trn_opcr')) ;
+            
 
-			   custzip    =  "Pin : " + loadAddressDatastore.getAt(0).get('cust_zip');
-			   custcontact=  "Contact Person : Mr." + loadAddressDatastore.getAt(0).get('cust_contact');
-			   custphone  =  "Phone          : " + loadAddressDatastore.getAt(0).get('cust_phone');
+            var openingdebit = 0;
+            var openingcredit = 0;
+           
+            if (opamt > 0)
+            {  
+            opdbamt =   formatter.format(opamt);
+            opcramt = "";
+            openingdebit = opamt;
+            } 
+            else
+            { 
+            opdbamt = "";
+            opcramt = formatter.format(Math.abs(opamt));
+            openingcredit = Math.abs(opamt);
+            }              
+            
 
-                           repperiod  = "Preiod from : " + Ext.util.Format.date(monthstartdate.getValue(),"d-m-Y") + " to " +  Ext.util.Format.date(monthenddate.getValue(),"d-m-Y") 
+                            
+            var sumtotdebit = 0;
+            var sumtotcredit = 0;
+            
+            
+            //   mailtrailer =  '<tr>' + '<td align="center"  colspan="3"> <b> ' + 'OPENING BALANCE'  + ' </b> </td>' + '<td align="right">   <b> '+ opdbamt + ' </b> </td>' + '<td align="right"   width =150px>  <b> '  + opcramt + ' </b> </td>' + '</tr> <br>'; 
+            
+            mailtrailer = '<tr>' +
+            '<td align="center" colspan="3" style="border:1px solid black;"><b>OPENING BALANCE</b></td>' +
+            '<td align="right" style="border:1px solid black;"><b>'+ opdbamt +'</b></td>' +
+            '<td align="right" style="border:1px solid black;"><b>'+ opcramt +'</b></td>' +
+            '</tr>';
+            
+            
+            
+            for(var j=0; j<cnt; j++)
+            { 
+            
+            voudate  =  Ext.util.Format.date(MonthClickVocDataStoreEmail.getAt(j).get('accref_voudate'),"d-m-Y");
+            ledname  =  MonthClickVocDataStoreEmail.getAt(j).get('ledgername');
+            dbamt    =  MonthClickVocDataStoreEmail.getAt(j).get('acctran_dbamt');
+            cramt    =  MonthClickVocDataStoreEmail.getAt(j).get('acctran_cramt');
+            vouno    =  MonthClickVocDataStoreEmail.getAt(j).get('accref_vouno');
+            
+            sumtotdebit = Number(sumtotdebit) + Number(MonthClickVocDataStoreEmail.getAt(j).get('acctran_dbamt'));
+            sumtotcredit = Number(sumtotcredit) + Number(MonthClickVocDataStoreEmail.getAt(j).get('acctran_cramt'));
+            
+            if (dbamt > 0)
+                dbamt        =  formatter.format(dbamt);
+            else
+                dbamt        = "";
+            
+            if (cramt > 0)
+                cramt        =  formatter.format(cramt);
+            else
+                cramt        =  "";
+            
+            
+            if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "GSI" || MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type').substring(0,1) == "P")
+                billno   =  MonthClickVocDataStoreEmail.getAt(j).get('accref_payref_no');
+            else
+                billno   =  MonthClickVocDataStoreEmail.getAt(j).get('accref_vouno');
+            
+            
+            if (billno == '')
+                invno = vouno;
+            else
+                invno = billno;
+            
+            
+                if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type').substring(0,3) == "GSI")
+                    voutype  =  "Sales";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type').substring(0,1) == "P")
+                    voutype  =  "Purchase";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "CNG" || MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "CNN" )
+                    voutype  =  "Credit Note";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "DNG" || MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "DNN" )
+                    voutype  =  "Debit Note";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "BKR")
+                    voutype  =  "Bank Receipt";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "BKP")
+                    voutype  =  "Bank Payment";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "CHR")
+                    voutype  =  "Cash Receipt";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "CHP")
+                    voutype  =  "Cash Payment";
+                else if (MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type')  == "EXP")
+                    voutype  =  "Expenses Voucher";
+                else
+                    voutype  = MonthClickVocDataStoreEmail.getAt(j).get('accref_vou_type');
+            
+            
+            
+                accref_seqno =  MonthClickVocDataStoreEmail.getAt(j).get('accref_seqno');
+            
+            
+                mailtrailer = mailtrailer + '<tr>' + '<td align="center" width =100px >' + voudate + '</td>' +
+                '<td align="center"  width =120px>' + invno + '</td>' +  
+                '<td align="left"   width =120px>'  + voutype + '</td>' +  
+                '<td align="right"   width =150px>'  + dbamt + '</td>' +  
+                '<td align="right"   width =150px>'  + cramt + '</td>' + '</tr>'; 
+            
+            
+            
+            } 
+            
+            var closing =  opamt + sumtotdebit - sumtotcredit;
+            
+            /*
+            if (closing > 0)
+            {  
+            clodbamt =   formatter.format(closing);
+            clocramt = "";
+            } 
+            else
+            { 
+            clodbamt = "";
+            clocramt = formatter.format(Math.abs(closing));
+            }   
+            */ 
+                       
+            if (closing > 0)
+                {  
+                clodbamt = "";
+                clocramt = formatter.format(closing);
+                } 
+                else
+                { 
+                clodbamt = formatter.format(Math.abs(closing));
+                clocramt = "";
+                }   
+            
+     
+                           
+            if (sumtotdebit > 0)
+            sumtotdebit  =  formatter.format(Number(sumtotdebit)+Number(openingdebit));
+            else
+            sumtotdebit  =  "";
+            
+            if (sumtotcredit > 0)
+            sumtotcredit  =  formatter.format(Number(sumtotcredit)+Number(openingcredit));
+            else
+            sumtotcredit  =  "";
+            
+            
 
-	MonthClickVocDataStore.removeAll();
-	MonthClickVocDataStore.load({
-	 url: 'ClsViewStatements.php',
-                params: {
-	    	task: 'load_Ledger_Details',
-                compcode  : compcode,
-                finid     : finid,
-                startdate : Ext.util.Format.date(monthstartdate.getValue(),"Y-m-d"), 
-                enddate   : Ext.util.Format.date(monthenddate.getValue(),"Y-m-d"), 
-                ledcode   : ledcode,
-                ledgertype   : ledtype,
-		},
-		scope:this,
-		callback:function()
-       		{
-                   var cnt=MonthClickVocDataStore.getCount();
-                   if(cnt>0)
-                   {
 
-		     ledgerNameDisplay = txtAccountName.getRawValue();
-		     email  = MonthClickVocDataStore.getAt(0).get('email');
+            
+            mailtrailer = mailtrailer + '<tr>' + '<td align="center" width =100px > <b> ' + 'TOTAL'  + '  </b>  </td>' +
+            '<td align="center"  width =120px > </td>' +  
+            '<td align="left"   width =120px>  </td>' +  
+            '<td align="right"   width =150px> <b> '  + sumtotdebit + ' </b>  </td>' +  
+            '<td align="right"   width =150px> <b> '  + sumtotcredit + ' </b> </td>' + '</tr>'; 
+            
+            mailtrailer = mailtrailer +  '<tr>' + '<td align="center"  colspan="3"> <b> ' + 'CLOSING BALANCE'  + ' </b> </td>' + '<td align="right">   <b> '+ clodbamt + ' </b> </td>' + '<td align="right"   width =150px>  <b> '  + clocramt + ' </b> </td>' + '</tr>'; 
+            
+            mailheader = Ext.util.Format.trim('<table border = "1" , height = 70px ><tr>' +'<th bgcolor= "yellow">' + 'Doc Date' + '</th>' + '<th bgcolor= "yellow">' + 'Doc No.' + '</th>' +  '<th bgcolor= "yellow">' + 'Transaction' + '</th>' + '<th bgcolor= "yellow">' + 'Debit' + '</th>' + '<th bgcolor= "yellow">' + 'Creidt' + '</th>' + '\n' + mailtrailer) +'</table>' +  '\n' +'<br>';
+            
+            mailmessage = "<style> body {height: 842px; width: 700px;  margin-left:0 auto;} </style> <h2> SRI HARI VENKATESWARA PAPER MILLS (P) LTD </h2> ";
+            
+            
+            // mailmessage =  mailmessage + "<td align='center'> 2/151, Keelanmarai Nadu Village, A.Lakshmiapuram-Post, Sivakasi - 626127 </td><br> <hr> <br> <br>";
+            mailmessage = mailmessage +
+            "<div style='width:100%; margin:0; padding:0;'>"+
+            "<div style='text-align:center;'>2/151, Keelanmarai Nadu Village, A.Lakshmiapuram-Post, Sivakasi - 626127</div>"+
+            "<hr>"+
+            "</div>";
+            
+            mailmessage =  mailmessage +  "To :  <br>  <br>  <b>  "+ custname + '  </b> &nbsp;&nbsp;&nbsp;' + custcontact +'  <br> ' + custadd1 + ' <br> ' +  custadd2 + ' <br>  ' +  custadd3 + ' <br>   ' +  statename + ' <br> ' +  custzip + ' <br> <br>   Dear Sir / Madam, <br> <br>   <h3 align="center"> <b> Sub :- Confirmation of Accounts </b> </h3>      <h3 align="center"> <b> ' + repperiod +  ' </b> </h3>   <br> Given below is the details of your Accounts as standing in my/our Books of Accounts for the the mentioned period. <br> Kindly return 3 copies stating your I.T. Permanent A/c No., duly signed and sealed, in confirmation of the same. <br> Please note that if no reply is received from you within a fortnight, it will be assumed that you have accepted the balance shown below.<br> <br>'+ mailheader+ "<br> <br> <br>  <hr> <br> I / We hereby Confirm the above "
+            
 
-
-                    opamt =  Number(MonthClickVocDataStore.getAt(0).get('curbal_obdbamt'))+Number(MonthClickVocDataStore.getAt(0).get('trn_opdr')) - Number(MonthClickVocDataStore.getAt(0).get('curbal_obcramt')) - Number(MonthClickVocDataStore.getAt(0).get('trn_opcr')) ;
-
-
-
-
-
-                   if (opamt > 0)
-                   {  
-                      opdbamt =   formatter.format(opamt);
-                      opcramt = "";
-                   } 
-                   else
-                   { 
-                      opdbamt = "";
-                      opcramt = formatter.format(Math.abs(opamt));
-                   }   
-   
-
-
- 
-                   var sumtotdebit = 0;
-                   var sumtotcredit = 0;
-/*
-                    mailtrailer =  '<tr>' + '<td align="center" width =100px > <b> ' + 'OPENING'  + ' </b> </td>' +
-					 '<td align="center"  width =120px > </td>' +  
-					 '<td align="left"   width =120px>  </td>' +  
-					 '<td align="right"   width =150px>  <b> '  + opdbamt + ' </b> </td>' +  
-					 '<td align="right"   width =150px>  <b> '  + opcramt + ' </b> </td>' + '</tr>'; 
-
-*/
-
-                    mailtrailer =  '<tr>' + '<td align="center"  colspan="3"> <b> ' + 'OPENING BALANCE'  + ' </b> </td>' + '<td align="right">   <b> '+ opdbamt + ' </b> </td>' + '<td align="right"   width =150px>  <b> '  + opcramt + ' </b> </td>' + '</tr> <br>'; 
-
-
-
-                   for(var j=0; j<cnt; j++)
- 		   { 
-
-                           voudate  =  Ext.util.Format.date(MonthClickVocDataStore.getAt(j).get('accref_voudate'),"d-m-Y");
-			   ledname  =  MonthClickVocDataStore.getAt(j).get('ledgername');
- 	                   dbamt    =  MonthClickVocDataStore.getAt(j).get('acctran_dbamt');
- 			   cramt    =  MonthClickVocDataStore.getAt(j).get('acctran_cramt');
-
- 			   vouno    =  MonthClickVocDataStore.getAt(j).get('accref_vouno');
-
-
-
-
-                           sumtotdebit = Number(sumtotdebit) + Number(MonthClickVocDataStore.getAt(j).get('acctran_dbamt'));
-                           sumtotcredit = Number(sumtotcredit) + Number(MonthClickVocDataStore.getAt(j).get('acctran_cramt'));
-
-                           if (dbamt > 0)
-                              dbamt        =  formatter.format(dbamt);
-                           else
-                              dbamt        = "";
-
-                           if (cramt > 0)
-                              cramt        =  formatter.format(cramt);
-                           else
-                              cramt        =  "";
-
-
-
-
-                          if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "GSI" || MonthClickVocDataStore.getAt(j).get('accref_vou_type').substring(0,1) == "P")
-                             billno   =  MonthClickVocDataStore.getAt(j).get('accref_payref_no');
-                          else
-                             billno   =  MonthClickVocDataStore.getAt(j).get('accref_vouno');
-
-
-                           if (billno == ''   )
-                               invno = vouno;
-                           else
-                               invno = billno;
+    Ext.Msg.prompt(
+        'Confirm Email',
+        'Please confirm or change Email ID:',
+        function(btn, text){
     
-
-                           if (MonthClickVocDataStore.getAt(j).get('accref_vou_type').substring(0,3) == "GSI")
-                               voutype  =  "Sales";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type').substring(0,1) == "P")
-                               voutype  =  "Purchase";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "CNG" || MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "CNN" )
-                               voutype  =  "Credit Note";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "DNG" || MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "DNN" )
-                               voutype  =  "Debit Note";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "BKR")
-                               voutype  =  "Bank Receipt";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "BKP")
-                               voutype  =  "Bank Payment";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "CHR")
-                               voutype  =  "Cash Receipt";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "CHP")
-                               voutype  =  "Cash Payment";
-                           else if (MonthClickVocDataStore.getAt(j).get('accref_vou_type')  == "EXP")
-                               voutype  =  "Expenses Voucher";
-                           else
-                               voutype  = MonthClickVocDataStore.getAt(j).get('accref_vou_type');
-
-
-
-			   accref_seqno =  MonthClickVocDataStore.getAt(j).get('accref_seqno');
-
-
-	                    mailtrailer = mailtrailer + '<tr>' + '<td align="center" width =100px >' + voudate + '</td>' +
-					 '<td align="center"  width =120px>' + invno + '</td>' +  
-					 '<td align="left"   width =120px>'  + voutype + '</td>' +  
-					 '<td align="right"   width =150px>'  + dbamt + '</td>' +  
-					 '<td align="right"   width =150px>'  + cramt + '</td>' + '</tr>'; 
-
-
-	     
-                   } 
-
-                   var closing =  opamt + sumtotdebit - sumtotcredit;
-
-
-                   if (closing > 0)
-                   {  
-                      clodbamt =   formatter.format(closing);
-                      clocramt = "";
-                   } 
-                   else
-                   { 
-                      clodbamt = "";
-                      clocramt = formatter.format(Math.abs(closing));
-                   }   
-
-
-
-
-                           if (sumtotdebit > 0)
-                              sumtotdebit  =  formatter.format(sumtotdebit);
-                           else
-                              sumtotdebit  =  "";
-
-                           if (sumtotcredit > 0)
-                              sumtotcredit  =  formatter.format(sumtotcredit);
-                           else
-                              sumtotcredit  =  "";
-
-
-
-                    mailtrailer = mailtrailer + '<tr>' + '<td align="center" width =100px > <b> ' + 'TOTAL'  + '  </b>  </td>' +
-					 '<td align="center"  width =120px > </td>' +  
-					 '<td align="left"   width =120px>  </td>' +  
-					 '<td align="right"   width =150px> <b> '  + sumtotdebit + ' </b>  </td>' +  
-					 '<td align="right"   width =150px> <b> '  + sumtotcredit + ' </b> </td>' + '</tr>'; 
-
-
+            if(btn == 'ok'){
+    
+                var emailid = text;   // <-- use entered value
+    
+                if(!emailid){
+                    Ext.Msg.alert("Validation","Email id cannot be empty");
+                    return;
+                }
+    
+                Ext.Ajax.request({
+                    url: 'TrnLedgerEmail.php',
+                    method:'POST',
+                    params :
+                    {
+                        mailmessage : mailmessage,
+                        idemail     : emailid
+                    },
+                    callback: function(options, success, response)
+                    {
+                        if(success){
+                            Ext.Msg.alert("Success","EMAIL Sent Successfully to " + txtAccountName.getRawValue() );
+                        }else{
+                            Ext.Msg.alert("Error","Email Sending Failed");
+                        }
+                    }
+                });
+    
+            }
+    
+        },
+        this,
+        false,
+        custemail   // default value shown in textbox
+    );
 /*
+    Ext.Ajax.request({
+    url: 'TrnLedgerEmail.php',
+    params :
+    {
+        mailmessage : mailmessage,
+        idemail     : custemail,
 
-                    mailtrailer = mailtrailer + '<tr>' + '<td align="center" width =100px > <b> ' + 'CLOSING BALANCE'  + '  </b>  </td>' +					 '<td align="center"  width =120px > </td>' +  
-					 '<td align="left"   width =120px>  </td>' +  
-					 '<td align="right"   width =150px> <b> '  + clodbamt + ' </b>  </td>' +  
-					 '<td align="right"   width =150px> <b> '  + clocramt + ' </b> </td>' + '</tr>'; 
+    },
+    callback: function(options, success, response)
+    {
+    Ext.MessageBox.alert("EMAIL Send to Customers - "); 
+    //                                         mailcount = 1;
+    }
+    }); 
 */
 
-                    mailtrailer = mailtrailer +  '<tr>' + '<td align="center"  colspan="3"> <b> ' + 'CLOSING BALANCE'  + ' </b> </td>' + '<td align="right">   <b> '+ clodbamt + ' </b> </td>' + '<td align="right"   width =150px>  <b> '  + clocramt + ' </b> </td>' + '</tr>'; 
 
 
 
-
-				    mailheader = Ext.util.Format.trim('<table border = "1" , height = 70px ><tr>' +'<th bgcolor= "yellow">' + 'Doc Date' + '</th>' + '<th bgcolor= "yellow">' + 'Doc No.' + '</th>' +  '<th bgcolor= "yellow">' + 'Transaction' + '</th>' + '<th bgcolor= "yellow">' + 'Debit' + '</th>' + '<th bgcolor= "yellow">' + 'Creidt' + '</th>' + '\n' + mailtrailer) +'</table>' +  '\n' +'<br>';
-
+    grid_tot2();  
 
 
-  //                            mailmessage = "     <style> body {height: 842px; width: 700px;  margin-left: 5px;}    </style> <h2> SRI HARI VENKATESWARA PAPER MILLS (P) LTD </h2> <br> 2/151, Keelanmarai Nadu Village, A.Lakshmiapuram-Post, Sivakasi - 626127<br> <hr> <br> <br>";
-
-                              mailmessage = "<style> body {height: 842px; width: 700px;  margin-left: 5px;} </style> <h2> SRI HARI VENKATESWARA PAPER MILLS (P) LTD </h2> ";
+    cloamt = opamt + ledger_debit - ledger_credit ;
 
 
-                              mailmessage =  mailmessage + "<td align='center'> 2/151, Keelanmarai Nadu Village, A.Lakshmiapuram-Post, Sivakasi - 626127 </td><br> <hr> <br> <br>";
+    var cloamt2 = formatter.format(Math.abs(cloamt));
+    if (cloamt > 0) 
+    {         
+    txtClosing_Debit.setRawValue(cloamt2);
+    } 
+    else
+    {
+    txtClosing_Credit.setRawValue(cloamt2);
 
-			      mailmessage =  mailmessage +  "To :  <br>  <br>  <b>  "+ custname + '  </b> &nbsp &nbsp &nbsp ' + custcontact +'  <br> ' + custadd1 + ' <br> ' +  custadd2 + ' <br>  ' +  custadd3 + ' <br>   ' +  statename + ' <br> ' +  custzip + ' <br> <br>   Dear Sir / Madam, <br> <br>   <h3 align="center"> <b> Sub :- Confirmation of Accounts </b> </h3>      <h3 align="center"> <b> ' + repperiod +  ' </b> </h3>   <br> Given below is the details of your Accounts as standing in my/our Books of Accounts for the the mentioned period. <br> Kindly return 3 copies stating your I.T. Permanent A/c No., duly signed and sealed, in confirmation of the same. <br> Please note that if no reply is received from you within a fortnight, it will be assumed that you have accepted the balance shown below.<br> <br>'+ mailheader+ "<br> <br> <br>  <hr> <br> I / We hereby Confirm the above "
+    }   
 
+    }
 
-			      Ext.Ajax.request({
-          			      url: 'TrnLedgerEmail.php',
-				      params :
-				      {
-				             mailmessage : mailmessage,
-				             idemail     : custemail,
+    }         
+    });
 
-				      },
-				      callback: function(options, success, response)
-				      {
-					 Ext.MessageBox.alert("EMAIL Send to Customers - "); 
-//                                         mailcount = 1;
-				      }
-				      }); 
-
+    }         
+    });
 
 
+    }
 
-
-                   grid_tot2();  
-
-
-                  cloamt = opamt + ledger_debit - ledger_credit ;
-
-
-                  var cloamt2 = formatter.format(Math.abs(cloamt));
-                    if (cloamt > 0) 
-                    {         
-                       txtClosing_Debit.setRawValue(cloamt2);
-                    } 
-                    else
-                    {
-                       txtClosing_Credit.setRawValue(cloamt2);
-
-                    }   
-                   
-                }
-
-                }         
-	  });
-         
-                }         
-	  });
-       
-
-         }
-
-        }
+    }
     });
 
 
@@ -12872,7 +6240,7 @@ ProcessPaymentPerformance();
             title       : '',
             x           : 10,
             y           : 10,
-            height      : 100,
+            width       : 450,
             labelWidth  : 80,
             border      : false,
             items : [cmbMonth]
@@ -12893,6 +6261,7 @@ ProcessPaymentPerformance();
                              xtype   : 'fieldset',
                              title   : '',
                              labelWidth  : 80,
+                             width       : 200,
                              border  : false,
 		             x       : 400,
 			     y       : 10,
@@ -12901,6 +6270,7 @@ ProcessPaymentPerformance();
 			{ 
                              xtype   : 'fieldset',
                              title   : '',
+                             width       : 200,
                              labelWidth  : 70,
                              border  : false,
 		             x       : 600,
@@ -12929,6 +6299,8 @@ ProcessPaymentPerformance();
 			    border      : false,
 			    items : [flxDetails]
 			},
+
+
 
 			{
 			    xtype       : 'fieldset',
@@ -12988,22 +6360,21 @@ ProcessPaymentPerformance();
 		{
 		    xtype       : 'fieldset',
 		    x           : 1150,
-		    y           : 300,
+		    y           : 330,
 		    border      : false,
 		    width       : 200,
                     labelWidth  : 50,
 		    items : [btnLedgerPrint]
 		},
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 340,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint]
-		},
+        {
+            xtype       : 'fieldset',
+            x           : 1150,
+            y           : 300,
+            border      : false,
+            width       : 300,
+                labelWidth  : 1,
+            items : [btnLedgerPrintNew]
+        },
 
 
 		{
@@ -13624,1574 +6995,54 @@ ProcessPaymentPerformance();
 
    {
 //Panel 6
+//Annadurai
         xtype: 'panel',
-        title: 'COLUMNAR-CGST/SGST',
-        id  : 'columncgst', 
+        title: 'COLUMNAR',
+        id  : 'ColumnAr', 
         bodyStyle: {"background-color": "#e6f2ff"},
         layout: 'absolute',
         hidden : true,
         items: [
+            {
+                xtype       : 'fieldset',
+                x           : 10,
+                y           : 10,
+                border      : false,
+                width       :500,
+                items : [lblLedgerName]
+            },        
+            { 
+            xtype   : 'fieldset',
+            title   : '',
+            labelWidth  : 80,
+            border  : false,
+            x       : 600,
+            y       : 10,
+            items: [monthstartdate3]
+            },
+            { 
+            xtype   : 'fieldset',
+            title   : '',
+            labelWidth  : 70,
+            border  : false,
+            x       : 800,
+            y       : 10,
+            items: [monthenddate3]
+            },        
 
-			{ 
-                             xtype   : 'fieldset',
-                             title   : '',
-                             labelWidth  : 80,
-                             border  : false,
-		             x       : 100,
-			     y       : 20,
-                             items: [lblParty6]
-                        },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_CGST]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_CGST]
-		},
+            { 
+            xtype   : 'fieldset',
+            title   : '',
+            labelWidth  : 70,
+            border  : false,
+            x       : 10,
+            y       : 40,
+            items: [columnGrid]
+            },    
 
         ]
     } ,
      
-
-   {
-//Panel 7
-        xtype: 'panel',
-        title: 'COLUMNAR-IGST',
-        id  : 'columnigst', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty7]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_IGST]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_IGST]
-		},
-
-        ]
-    } ,
- 
-   {
-//Panel 8
-        xtype: 'panel',
-        title: 'COLUMNAR-MACHINERY MAINTENANCE-GST 18%',
-        id  : 'columnMMGST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty8]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_MMGST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_MMGST18]
-		},
-
-        ]
-    } ,    
-
-   {
-//Panel 9
-        xtype: 'panel',
-        title: 'COLUMNAR-GST SALES @ 12%',
-
-        id  : 'columnSalesGST12', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty9]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_GSTSALES]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_GSTSales]
-		},
-
-        ]
-    } ,   
-
-   {
-//Panel 10
-        xtype: 'panel',
-        title: 'COLUMNAR- IGST SALES @ 12%',
-
-        id  : 'columnSalesIGST12', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty10]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_IGSTSALES]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_IGSTSales]
-		},
-
-        ]
-    } ,   
-
- 
-   {
-//Panel 11
-        xtype: 'panel',
-        title: 'COLUMNAR- BIO FUEL EXEMPT',
-
-        id  : 'columnBIO_FUEL_EXEMPT', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty11]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_BIO_FUEL_EXEMPT]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_BIO_FUEL_EXEMPT]
-		},
-
-        ]
-    } ,   
-
-   {
-//Panel 12
-        xtype: 'panel',
-        title: 'COLUMNAR- BIO FUEL GST 12%',
-
-        id  : 'columnBIO_FUEL_GST12', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty12]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_BIO_FUEL_GST12]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_BIO_FUEL_GST12]
-		},
-
-        ]
-    } ,  
-
-   {
-//Panel 13
-        xtype: 'panel',
-        title: 'COLUMNAR- BIO FUEL GST 5%',
-
-        id  : 'columnBIO_FUEL_GST5', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty13]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_BIO_FUEL_GST_5Per]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_BIO_FUEL_GST5Per]
-		},
-
-        ]
-    } ,  
-
-
-   {
-//Panel 14
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN ELECTRICAL MAITENANCE-18%',
-
-        id  : 'column_COGEN_ELEC_MAINT_18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_ELEC_MAINT_18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_ELEC_MAINT_18]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 15
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN ELECTRICAL MAITENANCE-28%',
-
-        id  : 'column_COGEN_ELEC_MAINT_28', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_ELEC_MAINT_28]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_ELEC_MAINT_28]
-		},
-
-        ]
-    } ,    
-
-
-   {
-//Panel 16
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN ELECTRICAL MAITENANCE-IGST 18%',
-
-        id  : 'column_COGEN_ELEC_MAINT_IGST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_ELEC_MAINT_IGST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_ELEC_MAINT_IGST18]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 17
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN MACHINERY MAINTENANCE-GST 18%',
-
-        id  : 'column_COGEN_MC_MAINT_GST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_MC_MAINT_GST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_MC_MAINT_GST18]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 18
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN MACHINERY MAINTENANCE-GST 28%',
-
-        id  : 'column_COGEN_MC_MAINT_GST28', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_MC_MAINT_GST28]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_MC_MAINT_GST28]
-		},
-
-        ]
-    } ,
-   {
-//Panel 19
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN MACHINERY MAINTENANCE-GST 12%',
-
-        id  : 'column_COGEN_MC_MAINT_GST12', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_MC_MAINT_GST12]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_MC_MAINT_GST12]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 20
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN MACHINERY MAINTENANCE-GST 5%',
-
-        id  : 'column_COGEN_MC_MAINT_GST5', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_MC_MAINT_GST5]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_MC_MAINT_GST5]
-		},
-
-        ]
-    } ,
-
-
-
-   {
-//Panel 21
-        xtype: 'panel',
-        title: 'COLUMNAR- CO GEN MACHINERY MAINTENANCE-IGST 18%',
-        id  : 'column_COGEN_MC_MAINT_IGST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_MC_MAINT_IGST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_MC_MAINT_IGST18]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 22
-        xtype: 'panel',
-        title: 'COLUMNAR- CO-GEN CHEMICAL GST 12%%',
-        id  : 'column_COGEN_CHEMICAL_GST12', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_CHEMICAL_GST12]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_CHEMICAL_GST12]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 23
-        xtype: 'panel',
-        title: 'COLUMNAR- CO-GEN CHEMICAL GST 18%%',
-        id  : 'column_COGEN_CHEMICAL_GST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_CHEMICAL_GST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_CHEMICAL_GST18]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 24
-        xtype: 'panel',
-        title: 'COLUMNAR- CO-GEN CHEMICAL GST 5%',
-        id  : 'column_COGEN_CHEMICAL_GST5', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_CHEMICAL_GST5]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_CHEMICAL_GST5]
-		},
-
-        ]
-    } ,
-
-
-
-   {
-//Panel 25
-        xtype: 'panel',
-        title: 'COLUMNAR- CO-GEN COAL-GST 5%',
-        id  : 'column_COGEN_COAL_GST5', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_COAL_GST5]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_COAL_GST5]
-		},
-
-        ]
-    } ,
-   {
-//Panel 26
-        xtype: 'panel',
-        title: 'COLUMNAR- CO-GEN COAL-IGST 5%',
-        id  : 'column_COGEN_COAL_IGST5', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_COGEN_COAL_IGST5]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_COGEN_COAL_IGST5]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 27
-        xtype: 'panel',
-        title: 'COLUMNAR- CHEMICAL-GST 12%',
-        id  : 'column_CHEMICALGST_12Per', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_CHEMICAL_GST12]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_CHEMICAL_GST12]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 28
-        xtype: 'panel',
-        title: 'COLUMNAR- CHEMICAL-GST 18%',
-        id  : 'column_CHEMICALGST_18Per', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_CHEMICAL_GST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_CHEMICAL_GST18]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 29
-        xtype: 'panel',
-        title: 'COLUMNAR- CHEMICAL-IGST 12%',
-        id  : 'column_CHEMICALIGST_12Per', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_CHEMICAL_IGST12]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_CHEMICAL_IGST12]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 30
-        xtype: 'panel',
-        title: 'COLUMNAR- CHEMICAL-IGST 18%',
-        id  : 'column_CHEMICALIGST_18Per', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_CHEMICAL_IGST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_CHEMICAL_IGST18]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 31
-        xtype: 'panel',
-        title: 'COLUMNAR- IMPORT CLEARING CHARGES',
-        id  : 'column_IMPORT_CLEARING_CHARGES', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_IMPORT_CLEARING]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_IMPORT_CLEARING]
-		},
-
-        ]
-    } ,
-
-
-   {
-//Panel 32
-        xtype: 'panel',
-        title: 'COLUMNAR- IMPORT CLEARING CHARGES-GST 18%',
-        id  : 'column_IMPORT_CLEARING_CHARGES_GST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_IMPORT_CLEARING_GST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_IMPORT_CLEARING_GST18]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 33
-        xtype: 'panel',
-        title: 'COLUMNAR- PACKING -GST 18%',
-        id  : 'column_PACKING_GST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_PACKING_GST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_PACKING_GST18]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 34
-        xtype: 'panel',
-        title: 'COLUMNAR- PACKING -IGST 18%',
-        id  : 'column_PACKING_IGST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_PACKING_IGST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnPrint_PACKING_IGST18]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 35
-        xtype: 'panel',
-        title: 'COLUMNAR- WASTE PAPER GST',
-        id  : 'column_WASTE_PAPER_GST', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 450,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_WASTE_PAPER_GST5]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnWASTE_PAPER_GST5]
-		},
-
-        ]
-    } ,
-
-
-
-   {
-//Panel 36
-        xtype: 'panel',
-        title: 'COLUMNAR- WASTE PAPER IGST',
-        id  : 'column_WASTE_PAPER_IGST', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_WASTE_PAPER_IGST5]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnWASTE_PAPER_IGST5]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 37
-        xtype: 'panel',
-        title: 'COLUMNAR- WASTE PAPER IMPORT',
-        id  : 'column_WASTE_PAPER_IMPORT', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 420,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_WASTE_PAPER_IMPORT]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnWASTE_PAPER_IMPORT]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 38
-        xtype: 'panel',
-        title: 'COLUMNAR- ELECTRICAL WASTE SALES GST 18%',
-        id  : 'column_ELECTRICAL_WASTE_GST18', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 450,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_ELECTRICAL_WASTE_SALES_GST18]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnELECTRICAL_WASTE_SALES_GST18]
-		},
-
-        ]
-    } ,
-
-   {
-//Panel 39
-        xtype: 'panel',
-        title: 'COLUMNAR- FLY ASH SALES-GST',
-        id  : 'column_FLY_ASH_SALES_GST', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 450,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_FLY_ASH_SALES_GST]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnFLY_ASH_SALES_GST]
-		},
-
-        ]
-    } ,
-
-
-
-   {
-//Panel 40
-        xtype: 'panel',
-        title: 'COLUMNAR- FLY ASH SALES-IGST',
-        id  : 'column_FLY_ASH_SALES_IGST', 
-        bodyStyle: {"background-color": "#e6f2ff"},
-        layout: 'absolute',
-        hidden : true,
-        items: [
-
-		{ 
-                     xtype   : 'fieldset',
-                     title   : '',
-                     labelWidth  : 80,
-                     border  : false,
-	             x       : 100,
-		     y       : 20,
-                     items: [lblParty14]
-                },
-
-	    {xtype: 'fieldset',
-	        title: '',
-	        width: 1500,
-	        height: 450,
-	        x: 10,
-	        y: 50,
-	        border: false,
-	        style: 'padding:0px',
-	        items: [grid_FLY_ASH_SALES_IGST]
-	     }, 
-
-		{
-		    xtype       : 'fieldset',
-		    x           : 1150,
-		    y           : 10,
-		    border      : false,
-		    width       : 200,
-                    labelWidth  : 50,
-		    items : [btnColumnFLY_ASH_SALES_IGST]
-		},
-
-        ]
-    } ,
 
 
 //ANNADURAI
@@ -15218,60 +7069,18 @@ onEsc:function(){
 },
     listeners:{
       
+     
+
+
         show:function(){
+
         flxLedger.hide();
-    Ext.getCmp('columncgst').setVisible(false);
+        Ext.getCmp('btnLedgerPrint').setDisabled(true);  
+
 
     var tabPanel = Ext.getCmp('tabOverall');
 
     tabPanel.hideTabStripItem(6); 
-    tabPanel.hideTabStripItem(7); 
-    tabPanel.hideTabStripItem(8); 
-    tabPanel.hideTabStripItem(9); 
-    tabPanel.hideTabStripItem(10);
-
-    tabPanel.hideTabStripItem(11); 
-    tabPanel.hideTabStripItem(12); 
-
-    tabPanel.hideTabStripItem(13); 
-    tabPanel.hideTabStripItem(14); 
-    tabPanel.hideTabStripItem(15); 
-    tabPanel.hideTabStripItem(16); 
-    tabPanel.hideTabStripItem(17); 
-    tabPanel.hideTabStripItem(18); 
-    tabPanel.hideTabStripItem(19); 
-    tabPanel.hideTabStripItem(20); 
-    tabPanel.hideTabStripItem(21); 
-    tabPanel.hideTabStripItem(22); 
-    tabPanel.hideTabStripItem(23); 
-    tabPanel.hideTabStripItem(24); 
-    tabPanel.hideTabStripItem(25); 
-    tabPanel.hideTabStripItem(26); 
-    tabPanel.hideTabStripItem(27); 
-    tabPanel.hideTabStripItem(28); 
-    tabPanel.hideTabStripItem(29); 
-    tabPanel.hideTabStripItem(30); 
-    tabPanel.hideTabStripItem(31); 
-    tabPanel.hideTabStripItem(32); 
-    tabPanel.hideTabStripItem(33); 
-    tabPanel.hideTabStripItem(34); 
-    tabPanel.hideTabStripItem(35); 
-    tabPanel.hideTabStripItem(36); 
-    tabPanel.hideTabStripItem(37); 
-    tabPanel.hideTabStripItem(38); 
-    tabPanel.hideTabStripItem(39); 
-    tabPanel.hideTabStripItem(40); 
-    tabPanel.hideTabStripItem(41); 
-    tabPanel.hideTabStripItem(42); 
-    tabPanel.hideTabStripItem(43); 
-    tabPanel.hideTabStripItem(44); 
-    tabPanel.hideTabStripItem(45); 
-    tabPanel.hideTabStripItem(46); 
-    tabPanel.hideTabStripItem(47); 
-    tabPanel.hideTabStripItem(48); 
-    tabPanel.hideTabStripItem(49); 
-    tabPanel.hideTabStripItem(50); 
-
 
      tabPanel.setActiveTab(0);
     monthstartdate2.setValue(finstdate);
